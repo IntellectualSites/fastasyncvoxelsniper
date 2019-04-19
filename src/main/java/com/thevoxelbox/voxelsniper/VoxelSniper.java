@@ -142,8 +142,6 @@ public class VoxelSniper extends JavaPlugin {
 		instance = this;
 		registerBrushes();
 		getLogger().info("Registered " + this.brushManager.registeredSniperBrushes() + " Sniper Brushes with " + this.brushManager.registeredSniperBrushHandles() + " handles.");
-		MetricsManager.getInstance()
-			.start();
 		saveDefaultConfig();
 		this.voxelSniperConfiguration = new VoxelSniperConfiguration(getConfig());
 		Bukkit.getPluginManager()

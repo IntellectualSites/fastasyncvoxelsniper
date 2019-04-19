@@ -250,13 +250,8 @@ public class Sniper {
 					PerformBrush performerBrush = (PerformBrush) sniperTool.getCurrentBrush();
 					performerBrush.initPerformer(snipeData);
 				}
-				boolean result = sniperTool.getCurrentBrush()
+				return sniperTool.getCurrentBrush()
 					.perform(snipeAction, snipeData, targetBlock, lastBlock);
-				if (result) {
-					MetricsManager.increaseBrushUsage(sniperTool.getCurrentBrush()
-						.getName());
-				}
-				return result;
 			}
 		}
 		return false;
