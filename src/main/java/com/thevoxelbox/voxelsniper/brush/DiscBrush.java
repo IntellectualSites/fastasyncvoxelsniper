@@ -40,7 +40,7 @@ public class DiscBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

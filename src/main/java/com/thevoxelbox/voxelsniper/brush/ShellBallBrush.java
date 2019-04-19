@@ -91,10 +91,10 @@ public class ShellBallBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 		// This is needed because most uses of this brush will not be sible to the sniper.
-		v.owner()
+		v.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}

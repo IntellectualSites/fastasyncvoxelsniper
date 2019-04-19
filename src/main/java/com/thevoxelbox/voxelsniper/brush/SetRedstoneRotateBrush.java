@@ -59,11 +59,11 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	@Override
 	protected final void arrow(SnipeData v) {
 		if (this.set(this.getTargetBlock())) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.undo);
 		}
 	}
@@ -71,11 +71,11 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	@Override
 	protected final void powder(SnipeData v) {
 		if (this.set(this.getLastBlock())) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.undo);
 		}
 	}

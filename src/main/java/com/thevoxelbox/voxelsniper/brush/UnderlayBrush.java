@@ -84,7 +84,7 @@ public class UnderlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -141,7 +141,7 @@ public class UnderlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -165,13 +165,13 @@ public class UnderlayBrush extends PerformBrush {
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
 			if (parameters[i].equalsIgnoreCase("info")) {
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
 				if (this.depth < 1) {
@@ -181,21 +181,21 @@ public class UnderlayBrush extends PerformBrush {
 			}
 			if (parameters[i].startsWith("d")) {
 				this.depth = Integer.parseInt(parameters[i].replace("d", ""));
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
 			} else if (parameters[i].startsWith("all")) {
 				this.allBlocks = true;
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "Will underlay over any block." + this.depth);
 			} else if (parameters[i].startsWith("some")) {
 				this.allBlocks = false;
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + this.depth);
 			} else {
-				snipeData.owner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}

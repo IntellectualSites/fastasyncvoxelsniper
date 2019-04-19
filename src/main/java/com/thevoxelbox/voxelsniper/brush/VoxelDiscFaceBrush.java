@@ -26,7 +26,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -36,7 +36,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -46,7 +46,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 				this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

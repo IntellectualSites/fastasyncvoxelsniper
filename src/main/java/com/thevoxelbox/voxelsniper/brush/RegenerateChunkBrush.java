@@ -31,7 +31,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 		v.sendMessage("Generate that chunk! " + chunk.getX() + " " + chunk.getZ());
 		this.getWorld()

@@ -181,14 +181,14 @@ public class PunishBrush extends PerformBrush {
 
 	@Override
 	protected final void arrow(SnipeData v) {
-		if (!v.owner()
+		if (!v.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
 			v.sendMessage("The server says no!");
 			return;
 		}
 		this.punishDuration = v.getVoxelHeight();
-		this.punishLevel = v.getcCen();
+		this.punishLevel = v.getCylinderCenter();
 		if (this.specificPlayer) {
 			Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
 			if (punishedPlayer == null) {
@@ -207,7 +207,7 @@ public class PunishBrush extends PerformBrush {
 			.getLivingEntities();
 		int numPunishApps = 0;
 		for (LivingEntity entity : entities) {
-			if (v.owner()
+			if (v.getOwner()
 				.getPlayer() != entity || this.hitsSelf) {
 				if (v.getBrushSize() >= 0) {
 					try {
@@ -232,7 +232,7 @@ public class PunishBrush extends PerformBrush {
 
 	@Override
 	protected final void powder(SnipeData v) {
-		if (!v.owner()
+		if (!v.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
 			v.sendMessage("The server says no!");

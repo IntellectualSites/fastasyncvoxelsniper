@@ -81,7 +81,7 @@ public class StencilListBrush extends AbstractBrush {
 				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
 				int volume = this.x * this.y * this.z;
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
 				int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
@@ -253,16 +253,16 @@ public class StencilListBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}
@@ -271,7 +271,7 @@ public class StencilListBrush extends AbstractBrush {
 	@SuppressWarnings("deprecation")
 	private void stencilPaste180(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
@@ -291,7 +291,7 @@ public class StencilListBrush extends AbstractBrush {
 				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
 				int volume = this.x * this.y * this.z;
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
 				int currX = this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
@@ -463,16 +463,16 @@ public class StencilListBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}
@@ -481,7 +481,7 @@ public class StencilListBrush extends AbstractBrush {
 	@SuppressWarnings("deprecation")
 	private void stencilPaste270(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
@@ -501,7 +501,7 @@ public class StencilListBrush extends AbstractBrush {
 				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
 				int volume = this.x * this.y * this.z;
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
 				int currX = this.zRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
@@ -681,16 +681,16 @@ public class StencilListBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}
@@ -887,14 +887,14 @@ public class StencilListBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
 				v.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}

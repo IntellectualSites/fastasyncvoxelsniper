@@ -1,25 +1,26 @@
 package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VoxelDefaultCommand extends VoxelCommand {
 
-	public VoxelDefaultCommand(VoxelSniper plugin) {
-		super("VoxelDefault", plugin);
-		setIdentifier("d");
-		setPermission("voxelsniper.sniper");
+	private VoxelSniperPlugin plugin;
+
+	public VoxelDefaultCommand(VoxelSniperPlugin plugin) {
+		super("VoxelDefault", "d", "voxelsniper.sniper");
+		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = this.plugin.getSniperManager()
-			.getSniperForPlayer(player);
+	public boolean onCommand(Player sender, String[] args) {
+		SniperManager sniperManager = this.plugin.getSniperManager();
+		Sniper sniper = sniperManager.getSniperForPlayer(sender);
 		sniper.reset(sniper.getCurrentToolId());
-		player.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
+		sender.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
 		return true;
 	}
 }

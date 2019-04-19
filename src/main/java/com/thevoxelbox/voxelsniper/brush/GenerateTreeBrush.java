@@ -447,7 +447,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			this.leafNodeCreate();
 		}
 		// Ends the undo function and mos on.
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.undo);
 	}
 

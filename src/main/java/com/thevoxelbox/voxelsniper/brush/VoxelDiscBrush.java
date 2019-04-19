@@ -25,7 +25,7 @@ public class VoxelDiscBrush extends PerformBrush {
 				this.current.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

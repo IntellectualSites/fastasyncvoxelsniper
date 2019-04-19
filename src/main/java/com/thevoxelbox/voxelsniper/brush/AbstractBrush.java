@@ -107,8 +107,8 @@ public abstract class AbstractBrush implements Brush {
 				v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
-			if (v.owner()
-				.getSnipeData(v.owner()
+			if (v.getOwner()
+				.getSnipeData(v.getOwner()
 					.getCurrentToolId())
 				.isLightningEnabled()) {
 				this.getWorld()
@@ -117,21 +117,21 @@ public abstract class AbstractBrush implements Brush {
 			return true;
 		} else {
 			RangeBlockHelper rangeBlockHelper;
-			if (v.owner()
-				.getSnipeData(v.owner()
+			if (v.getOwner()
+				.getSnipeData(v.getOwner()
 					.getCurrentToolId())
 				.isRanged()) {
-				rangeBlockHelper = new RangeBlockHelper(v.owner()
-					.getPlayer(), v.owner()
+				rangeBlockHelper = new RangeBlockHelper(v.getOwner()
+					.getPlayer(), v.getOwner()
 					.getPlayer()
-					.getWorld(), v.owner()
-					.getSnipeData(v.owner()
+					.getWorld(), v.getOwner()
+					.getSnipeData(v.getOwner()
 						.getCurrentToolId())
 					.getRange());
 				this.targetBlock = rangeBlockHelper.getRangeBlock();
 			} else {
-				rangeBlockHelper = new RangeBlockHelper(v.owner()
-					.getPlayer(), v.owner()
+				rangeBlockHelper = new RangeBlockHelper(v.getOwner()
+					.getPlayer(), v.getOwner()
 					.getPlayer()
 					.getWorld());
 				this.targetBlock = rangeBlockHelper.getTargetBlock();
@@ -142,8 +142,8 @@ public abstract class AbstractBrush implements Brush {
 					v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
 				}
-				if (v.owner()
-					.getSnipeData(v.owner()
+				if (v.getOwner()
+					.getSnipeData(v.getOwner()
 						.getCurrentToolId())
 					.isLightningEnabled()) {
 					this.getWorld()

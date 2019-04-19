@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,27 +15,28 @@ public class VoxelSniperListener implements Listener {
 
 	private static final String SNIPER_PERMISSION = "voxelsniper.sniper";
 
-	private VoxelSniper plugin;
+	private VoxelSniperPlugin plugin;
 
-	public VoxelSniperListener(VoxelSniper plugin) {
+	public VoxelSniperListener(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	/**
 	 * @return boolean Success.
 	 */
-	public boolean listenCommandExecution(Player player, String command, String[] args) {
+	public boolean listenCommandExecution(Player sender, String command, String[] args) {
 		CommandRegistry commandRegistry = this.plugin.getCommandRegistry();
 		String commandLowered = command.toLowerCase();
 		VoxelCommand foundCommand = commandRegistry.getCommand(commandLowered);
 		if (foundCommand == null) {
 			return false;
 		}
-		if (!hasPermission(foundCommand, player)) {
-			player.sendMessage(ChatColor.RED + "Insufficient Permissions.");
+		if (!hasPermission(foundCommand, sender)) {
+			sender.sendMessage(ChatColor.RED + "Insufficient Permissions.");
 			return true;
 		}
-		return foundCommand.onCommand(player, args);
+		foundCommand.onCommand(sender, args);
+		return true;
 	}
 
 	private boolean hasPermission(VoxelCommand command, Player player) {

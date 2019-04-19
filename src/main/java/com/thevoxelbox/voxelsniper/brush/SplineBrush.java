@@ -92,7 +92,7 @@ public class SplineBrush extends PerformBrush {
 		for (Point point : this.spline) {
 			this.current.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

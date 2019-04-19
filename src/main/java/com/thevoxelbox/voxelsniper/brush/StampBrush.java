@@ -226,7 +226,7 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.undo);
 	}
 
@@ -267,7 +267,7 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.undo);
 	}
 
@@ -308,7 +308,7 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.undo);
 	}
 

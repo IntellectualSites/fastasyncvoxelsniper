@@ -96,7 +96,7 @@ public class BlendDiscBrush extends BlendBrushBase {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

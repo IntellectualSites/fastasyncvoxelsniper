@@ -45,7 +45,7 @@ public class JockeyBrush extends AbstractBrush {
 				for (Entity entity : this.getWorld()
 					.getChunkAt(x, y)
 					.getEntities()) {
-					if (entity.getEntityId() == v.owner()
+					if (entity.getEntityId() == v.getOwner()
 						.getPlayer()
 						.getEntityId()) {
 						continue;
@@ -56,7 +56,7 @@ public class JockeyBrush extends AbstractBrush {
 						}
 					}
 					Location entityLocation = entity.getLocation();
-					double entityDistance = entityLocation.distance(v.owner()
+					double entityDistance = entityLocation.distance(v.getOwner()
 						.getPlayer()
 						.getLocation());
 					if (entityDistance < range) {
@@ -67,7 +67,7 @@ public class JockeyBrush extends AbstractBrush {
 			}
 		}
 		if (closest != null) {
-			Player player = v.owner()
+			Player player = v.getOwner()
 				.getPlayer();
 			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 			Bukkit.getPluginManager()
@@ -88,10 +88,10 @@ public class JockeyBrush extends AbstractBrush {
 
 	private void stack(SnipeData v) {
 		int brushSizeDoubled = v.getBrushSize() * 2;
-		List<Entity> nearbyEntities = v.owner()
+		List<Entity> nearbyEntities = v.getOwner()
 			.getPlayer()
 			.getNearbyEntities(brushSizeDoubled, brushSizeDoubled, brushSizeDoubled);
-		Entity lastEntity = v.owner()
+		Entity lastEntity = v.getOwner()
 			.getPlayer();
 		int stackHeight = 0;
 		for (Entity entity : nearbyEntities) {
@@ -107,7 +107,7 @@ public class JockeyBrush extends AbstractBrush {
 						stackHeight++;
 					}
 				} else {
-					v.owner()
+					v.getOwner()
 						.getPlayer()
 						.sendMessage("You broke stack! :O");
 				}
@@ -129,17 +129,17 @@ public class JockeyBrush extends AbstractBrush {
 	@Override
 	protected final void powder(SnipeData v) {
 		if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.eject();
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
 		} else {
 			if (this.jockeyedEntity != null) {
 				this.jockeyedEntity.eject();
 				this.jockeyedEntity = null;
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.GOLD + "You have been ejected!");
 			}

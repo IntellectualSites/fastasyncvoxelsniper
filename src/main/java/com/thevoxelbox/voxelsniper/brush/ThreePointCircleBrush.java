@@ -124,7 +124,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 			}
 		}
 		v.sendMessage(ChatColor.GREEN + "Done.");
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 		// Reset Brush
 		this.coordsOne = null;
@@ -170,7 +170,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 					.toLowerCase() + " tolerance.");
 				return;
 			} catch (IllegalArgumentException exception) {
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.brushMessage("No such tolerance.");
 			}
 		}

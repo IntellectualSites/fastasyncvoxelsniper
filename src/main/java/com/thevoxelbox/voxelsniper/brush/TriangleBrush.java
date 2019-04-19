@@ -233,7 +233,7 @@ public class TriangleBrush extends PerformBrush {
 					}
 				}
 			} // END Z DEPENDENT
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.current.getUndo());
 		}
 		// RESET BRUSH

@@ -4,19 +4,18 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
-/**
- *
- */
 public class SniperMaterialChangedEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-	private final Sniper sniper;
-	private final BlockData originalMaterial;
-	private final BlockData newMaterial;
-	private final String toolId;
 
-	public SniperMaterialChangedEvent(Sniper sniper, String toolId, BlockData originalMaterial, BlockData newMaterial) {
+	private Sniper sniper;
+	private BlockData originalMaterial;
+	private BlockData newMaterial;
+	private String toolId;
+
+	public SniperMaterialChangedEvent(Sniper sniper, BlockData originalMaterial, BlockData newMaterial, String toolId) {
 		this.sniper = sniper;
 		this.originalMaterial = originalMaterial;
 		this.newMaterial = newMaterial;
@@ -27,6 +26,16 @@ public class SniperMaterialChangedEvent extends Event {
 		return handlers;
 	}
 
+	@NotNull
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public Sniper getSniper() {
+		return this.sniper;
+	}
+
 	public BlockData getOriginalMaterial() {
 		return this.originalMaterial;
 	}
@@ -35,16 +44,7 @@ public class SniperMaterialChangedEvent extends Event {
 		return this.newMaterial;
 	}
 
-	public Sniper getSniper() {
-		return this.sniper;
-	}
-
 	public String getToolId() {
 		return this.toolId;
-	}
-
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
 	}
 }

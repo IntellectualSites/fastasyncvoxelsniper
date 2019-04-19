@@ -44,7 +44,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
 				canyon(getWorld().getChunkAt(x, z), undo);
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

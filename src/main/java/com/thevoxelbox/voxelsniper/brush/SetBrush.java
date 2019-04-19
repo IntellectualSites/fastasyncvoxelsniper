@@ -65,7 +65,7 @@ public class SetBrush extends PerformBrush {
 		if (this.set(this.getTargetBlock(), v)) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.current.getUndo());
 		}
 	}
@@ -75,7 +75,7 @@ public class SetBrush extends PerformBrush {
 		if (this.set(this.getLastBlock(), v)) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.current.getUndo());
 		}
 	}

@@ -77,7 +77,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		if (this.set(this.getTargetBlock())) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.undo);
 		}
 	}
@@ -87,7 +87,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		if (this.set(this.getLastBlock())) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.owner()
+			v.getOwner()
 				.storeUndo(this.undo);
 		}
 	}

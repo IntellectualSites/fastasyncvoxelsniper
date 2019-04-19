@@ -95,7 +95,7 @@ public class CopyPastaBrush extends AbstractBrush {
 			}
 		}
 		v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

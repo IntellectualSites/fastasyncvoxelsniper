@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 public class SniperManager {
 
 	private Map<UUID, Sniper> playerSnipers = new HashMap<>();
-	private VoxelSniper plugin;
+	private VoxelSniperPlugin plugin;
 
-	public SniperManager(VoxelSniper plugin) {
+	public SniperManager(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 

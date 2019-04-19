@@ -1,30 +1,26 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class VoxelGoToCommand extends VoxelCommand {
 
-	public VoxelGoToCommand(VoxelSniper plugin) {
-		super("VoxelGoTo", plugin);
-		setIdentifier("goto");
-		setPermission("voxelsniper.sniper");
+	public VoxelGoToCommand() {
+		super("VoxelGoTo", "goto", "voxelsniper.sniper");
 	}
 
 	@Override
-	public boolean onCommand(Player player, String[] args) {
+	public boolean onCommand(Player sender, String[] args) {
 		try {
 			int x = Integer.parseInt(args[0]);
 			int z = Integer.parseInt(args[1]);
-			player.teleport(new Location(player.getWorld(), x, player.getWorld()
+			sender.teleport(new Location(sender.getWorld(), x, sender.getWorld()
 				.getHighestBlockYAt(x, z), z));
-			player.sendMessage(ChatColor.GREEN + "Woosh!");
+			sender.sendMessage(ChatColor.GREEN + "Woosh!");
 			return true;
 		} catch (NumberFormatException exception) {
-			player.sendMessage(ChatColor.RED + "Invalid syntax.");
+			sender.sendMessage(ChatColor.RED + "Invalid syntax.");
 			return true;
 		}
 	}

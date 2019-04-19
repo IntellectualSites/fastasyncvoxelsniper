@@ -33,17 +33,17 @@ public class CometBrush extends AbstractBrush {
 			.getZ() + 0.5 * this.getTargetBlock()
 			.getZ() / Math.abs(this.getTargetBlock()
 			.getZ()));
-		Location playerLocation = v.owner()
+		Location playerLocation = v.getOwner()
 			.getPlayer()
 			.getEyeLocation();
 		Vector slope = targetCoords.subtract(playerLocation.toVector());
 		if (this.useBigBalls) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.launchProjectile(LargeFireball.class)
 				.setVelocity(slope.normalize());
 		} else {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.launchProjectile(SmallFireball.class)
 				.setVelocity(slope.normalize());

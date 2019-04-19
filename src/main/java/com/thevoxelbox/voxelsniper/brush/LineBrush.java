@@ -60,7 +60,7 @@ public class LineBrush extends PerformBrush {
 				this.current.perform(currentBlock);
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -71,7 +71,7 @@ public class LineBrush extends PerformBrush {
 			.toVector();
 		this.targetWorld = this.getTargetBlock()
 			.getWorld();
-		v.owner()
+		v.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
@@ -81,7 +81,7 @@ public class LineBrush extends PerformBrush {
 		if (this.originCoords == null || !this.getTargetBlock()
 			.getWorld()
 			.equals(this.targetWorld)) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {

@@ -58,7 +58,7 @@ public class FillDownBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

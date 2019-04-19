@@ -39,7 +39,7 @@ public class RingBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

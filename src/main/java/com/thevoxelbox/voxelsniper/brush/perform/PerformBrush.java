@@ -30,12 +30,12 @@ public abstract class PerformBrush extends AbstractBrush implements BrushPerform
 			Performer performer = Performers.getPerformer(handle);
 			if (performer != null) {
 				this.current = performer;
-				SniperBrushChangedEvent event = new SniperBrushChangedEvent(snipeData.owner(), snipeData.owner()
+				SniperBrushChangedEvent event = new SniperBrushChangedEvent(snipeData.getOwner(), snipeData.getOwner()
 					.getCurrentToolId(), this, this);
 				Bukkit.getPluginManager()
 					.callEvent(event);
-				info(snipeData.getVoxelMessage());
-				this.current.info(snipeData.getVoxelMessage());
+				info(snipeData.getMessage());
+				this.current.info(snipeData.getMessage());
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
 					parameters(hackTheArray(additionalArguments), snipeData);

@@ -61,7 +61,7 @@ public class OverlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -157,7 +157,7 @@ public class OverlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

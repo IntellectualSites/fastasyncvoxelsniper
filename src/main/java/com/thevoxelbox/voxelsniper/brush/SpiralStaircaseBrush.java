@@ -278,7 +278,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -528,7 +528,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

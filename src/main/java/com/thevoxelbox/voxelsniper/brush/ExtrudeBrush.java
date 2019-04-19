@@ -45,7 +45,7 @@ public class ExtrudeBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -71,7 +71,7 @@ public class ExtrudeBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -97,7 +97,7 @@ public class ExtrudeBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

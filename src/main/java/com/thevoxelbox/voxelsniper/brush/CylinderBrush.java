@@ -22,8 +22,8 @@ public class CylinderBrush extends PerformBrush {
 
 	private void cylinder(SnipeData v, Block targetBlock) {
 		int brushSize = v.getBrushSize();
-		int yStartingPoint = targetBlock.getY() + v.getcCen();
-		int yEndPoint = targetBlock.getY() + v.getVoxelHeight() + v.getcCen();
+		int yStartingPoint = targetBlock.getY() + v.getCylinderCenter();
+		int yEndPoint = targetBlock.getY() + v.getVoxelHeight() + v.getCylinderCenter();
 		if (yEndPoint < yStartingPoint) {
 			yEndPoint = yStartingPoint;
 		}
@@ -59,7 +59,7 @@ public class CylinderBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -102,8 +102,8 @@ public class CylinderBrush extends PerformBrush {
 				snipeData.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
 				snipeData.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + snipeData.getVoxelHeight());
 			} else if (parameter.startsWith("c")) {
-				snipeData.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
-				snipeData.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + snipeData.getcCen());
+				snipeData.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
+				snipeData.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + snipeData.getCylinderCenter());
 			} else {
 				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}

@@ -1,22 +1,20 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class VoxelChunkCommand extends VoxelCommand {
 
-	public VoxelChunkCommand(VoxelSniper plugin) {
-		super("VoxelChunk", plugin);
-		setIdentifier("vchunk");
+	public VoxelChunkCommand() {
+		super("VoxelChunk", "vchunk");
 	}
 
 	@Override
-	public boolean onCommand(Player player, String[] args) {
-		player.getWorld()
-			.refreshChunk(player.getLocation()
-				.getBlockX(), player.getLocation()
-				.getBlockZ());
+	public boolean onCommand(Player sender, String[] args) {
+		World world = sender.getWorld();
+		world.refreshChunk(sender.getLocation()
+			.getBlockX(), sender.getLocation()
+			.getBlockZ());
 		return true;
 	}
 }

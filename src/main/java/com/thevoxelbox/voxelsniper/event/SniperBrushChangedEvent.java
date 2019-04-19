@@ -4,19 +4,18 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
-/**
- *
- */
 public class SniperBrushChangedEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-	private final Sniper sniper;
-	private final Brush originalBrush;
-	private final Brush newBrush;
-	private final String toolId;
 
-	public SniperBrushChangedEvent(Sniper sniper, String toolId, Brush originalBrush, Brush newBrush) {
+	private Sniper sniper;
+	private Brush originalBrush;
+	private Brush newBrush;
+	private String toolId;
+
+	public SniperBrushChangedEvent(Sniper sniper, Brush originalBrush, Brush newBrush, String toolId) {
 		this.sniper = sniper;
 		this.originalBrush = originalBrush;
 		this.newBrush = newBrush;
@@ -27,6 +26,16 @@ public class SniperBrushChangedEvent extends Event {
 		return handlers;
 	}
 
+	@NotNull
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+
+	public Sniper getSniper() {
+		return this.sniper;
+	}
+
 	public Brush getOriginalBrush() {
 		return this.originalBrush;
 	}
@@ -35,16 +44,7 @@ public class SniperBrushChangedEvent extends Event {
 		return this.newBrush;
 	}
 
-	public Sniper getSniper() {
-		return this.sniper;
-	}
-
 	public String getToolId() {
 		return this.toolId;
-	}
-
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
 	}
 }

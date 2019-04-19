@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import com.thevoxelbox.voxelsniper.command.VoxelCommand;
 import org.jetbrains.annotations.Nullable;
 
 public class CommandRegistry {

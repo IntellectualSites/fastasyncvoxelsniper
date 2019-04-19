@@ -202,7 +202,7 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -259,7 +259,7 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

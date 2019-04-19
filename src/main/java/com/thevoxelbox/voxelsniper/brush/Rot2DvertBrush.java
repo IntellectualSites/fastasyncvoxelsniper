@@ -137,7 +137,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 				this.rotate(v);
 				break;
 			default:
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;
@@ -153,7 +153,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 				this.rotate(v);
 				break;
 			default:
-				v.owner()
+				v.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;

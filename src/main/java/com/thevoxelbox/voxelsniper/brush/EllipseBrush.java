@@ -61,7 +61,7 @@ public class EllipseBrush extends PerformBrush {
 		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -128,7 +128,7 @@ public class EllipseBrush extends PerformBrush {
 		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

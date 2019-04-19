@@ -103,7 +103,7 @@ public class BlendVoxelBrush extends BlendBrushBase {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

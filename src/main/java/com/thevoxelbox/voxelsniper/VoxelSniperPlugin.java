@@ -105,7 +105,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Bukkit extension point.
  */
-public class VoxelSniper extends JavaPlugin {
+public class VoxelSniperPlugin extends JavaPlugin {
 
 	private BrushRegistry brushRegistry;
 	private CommandRegistry commandRegistry;

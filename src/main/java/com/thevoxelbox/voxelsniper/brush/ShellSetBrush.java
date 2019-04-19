@@ -82,7 +82,7 @@ public class ShellSetBrush extends AbstractBrush {
 						currentBlock.setTypeId(v.getVoxelId());
 					}
 				}
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 				v.sendMessage(ChatColor.AQUA + "Shell complete.");
 			}
@@ -94,7 +94,7 @@ public class ShellSetBrush extends AbstractBrush {
 	@Override
 	protected final void arrow(SnipeData v) {
 		if (this.set(this.getTargetBlock(), v)) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GRAY + "Point one");
 		}
@@ -103,7 +103,7 @@ public class ShellSetBrush extends AbstractBrush {
 	@Override
 	protected final void powder(SnipeData v) {
 		if (this.set(this.getLastBlock(), v)) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GRAY + "Point one");
 		}

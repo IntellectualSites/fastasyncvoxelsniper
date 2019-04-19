@@ -91,7 +91,7 @@ public class ErodeBrush extends AbstractBrush {
 				.setTypeIdAndData(blockWrapper.getMaterial()
 					.getId(), blockWrapper.getData(), true);
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -199,7 +199,7 @@ public class ErodeBrush extends AbstractBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		JSAPResult result = this.parser.parse(Arrays.copyOfRange(parameters, 1, parameters.length));
-		if (sendHelpOrErrorMessageToPlayer(result, snipeData.owner()
+		if (sendHelpOrErrorMessageToPlayer(result, snipeData.getOwner()
 			.getPlayer(), this.parser)) {
 			return;
 		}
@@ -208,11 +208,11 @@ public class ErodeBrush extends AbstractBrush {
 				this.currentPreset = Preset.valueOf(result.getString("preset")
 					.toUpperCase())
 					.getPreset();
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.brushMessage("Brush preset set to " + result.getString("preset"));
 				return;
 			} catch (IllegalArgumentException exception) {
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.brushMessage("No such preset.");
 				return;
 			}

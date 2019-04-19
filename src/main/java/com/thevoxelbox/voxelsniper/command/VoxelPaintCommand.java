@@ -1,36 +1,32 @@
 package com.thevoxelbox.voxelsniper.command;
 
 import com.thevoxelbox.voxelsniper.PaintingWrapper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class VoxelPaintCommand extends VoxelCommand {
 
-	public VoxelPaintCommand(VoxelSniper plugin) {
-		super("VoxelPaint", plugin);
-		setIdentifier("paint");
-		setPermission("voxelsniper.paint");
+	public VoxelPaintCommand() {
+		super("VoxelPaint", "paint", "voxelsniper.sniper");
 	}
 
 	@Override
-	public boolean onCommand(Player player, String[] args) {
+	public boolean onCommand(Player sender, String[] args) {
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("back")) {
-				PaintingWrapper.paint(player, true, true, 0);
+				PaintingWrapper.paint(sender, true, true, 0);
 				return true;
 			} else {
 				try {
-					PaintingWrapper.paint(player, false, false, Integer.parseInt(args[0]));
+					PaintingWrapper.paint(sender, false, false, Integer.parseInt(args[0]));
 					return true;
 				} catch (NumberFormatException exception) {
-					player.sendMessage(ChatColor.RED + "Invalid input.");
+					sender.sendMessage(ChatColor.RED + "Invalid input.");
 					return true;
 				}
 			}
 		} else {
-			PaintingWrapper.paint(player, true, false, 0);
+			PaintingWrapper.paint(sender, true, false, 0);
 			return true;
 		}
 	}

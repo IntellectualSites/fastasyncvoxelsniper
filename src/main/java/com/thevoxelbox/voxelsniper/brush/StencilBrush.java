@@ -199,7 +199,7 @@ public class StencilBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.owner()
+				v.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
 				v.sendMessage(ChatColor.RED + "Something went wrong.");

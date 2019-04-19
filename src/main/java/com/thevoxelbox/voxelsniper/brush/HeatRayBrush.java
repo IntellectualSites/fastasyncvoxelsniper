@@ -153,7 +153,7 @@ public class HeatRayBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -188,15 +188,15 @@ public class HeatRayBrush extends AbstractBrush {
 			}
 			if (parameter.startsWith("oct")) {
 				this.octaves = Integer.valueOf(parameter.replace("oct", ""));
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
 			} else if (parameter.startsWith("amp")) {
 				this.amplitude = Double.valueOf(parameter.replace("amp", ""));
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
 			} else if (parameter.startsWith("freq")) {
 				this.frequency = Double.valueOf(parameter.replace("freq", ""));
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
 			}
 		}

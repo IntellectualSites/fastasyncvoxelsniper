@@ -3,17 +3,12 @@ package com.thevoxelbox.voxelsniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-/**
- *
- */
 public class Message {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
-	private final SnipeData snipeData;
 
-	/**
-	 *
-	 */
+	private SnipeData snipeData;
+
 	public Message(SnipeData snipeData) {
 		this.snipeData = snipeData;
 	}
@@ -36,7 +31,7 @@ public class Message {
 	 * Display Center Parameter.
 	 */
 	public void center() {
-		this.snipeData.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + this.snipeData.getcCen());
+		this.snipeData.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + this.snipeData.getCylinderCenter());
 	}
 
 	/**
@@ -96,8 +91,8 @@ public class Message {
 	 * Display toggle lightning message.
 	 */
 	public void toggleLightning() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.owner()
-			.getSnipeData(this.snipeData.owner()
+		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
+			.getSnipeData(this.snipeData.getOwner()
 				.getCurrentToolId())
 			.isLightningEnabled()) ? "on" : "off"));
 	}
@@ -106,8 +101,8 @@ public class Message {
 	 * Display toggle printout message.
 	 */
 	public final void togglePrintout() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.owner()
-			.getSnipeData(this.snipeData.owner()
+		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
+			.getSnipeData(this.snipeData.getOwner()
 				.getCurrentToolId())
 			.isLightningEnabled()) ? "on" : "off"));
 	}
@@ -116,11 +111,11 @@ public class Message {
 	 * Display toggle range message.
 	 */
 	public void toggleRange() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((this.snipeData.owner()
-			.getSnipeData(this.snipeData.owner()
+		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
+			.getSnipeData(this.snipeData.getOwner()
 				.getCurrentToolId())
-			.isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) this.snipeData.owner()
-			.getSnipeData(this.snipeData.owner()
+			.isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) this.snipeData.getOwner()
+			.getSnipeData(this.snipeData.getOwner()
 				.getCurrentToolId())
 			.getRange());
 	}

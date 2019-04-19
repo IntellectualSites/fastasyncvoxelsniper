@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,7 +12,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
@@ -30,18 +30,15 @@ import org.bukkit.event.block.Action;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.Nullable;
 
-/**
- *
- */
 public class Sniper {
 
-	private VoxelSniper plugin;
-	private final UUID player;
+	private VoxelSniperPlugin plugin;
+	private UUID player;
 	private boolean enabled = true;
 	private LinkedList<Undo> undoList = new LinkedList<>();
-	private Map<String, SniperTool> tools = Maps.newHashMap();
+	private Map<String, SniperTool> tools = new HashMap<>();
 
-	public Sniper(VoxelSniper plugin, Player player) {
+	public Sniper(VoxelSniperPlugin plugin, Player player) {
 		this.plugin = plugin;
 		this.player = player.getUniqueId();
 		SniperTool sniperTool = new SniperTool(this);
@@ -123,9 +120,9 @@ public class Sniper {
 						switch (snipeAction) {
 							case ARROW:
 								if (targetBlock != null) {
-									BlockData originalVoxel = snipeData.getVoxelData();
+									BlockData originalVoxel = snipeData.getBlockData();
 									BlockData blockData = targetBlock.getBlockData();
-									snipeData.setVoxelData(blockData);
+									snipeData.setBlockData(blockData);
 									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, toolId, originalVoxel, blockData);
 									Bukkit.getPluginManager()
 										.callEvent(event);
@@ -136,7 +133,7 @@ public class Sniper {
 									Bukkit.getPluginManager()
 										.callEvent(event);
 								}
-								snipeData.getVoxelMessage()
+								snipeData.getMessage()
 									.voxel();
 								return true;
 							case GUNPOWDER:
@@ -146,7 +143,7 @@ public class Sniper {
 									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getVoxelId(), originalData), new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.data();
 									return true;
 								} else {
@@ -155,7 +152,7 @@ public class Sniper {
 									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getVoxelId(), originalData), new MaterialData(snipeData.getVoxelId(), snipeData.getData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.data();
 									return true;
 								}
@@ -179,7 +176,7 @@ public class Sniper {
 									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId, new MaterialData(originalId, snipeData.getReplaceData()), new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.replace();
 									return true;
 								} else {
@@ -188,7 +185,7 @@ public class Sniper {
 									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId, new MaterialData(originalId, snipeData.getReplaceData()), new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.replace();
 									return true;
 								}
@@ -199,7 +196,7 @@ public class Sniper {
 									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getReplaceId(), originalData), new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.replaceData();
 									return true;
 								} else {
@@ -208,7 +205,7 @@ public class Sniper {
 									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, toolId, new MaterialData(snipeData.getReplaceId(), originalData), new MaterialData(snipeData.getReplaceId(), snipeData.getReplaceData()));
 									Bukkit.getPluginManager()
 										.callEvent(event);
-									snipeData.getVoxelMessage()
+									snipeData.getMessage()
 										.replaceData();
 									return true;
 								}
@@ -407,9 +404,9 @@ public class Sniper {
 		private SniperTool(Class<? extends Brush> currentBrush, SnipeData snipeData) {
 			this.snipeData = snipeData;
 			this.messageHelper = new Message(snipeData);
-			snipeData.setVoxelMessage(this.messageHelper);
+			snipeData.setMessage(this.messageHelper);
 			Brush newBrushInstance = instanciateBrush(currentBrush);
-			if (snipeData.owner()
+			if (snipeData.getOwner()
 				.getPlayer()
 				.hasPermission(newBrushInstance.getPermissionNode())) {
 				this.brushes.put(currentBrush, newBrushInstance);
@@ -464,7 +461,7 @@ public class Sniper {
 			if (brushInstance == null) {
 				brushInstance = instanciateBrush(brush);
 				Preconditions.checkNotNull(brushInstance, "Could not instanciate brush class.");
-				if (this.snipeData.owner()
+				if (this.snipeData.getOwner()
 					.getPlayer()
 					.hasPermission(brushInstance.getPermissionNode())) {
 					this.brushes.put(brush, brushInstance);
@@ -473,7 +470,7 @@ public class Sniper {
 					return brushInstance;
 				}
 			}
-			if (this.snipeData.owner()
+			if (this.snipeData.getOwner()
 				.getPlayer()
 				.hasPermission(brushInstance.getPermissionNode())) {
 				this.previousBrush = this.currentBrush;

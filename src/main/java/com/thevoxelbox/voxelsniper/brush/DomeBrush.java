@@ -75,7 +75,7 @@ public class DomeBrush extends AbstractBrush {
 				currentTargetBlock.setTypeIdAndData(v.getVoxelId(), v.getData(), true);
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

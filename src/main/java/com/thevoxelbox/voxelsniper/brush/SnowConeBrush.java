@@ -106,7 +106,7 @@ public class SnowConeBrush extends AbstractBrush {
 					.setData((byte) snowconeData[x][z]);
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -125,7 +125,7 @@ public class SnowConeBrush extends AbstractBrush {
 				if (blockAbove != null && blockAbove.getType() == Material.LEGACY_AIR) {
 					addSnow(v, blockAbove);
 				} else {
-					v.owner()
+					v.getOwner()
 						.getPlayer()
 						.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
 				}

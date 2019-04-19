@@ -85,9 +85,9 @@ public class ShellVoxelBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
-		v.owner()
+		v.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}

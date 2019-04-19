@@ -46,7 +46,7 @@ public class RulerBrush extends AbstractBrush {
 				.getZ() + this.zOff, this.getTargetBlock()
 				.getX() + this.xOff, this.getTargetBlock()
 				.getY() + this.yOff, voxelMaterialId);
-			v.owner()
+			v.getOwner()
 				.storeUndo(undo);
 		}
 	}

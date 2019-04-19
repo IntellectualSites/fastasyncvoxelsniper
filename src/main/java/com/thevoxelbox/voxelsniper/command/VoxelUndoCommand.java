@@ -1,34 +1,36 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
-import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
+import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.entity.Player;
 
 public class VoxelUndoCommand extends VoxelCommand {
 
-	public VoxelUndoCommand(VoxelSniper plugin) {
-		super("VoxelUndo", plugin);
-		setIdentifier("u");
-		setPermission("voxelsniper.sniper");
+	private VoxelSniperPlugin plugin;
+
+	public VoxelUndoCommand(VoxelSniperPlugin plugin) {
+		super("VoxelUndo", "u", "voxelsniper.sniper");
+		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = this.plugin.getSniperManager()
-			.getSniperForPlayer(player);
+	public boolean onCommand(Player sender, String[] args) {
+		SniperManager sniperManager = this.plugin.getSniperManager();
+		Sniper sniper = sniperManager.getSniperForPlayer(sender);
 		if (args.length == 1) {
 			try {
 				int amount = Integer.parseInt(args[0]);
 				sniper.undo(amount);
 			} catch (NumberFormatException exception) {
-				player.sendMessage("Error while parsing amount of undo. Number format exception.");
+				sender.sendMessage("Error while parsing amount of undo. Number format exception.");
 			}
 		} else {
 			sniper.undo();
 		}
-		this.plugin.getLogger()
-			.info("Player \"" + player.getName() + "\" used /u");
+		Logger logger = this.plugin.getLogger();
+		logger.info("Player \"" + sender.getName() + "\" used /u");
 		return true;
 	}
 }

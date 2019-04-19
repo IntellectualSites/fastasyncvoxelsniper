@@ -35,9 +35,9 @@ public class CloneStampBrush extends StampBrush {
 		this.solid.clear();
 		this.sorted = false;
 		int yStartingPoint = this.getTargetBlock()
-			.getY() + v.getcCen();
+			.getY() + v.getCylinderCenter();
 		int yEndPoint = this.getTargetBlock()
-			.getY() + v.getVoxelHeight() + v.getcCen();
+			.getY() + v.getVoxelHeight() + v.getCylinderCenter();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
 			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
@@ -147,8 +147,8 @@ public class CloneStampBrush extends StampBrush {
 			this.reSort();
 			snipeData.sendMessage(ChatColor.AQUA + "Default stamp brush");
 		} else if (parameter.startsWith("c")) {
-			snipeData.setcCen(Integer.parseInt(parameter.replace("c", "")));
-			snipeData.sendMessage(ChatColor.BLUE + "Center set to " + snipeData.getcCen());
+			snipeData.setCylinderCenter(Integer.parseInt(parameter.replace("c", "")));
+			snipeData.sendMessage(ChatColor.BLUE + "Center set to " + snipeData.getCylinderCenter());
 		}
 	}
 

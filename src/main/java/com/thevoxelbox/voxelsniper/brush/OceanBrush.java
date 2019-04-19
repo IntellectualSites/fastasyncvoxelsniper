@@ -127,7 +127,7 @@ public class OceanBrush extends AbstractBrush {
 	protected final void arrow(SnipeData v) {
 		Undo undo = new Undo();
 		this.oceanator(v, undo);
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 

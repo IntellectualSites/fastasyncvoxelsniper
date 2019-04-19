@@ -37,19 +37,19 @@ public class SplatterBallBrush extends PerformBrush {
 
 	private void splatterBall(SnipeData v, Block targetBlock) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 			this.growPercent = GROW_PERCENT_DEFAULT;
 		}
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
-			v.owner()
+			v.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
@@ -133,7 +133,7 @@ public class SplatterBallBrush extends PerformBrush {
 				}
 			}
 		}
-		v.owner()
+		v.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 

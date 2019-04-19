@@ -41,7 +41,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Undo undo = undoDelegate.getUndo();
 		blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
 		undo.put(blockBelow);
-		v.owner()
+		v.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -88,14 +88,14 @@ public class TreeSnipeBrush extends AbstractBrush {
 			if (parameters[i].equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b t treetype");
-				this.printTreeType(snipeData.getVoxelMessage());
+				this.printTreeType(snipeData.getMessage());
 				return;
 			}
 			try {
 				this.treeType = TreeType.valueOf(parameters[i].toUpperCase());
-				this.printTreeType(snipeData.getVoxelMessage());
+				this.printTreeType(snipeData.getMessage());
 			} catch (IllegalArgumentException exception) {
-				snipeData.getVoxelMessage()
+				snipeData.getMessage()
 					.brushMessage("No such tree type.");
 			}
 		}
