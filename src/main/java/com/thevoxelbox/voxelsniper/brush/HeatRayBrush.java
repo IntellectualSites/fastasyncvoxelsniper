@@ -24,34 +24,34 @@ public class HeatRayBrush extends AbstractBrush {
 	 * @author MikeMatrix
 	 */
 	private enum FlameableBlock {
-		WOOD(Material.WOOD),
-		SAPLING(Material.SAPLING),
-		LOG(Material.LOG),
-		LEAVES(Material.LEAVES),
-		SPONGE(Material.SPONGE),
-		WEB(Material.WEB),
-		LONG_GRASS(Material.LONG_GRASS),
-		DEAD_BUSH(Material.DEAD_BUSH),
-		WOOL(Material.WOOL),
-		YELLOW_FLOWER(Material.YELLOW_FLOWER),
-		RED_ROSE(Material.RED_ROSE),
-		TORCH(Material.TORCH),
-		FIRE(Material.FIRE),
-		WOOD_STAIRS(Material.WOOD_STAIRS),
-		CROPS(Material.CROPS),
-		SIGN_POST(Material.SIGN_POST),
-		WOODEN_DOOR(Material.WOODEN_DOOR),
-		LADDER(Material.LADDER),
-		WALL_SIGN(Material.WALL_SIGN),
-		WOOD_PLATE(Material.WOOD_PLATE),
-		SNOW(Material.SNOW),
-		ICE(Material.ICE),
-		SUGAR_CANE_BLOCK(Material.SUGAR_CANE_BLOCK),
-		FENCE(Material.FENCE),
-		TRAP_DOOR(Material.TRAP_DOOR),
-		VINE(Material.VINE),
-		FENCE_GATE(Material.FENCE_GATE),
-		WATER_LILLY(Material.WATER_LILY);
+		WOOD(Material.LEGACY_LEGACY_WOOD),
+		SAPLING(Material.LEGACY_LEGACY_SAPLING),
+		LOG(Material.LEGACY_LEGACY_LOG),
+		LEAVES(Material.LEGACY_LEGACY_LEAVES),
+		SPONGE(Material.LEGACY_LEGACY_SPONGE),
+		WEB(Material.LEGACY_LEGACY_WEB),
+		LONG_GRASS(Material.LEGACY_LEGACY_LONG_GRASS),
+		DEAD_BUSH(Material.LEGACY_LEGACY_DEAD_BUSH),
+		WOOL(Material.LEGACY_LEGACY_WOOL),
+		YELLOW_FLOWER(Material.LEGACY_LEGACY_YELLOW_FLOWER),
+		RED_ROSE(Material.LEGACY_LEGACY_RED_ROSE),
+		TORCH(Material.LEGACY_LEGACY_TORCH),
+		FIRE(Material.LEGACY_LEGACY_FIRE),
+		WOOD_STAIRS(Material.LEGACY_LEGACY_WOOD_STAIRS),
+		CROPS(Material.LEGACY_LEGACY_CROPS),
+		SIGN_POST(Material.LEGACY_LEGACY_SIGN_POST),
+		WOODEN_DOOR(Material.LEGACY_LEGACY_WOODEN_DOOR),
+		LADDER(Material.LEGACY_LEGACY_LADDER),
+		WALL_SIGN(Material.LEGACY_LEGACY_WALL_SIGN),
+		WOOD_PLATE(Material.LEGACY_LEGACY_WOOD_PLATE),
+		SNOW(Material.LEGACY_LEGACY_SNOW),
+		ICE(Material.LEGACY_LEGACY_ICE),
+		SUGAR_CANE_BLOCK(Material.LEGACY_LEGACY_SUGAR_CANE_BLOCK),
+		FENCE(Material.LEGACY_LEGACY_FENCE),
+		TRAP_DOOR(Material.LEGACY_LEGACY_TRAP_DOOR),
+		VINE(Material.LEGACY_LEGACY_VINE),
+		FENCE_GATE(Material.LEGACY_LEGACY_FENCE_GATE),
+		WATER_LILLY(Material.LEGACY_LEGACY_WATER_LILY);
 
 		private Material material;
 
@@ -108,44 +108,44 @@ public class HeatRayBrush extends AbstractBrush {
 					if (currentLocation.toVector()
 						.isInSphere(targetLocation, v.getBrushSize())) {
 						Block currentBlock = currentLocation.getBlock();
-						if (currentBlock == null || currentBlock.getType() == Material.CHEST) {
+						if (currentBlock == null || currentBlock.getType() == Material.LEGACY_CHEST) {
 							continue;
 						}
 						if (currentBlock.isLiquid()) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.AIR);
+							currentBlock.setType(Material.LEGACY_AIR);
 							continue;
 						}
 						if (FLAMABLE_BLOCKS.contains(currentBlock.getType())) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.FIRE);
+							currentBlock.setType(Material.LEGACY_FIRE);
 							continue;
 						}
 						if (!currentBlock.getType()
-							.equals(Material.AIR)) {
+							.equals(Material.LEGACY_AIR)) {
 							double airDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double fireDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double obsidianDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlock.getType() != Material.OBSIDIAN) {
-									currentBlock.setType(Material.OBSIDIAN);
+								if (currentBlock.getType() != Material.LEGACY_OBSIDIAN) {
+									currentBlock.setType(Material.LEGACY_OBSIDIAN);
 								}
 							} else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlock.getType() != Material.COBBLESTONE) {
-									currentBlock.setType(Material.COBBLESTONE);
+								if (currentBlock.getType() != Material.LEGACY_COBBLESTONE) {
+									currentBlock.setType(Material.LEGACY_COBBLESTONE);
 								}
 							} else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlock.getType() != Material.FIRE) {
-									currentBlock.setType(Material.FIRE);
+								if (currentBlock.getType() != Material.LEGACY_FIRE) {
+									currentBlock.setType(Material.LEGACY_FIRE);
 								}
 							} else if (airDensity >= REQUIRED_AIR_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlock.getType() != Material.AIR) {
-									currentBlock.setType(Material.AIR);
+								if (currentBlock.getType() != Material.LEGACY_AIR) {
+									currentBlock.setType(Material.LEGACY_AIR);
 								}
 							}
 						}

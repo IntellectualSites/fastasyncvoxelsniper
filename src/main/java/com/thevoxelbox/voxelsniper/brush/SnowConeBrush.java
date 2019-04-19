@@ -21,7 +21,7 @@ public class SnowConeBrush extends AbstractBrush {
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		if (this.getBlockIdAt(blockPositionX, blockPositionY, blockPositionZ) == Material.AIR.getId()) {
+		if (this.getBlockIdAt(blockPositionX, blockPositionY, blockPositionZ) == Material.LEGACY_AIR.getId()) {
 			brushSize = 0;
 		} else {
 			brushSize = this.clampY(blockPositionX, blockPositionY, blockPositionZ)
@@ -37,7 +37,7 @@ public class SnowConeBrush extends AbstractBrush {
 				boolean flag = true;
 				for (int i = 0; i < 10; i++) { // overlay
 					if (flag) {
-						if ((this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == 0 || this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.SNOW.getId()) && this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.AIR.getId() && this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.SNOW.getId()) {
+						if ((this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == 0 || this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.LEGACY_SNOW.getId()) && this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.LEGACY_AIR.getId() && this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.LEGACY_SNOW.getId()) {
 							flag = false;
 							yOffset[x][z] = i;
 						}
@@ -58,14 +58,14 @@ public class SnowConeBrush extends AbstractBrush {
 				if (snowData >= 0) { // no funny business
 					switch (snowData) {
 						case 0:
-							if (snowcone[x][z] == Material.AIR.getId()) {
-								snowcone[x][z] = Material.SNOW.getId();
+							if (snowcone[x][z] == Material.LEGACY_AIR.getId()) {
+								snowcone[x][z] = Material.LEGACY_SNOW.getId();
 								snowconeData[x][z] = 0;
 							}
 							break;
 						case 7: // Turn largest snowtile into snowblock
-							if (snowcone[x][z] == Material.SNOW.getId()) {
-								snowcone[x][z] = Material.SNOW_BLOCK.getId();
+							if (snowcone[x][z] == Material.LEGACY_SNOW.getId()) {
+								snowcone[x][z] = Material.LEGACY_SNOW_BLOCK.getId();
 								snowconeData[x][z] = 0;
 							}
 							break;
@@ -74,7 +74,7 @@ public class SnowConeBrush extends AbstractBrush {
 								switch (snowcone[x][z]) {
 									case 0:
 										snowconeData[x][z] = snowData;
-										snowcone[x][z] = Material.SNOW.getId();
+										snowcone[x][z] = Material.LEGACY_SNOW.getId();
 										break;
 									case 78:
 										snowconeData[x][z] = snowData;
@@ -82,11 +82,11 @@ public class SnowConeBrush extends AbstractBrush {
 									default:
 										break;
 								}
-							} else if (yOffset[x][z] > 0 && snowcone[x][z] == Material.SNOW.getId()) {
+							} else if (yOffset[x][z] > 0 && snowcone[x][z] == Material.LEGACY_SNOW.getId()) {
 								snowconeData[x][z]++;
 								if (snowconeData[x][z] == 7) {
 									snowconeData[x][z] = 0;
-									snowcone[x][z] = Material.SNOW_BLOCK.getId();
+									snowcone[x][z] = Material.LEGACY_SNOW_BLOCK.getId();
 								}
 							}
 							break;
@@ -122,7 +122,7 @@ public class SnowConeBrush extends AbstractBrush {
 				break;
 			default:
 				Block blockAbove = getTargetBlock().getRelative(BlockFace.UP);
-				if (blockAbove != null && blockAbove.getType() == Material.AIR) {
+				if (blockAbove != null && blockAbove.getType() == Material.LEGACY_AIR) {
 					addSnow(v, blockAbove);
 				} else {
 					v.owner()

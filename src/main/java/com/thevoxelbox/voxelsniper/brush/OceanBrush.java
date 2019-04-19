@@ -23,29 +23,29 @@ public class OceanBrush extends AbstractBrush {
 	private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<>();
 
 	static {
-		EXCLUDED_MATERIALS.add(Material.AIR);
-		EXCLUDED_MATERIALS.add(Material.SAPLING);
-		EXCLUDED_MATERIALS.add(Material.WATER);
-		EXCLUDED_MATERIALS.add(Material.STATIONARY_WATER);
-		EXCLUDED_MATERIALS.add(Material.LAVA);
-		EXCLUDED_MATERIALS.add(Material.STATIONARY_LAVA);
-		EXCLUDED_MATERIALS.add(Material.LOG);
-		EXCLUDED_MATERIALS.add(Material.LEAVES);
-		EXCLUDED_MATERIALS.add(Material.YELLOW_FLOWER);
-		EXCLUDED_MATERIALS.add(Material.RED_ROSE);
-		EXCLUDED_MATERIALS.add(Material.RED_MUSHROOM);
-		EXCLUDED_MATERIALS.add(Material.BROWN_MUSHROOM);
-		EXCLUDED_MATERIALS.add(Material.MELON_BLOCK);
-		EXCLUDED_MATERIALS.add(Material.MELON_STEM);
-		EXCLUDED_MATERIALS.add(Material.PUMPKIN);
-		EXCLUDED_MATERIALS.add(Material.PUMPKIN_STEM);
-		EXCLUDED_MATERIALS.add(Material.COCOA);
-		EXCLUDED_MATERIALS.add(Material.SNOW);
-		EXCLUDED_MATERIALS.add(Material.SNOW_BLOCK);
-		EXCLUDED_MATERIALS.add(Material.ICE);
-		EXCLUDED_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-		EXCLUDED_MATERIALS.add(Material.LONG_GRASS);
-		EXCLUDED_MATERIALS.add(Material.SNOW);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_AIR);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_SAPLING);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_WATER);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_STATIONARY_WATER);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_LAVA);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_STATIONARY_LAVA);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_LOG);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_LEAVES);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_YELLOW_FLOWER);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_RED_ROSE);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_RED_MUSHROOM);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_BROWN_MUSHROOM);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_MELON_BLOCK);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_MELON_STEM);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_PUMPKIN);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_PUMPKIN_STEM);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_COCOA);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_SNOW);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_SNOW_BLOCK);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_ICE);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_SUGAR_CANE_BLOCK);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_LONG_GRASS);
+		EXCLUDED_MATERIALS.add(Material.LEGACY_SNOW);
 	}
 
 	private int waterLevel = WATER_LEVEL_DEFAULT;
@@ -94,21 +94,21 @@ public class OceanBrush extends AbstractBrush {
 				// go down from highest Y block down to new sea floor
 				for (int y = highestY; y > newSeaFloorLevel; y--) {
 					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.AIR) {
+					if (block.getType() != Material.LEGACY_AIR) {
 						undo.put(block);
-						block.setType(Material.AIR);
+						block.setType(Material.LEGACY_AIR);
 					}
 				}
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
 					Block block = world.getBlockAt(x, y, z);
 					if (!block.getType()
-						.equals(Material.STATIONARY_WATER)) {
+						.equals(Material.LEGACY_STATIONARY_WATER)) {
 						// do not put blocks into the undo we already put into
-						if (block.getType() != Material.AIR) {
+						if (block.getType() != Material.LEGACY_AIR) {
 							undo.put(block);
 						}
-						block.setType(Material.STATIONARY_WATER);
+						block.setType(Material.LEGACY_STATIONARY_WATER);
 					}
 				}
 				// cover the sea floor of required

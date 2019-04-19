@@ -36,15 +36,15 @@ public class CleanSnowBrush extends AbstractBrush {
 							.getX() + x - brushSize, this.getTargetBlock()
 							.getY() + z - brushSize, this.getTargetBlock()
 							.getZ() + y - brushSize)
-							.getType() == Material.SNOW) && ((this.clampY(this.getTargetBlock()
+							.getType() == Material.LEGACY_SNOW) && ((this.clampY(this.getTargetBlock()
 							.getX() + x - brushSize, this.getTargetBlock()
 							.getY() + z - brushSize - 1, this.getTargetBlock()
 							.getZ() + y - brushSize)
-							.getType() == Material.SNOW) || (this.clampY(this.getTargetBlock()
+							.getType() == Material.LEGACY_SNOW) || (this.clampY(this.getTargetBlock()
 							.getX() + x - brushSize, this.getTargetBlock()
 							.getY() + z - brushSize - 1, this.getTargetBlock()
 							.getZ() + y - brushSize)
-							.getType() == Material.AIR))) {
+							.getType() == Material.LEGACY_AIR))) {
 							undo.put(this.clampY(this.getTargetBlock()
 								.getX() + x, this.getTargetBlock()
 								.getY() + z, this.getTargetBlock()

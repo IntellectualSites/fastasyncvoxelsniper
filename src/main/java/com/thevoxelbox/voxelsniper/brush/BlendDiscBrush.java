@@ -53,7 +53,7 @@ public class BlendDiscBrush extends BlendBrushBase {
 				int modeMatId = 0;
 				int modeMatCount = 0;
 				for (int i = 0; i <= BlendBrushBase.getMaxBlockMaterialID(); i++) {
-					if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
+					if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.LEGACY_AIR.getId()) && !(this.excludeWater && (i == Material.LEGACY_WATER.getId() || i == Material.LEGACY_STATIONARY_WATER.getId()))) {
 						modeMatCount = materialFrequency[i];
 						modeMatId = i;
 					}
@@ -61,7 +61,7 @@ public class BlendDiscBrush extends BlendBrushBase {
 				// Make sure there'world not a tie for most common
 				boolean tiecheck = true;
 				for (int i = 0; i < modeMatId; i++) {
-					if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
+					if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.LEGACY_AIR.getId()) && !(this.excludeWater && (i == Material.LEGACY_WATER.getId() || i == Material.LEGACY_STATIONARY_WATER.getId()))) {
 						tiecheck = false;
 					}
 				}
@@ -78,7 +78,7 @@ public class BlendDiscBrush extends BlendBrushBase {
 			double xSquared = Math.pow(x - brushSize - 1, 2);
 			for (int z = brushSizeDoubled; z >= 0; z--) {
 				if (xSquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
-					if (!(this.excludeAir && newMaterials[x][z] == Material.AIR.getId()) && !(this.excludeWater && (newMaterials[x][z] == Material.WATER.getId() || newMaterials[x][z] == Material.STATIONARY_WATER.getId()))) {
+					if (!(this.excludeAir && newMaterials[x][z] == Material.LEGACY_AIR.getId()) && !(this.excludeWater && (newMaterials[x][z] == Material.LEGACY_WATER.getId() || newMaterials[x][z] == Material.LEGACY_STATIONARY_WATER.getId()))) {
 						if (this.getBlockIdAt(this.getTargetBlock()
 							.getX() - brushSize + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()

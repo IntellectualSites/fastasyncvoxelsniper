@@ -31,13 +31,13 @@ public class FlatOceanBrush extends AbstractBrush {
 					.getMaxHeight(); y++) {
 					if (y <= this.floorLevel) {
 						chunk.getBlock(x, y, z)
-							.setType(Material.DIRT);
+							.setType(Material.LEGACY_DIRT);
 					} else if (y <= this.waterLevel) {
 						chunk.getBlock(x, y, z)
-							.setTypeId(Material.STATIONARY_WATER.getId(), false);
+							.setTypeId(Material.LEGACY_STATIONARY_WATER.getId(), false);
 					} else {
 						chunk.getBlock(x, y, z)
-							.setTypeId(Material.AIR.getId(), false);
+							.setTypeId(Material.LEGACY_AIR.getId(), false);
 					}
 				}
 			}

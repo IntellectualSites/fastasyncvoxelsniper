@@ -51,7 +51,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@SuppressWarnings("deprecation")
 	private void perform(Block bl) {
-		if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
+		if (bl.getType() == Material.LEGACY_DIODE_BLOCK_ON || bl.getType() == Material.LEGACY_DIODE_BLOCK_OFF) {
 			if (this.northSouth) {
 				if ((bl.getData() % 4) == 1) {
 					this.undo.put(bl);

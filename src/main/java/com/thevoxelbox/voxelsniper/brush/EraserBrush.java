@@ -16,8 +16,8 @@ import org.bukkit.block.Block;
  */
 public class EraserBrush extends AbstractBrush {
 
-	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
-	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
+	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.LEGACY_AIR, Material.LEGACY_STONE, Material.LEGACY_GRASS, Material.LEGACY_DIRT, Material.LEGACY_SAND, Material.LEGACY_GRAVEL, Material.LEGACY_SANDSTONE);
+	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA);
 
 	/**
 	 *
@@ -46,7 +46,7 @@ public class EraserBrush extends AbstractBrush {
 						continue;
 					}
 					undo.put(currentBlock);
-					currentBlock.setType(Material.AIR);
+					currentBlock.setType(Material.LEGACY_AIR);
 				}
 			}
 		}

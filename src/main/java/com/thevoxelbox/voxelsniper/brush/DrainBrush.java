@@ -37,16 +37,16 @@ public class DrainBrush extends AbstractBrush {
 						if (this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.STATIONARY_LAVA.getId()) {
+							.getZ() + y) == Material.LEGACY_STATIONARY_LAVA.getId()) {
 							undo.put(this.clampY(this.getTargetBlock()
 								.getX() + x, this.getTargetBlock()
 								.getY(), this.getTargetBlock()
@@ -54,21 +54,21 @@ public class DrainBrush extends AbstractBrush {
 							this.setBlockIdAt(this.getTargetBlock()
 								.getZ() + y, this.getTargetBlock()
 								.getX() + x, this.getTargetBlock()
-								.getY(), Material.AIR.getId());
+								.getY(), Material.LEGACY_AIR.getId());
 						}
 						if (this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.STATIONARY_LAVA.getId()) {
+							.getZ() - y) == Material.LEGACY_STATIONARY_LAVA.getId()) {
 							undo.put(this.clampY(this.getTargetBlock()
 								.getX() + x, this.getTargetBlock()
 								.getY(), this.getTargetBlock()
@@ -76,21 +76,21 @@ public class DrainBrush extends AbstractBrush {
 							this.setBlockIdAt(this.getTargetBlock()
 								.getZ() - y, this.getTargetBlock()
 								.getX() + x, this.getTargetBlock()
-								.getY(), Material.AIR.getId());
+								.getY(), Material.LEGACY_AIR.getId());
 						}
 						if (this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() + y) == Material.LEGACY_LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() + y) == Material.STATIONARY_LAVA.getId()) {
+							.getZ() + y) == Material.LEGACY_STATIONARY_LAVA.getId()) {
 							undo.put(this.clampY(this.getTargetBlock()
 								.getX() - x, this.getTargetBlock()
 								.getY(), this.getTargetBlock()
@@ -98,21 +98,21 @@ public class DrainBrush extends AbstractBrush {
 							this.setBlockIdAt(this.getTargetBlock()
 								.getZ() + y, this.getTargetBlock()
 								.getX() - x, this.getTargetBlock()
-								.getY(), Material.AIR.getId());
+								.getY(), Material.LEGACY_AIR.getId());
 						}
 						if (this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
+							.getZ() - y) == Material.LEGACY_LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
 							.getX() - x, this.getTargetBlock()
 							.getY(), this.getTargetBlock()
-							.getZ() - y) == Material.STATIONARY_LAVA.getId()) {
+							.getZ() - y) == Material.LEGACY_STATIONARY_LAVA.getId()) {
 							undo.put(this.clampY(this.getTargetBlock()
 								.getX() - x, this.getTargetBlock()
 								.getY(), this.getTargetBlock()
@@ -120,7 +120,7 @@ public class DrainBrush extends AbstractBrush {
 							this.setBlockIdAt(this.getTargetBlock()
 								.getZ() - y, this.getTargetBlock()
 								.getX() - x, this.getTargetBlock()
-								.getY(), Material.AIR.getId());
+								.getY(), Material.LEGACY_AIR.getId());
 						}
 					}
 				}
@@ -135,16 +135,16 @@ public class DrainBrush extends AbstractBrush {
 							if (this.getBlockIdAt(this.getTargetBlock()
 								.getX() + x - brushSize, this.getTargetBlock()
 								.getY() + z - brushSize, this.getTargetBlock()
-								.getZ() + y - brushSize) == Material.WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+								.getZ() + y - brushSize) == Material.LEGACY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 								.getX() + x - brushSize, this.getTargetBlock()
 								.getY() + z - brushSize, this.getTargetBlock()
-								.getZ() + y - brushSize) == Material.STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
+								.getZ() + y - brushSize) == Material.LEGACY_STATIONARY_WATER.getId() || this.getBlockIdAt(this.getTargetBlock()
 								.getX() + x - brushSize, this.getTargetBlock()
 								.getY() + z - brushSize, this.getTargetBlock()
-								.getZ() + y - brushSize) == Material.LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
+								.getZ() + y - brushSize) == Material.LEGACY_LAVA.getId() || this.getBlockIdAt(this.getTargetBlock()
 								.getX() + x - brushSize, this.getTargetBlock()
 								.getY() + z - brushSize, this.getTargetBlock()
-								.getZ() + y - brushSize) == Material.STATIONARY_LAVA.getId()) {
+								.getZ() + y - brushSize) == Material.LEGACY_STATIONARY_LAVA.getId()) {
 								undo.put(this.clampY(this.getTargetBlock()
 									.getX() + x, this.getTargetBlock()
 									.getY() + z, this.getTargetBlock()
@@ -152,7 +152,7 @@ public class DrainBrush extends AbstractBrush {
 								this.setBlockIdAt(this.getTargetBlock()
 									.getZ() + y - brushSize, this.getTargetBlock()
 									.getX() + x - brushSize, this.getTargetBlock()
-									.getY() + z - brushSize, Material.AIR.getId());
+									.getY() + z - brushSize, Material.LEGACY_AIR.getId());
 							}
 						}
 					}

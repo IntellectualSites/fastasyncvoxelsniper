@@ -35,7 +35,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
 		BlockState currentState = blockBelow.getState();
 		undoDelegate.setBlock(blockBelow);
-		blockBelow.setType(Material.GRASS);
+		blockBelow.setType(Material.LEGACY_GRASS);
 		this.getWorld()
 			.generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
 		Undo undo = undoDelegate.getUndo();
@@ -49,7 +49,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		for (int i = 1; i < (getTargetBlock().getWorld()
 			.getMaxHeight() - 1 - getTargetBlock().getY()); i++) {
 			if (getTargetBlock().getRelative(0, i + 1, 0)
-				.getType() == Material.AIR) {
+				.getType() == Material.LEGACY_AIR) {
 				return i;
 			}
 		}

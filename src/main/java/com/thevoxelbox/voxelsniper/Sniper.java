@@ -45,8 +45,8 @@ public class Sniper {
 		this.plugin = plugin;
 		this.player = player.getUniqueId();
 		SniperTool sniperTool = new SniperTool(this);
-		sniperTool.assignAction(SnipeAction.ARROW, Material.ARROW);
-		sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.GUNPOWDER);
+		sniperTool.assignAction(SnipeAction.ARROW, Material.LEGACY_ARROW);
+		sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.LEGACY_SULPHUR);
 		this.tools.put(null, sniperTool);
 	}
 

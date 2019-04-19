@@ -41,16 +41,16 @@ public class CanyonBrush extends AbstractBrush {
 					undo.put(block);
 					undo.put(currentYLevelBlock);
 					currentYLevelBlock.setTypeId(block.getTypeId(), false);
-					block.setType(Material.AIR);
+					block.setType(Material.LEGACY_AIR);
 					currentYLevel++;
 				}
 				Block block = chunk.getBlock(x, 0, z);
 				undo.put(block);
-				block.setTypeId(Material.BEDROCK.getId());
+				block.setTypeId(Material.LEGACY_BEDROCK.getId());
 				for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
 					Block currentBlock = chunk.getBlock(x, y, z);
 					undo.put(currentBlock);
-					currentBlock.setType(Material.STONE);
+					currentBlock.setType(Material.LEGACY_STONE);
 				}
 			}
 		}
