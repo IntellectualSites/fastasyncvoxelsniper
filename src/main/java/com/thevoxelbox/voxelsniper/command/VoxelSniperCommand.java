@@ -29,8 +29,8 @@ public class VoxelSniperCommand extends VoxelCommand {
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("brushes")) {
 				Multimap<Class<? extends Brush>, String> registeredBrushesMultimap = VoxelSniper.getInstance()
-					.getBrushManager()
-					.getRegisteredBrushesMultimap();
+					.getBrushRegistry()
+					.getBrushes();
 				List<String> allHandles = Lists.newLinkedList();
 				for (Class<? extends Brush> brushClass : registeredBrushesMultimap.keySet()) {
 					allHandles.addAll(registeredBrushesMultimap.get(brushClass));

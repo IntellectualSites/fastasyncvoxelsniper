@@ -84,7 +84,7 @@ public class Sniper {
 	 * @param clickedFace Face of that targeted Block
 	 * @return true if command visibly processed, false otherwise.
 	 */
-	public boolean snipe(Action action, Material itemInHand, Block clickedBlock, BlockFace clickedFace) {
+	public boolean snipe(Action action, Material itemInHand, @Nullable Block clickedBlock, BlockFace clickedFace) {
 		String toolId = getToolId(itemInHand);
 		SniperTool sniperTool = this.tools.get(toolId);
 		switch (action) {

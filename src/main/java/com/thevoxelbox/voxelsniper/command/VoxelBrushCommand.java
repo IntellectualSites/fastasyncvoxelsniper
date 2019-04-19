@@ -51,8 +51,8 @@ public class VoxelBrushCommand extends VoxelCommand {
 			} catch (NumberFormatException exception) {
 				exception.printStackTrace();
 			}
-			Class<? extends Brush> brush = this.plugin.getBrushManager()
-				.getBrushForHandle(args[0]);
+			Class<? extends Brush> brush = this.plugin.getBrushRegistry()
+				.getBrush(args[0]);
 			if (brush != null) {
 				Brush orignalBrush = sniper.getBrush(currentToolId);
 				sniper.setBrush(currentToolId, brush);
