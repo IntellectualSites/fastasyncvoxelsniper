@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 /**
  * @author Gavjenks
  */
-public class LightningBrush extends Brush {
+public class LightningBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -16,9 +16,9 @@ public class LightningBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.brushMessage("Lightning Brush!  Please use in moderation.");
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.brushMessage("Lightning Brush!  Please use in moderation.");
 	}
 
 	@Override

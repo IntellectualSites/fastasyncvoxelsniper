@@ -123,54 +123,54 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 		if (this.set) {
-			vm.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+			message.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
 		} else if (this.ctrl) {
-			vm.custom(ChatColor.GRAY + "Control point selection mode ENABLED.");
+			message.custom(ChatColor.GRAY + "Control point selection mode ENABLED.");
 		} else {
-			vm.custom(ChatColor.AQUA + "No selection mode enabled.");
+			message.custom(ChatColor.AQUA + "No selection mode enabled.");
 		}
 	}
 
 	@Override
-	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
-				v.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
-				v.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
-				v.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
-				v.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
+	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.sendMessage(ChatColor.GOLD + "Spline brush parameters");
+				snipeData.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
+				snipeData.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
+				snipeData.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
+				snipeData.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
 				return;
 			}
-			if (par[i].equalsIgnoreCase("sc")) {
+			if (parameters[i].equalsIgnoreCase("sc")) {
 				if (!this.ctrl) {
 					this.set = false;
 					this.ctrl = true;
-					v.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
+					snipeData.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
 				} else {
 					this.ctrl = false;
-					v.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
+					snipeData.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
 				}
-			} else if (par[i].equalsIgnoreCase("ss")) {
+			} else if (parameters[i].equalsIgnoreCase("ss")) {
 				if (!this.set) {
 					this.set = true;
 					this.ctrl = false;
-					v.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+					snipeData.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
 				} else {
 					this.set = false;
-					v.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
+					snipeData.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
 				}
-			} else if (par[i].equalsIgnoreCase("clear")) {
-				this.clear(v);
-			} else if (par[i].equalsIgnoreCase("ren")) {
-				if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), v)) {
-					this.render(v);
+			} else if (parameters[i].equalsIgnoreCase("clear")) {
+				this.clear(snipeData);
+			} else if (parameters[i].equalsIgnoreCase("ren")) {
+				if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), snipeData)) {
+					this.render(snipeData);
 				}
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

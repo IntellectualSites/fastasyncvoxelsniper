@@ -85,27 +85,27 @@ public class BallBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+				snipeData.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
 				return;
 			} else if (parameter.startsWith("true")) {
 				this.trueCircle = TRUE_CIRCLE_ON_VALUE;
-				v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = TRUE_CIRCLE_OFF_VALUE;
-				v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

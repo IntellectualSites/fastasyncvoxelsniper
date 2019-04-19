@@ -20,7 +20,7 @@ import org.bukkit.block.Sign;
  *
  * @author Monofraps
  */
-public class SignOverwriteBrush extends Brush {
+public class SignOverwriteBrush extends AbstractBrush {
 
 	private static final int MAX_SIGN_LINE_LENGTH = 15;
 	private static final int NUM_SIGN_LINES = 4;
@@ -123,78 +123,78 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		boolean textChanged = false;
-		for (int i = 0; i < par.length; i++) {
-			String parameter = par[i];
+		for (int i = 0; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					v.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
-					v.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
-					v.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
-					v.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
-					v.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
-					v.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
-					v.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
-					v.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
-					v.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
-					v.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
-					v.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
-					v.sendMessage(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)");
-					v.sendMessage(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)");
+					snipeData.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
+					snipeData.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
+					snipeData.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
+					snipeData.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
+					snipeData.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
+					snipeData.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
+					snipeData.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
+					snipeData.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
+					snipeData.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
+					snipeData.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
+					snipeData.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
+					snipeData.sendMessage(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)");
+					snipeData.sendMessage(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)");
 				} else if (parameter.startsWith("-1")) {
 					textChanged = true;
-					i = parseSignLineFromParam(par, SIGN_LINE_1, v, i);
+					i = parseSignLineFromParam(parameters, SIGN_LINE_1, snipeData, i);
 				} else if (parameter.startsWith("-2")) {
 					textChanged = true;
-					i = parseSignLineFromParam(par, SIGN_LINE_2, v, i);
+					i = parseSignLineFromParam(parameters, SIGN_LINE_2, snipeData, i);
 				} else if (parameter.startsWith("-3")) {
 					textChanged = true;
-					i = parseSignLineFromParam(par, SIGN_LINE_3, v, i);
+					i = parseSignLineFromParam(parameters, SIGN_LINE_3, snipeData, i);
 				} else if (parameter.startsWith("-4")) {
 					textChanged = true;
-					i = parseSignLineFromParam(par, SIGN_LINE_4, v, i);
+					i = parseSignLineFromParam(parameters, SIGN_LINE_4, snipeData, i);
 				} else if (parameter.equalsIgnoreCase("-clear") || parameter.equalsIgnoreCase("-c")) {
 					clearBuffer();
-					v.sendMessage(ChatColor.BLUE + "Internal text buffer cleard.");
+					snipeData.sendMessage(ChatColor.BLUE + "Internal text buffer cleard.");
 				} else if (parameter.equalsIgnoreCase("-clearall") || parameter.equalsIgnoreCase("-ca")) {
 					clearBuffer();
 					resetStates();
-					v.sendMessage(ChatColor.BLUE + "Internal text buffer cleard and states back to enabled.");
+					snipeData.sendMessage(ChatColor.BLUE + "Internal text buffer cleard and states back to enabled.");
 				} else if (parameter.equalsIgnoreCase("-multiple") || parameter.equalsIgnoreCase("-m")) {
-					if ((i + 1) >= par.length) {
-						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+					if ((i + 1) >= parameters.length) {
+						snipeData.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
 						continue;
 					}
-					this.rangedMode = (par[++i].equalsIgnoreCase("on") || par[++i].equalsIgnoreCase("yes"));
-					v.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+					this.rangedMode = (parameters[++i].equalsIgnoreCase("on") || parameters[++i].equalsIgnoreCase("yes"));
+					snipeData.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
 					if (this.rangedMode) {
-						v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + v.getBrushSize());
-						v.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + v.getVoxelHeight());
+						snipeData.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + snipeData.getBrushSize());
+						snipeData.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + snipeData.getVoxelHeight());
 					}
 				} else if (parameter.equalsIgnoreCase("-save") || parameter.equalsIgnoreCase("-s")) {
-					if ((i + 1) >= par.length) {
-						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+					if ((i + 1) >= parameters.length) {
+						snipeData.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
 						continue;
 					}
-					String fileName = par[++i];
-					saveBufferToFile(fileName, v);
+					String fileName = parameters[++i];
+					saveBufferToFile(fileName, snipeData);
 				} else if (parameter.equalsIgnoreCase("-open") || parameter.equalsIgnoreCase("-o")) {
-					if ((i + 1) >= par.length) {
-						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+					if ((i + 1) >= parameters.length) {
+						snipeData.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
 						continue;
 					}
-					String fileName = par[++i];
-					loadBufferFromFile(fileName, "", v);
+					String fileName = parameters[++i];
+					loadBufferFromFile(fileName, "", snipeData);
 					textChanged = true;
 				}
 			} catch (RuntimeException exception) {
-				v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
+				snipeData.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
 				exception.printStackTrace();
 			}
 		}
 		if (textChanged) {
-			displayBuffer(v);
+			displayBuffer(snipeData);
 		}
 	}
 
@@ -331,16 +331,16 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName("Sign Overwrite Brush");
-		vm.custom(ChatColor.BLUE + "Buffer text: ");
+	public final void info(Message message) {
+		message.brushName("Sign Overwrite Brush");
+		message.custom(ChatColor.BLUE + "Buffer text: ");
 		for (int i = 0; i < this.signTextLines.length; i++) {
-			vm.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
+			message.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
 		}
-		vm.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+		message.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
 		if (this.rangedMode) {
-			vm.size();
-			vm.height();
+			message.size();
+			message.height();
 		}
 	}
 

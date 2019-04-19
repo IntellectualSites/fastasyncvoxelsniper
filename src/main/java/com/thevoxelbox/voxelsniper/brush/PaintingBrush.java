@@ -10,7 +10,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  *
  * @author Voxel
  */
-public class PaintingBrush extends Brush {
+public class PaintingBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -42,8 +42,8 @@ public class PaintingBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override

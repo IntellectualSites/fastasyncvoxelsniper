@@ -16,7 +16,7 @@ import org.bukkit.ChatColor;
 /**
  * @author Gavjenks
  */
-public class StencilListBrush extends Brush {
+public class StencilListBrush extends AbstractBrush {
 
 	private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
 	private String filename = "NoFileLoaded";
@@ -926,39 +926,39 @@ public class StencilListBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom("File loaded: " + this.filename);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom("File loaded: " + this.filename);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
 			return;
-		} else if (par[1].equalsIgnoreCase("full")) {
+		} else if (parameters[1].equalsIgnoreCase("full")) {
 			this.pasteOption = 0;
 			this.pasteParam = 1;
-		} else if (par[1].equalsIgnoreCase("fill")) {
+		} else if (parameters[1].equalsIgnoreCase("fill")) {
 			this.pasteOption = 1;
 			this.pasteParam = 1;
-		} else if (par[1].equalsIgnoreCase("replace")) {
+		} else if (parameters[1].equalsIgnoreCase("replace")) {
 			this.pasteOption = 2;
 			this.pasteParam = 1;
 		}
 		try {
-			this.filename = par[1 + this.pasteParam];
+			this.filename = parameters[1 + this.pasteParam];
 			File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 			if (file.exists()) {
-				v.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
-				this.readStencilList(this.filename, v);
+				snipeData.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
+				this.readStencilList(this.filename, snipeData);
 			} else {
-				v.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
+				snipeData.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
 				this.filename = "NoFileLoaded";
 			}
 		} catch (RuntimeException exception) {
-			v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+			snipeData.sendMessage(ChatColor.RED + "You need to type a stencil name.");
 		}
 	}
 

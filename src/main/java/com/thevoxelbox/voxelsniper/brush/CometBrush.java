@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
  * @author Giltwist
  * @author Monofraps (Merged Meteor brush)
  */
-public class CometBrush extends Brush {
+public class CometBrush extends AbstractBrush {
 
 	private boolean useBigBalls;
 
@@ -51,26 +51,26 @@ public class CometBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 0; i < par.length; ++i) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 0; i < parameters.length; ++i) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage("Parameters:");
-				v.sendMessage("balls [big|small]  -- Sets your ball size.");
+				snipeData.sendMessage("Parameters:");
+				snipeData.sendMessage("balls [big|small]  -- Sets your ball size.");
 			}
 			if (parameter.equalsIgnoreCase("balls")) {
-				if (i + 1 >= par.length) {
-					v.sendMessage("The balls parameter expects a ball size after it.");
+				if (i + 1 >= parameters.length) {
+					snipeData.sendMessage("The balls parameter expects a ball size after it.");
 				}
-				String newBallSize = par[++i];
+				String newBallSize = parameters[++i];
 				if (newBallSize.equalsIgnoreCase("big")) {
 					this.useBigBalls = true;
-					v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
+					snipeData.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
 				} else if (newBallSize.equalsIgnoreCase("small")) {
 					this.useBigBalls = false;
-					v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
+					snipeData.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
 				} else {
-					v.sendMessage("Unknown ball size.");
+					snipeData.sendMessage("Unknown ball size.");
 				}
 			}
 		}
@@ -87,10 +87,10 @@ public class CometBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.voxel();
-		vm.custom("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"));
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.voxel();
+		message.custom("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"));
 	}
 
 	@Override

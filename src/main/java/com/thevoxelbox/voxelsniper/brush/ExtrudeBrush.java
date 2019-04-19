@@ -12,7 +12,7 @@ import org.bukkit.block.BlockFace;
  *
  * @author psanker
  */
-public class ExtrudeBrush extends Brush {
+public class ExtrudeBrush extends AbstractBrush {
 
 	private double trueCircle;
 
@@ -146,35 +146,35 @@ public class ExtrudeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.height();
-		vm.voxelList();
-		vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.height();
+		message.voxelList();
+		message.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
 	}
 
 	@Override
-	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
-					v.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
+					snipeData.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
+					snipeData.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
 					return;
 				} else if (parameter.startsWith("true")) {
 					this.trueCircle = 0.5;
-					v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+					snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 				} else if (parameter.startsWith("false")) {
 					this.trueCircle = 0;
-					v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+					snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 				} else {
-					v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 					return;
 				}
 			} catch (RuntimeException exception) {
-				v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+				snipeData.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}
 	}

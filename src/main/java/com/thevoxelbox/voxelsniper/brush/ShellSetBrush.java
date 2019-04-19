@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Piotr
  */
-public class ShellSetBrush extends Brush {
+public class ShellSetBrush extends AbstractBrush {
 
 	private static final int MAX_SIZE = 5000000;
 	@Nullable
@@ -110,11 +110,11 @@ public class ShellSetBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.voxel();
-		vm.replace();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.voxel();
+		message.replace();
 	}
 
 	@Override

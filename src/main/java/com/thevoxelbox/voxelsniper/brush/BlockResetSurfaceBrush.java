@@ -23,7 +23,7 @@ import org.bukkit.block.Block;
  *
  * @author GavJenks
  */
-public class BlockResetSurfaceBrush extends Brush {
+public class BlockResetSurfaceBrush extends AbstractBrush {
 
 	private static final List<Material> DENIED_UPDATES = new ArrayList<>();
 
@@ -176,8 +176,8 @@ public class BlockResetSurfaceBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override

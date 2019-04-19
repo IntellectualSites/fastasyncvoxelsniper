@@ -9,7 +9,7 @@ import org.bukkit.Material;
 /**
  * @author GavJenks
  */
-public class FlatOceanBrush extends Brush {
+public class FlatOceanBrush extends AbstractBrush {
 
 	private static final int DEFAULT_WATER_LEVEL = 29;
 	private static final int DEFAULT_FLOOR_LEVEL = 8;
@@ -89,20 +89,20 @@ public class FlatOceanBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
-		vm.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-		vm.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
+		message.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+		message.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
-				v.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
+				snipeData.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
+				snipeData.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
 			}
 			if (parameter.startsWith("yo")) {
 				int newWaterLevel = Integer.parseInt(parameter.replace("yo", ""));
@@ -110,7 +110,7 @@ public class FlatOceanBrush extends Brush {
 					newWaterLevel = this.floorLevel + 1;
 				}
 				this.waterLevel = newWaterLevel;
-				v.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
+				snipeData.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
 			} else if (parameter.startsWith("yl")) {
 				int newFloorLevel = Integer.parseInt(parameter.replace("yl", ""));
 				if (newFloorLevel > this.waterLevel) {
@@ -121,7 +121,7 @@ public class FlatOceanBrush extends Brush {
 					}
 				}
 				this.floorLevel = newFloorLevel;
-				v.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
+				snipeData.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
 			}
 		}
 	}

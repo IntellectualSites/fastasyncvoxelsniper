@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 /**
  * @author Piotr
  */
-public class PullBrush extends Brush {
+public class PullBrush extends AbstractBrush {
 
 	private final Set<BlockWrapper> surface = new HashSet<>();
 	private int vh;
@@ -25,23 +25,23 @@ public class PullBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.height();
-		vm.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-		vm.custom(ChatColor.AQUA + "Bubble " + this.c2);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.height();
+		message.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
+		message.custom(ChatColor.AQUA + "Bubble " + this.c2);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		try {
-			double pinch = Double.parseDouble(par[1]);
-			double bubble = Double.parseDouble(par[2]);
+			double pinch = Double.parseDouble(parameters[1]);
+			double bubble = Double.parseDouble(parameters[2]);
 			this.c1 = 1 - pinch;
 			this.c2 = bubble;
 		} catch (NumberFormatException exception) {
-			v.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+			snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters!");
 		}
 	}
 

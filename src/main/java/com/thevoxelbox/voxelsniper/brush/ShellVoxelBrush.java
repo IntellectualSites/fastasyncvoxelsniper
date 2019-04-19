@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class ShellVoxelBrush extends Brush {
+public class ShellVoxelBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -103,19 +103,19 @@ public class ShellVoxelBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.voxel();
-		vm.replace();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.voxel();
+		message.replace();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
 		} else {
-			v.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
+			snipeData.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
 		}
 	}
 

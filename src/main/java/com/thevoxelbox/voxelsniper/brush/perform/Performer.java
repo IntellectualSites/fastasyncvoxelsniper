@@ -1,18 +1,26 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Undo;
+import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Voxel
- */
 public interface Performer {
 
-	void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v);
+	void info(Message message);
 
-	void showInfo(Message vm);
+	void init(SnipeData snipeData);
+
+	void setUndo();
+
+	void perform(Block block);
+
+	@Nullable Undo getUndo();
+
+	boolean isUsingReplaceMaterial();
+
+	String getName();
+
+	void setName(String name);
 }

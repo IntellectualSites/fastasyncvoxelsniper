@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  * @author Piotr
  * @author Giltwist (Randomized blockPositionY)
  */
-public class RandomErodeBrush extends Brush {
+public class RandomErodeBrush extends AbstractBrush {
 
 	private static final double TRUE_CIRCLE = 0.5;
 	private BlockWrapper[][][] snap;
@@ -296,9 +296,9 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	/**

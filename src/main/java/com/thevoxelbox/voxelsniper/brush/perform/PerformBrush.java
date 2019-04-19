@@ -7,43 +7,44 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.brush.AbstractBrush;
 import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
 import org.bukkit.Bukkit;
 
 /**
  * @author Voxel
  */
-public abstract class PerformBrush extends Brush implements Performer {
+public abstract class PerformBrush extends AbstractBrush implements BrushPerformer {
 
-	protected vPerformer current = new pMaterial();
+	protected Performer current = new MaterialPerformer();
 
-	public vPerformer getCurrentPerformer() {
+	public Performer getCurrentPerformer() {
 		return this.current;
 	}
 
 	@Override
-	public void parse(String[] args, com.thevoxelbox.voxelsniper.SnipeData v) {
+	public void parse(String[] args, SnipeData snipeData) {
 		String handle = args[0];
-		if (PerformerE.has(handle)) {
-			vPerformer p = PerformerE.getPerformer(handle);
-			if (p != null) {
-				this.current = p;
-				SniperBrushChangedEvent event = new SniperBrushChangedEvent(v.owner(), v.owner()
+		if (Performers.has(handle)) {
+			Performer performer = Performers.getPerformer(handle);
+			if (performer != null) {
+				this.current = performer;
+				SniperBrushChangedEvent event = new SniperBrushChangedEvent(snipeData.owner(), snipeData.owner()
 					.getCurrentToolId(), this, this);
 				Bukkit.getPluginManager()
 					.callEvent(event);
-				info(v.getVoxelMessage());
-				this.current.info(v.getVoxelMessage());
+				info(snipeData.getVoxelMessage());
+				this.current.info(snipeData.getVoxelMessage());
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
-					parameters(hackTheArray(additionalArguments), v);
+					parameters(hackTheArray(additionalArguments), snipeData);
 				}
 			} else {
-				parameters(hackTheArray(args), v);
+				parameters(hackTheArray(args), snipeData);
 			}
 		} else {
-			parameters(hackTheArray(args), v);
+			parameters(hackTheArray(args), snipeData);
 		}
 	}
 
@@ -62,13 +63,13 @@ public abstract class PerformBrush extends Brush implements Performer {
 		return returnValue;
 	}
 
-	public void initP(com.thevoxelbox.voxelsniper.SnipeData v) {
-		this.current.init(v);
+	public void initPerformer(SnipeData snipeData) {
+		this.current.init(snipeData);
 		this.current.setUndo();
 	}
 
 	@Override
-	public void showInfo(Message vm) {
-		this.current.info(vm);
+	public void showInfo(Message message) {
+		this.current.info(message);
 	}
 }

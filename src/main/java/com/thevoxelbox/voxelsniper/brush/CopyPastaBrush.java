@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
  *
  * @author giltwist
  */
-public class CopyPastaBrush extends Brush {
+public class CopyPastaBrush extends AbstractBrush {
 
 	private static final int BLOCK_LIMIT = 10000;
 
@@ -156,29 +156,29 @@ public class CopyPastaBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-		vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
+		message.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
 	}
 
 	@Override
-	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
-		String parameter = par[1];
+	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+		String parameter = parameters[1];
 		if (parameter.equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
-			v.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
+			snipeData.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
+			snipeData.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
 			return;
 		}
 		if (parameter.equalsIgnoreCase("air")) {
 			this.pasteAir = !this.pasteAir;
-			v.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
+			snipeData.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
 			return;
 		}
 		if (parameter.equalsIgnoreCase("90") || parameter.equalsIgnoreCase("180") || parameter.equalsIgnoreCase("270") || parameter.equalsIgnoreCase("0")) {
 			this.pivot = Integer.parseInt(parameter);
-			v.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+			snipeData.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
 		}
 	}
 

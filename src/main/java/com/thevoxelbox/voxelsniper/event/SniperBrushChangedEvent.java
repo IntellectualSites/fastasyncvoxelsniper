@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.event;
 
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -12,11 +12,11 @@ public class SniperBrushChangedEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
 	private final Sniper sniper;
-	private final IBrush originalBrush;
-	private final IBrush newBrush;
+	private final Brush originalBrush;
+	private final Brush newBrush;
 	private final String toolId;
 
-	public SniperBrushChangedEvent(Sniper sniper, String toolId, IBrush originalBrush, IBrush newBrush) {
+	public SniperBrushChangedEvent(Sniper sniper, String toolId, Brush originalBrush, Brush newBrush) {
 		this.sniper = sniper;
 		this.originalBrush = originalBrush;
 		this.newBrush = newBrush;
@@ -27,11 +27,11 @@ public class SniperBrushChangedEvent extends Event {
 		return handlers;
 	}
 
-	public IBrush getOriginalBrush() {
+	public Brush getOriginalBrush() {
 		return this.originalBrush;
 	}
 
-	public IBrush getNewBrush() {
+	public Brush getNewBrush() {
 		return this.newBrush;
 	}
 

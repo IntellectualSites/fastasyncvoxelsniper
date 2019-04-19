@@ -11,7 +11,7 @@ import org.bukkit.block.BlockFace;
  *
  * @author Gavjenks
  */
-public class VoltMeterBrush extends Brush {
+public class VoltMeterBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -57,9 +57,9 @@ public class VoltMeterBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
 	}
 
 	@Override

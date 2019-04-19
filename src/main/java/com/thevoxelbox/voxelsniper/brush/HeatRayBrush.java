@@ -18,7 +18,7 @@ import org.bukkit.util.noise.PerlinNoiseGenerator;
  *
  * @author Gavjenks
  */
-public class HeatRayBrush extends Brush {
+public class HeatRayBrush extends AbstractBrush {
 
 	/**
 	 * @author MikeMatrix
@@ -168,35 +168,35 @@ public class HeatRayBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
-		vm.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-		vm.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+		message.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+		message.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i].toLowerCase();
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-				v.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
-				v.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
+				snipeData.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
+				snipeData.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
+				snipeData.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
 			}
 			if (parameter.startsWith("oct")) {
 				this.octaves = Integer.valueOf(parameter.replace("oct", ""));
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
 			} else if (parameter.startsWith("amp")) {
 				this.amplitude = Double.valueOf(parameter.replace("amp", ""));
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
 			} else if (parameter.startsWith("freq")) {
 				this.frequency = Double.valueOf(parameter.replace("freq", ""));
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
 			}
 		}

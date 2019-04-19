@@ -133,44 +133,44 @@ public class ThreePointCircleBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 		switch (this.tolerance) {
 			case ACCURATE:
-				vm.custom(ChatColor.GOLD + "Mode: Accurate");
+				message.custom(ChatColor.GOLD + "Mode: Accurate");
 				break;
 			case DEFAULT:
-				vm.custom(ChatColor.GOLD + "Mode: Default");
+				message.custom(ChatColor.GOLD + "Mode: Default");
 				break;
 			case SMOOTH:
-				vm.custom(ChatColor.GOLD + "Mode: Smooth");
+				message.custom(ChatColor.GOLD + "Mode: Smooth");
 				break;
 			default:
-				vm.custom(ChatColor.GOLD + "Mode: Unknown");
+				message.custom(ChatColor.GOLD + "Mode: Unknown");
 				break;
 		}
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
 			String toleranceOptions = Arrays.stream(Tolerance.values())
 				.map(tolerance -> tolerance.name()
 					.toLowerCase())
 				.collect(Collectors.joining("|"));
-			v.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+			snipeData.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
 			return;
 		}
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i].toUpperCase();
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i].toUpperCase();
 			try {
 				this.tolerance = Tolerance.valueOf(parameter);
-				v.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
+				snipeData.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
 					.toLowerCase() + " tolerance.");
 				return;
 			} catch (IllegalArgumentException exception) {
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.brushMessage("No such tolerance.");
 			}
 		}

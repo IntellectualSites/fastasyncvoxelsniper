@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
  * @author Gavjenks
  * @author MikeMatrix
  */
-public class DomeBrush extends Brush {
+public class DomeBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -25,11 +25,11 @@ public class DomeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.voxel();
-		vm.height();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.voxel();
+		message.height();
 	}
 
 	/**

@@ -101,13 +101,13 @@ public class BlendDiscBrush extends BlendBrushBase {
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Blend Disc Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b bd water -- toggle include or exclude (default) water");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Blend Disc Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b bd water -- toggle include or exclude (default) water");
 			return;
 		}
-		super.parameters(par, v);
+		super.parameters(parameters, snipeData);
 	}
 
 	@Override

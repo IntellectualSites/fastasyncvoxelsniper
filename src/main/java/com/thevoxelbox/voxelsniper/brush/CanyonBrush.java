@@ -13,7 +13,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class CanyonBrush extends Brush {
+public class CanyonBrush extends AbstractBrush {
 
 	private static final int SHIFT_LEVEL_MIN = 10;
 	private static final int SHIFT_LEVEL_MAX = 60;
@@ -78,25 +78,25 @@ public class CanyonBrush extends Brush {
 	}
 
 	@Override
-	public void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+	public void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
 		}
-		if (par[1].startsWith("y")) {
-			int _i = Integer.parseInt(par[1].replace("y", ""));
+		if (parameters[1].startsWith("y")) {
+			int _i = Integer.parseInt(parameters[1].replace("y", ""));
 			if (_i < SHIFT_LEVEL_MIN) {
 				_i = SHIFT_LEVEL_MIN;
 			} else if (_i > SHIFT_LEVEL_MAX) {
 				_i = SHIFT_LEVEL_MAX;
 			}
 			this.yLevel = _i;
-			v.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+			snipeData.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 		}
 	}
 

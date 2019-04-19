@@ -9,7 +9,7 @@ import org.bukkit.block.BlockFace;
 /**
  * @author DivineRage
  */
-public class ScannerBrush extends Brush {
+public class ScannerBrush extends AbstractBrush {
 
 	private static final int DEPTH_MIN = 1;
 	private static final int DEPTH_DEFAULT = 24;
@@ -155,25 +155,25 @@ public class ScannerBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
-		vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
+		message.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
 				return;
 			}
-			if (par[i].startsWith("d")) {
-				this.depth = this.clamp(Integer.parseInt(par[i].substring(1)), DEPTH_MIN, DEPTH_MAX);
-				v.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
+			if (parameters[i].startsWith("d")) {
+				this.depth = this.clamp(Integer.parseInt(parameters[i].substring(1)), DEPTH_MIN, DEPTH_MAX);
+				snipeData.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

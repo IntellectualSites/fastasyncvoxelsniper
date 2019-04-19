@@ -11,7 +11,7 @@ import org.bukkit.util.Vector;
  *
  * @author Gavjenks
  */
-public class RulerBrush extends Brush {
+public class RulerBrush extends AbstractBrush {
 
 	private boolean first = true;
 	private Vector coords = new Vector(0, 0, 0);
@@ -78,36 +78,36 @@ public class RulerBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.voxel();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.voxel();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
-				v.sendMessage(ChatColor.LIGHT_PURPLE + "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
-				v.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
+				snipeData.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
+				snipeData.sendMessage(ChatColor.LIGHT_PURPLE + "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
+				snipeData.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
 				return;
 			} else if (parameter.startsWith("x")) {
 				this.xOff = Integer.parseInt(parameter.replace("x", ""));
-				v.sendMessage(ChatColor.AQUA + "X offset set to " + this.xOff);
+				snipeData.sendMessage(ChatColor.AQUA + "X offset set to " + this.xOff);
 			} else if (parameter.startsWith("y")) {
 				this.yOff = Integer.parseInt(parameter.replace("y", ""));
-				v.sendMessage(ChatColor.AQUA + "Y offset set to " + this.yOff);
+				snipeData.sendMessage(ChatColor.AQUA + "Y offset set to " + this.yOff);
 			} else if (parameter.startsWith("z")) {
 				this.zOff = Integer.parseInt(parameter.replace("z", ""));
-				v.sendMessage(ChatColor.AQUA + "Z offset set to " + this.zOff);
+				snipeData.sendMessage(ChatColor.AQUA + "Z offset set to " + this.zOff);
 			} else if (parameter.startsWith("ruler")) {
 				this.zOff = 0;
 				this.yOff = 0;
 				this.xOff = 0;
-				v.sendMessage(ChatColor.BLUE + "Ruler mode.");
+				snipeData.sendMessage(ChatColor.BLUE + "Ruler mode.");
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

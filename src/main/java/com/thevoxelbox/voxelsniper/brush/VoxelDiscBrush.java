@@ -40,9 +40,9 @@ public class VoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override

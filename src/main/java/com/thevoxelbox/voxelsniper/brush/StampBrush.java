@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
 /**
  *
  */
-public class StampBrush extends Brush {
+public class StampBrush extends AbstractBrush {
 
 	/**
 	 * @author Voxel
@@ -336,7 +336,7 @@ public class StampBrush extends Brush {
 	}
 
 	@Override
-	public void info(Message vm) {
+	public void info(Message message) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

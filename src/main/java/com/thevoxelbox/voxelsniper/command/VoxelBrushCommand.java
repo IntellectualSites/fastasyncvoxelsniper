@@ -5,8 +5,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.Performer;
+import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
 import com.thevoxelbox.voxelsniper.event.SniperBrushSizeChangedEvent;
 import org.bukkit.Bukkit;
@@ -51,16 +51,16 @@ public class VoxelBrushCommand extends VoxelCommand {
 			} catch (NumberFormatException exception) {
 				exception.printStackTrace();
 			}
-			Class<? extends IBrush> brush = this.plugin.getBrushManager()
+			Class<? extends Brush> brush = this.plugin.getBrushManager()
 				.getBrushForHandle(args[0]);
 			if (brush != null) {
-				IBrush orignalBrush = sniper.getBrush(currentToolId);
+				Brush orignalBrush = sniper.getBrush(currentToolId);
 				sniper.setBrush(currentToolId, brush);
 				if (args.length > 1) {
-					IBrush currentBrush = sniper.getBrush(currentToolId);
-					if (currentBrush instanceof Performer) {
+					Brush currentBrush = sniper.getBrush(currentToolId);
+					if (currentBrush instanceof BrushPerformer) {
 						String[] parameters = Arrays.copyOfRange(args, 1, args.length);
-						((Performer) currentBrush).parse(parameters, snipeData);
+						((BrushPerformer) currentBrush).parse(parameters, snipeData);
 						return true;
 					} else {
 						String[] parameters = hackTheArray(Arrays.copyOfRange(args, 1, args.length));

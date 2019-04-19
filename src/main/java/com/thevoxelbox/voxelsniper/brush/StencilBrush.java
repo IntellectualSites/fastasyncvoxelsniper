@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import com.google.common.io.Files;
@@ -28,7 +27,7 @@ import org.bukkit.block.Block;
  *
  * @author Gavjenks
  */
-public class StencilBrush extends Brush {
+public class StencilBrush extends AbstractBrush {
 
 	private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace
 	private String filename = "NoFileLoaded";
@@ -337,38 +336,38 @@ public class StencilBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom("File loaded: " + this.filename);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom("File loaded: " + this.filename);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-			v.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+			snipeData.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
 			return;
-		} else if (par[1].equalsIgnoreCase("full")) {
+		} else if (parameters[1].equalsIgnoreCase("full")) {
 			this.pasteOption = 0;
 			this.pasteParam = 1;
-		} else if (par[1].equalsIgnoreCase("fill")) {
+		} else if (parameters[1].equalsIgnoreCase("fill")) {
 			this.pasteOption = 1;
 			this.pasteParam = 1;
-		} else if (par[1].equalsIgnoreCase("replace")) {
+		} else if (parameters[1].equalsIgnoreCase("replace")) {
 			this.pasteOption = 2;
 			this.pasteParam = 1;
 		}
 		try {
-			this.filename = par[1 + this.pasteParam];
+			this.filename = parameters[1 + this.pasteParam];
 			File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 			if (file.exists()) {
-				v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+				snipeData.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
 			} else {
-				v.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+				snipeData.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
 			}
 		} catch (RuntimeException exception) {
-			v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+			snipeData.sendMessage(ChatColor.RED + "You need to type a stencil name.");
 		}
 	}
 

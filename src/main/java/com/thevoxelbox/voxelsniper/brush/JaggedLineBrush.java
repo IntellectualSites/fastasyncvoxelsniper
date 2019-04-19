@@ -86,37 +86,37 @@ public class JaggedLineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
-		vm.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
+		message.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (String parameter : par) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (String parameter : parameters) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					v.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
-					v.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
-					v.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
+					snipeData.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
+					snipeData.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
+					snipeData.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
 					return;
 				}
 				if (parameter.startsWith("r")) {
 					int temp = Integer.parseInt(parameter.substring(1));
 					if (temp >= RECURSION_MIN && temp <= RECURSION_MAX) {
 						this.recursion = temp;
-						v.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+						snipeData.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
 					} else {
-						v.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
+						snipeData.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
 					}
 					return;
 				} else if (parameter.startsWith("s")) {
 					this.spread = Integer.parseInt(parameter.substring(1));
-					v.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+					snipeData.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
 				}
 			} catch (NumberFormatException exception) {
-				v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
+				snipeData.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
 				exception.printStackTrace();
 			}
 		}

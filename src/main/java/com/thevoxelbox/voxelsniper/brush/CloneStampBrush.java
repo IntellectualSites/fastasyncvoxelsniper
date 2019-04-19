@@ -104,51 +104,51 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.height();
-		vm.center();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.height();
+		message.center();
 		switch (this.stamp) {
 			case DEFAULT:
-				vm.brushMessage("Default Stamp");
+				message.brushMessage("Default Stamp");
 				break;
 			case NO_AIR:
-				vm.brushMessage("No-Air Stamp");
+				message.brushMessage("No-Air Stamp");
 				break;
 			case FILL:
-				vm.brushMessage("Fill Stamp");
+				message.brushMessage("Fill Stamp");
 				break;
 			default:
-				vm.custom(ChatColor.DARK_RED + "Error while stamping! Report");
+				message.custom(ChatColor.DARK_RED + "Error while stamping! Report");
 				break;
 		}
 	}
 
 	@Override
-	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
-		String parameter = par[1];
+	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+		String parameter = parameters[1];
 		if (parameter.equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
-			v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
-			v.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
-			v.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
+			snipeData.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
+			snipeData.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
+			snipeData.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
+			snipeData.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
 		}
 		if (parameter.equalsIgnoreCase("a")) {
 			this.setStamp(StampType.NO_AIR);
 			this.reSort();
-			v.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
+			snipeData.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
 		} else if (parameter.equalsIgnoreCase("f")) {
 			this.setStamp(StampType.FILL);
 			this.reSort();
-			v.sendMessage(ChatColor.AQUA + "Fill stamp brush");
+			snipeData.sendMessage(ChatColor.AQUA + "Fill stamp brush");
 		} else if (parameter.equalsIgnoreCase("d")) {
 			this.setStamp(StampType.DEFAULT);
 			this.reSort();
-			v.sendMessage(ChatColor.AQUA + "Default stamp brush");
+			snipeData.sendMessage(ChatColor.AQUA + "Default stamp brush");
 		} else if (parameter.startsWith("c")) {
-			v.setcCen(Integer.parseInt(parameter.replace("c", "")));
-			v.sendMessage(ChatColor.BLUE + "Center set to " + v.getcCen());
+			snipeData.setcCen(Integer.parseInt(parameter.replace("c", "")));
+			snipeData.sendMessage(ChatColor.BLUE + "Center set to " + snipeData.getcCen());
 		}
 	}
 

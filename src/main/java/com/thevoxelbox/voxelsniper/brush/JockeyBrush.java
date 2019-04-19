@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Voxel
  * @author Monofraps
  */
-public class JockeyBrush extends Brush {
+public class JockeyBrush extends AbstractBrush {
 
 	private static final int ENTITY_STACK_LIMIT = 50;
 	private JockeyType jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
@@ -147,19 +147,19 @@ public class JockeyBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
-		vm.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+		message.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		try {
 			boolean stack = false;
 			boolean playerOnly = false;
 			boolean inverse = false;
-			for (String parameter : par) {
+			for (String parameter : parameters) {
 				if (parameter.startsWith("-i:")) {
 					inverse = parameter.endsWith("y");
 				}
@@ -177,9 +177,9 @@ public class JockeyBrush extends Brush {
 			} else {
 				this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
 			}
-			v.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+			snipeData.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
 		} catch (RuntimeException exception) {
-			v.sendMessage("Error while parsing your arguments.");
+			snipeData.sendMessage("Error while parsing your arguments.");
 			exception.printStackTrace();
 		}
 	}

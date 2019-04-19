@@ -59,9 +59,9 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
 	}
 
 	@Override

@@ -73,40 +73,40 @@ public class FillDownBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
-				v.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
-				v.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
-				v.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
-				v.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
+				snipeData.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
+				snipeData.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
+				snipeData.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
+				snipeData.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
 				return;
-			} else if (par[i].equalsIgnoreCase("true")) {
+			} else if (parameters[i].equalsIgnoreCase("true")) {
 				this.trueCircle = 0.5;
-				v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (par[i].equalsIgnoreCase("false")) {
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+			} else if (parameters[i].equalsIgnoreCase("false")) {
 				this.trueCircle = 0;
-				v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (par[i].equalsIgnoreCase("all")) {
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+			} else if (parameters[i].equalsIgnoreCase("all")) {
 				this.fillLiquid = true;
-				v.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
-			} else if (par[i].equalsIgnoreCase("some")) {
+				snipeData.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
+			} else if (parameters[i].equalsIgnoreCase("some")) {
 				this.fillLiquid = false;
-				v.setReplaceId(0);
-				v.sendMessage(ChatColor.AQUA + "Now only filling air.");
-			} else if (par[i].equalsIgnoreCase("-e")) {
+				snipeData.setReplaceId(0);
+				snipeData.sendMessage(ChatColor.AQUA + "Now only filling air.");
+			} else if (parameters[i].equalsIgnoreCase("-e")) {
 				this.fromExisting = !this.fromExisting;
-				v.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+				snipeData.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

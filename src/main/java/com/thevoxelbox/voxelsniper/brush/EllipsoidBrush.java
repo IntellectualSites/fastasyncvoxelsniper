@@ -63,41 +63,41 @@ public class EllipsoidBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xRad);
-		vm.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yRad);
-		vm.custom(ChatColor.AQUA + "Z-size set to: " + ChatColor.DARK_AQUA + this.zRad);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xRad);
+		message.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yRad);
+		message.custom(ChatColor.AQUA + "Z-size set to: " + ChatColor.DARK_AQUA + this.zRad);
 	}
 
 	@Override
-	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
+	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
 		this.istrue = false;
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-					v.sendMessage(ChatColor.AQUA + "x[n]: Set X radius to n");
-					v.sendMessage(ChatColor.AQUA + "y[n]: Set Y radius to n");
-					v.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
+					snipeData.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
+					snipeData.sendMessage(ChatColor.AQUA + "x[n]: Set X radius to n");
+					snipeData.sendMessage(ChatColor.AQUA + "y[n]: Set Y radius to n");
+					snipeData.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
 					return;
 				} else if (parameter.startsWith("x")) {
-					this.xRad = Integer.parseInt(par[i].replace("x", ""));
-					v.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
+					this.xRad = Integer.parseInt(parameters[i].replace("x", ""));
+					snipeData.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
 				} else if (parameter.startsWith("y")) {
-					this.yRad = Integer.parseInt(par[i].replace("y", ""));
-					v.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
+					this.yRad = Integer.parseInt(parameters[i].replace("y", ""));
+					snipeData.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
 				} else if (parameter.startsWith("z")) {
-					this.zRad = Integer.parseInt(par[i].replace("z", ""));
-					v.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
+					this.zRad = Integer.parseInt(parameters[i].replace("z", ""));
+					snipeData.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
 				} else if (parameter.equalsIgnoreCase("true")) {
 					this.istrue = true;
 				} else {
-					v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+				snipeData.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}
 	}

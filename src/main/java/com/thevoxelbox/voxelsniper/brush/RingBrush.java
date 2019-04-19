@@ -54,29 +54,29 @@ public class RingBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.custom(ChatColor.AQUA + "The inner radius is " + ChatColor.RED + this.innerSize);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.custom(ChatColor.AQUA + "The inner radius is " + ChatColor.RED + this.innerSize);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData snipeData) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
 				snipeData.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
 				return;
-			} else if (par[i].startsWith("true")) {
+			} else if (parameters[i].startsWith("true")) {
 				this.trueCircle = 0.5;
 				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (par[i].startsWith("false")) {
+			} else if (parameters[i].startsWith("false")) {
 				this.trueCircle = 0;
 				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (par[i].startsWith("ir")) {
+			} else if (parameters[i].startsWith("ir")) {
 				try {
-					this.innerSize = Double.parseDouble(par[i].replace("ir", ""));
+					this.innerSize = Double.parseDouble(parameters[i].replace("ir", ""));
 					snipeData.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
 				} catch (NumberFormatException exception) {
 					snipeData.sendMessage(ChatColor.RED + "The parameters included are invalid.");

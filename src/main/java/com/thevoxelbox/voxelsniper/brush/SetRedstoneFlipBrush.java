@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Voxel
  */
-public class SetRedstoneFlipBrush extends Brush {
+public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Nullable
 	private Block block;
@@ -93,27 +93,27 @@ public class SetRedstoneFlipBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
+	public final void info(Message message) {
 		this.block = null;
-		vm.brushName(this.getName());
+		message.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
 				return;
 			}
-			if (par[i].startsWith("n") || par[i].startsWith("s") || par[i].startsWith("ns")) {
+			if (parameters[i].startsWith("n") || parameters[i].startsWith("s") || parameters[i].startsWith("ns")) {
 				this.northSouth = true;
-				v.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
-			} else if (par[i].startsWith("e") || par[i].startsWith("world") || par[i].startsWith("ew")) {
+				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
+			} else if (parameters[i].startsWith("e") || parameters[i].startsWith("world") || parameters[i].startsWith("ew")) {
 				this.northSouth = false;
-				v.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

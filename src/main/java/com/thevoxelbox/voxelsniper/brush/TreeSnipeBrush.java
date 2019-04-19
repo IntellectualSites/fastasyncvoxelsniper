@@ -18,7 +18,7 @@ import org.bukkit.block.BlockState;
  *
  * @author Mick
  */
-public class TreeSnipeBrush extends Brush {
+public class TreeSnipeBrush extends AbstractBrush {
 
 	private TreeType treeType = TreeType.TREE;
 
@@ -77,25 +77,25 @@ public class TreeSnipeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		this.printTreeType(vm);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		this.printTreeType(message);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-				v.sendMessage(ChatColor.AQUA + "/b t treetype");
-				this.printTreeType(v.getVoxelMessage());
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b t treetype");
+				this.printTreeType(snipeData.getVoxelMessage());
 				return;
 			}
 			try {
-				this.treeType = TreeType.valueOf(par[i].toUpperCase());
-				this.printTreeType(v.getVoxelMessage());
+				this.treeType = TreeType.valueOf(parameters[i].toUpperCase());
+				this.printTreeType(snipeData.getVoxelMessage());
 			} catch (IllegalArgumentException exception) {
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.brushMessage("No such tree type.");
 			}
 		}

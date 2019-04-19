@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  */
 // The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
-public class Rot2DvertBrush extends Brush {
+public class Rot2DvertBrush extends AbstractBrush {
 
 	private int mode;
 	private int bSize;
@@ -161,17 +161,17 @@ public class Rot2DvertBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		try {
-			this.se = Math.toRadians(Double.parseDouble(par[1]));
-			v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+			this.se = Math.toRadians(Double.parseDouble(parameters[1]));
+			snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
 		} catch (NumberFormatException exception) {
-			v.sendMessage("Exception while parsing parameter: " + par[1]);
+			snipeData.sendMessage("Exception while parsing parameter: " + parameters[1]);
 			Bukkit.getLogger()
 				.severe(exception.getMessage());
 		}

@@ -8,8 +8,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformerE;
+import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.perform.Performers;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -28,11 +28,11 @@ public class VoxelSniperCommand extends VoxelCommand {
 			.getSniperForPlayer(player);
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("brushes")) {
-				Multimap<Class<? extends IBrush>, String> registeredBrushesMultimap = VoxelSniper.getInstance()
+				Multimap<Class<? extends Brush>, String> registeredBrushesMultimap = VoxelSniper.getInstance()
 					.getBrushManager()
 					.getRegisteredBrushesMultimap();
 				List<String> allHandles = Lists.newLinkedList();
-				for (Class<? extends IBrush> brushClass : registeredBrushesMultimap.keySet()) {
+				for (Class<? extends Brush> brushClass : registeredBrushesMultimap.keySet()) {
 					allHandles.addAll(registeredBrushesMultimap.get(brushClass));
 				}
 				player.sendMessage(Joiner.on(", ")
@@ -62,11 +62,11 @@ public class VoxelSniperCommand extends VoxelCommand {
 				return true;
 			} else if (args[0].equalsIgnoreCase("perf")) {
 				player.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");
-				player.sendMessage(PerformerE.getPerformerListShort());
+				player.sendMessage(Performers.getPerformerListShort());
 				return true;
 			} else if (args[0].equalsIgnoreCase("perflong")) {
 				player.sendMessage(ChatColor.AQUA + "Available performers:");
-				player.sendMessage(PerformerE.getPerformerListLong());
+				player.sendMessage(Performers.getPerformerListLong());
 				return true;
 			} else if (args[0].equalsIgnoreCase("enable")) {
 				sniper.setEnabled(true);

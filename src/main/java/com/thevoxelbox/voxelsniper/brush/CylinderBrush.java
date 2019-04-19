@@ -74,38 +74,38 @@ public class CylinderBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.height();
-		vm.center();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.height();
+		message.center();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-				v.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-				v.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
+				snipeData.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
+				snipeData.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+				snipeData.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
 				return;
 			}
 			if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (parameter.startsWith("h")) {
-				v.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
-				v.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + v.getVoxelHeight());
+				snipeData.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
+				snipeData.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + snipeData.getVoxelHeight());
 			} else if (parameter.startsWith("c")) {
-				v.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
-				v.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + v.getcCen());
+				snipeData.setcCen((int) Double.parseDouble(parameter.replace("c", "")));
+				snipeData.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + snipeData.getcCen());
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

@@ -13,10 +13,10 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.MutableClassToInstanceMap;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.Performer;
 import com.thevoxelbox.voxelsniper.event.SniperMaterialChangedEvent;
 import com.thevoxelbox.voxelsniper.event.SniperReplaceMaterialChangedEvent;
 import org.bukkit.Bukkit;
@@ -248,7 +248,7 @@ public class Sniper {
 				}
 				if (sniperTool.getCurrentBrush() instanceof PerformBrush) {
 					PerformBrush performerBrush = (PerformBrush) sniperTool.getCurrentBrush();
-					performerBrush.initP(snipeData);
+					performerBrush.initPerformer(snipeData);
 				}
 				boolean result = sniperTool.getCurrentBrush()
 					.perform(snipeAction, snipeData, targetBlock, lastBlock);
@@ -262,7 +262,7 @@ public class Sniper {
 		return false;
 	}
 
-	public IBrush setBrush(String toolId, Class<? extends IBrush> brush) {
+	public Brush setBrush(String toolId, Class<? extends Brush> brush) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
 		}
@@ -270,7 +270,7 @@ public class Sniper {
 			.setCurrentBrush(brush);
 	}
 
-	public IBrush getBrush(String toolId) {
+	public Brush getBrush(String toolId) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
 		}
@@ -278,7 +278,7 @@ public class Sniper {
 			.getCurrentBrush();
 	}
 
-	public IBrush previousBrush(String toolId) {
+	public Brush previousBrush(String toolId) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
 		}
@@ -382,15 +382,15 @@ public class Sniper {
 	public void displayInfo() {
 		String currentToolId = getCurrentToolId();
 		SniperTool sniperTool = this.tools.get(currentToolId);
-		IBrush brush = sniperTool.getCurrentBrush();
+		Brush brush = sniperTool.getCurrentBrush();
 		getPlayer().sendMessage("Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool"));
 		if (brush == null) {
 			getPlayer().sendMessage("No brush selected.");
 			return;
 		}
 		brush.info(sniperTool.getMessageHelper());
-		if (brush instanceof Performer) {
-			((Performer) brush).showInfo(sniperTool.getMessageHelper());
+		if (brush instanceof BrushPerformer) {
+			((BrushPerformer) brush).showInfo(sniperTool.getMessageHelper());
 		}
 	}
 
@@ -401,9 +401,9 @@ public class Sniper {
 	public static class SniperTool {
 
 		private BiMap<SnipeAction, Material> actionTools = HashBiMap.create();
-		private ClassToInstanceMap<IBrush> brushes = MutableClassToInstanceMap.create();
-		private Class<? extends IBrush> currentBrush;
-		private Class<? extends IBrush> previousBrush;
+		private ClassToInstanceMap<Brush> brushes = MutableClassToInstanceMap.create();
+		private Class<? extends Brush> currentBrush;
+		private Class<? extends Brush> previousBrush;
 		private SnipeData snipeData;
 		private Message messageHelper;
 
@@ -411,11 +411,11 @@ public class Sniper {
 			this(SnipeBrush.class, new SnipeData(owner));
 		}
 
-		private SniperTool(Class<? extends IBrush> currentBrush, SnipeData snipeData) {
+		private SniperTool(Class<? extends Brush> currentBrush, SnipeData snipeData) {
 			this.snipeData = snipeData;
 			this.messageHelper = new Message(snipeData);
 			snipeData.setVoxelMessage(this.messageHelper);
-			IBrush newBrushInstance = instanciateBrush(currentBrush);
+			Brush newBrushInstance = instanciateBrush(currentBrush);
 			if (snipeData.owner()
 				.getPlayer()
 				.hasPermission(newBrushInstance.getPermissionNode())) {
@@ -458,16 +458,16 @@ public class Sniper {
 			return this.messageHelper;
 		}
 
-		public IBrush getCurrentBrush() {
+		public Brush getCurrentBrush() {
 			if (this.currentBrush == null) {
 				return null;
 			}
 			return this.brushes.getInstance(this.currentBrush);
 		}
 
-		public IBrush setCurrentBrush(Class<? extends IBrush> brush) {
+		public Brush setCurrentBrush(Class<? extends Brush> brush) {
 			Preconditions.checkNotNull(brush, "Can't set brush to null.");
-			IBrush brushInstance = this.brushes.get(brush);
+			Brush brushInstance = this.brushes.get(brush);
 			if (brushInstance == null) {
 				brushInstance = instanciateBrush(brush);
 				Preconditions.checkNotNull(brushInstance, "Could not instanciate brush class.");
@@ -491,7 +491,7 @@ public class Sniper {
 		}
 
 		@Nullable
-		public IBrush previousBrush() {
+		public Brush previousBrush() {
 			if (this.previousBrush == null) {
 				return null;
 			}
@@ -499,9 +499,9 @@ public class Sniper {
 		}
 
 		@Nullable
-		private IBrush instanciateBrush(Class<? extends IBrush> brush) {
+		private Brush instanciateBrush(Class<? extends Brush> brush) {
 			try {
-				Constructor<? extends IBrush> constructor = brush.getConstructor();
+				Constructor<? extends Brush> constructor = brush.getConstructor();
 				return constructor.newInstance();
 			} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
 				return null;

@@ -13,7 +13,7 @@ import org.bukkit.entity.Entity;
 /**
  *
  */
-public class EntityRemovalBrush extends Brush {
+public class EntityRemovalBrush extends AbstractBrush {
 
 	private final List<String> exemptions = new ArrayList<>(3);
 
@@ -92,8 +92,8 @@ public class EntityRemovalBrush extends Brush {
 	}
 
 	@Override
-	public void info(Message vm) {
-		vm.brushName(getName());
+	public void info(Message message) {
+		message.brushName(getName());
 		StringBuilder exemptionsList = new StringBuilder(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE);
 		for (Iterator<String> it = this.exemptions.iterator(); it.hasNext(); ) {
 			exemptionsList.append(it.next());
@@ -101,28 +101,28 @@ public class EntityRemovalBrush extends Brush {
 				exemptionsList.append(", ");
 			}
 		}
-		vm.custom(exemptionsList.toString());
-		vm.size();
+		message.custom(exemptionsList.toString());
+		message.size();
 	}
 
 	@Override
-	public void parameters(String[] par, SnipeData v) {
-		for (String currentParam : par) {
+	public void parameters(String[] parameters, SnipeData snipeData) {
+		for (String currentParam : parameters) {
 			if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
 				boolean isAddOperation = currentParam.startsWith("+");
 				// +#/-# will suppress auto-prefixing
 				String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(2) : (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
 				if (isAddOperation) {
 					this.exemptions.add(exemptionPattern);
-					v.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
+					snipeData.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
 				} else {
 					this.exemptions.remove(exemptionPattern);
-					v.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
+					snipeData.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
 				}
 			}
 			if (currentParam.equalsIgnoreCase("list-exemptions") || currentParam.equalsIgnoreCase("lex")) {
 				for (String exemption : this.exemptions) {
-					v.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
+					snipeData.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
 				}
 			}
 		}

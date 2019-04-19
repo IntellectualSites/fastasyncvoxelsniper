@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class EraserBrush extends Brush {
+public class EraserBrush extends AbstractBrush {
 
 	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.AIR, Material.STONE, Material.GRASS, Material.DIRT, Material.SAND, Material.GRAVEL, Material.SANDSTONE);
 	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.WATER, Material.STATIONARY_WATER, Material.LAVA, Material.STATIONARY_LAVA);
@@ -65,9 +65,9 @@ public class EraserBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override

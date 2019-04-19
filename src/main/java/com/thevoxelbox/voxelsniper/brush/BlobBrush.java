@@ -193,32 +193,32 @@ public class BlobBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
+	public final void info(Message message) {
 		this.checkValidGrowPercent(null);
-		vm.brushName(this.getName());
-		vm.size();
-		vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+		message.brushName(this.getName());
+		message.size();
+		message.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
+				snipeData.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
 				return;
 			}
 			if (parameter.startsWith("g")) {
 				int temp = Integer.parseInt(parameter.replace("g", ""));
 				if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-					v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
+					snipeData.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
 					this.growPercent = temp;
 				} else {
-					v.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+					snipeData.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
 				}
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

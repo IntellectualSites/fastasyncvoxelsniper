@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 /**
  *
  */
-public class BiomeBrush extends Brush {
+public class BiomeBrush extends AbstractBrush {
 
 	private Biome selectedBiome = Biome.PLAINS;
 
@@ -76,16 +76,16 @@ public class BiomeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 	}
 
 	@Override
-	public final void parameters(String[] args, SnipeData v) {
-		if (args[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
 			StringBuilder availableBiomes = new StringBuilder();
 			for (Biome biome : Biome.values()) {
 				if (availableBiomes.length() == 0) {
@@ -95,18 +95,18 @@ public class BiomeBrush extends Brush {
 				availableBiomes.append(ChatColor.RED + ", " + ChatColor.DARK_GREEN)
 					.append(biome.name());
 			}
-			v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
+			snipeData.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
 		} else {
 			// allows biome names with spaces in their name
-			String biomeName = IntStream.range(2, args.length)
-				.mapToObj(i -> " " + args[i])
-				.collect(Collectors.joining("", args[1], ""));
+			String biomeName = IntStream.range(2, parameters.length)
+				.mapToObj(i -> " " + parameters[i])
+				.collect(Collectors.joining("", parameters[1], ""));
 			this.selectedBiome = Arrays.stream(Biome.values())
 				.filter(biome -> biome.name()
 					.equalsIgnoreCase(biomeName))
 				.findFirst()
 				.orElse(this.selectedBiome);
-			v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+			snipeData.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 		}
 	}
 

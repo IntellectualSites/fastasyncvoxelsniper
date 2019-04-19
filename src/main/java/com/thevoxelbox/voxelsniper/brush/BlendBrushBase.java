@@ -9,7 +9,7 @@ import org.bukkit.Material;
  * @author Monofraps
  */
 @SuppressWarnings("deprecation")
-public abstract class BlendBrushBase extends Brush {
+public abstract class BlendBrushBase extends AbstractBrush {
 
 	private static int maxBlockMaterialID;
 	protected boolean excludeAir = true;
@@ -40,19 +40,19 @@ public abstract class BlendBrushBase extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.voxel();
-		vm.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.voxel();
+		message.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 	}
 
 	@Override
-	public void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; ++i) {
-			if (par[i].equalsIgnoreCase("water")) {
+	public void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; ++i) {
+			if (parameters[i].equalsIgnoreCase("water")) {
 				this.excludeWater = !this.excludeWater;
-				v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+				snipeData.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 			}
 		}
 	}

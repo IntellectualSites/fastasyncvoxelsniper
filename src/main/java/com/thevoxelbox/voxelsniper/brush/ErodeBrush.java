@@ -31,7 +31,7 @@ import org.bukkit.util.Vector;
  * @author Piotr
  * @author MikeMatrix
  */
-public class ErodeBrush extends Brush {
+public class ErodeBrush extends AbstractBrush {
 
 	private static final Vector[] FACES_TO_CHECK = {new Vector(0, 0, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), new Vector(0, -1, 0), new Vector(1, 0, 0), new Vector(-1, 0, 0)};
 	private final HelpJSAP parser = new HelpJSAP("/b e", "Brush for eroding landscape.", ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH);
@@ -187,19 +187,19 @@ public class ErodeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
-		vm.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
-		vm.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
-		vm.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
+		message.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
+		message.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
+		message.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		JSAPResult result = this.parser.parse(Arrays.copyOfRange(par, 1, par.length));
-		if (sendHelpOrErrorMessageToPlayer(result, v.owner()
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		JSAPResult result = this.parser.parse(Arrays.copyOfRange(parameters, 1, parameters.length));
+		if (sendHelpOrErrorMessageToPlayer(result, snipeData.owner()
 			.getPlayer(), this.parser)) {
 			return;
 		}
@@ -208,11 +208,11 @@ public class ErodeBrush extends Brush {
 				this.currentPreset = Preset.valueOf(result.getString("preset")
 					.toUpperCase())
 					.getPreset();
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.brushMessage("Brush preset set to " + result.getString("preset"));
 				return;
 			} catch (IllegalArgumentException exception) {
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.brushMessage("No such preset.");
 				return;
 			}
@@ -232,16 +232,16 @@ public class ErodeBrush extends Brush {
 		}
 		if (!this.currentPreset.equals(currentPresetBackup)) {
 			if (this.currentPreset.getErosionFaces() != currentPresetBackup.getErosionFaces()) {
-				v.sendMessage(ChatColor.AQUA + "Erosion faces set to: " + ChatColor.WHITE + this.currentPreset.getErosionFaces());
+				snipeData.sendMessage(ChatColor.AQUA + "Erosion faces set to: " + ChatColor.WHITE + this.currentPreset.getErosionFaces());
 			}
 			if (this.currentPreset.getFillFaces() != currentPresetBackup.getFillFaces()) {
-				v.sendMessage(ChatColor.AQUA + "Fill faces set to: " + ChatColor.WHITE + this.currentPreset.getFillFaces());
+				snipeData.sendMessage(ChatColor.AQUA + "Fill faces set to: " + ChatColor.WHITE + this.currentPreset.getFillFaces());
 			}
 			if (this.currentPreset.getErosionRecursion() != currentPresetBackup.getErosionRecursion()) {
-				v.sendMessage(ChatColor.AQUA + "Erosion recursions set to: " + ChatColor.WHITE + this.currentPreset.getErosionRecursion());
+				snipeData.sendMessage(ChatColor.AQUA + "Erosion recursions set to: " + ChatColor.WHITE + this.currentPreset.getErosionRecursion());
 			}
 			if (this.currentPreset.getFillRecursion() != currentPresetBackup.getFillRecursion()) {
-				v.sendMessage(ChatColor.AQUA + "Fill recursions set to: " + ChatColor.WHITE + this.currentPreset.getFillRecursion());
+				snipeData.sendMessage(ChatColor.AQUA + "Fill recursions set to: " + ChatColor.WHITE + this.currentPreset.getFillRecursion());
 			}
 		}
 	}

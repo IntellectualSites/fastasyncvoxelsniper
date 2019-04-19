@@ -10,7 +10,7 @@ import org.bukkit.Chunk;
  *
  * @author Mick
  */
-public class RegenerateChunkBrush extends Brush {
+public class RegenerateChunkBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -51,10 +51,10 @@ public class RegenerateChunkBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.brushMessage("Tread lightly.");
-		vm.brushMessage("This brush will melt your spleen and sell your kidneys.");
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.brushMessage("Tread lightly.");
+		message.brushMessage("This brush will melt your spleen and sell your kidneys.");
 	}
 
 	@Override

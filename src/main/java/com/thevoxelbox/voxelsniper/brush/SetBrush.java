@@ -81,14 +81,14 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
+	public final void info(Message message) {
 		this.block = null;
-		vm.brushName(this.getName());
+		message.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		super.parameters(par, v);
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		super.parameters(parameters, snipeData);
 	}
 
 	@Override

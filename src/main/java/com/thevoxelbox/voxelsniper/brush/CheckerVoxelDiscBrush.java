@@ -47,29 +47,29 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int x = 1; x < par.length; x++) {
-			String parameter = par[x].toLowerCase();
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int x = 1; x < parameters.length; x++) {
+			String parameter = parameters[x].toLowerCase();
 			if (parameter.equals("info")) {
-				v.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
-				v.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");
-				v.sendMessage(ChatColor.AQUA + "false -- Disables using World Coordinates.");
+				snipeData.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");
+				snipeData.sendMessage(ChatColor.AQUA + "false -- Disables using World Coordinates.");
 				return;
 			}
 			if (parameter.startsWith("true")) {
 				this.useWorldCoordinates = true;
-				v.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
+				snipeData.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
 			} else if (parameter.startsWith("false")) {
 				this.useWorldCoordinates = false;
-				v.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
+				snipeData.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 				break;
 			}
 		}

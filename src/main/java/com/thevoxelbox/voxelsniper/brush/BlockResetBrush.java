@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 /**
  * @author MikeMatrix
  */
-public class BlockResetBrush extends Brush {
+public class BlockResetBrush extends AbstractBrush {
 
 	private static final List<Material> DENIED_UPDATES = new ArrayList<>();
 
@@ -71,8 +71,8 @@ public class BlockResetBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override

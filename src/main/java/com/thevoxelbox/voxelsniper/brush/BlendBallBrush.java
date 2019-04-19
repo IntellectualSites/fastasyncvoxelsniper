@@ -113,13 +113,13 @@ public class BlendBallBrush extends BlendBrushBase {
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default: exclude) water");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default: exclude) water");
 			return;
 		}
-		super.parameters(par, v);
+		super.parameters(parameters, snipeData);
 	}
 
 	@Override

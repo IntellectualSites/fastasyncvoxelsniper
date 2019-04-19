@@ -156,22 +156,22 @@ public class UnderlayBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.owner()
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-				v.owner()
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-				v.owner()
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
 				if (this.depth < 1) {
@@ -179,23 +179,23 @@ public class UnderlayBrush extends PerformBrush {
 				}
 				return;
 			}
-			if (par[i].startsWith("d")) {
-				this.depth = Integer.parseInt(par[i].replace("d", ""));
-				v.owner()
+			if (parameters[i].startsWith("d")) {
+				this.depth = Integer.parseInt(parameters[i].replace("d", ""));
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
-			} else if (par[i].startsWith("all")) {
+			} else if (parameters[i].startsWith("all")) {
 				this.allBlocks = true;
-				v.owner()
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "Will underlay over any block." + this.depth);
-			} else if (par[i].startsWith("some")) {
+			} else if (parameters[i].startsWith("some")) {
 				this.allBlocks = false;
-				v.owner()
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + this.depth);
 			} else {
-				v.owner()
+				snipeData.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}

@@ -172,19 +172,19 @@ public class OverlayBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-				v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-				v.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+				snipeData.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+				snipeData.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
 				return;
 			}
 			if (parameter.startsWith("d")) {
@@ -193,18 +193,18 @@ public class OverlayBrush extends PerformBrush {
 					if (this.depth < 1) {
 						this.depth = 1;
 					}
-					v.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+					snipeData.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
 				} catch (NumberFormatException e) {
-					v.sendMessage(ChatColor.RED + "Depth isn't a number.");
+					snipeData.sendMessage(ChatColor.RED + "Depth isn't a number.");
 				}
 			} else if (parameter.startsWith("all")) {
 				this.allBlocks = true;
-				v.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
+				snipeData.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
 			} else if (parameter.startsWith("some")) {
 				this.allBlocks = false;
-				v.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+				snipeData.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

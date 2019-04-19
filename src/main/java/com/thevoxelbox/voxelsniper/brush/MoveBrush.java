@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author MikeMatrix
  */
-public class MoveBrush extends Brush {
+public class MoveBrush extends AbstractBrush {
 
 	/**
 	 * Breakable Blocks to determine if no-physics should be used.
@@ -175,53 +174,53 @@ public class MoveBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("info")) {
-				v.getVoxelMessage()
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("info")) {
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.GOLD + this.getName() + " Parameters:");
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
 			}
-			if (par[i].equalsIgnoreCase("reset")) {
+			if (parameters[i].equalsIgnoreCase("reset")) {
 				this.moveDirections[0] = 0;
 				this.moveDirections[1] = 0;
 				this.moveDirections[2] = 0;
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-				v.getVoxelMessage()
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
 			}
-			if (par[i].toLowerCase()
+			if (parameters[i].toLowerCase()
 				.startsWith("x")) {
-				this.moveDirections[0] = Integer.valueOf(par[i].substring(1));
-				v.getVoxelMessage()
+				this.moveDirections[0] = Integer.valueOf(parameters[i].substring(1));
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-			} else if (par[i].toLowerCase()
+			} else if (parameters[i].toLowerCase()
 				.startsWith("y")) {
-				this.moveDirections[1] = Integer.valueOf(par[i].substring(1));
-				v.getVoxelMessage()
+				this.moveDirections[1] = Integer.valueOf(parameters[i].substring(1));
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-			} else if (par[i].toLowerCase()
+			} else if (parameters[i].toLowerCase()
 				.startsWith("z")) {
-				this.moveDirections[2] = Integer.valueOf(par[i].substring(1));
-				v.getVoxelMessage()
+				this.moveDirections[2] = Integer.valueOf(parameters[i].substring(1));
+				snipeData.getVoxelMessage()
 					.custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
 			}
 		}

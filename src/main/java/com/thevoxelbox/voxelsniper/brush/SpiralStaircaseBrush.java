@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
  *
  * @author giltwist
  */
-public class SpiralStaircaseBrush extends Brush {
+public class SpiralStaircaseBrush extends AbstractBrush {
 
 	private String stairtype = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
 	private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
@@ -543,38 +543,38 @@ public class SpiralStaircaseBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName("Spiral Staircase");
-		vm.size();
-		vm.voxel();
-		vm.height();
-		vm.data();
-		vm.custom(ChatColor.BLUE + "Staircase type: " + this.stairtype);
-		vm.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-		vm.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+	public final void info(Message message) {
+		message.brushName("Spiral Staircase");
+		message.size();
+		message.voxel();
+		message.height();
+		message.data();
+		message.custom(ChatColor.BLUE + "Staircase type: " + this.stairtype);
+		message.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+		message.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-			v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-			v.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-			v.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
+			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
+			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
+			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
 			return;
 		}
-		for (int i = 1; i < par.length; i++) {
-			if (par[i].equalsIgnoreCase("block") || par[i].equalsIgnoreCase("step") || par[i].equalsIgnoreCase("woodstair") || par[i].equalsIgnoreCase("cobblestair")) {
-				this.stairtype = par[i];
-				v.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairtype);
-			} else if (par[i].equalsIgnoreCase("c") || par[i].equalsIgnoreCase("cc")) {
-				this.sdirect = par[i];
-				v.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-			} else if (par[i].equalsIgnoreCase("n") || par[i].equalsIgnoreCase("e") || par[i].equalsIgnoreCase("s") || par[i].equalsIgnoreCase("world")) {
-				this.sopen = par[i];
-				v.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+		for (int i = 1; i < parameters.length; i++) {
+			if (parameters[i].equalsIgnoreCase("block") || parameters[i].equalsIgnoreCase("step") || parameters[i].equalsIgnoreCase("woodstair") || parameters[i].equalsIgnoreCase("cobblestair")) {
+				this.stairtype = parameters[i];
+				snipeData.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairtype);
+			} else if (parameters[i].equalsIgnoreCase("c") || parameters[i].equalsIgnoreCase("cc")) {
+				this.sdirect = parameters[i];
+				snipeData.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+			} else if (parameters[i].equalsIgnoreCase("n") || parameters[i].equalsIgnoreCase("e") || parameters[i].equalsIgnoreCase("s") || parameters[i].equalsIgnoreCase("world")) {
+				this.sopen = parameters[i];
+				snipeData.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

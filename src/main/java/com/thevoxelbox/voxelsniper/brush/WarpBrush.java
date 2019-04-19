@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 /**
  * @author MikeMatrix
  */
-public class WarpBrush extends Brush {
+public class WarpBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -18,8 +18,8 @@ public class WarpBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override

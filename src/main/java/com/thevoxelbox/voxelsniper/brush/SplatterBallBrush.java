@@ -148,7 +148,7 @@ public class SplatterBallBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) {
+	public final void info(Message message) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
@@ -158,49 +158,49 @@ public class SplatterBallBrush extends PerformBrush {
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		vm.brushName("Splatter Ball");
-		vm.size();
-		vm.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
-		vm.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
-		vm.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
+		message.brushName("Splatter Ball");
+		message.size();
+		message.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
+		message.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+		message.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Splatter Ball brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b sb s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-				v.sendMessage(ChatColor.AQUA + "/b sb g[int] -- set a growth percentage (1-9999).  Default is 1000");
-				v.sendMessage(ChatColor.AQUA + "/b sb r[int] -- set a recursion (1-10).  Default is 3");
+				snipeData.sendMessage(ChatColor.GOLD + "Splatter Ball brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b sb s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+				snipeData.sendMessage(ChatColor.AQUA + "/b sb g[int] -- set a growth percentage (1-9999).  Default is 1000");
+				snipeData.sendMessage(ChatColor.AQUA + "/b sb r[int] -- set a recursion (1-10).  Default is 3");
 				return;
 			} else if (parameter.startsWith("s")) {
 				double temp = Integer.parseInt(parameter.replace("s", ""));
 				if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
-					v.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
+					snipeData.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
 					this.seedPercent = (int) temp;
 				} else {
-					v.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+					snipeData.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
 				}
 			} else if (parameter.startsWith("g")) {
 				double temp = Integer.parseInt(parameter.replace("g", ""));
 				if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-					v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+					snipeData.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
 					this.growPercent = (int) temp;
 				} else {
-					v.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+					snipeData.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
 				}
 			} else if (parameter.startsWith("r")) {
 				int temp = Integer.parseInt(parameter.replace("r", ""));
 				if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX) {
-					v.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
+					snipeData.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
 					this.splatterRecursions = temp;
 				} else {
-					v.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+					snipeData.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
 				}
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

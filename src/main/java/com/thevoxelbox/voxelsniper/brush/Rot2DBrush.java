@@ -9,7 +9,7 @@ import org.bukkit.block.Block;
 /**
  * @author Piotr
  */
-public class Rot2DBrush extends Brush {
+public class Rot2DBrush extends AbstractBrush {
 
 	private int mode;
 	private int bSize;
@@ -158,14 +158,14 @@ public class Rot2DBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
+	public final void info(Message message) {
+		message.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		this.se = Math.toRadians(Double.parseDouble(par[1]));
-		v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		this.se = Math.toRadians(Double.parseDouble(parameters[1]));
+		snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
 	}
 
 	@Override

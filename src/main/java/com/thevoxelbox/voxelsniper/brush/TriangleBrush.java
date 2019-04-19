@@ -260,14 +260,14 @@ public class TriangleBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(Message vm) { // Make the triangle
-		vm.brushName(this.getName());
+	public final void info(Message message) { // Make the triangle
+		message.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
 		}
 	}
 

@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.thevoxelbox.voxelsniper.brush.IBrush;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -15,15 +15,15 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Brushes {
 
-	private Multimap<Class<? extends IBrush>, String> brushes = HashMultimap.create();
+	private Multimap<Class<? extends Brush>, String> brushes = HashMultimap.create();
 
 	/**
 	 * Register a brush for VoxelSniper to be able to use.
 	 *
-	 * @param clazz Brush implementing IBrush interface.
+	 * @param clazz Brush implementing Brush interface.
 	 * @param handles Handles under which the brush can be accessed ingame.
 	 */
-	public void registerSniperBrush(Class<? extends IBrush> clazz, String... handles) {
+	public void registerSniperBrush(Class<? extends Brush> clazz, String... handles) {
 		Preconditions.checkNotNull(clazz, "Cannot register null as a class.");
 		for (String handle : handles) {
 			this.brushes.put(clazz, handle.toLowerCase());
@@ -37,7 +37,7 @@ public class Brushes {
 	 * @return Brush class
 	 */
 	@Nullable
-	public Class<? extends IBrush> getBrushForHandle(String handle) {
+	public Class<? extends Brush> getBrushForHandle(String handle) {
 		Preconditions.checkNotNull(handle, "Brushhandle can not be null.");
 		if (!this.brushes.containsValue(handle.toLowerCase())) {
 			return null;
@@ -52,7 +52,7 @@ public class Brushes {
 	}
 
 	/**
-	 * @return Amount of IBrush classes registered with the system under Sniper visibility.
+	 * @return Amount of Brush classes registered with the system under Sniper visibility.
 	 */
 	public int registeredSniperBrushes() {
 		return this.brushes.keySet()
@@ -70,14 +70,14 @@ public class Brushes {
 	 * @param clazz Brush class
 	 * @return All Sniper registered handles for the brush.
 	 */
-	public Set<String> getSniperBrushHandles(Class<? extends IBrush> clazz) {
+	public Set<String> getSniperBrushHandles(Class<? extends Brush> clazz) {
 		return new HashSet<>(this.brushes.get(clazz));
 	}
 
 	/**
 	 * @return Immutable Multimap copy of all the registered brushes
 	 */
-	public Multimap<Class<? extends IBrush>, String> getRegisteredBrushesMultimap() {
+	public Multimap<Class<? extends Brush>, String> getRegisteredBrushesMultimap() {
 		return ImmutableMultimap.copyOf(this.brushes);
 	}
 }

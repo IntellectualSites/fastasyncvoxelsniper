@@ -12,7 +12,7 @@ import org.bukkit.entity.EntityType;
  *
  * @author Piotr
  */
-public class EntityBrush extends Brush {
+public class EntityBrush extends AbstractBrush {
 
 	private EntityType entityType = EntityType.ZOMBIE;
 
@@ -47,27 +47,27 @@ public class EntityBrush extends Brush {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public final void info(Message vm) {
-		vm.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
-		vm.size();
+	public final void info(Message message) {
+		message.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
+		message.size();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
 			String names = Arrays.stream(EntityType.values())
 				.map(currentEntity -> ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName())
 				.collect(Collectors.joining("", "", ChatColor.AQUA + " |"));
-			v.sendMessage(names);
+			snipeData.sendMessage(names);
 		} else {
-			EntityType currentEntity = EntityType.fromName(par[1]);
+			EntityType currentEntity = EntityType.fromName(parameters[1]);
 			if (currentEntity != null) {
 				this.entityType = currentEntity;
-				v.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
+				snipeData.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
 			} else {
-				v.sendMessage(ChatColor.RED + "This is not a valid entity!");
+				snipeData.sendMessage(ChatColor.RED + "This is not a valid entity!");
 			}
 		}
 	}

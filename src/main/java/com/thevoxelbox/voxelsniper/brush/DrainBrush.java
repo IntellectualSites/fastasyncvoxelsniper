@@ -12,7 +12,7 @@ import org.bukkit.Material;
  * @author Gavjenks
  * @author psanker
  */
-public class DrainBrush extends Brush {
+public class DrainBrush extends AbstractBrush {
 
 	private double trueCircle;
 	private boolean disc;
@@ -174,38 +174,38 @@ public class DrainBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
-		vm.custom(ChatColor.AQUA + ((this.disc) ? "Disc drain mode ON" : "Disc drain mode OFF"));
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
+		message.custom(ChatColor.AQUA + ((this.disc) ? "Disc drain mode ON" : "Disc drain mode OFF"));
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		for (int i = 1; i < par.length; i++) {
-			String parameter = par[i];
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				v.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-				v.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-				v.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
+				snipeData.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
+				snipeData.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
+				snipeData.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
 				return;
 			} else if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				v.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				v.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (parameter.equalsIgnoreCase("d")) {
 				if (this.disc) {
 					this.disc = false;
-					v.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+					snipeData.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
 				} else {
 					this.disc = true;
-					v.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+					snipeData.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
 				}
 			} else {
-				v.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

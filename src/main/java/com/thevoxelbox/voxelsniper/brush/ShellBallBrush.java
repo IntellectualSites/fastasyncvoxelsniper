@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class ShellBallBrush extends Brush {
+public class ShellBallBrush extends AbstractBrush {
 
 	/**
 	 *
@@ -110,11 +110,11 @@ public class ShellBallBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName(this.getName());
-		vm.size();
-		vm.voxel();
-		vm.replace();
+	public final void info(Message message) {
+		message.brushName(this.getName());
+		message.size();
+		message.voxel();
+		message.replace();
 	}
 
 	@Override

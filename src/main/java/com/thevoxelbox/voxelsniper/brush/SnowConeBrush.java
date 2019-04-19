@@ -13,7 +13,7 @@ import org.bukkit.block.BlockFace;
  *
  * @author Voxel
  */
-public class SnowConeBrush extends Brush {
+public class SnowConeBrush extends AbstractBrush {
 
 	@SuppressWarnings("deprecation")
 	private void addSnow(SnipeData v, Block targetBlock) {
@@ -134,14 +134,14 @@ public class SnowConeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(Message vm) {
-		vm.brushName("Snow Cone");
+	public final void info(Message message) {
+		message.brushName("Snow Cone");
 	}
 
 	@Override
-	public final void parameters(String[] par, SnipeData v) {
-		if (par[1].equalsIgnoreCase("info")) {
-			v.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
+	public final void parameters(String[] parameters, SnipeData snipeData) {
+		if (parameters[1].equalsIgnoreCase("info")) {
+			snipeData.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
 		}
 	}
 
