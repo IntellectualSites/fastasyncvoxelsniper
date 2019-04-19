@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.jsap;
 
 import com.martiansoftware.jsap.ParseException;
 import com.martiansoftware.jsap.StringParser;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A {@link com.martiansoftware.jsap.StringParser} for parsing Integers. The parse() method delegates the actual parsing to Integer.decode(String).
@@ -31,6 +32,7 @@ public class NullableIntegerStringParser extends StringParser {
 	 * @throws com.martiansoftware.jsap.ParseException if {@code Integer.decode(arg)} throws a NumberFormatException.
 	 * @see Integer
 	 */
+	@Nullable
 	@Override
 	public final Object parse(String arg) throws ParseException {
 		if (arg == null) {

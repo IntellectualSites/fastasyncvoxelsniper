@@ -37,13 +37,13 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.applyBrush(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.applyBrush(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.applyBrush(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.applyBrush(snipeData, this.getLastBlock());
 	}
 
 	@Override

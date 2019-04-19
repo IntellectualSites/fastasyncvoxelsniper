@@ -22,14 +22,14 @@ public class LightningBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());

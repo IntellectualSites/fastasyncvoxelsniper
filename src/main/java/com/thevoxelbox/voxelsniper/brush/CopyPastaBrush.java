@@ -100,7 +100,7 @@ public class CopyPastaBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(com.thevoxelbox.voxelsniper.SnipeData v) {
+	protected final void arrow(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
 		switch (this.points) {
 			case 0:
 				this.firstPoint[0] = this.getTargetBlock()
@@ -109,7 +109,7 @@ public class CopyPastaBrush extends AbstractBrush {
 					.getY();
 				this.firstPoint[2] = this.getTargetBlock()
 					.getZ();
-				v.sendMessage(ChatColor.GRAY + "First point");
+				snipeData.sendMessage(ChatColor.GRAY + "First point");
 				this.points = 1;
 				break;
 			case 1:
@@ -119,7 +119,7 @@ public class CopyPastaBrush extends AbstractBrush {
 					.getY();
 				this.secondPoint[2] = this.getTargetBlock()
 					.getZ();
-				v.sendMessage(ChatColor.GRAY + "Second point");
+				snipeData.sendMessage(ChatColor.GRAY + "Second point");
 				this.points = 2;
 				break;
 			default:
@@ -129,16 +129,16 @@ public class CopyPastaBrush extends AbstractBrush {
 				this.blockArray = new int[1];
 				this.dataArray = new byte[1];
 				this.points = 0;
-				v.sendMessage(ChatColor.GRAY + "Points cleared.");
+				snipeData.sendMessage(ChatColor.GRAY + "Points cleared.");
 				break;
 		}
 	}
 
 	@Override
-	protected final void powder(com.thevoxelbox.voxelsniper.SnipeData v) {
+	protected final void powder(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
 		if (this.points == 2) {
 			if (this.numBlocks == 0) {
-				this.doCopy(v);
+				this.doCopy(snipeData);
 			} else if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
 				this.pastePoint[0] = this.getTargetBlock()
 					.getX();
@@ -146,12 +146,12 @@ public class CopyPastaBrush extends AbstractBrush {
 					.getY();
 				this.pastePoint[2] = this.getTargetBlock()
 					.getZ();
-				this.doPasta(v);
+				this.doPasta(snipeData);
 			} else {
-				v.sendMessage(ChatColor.RED + "Error");
+				snipeData.sendMessage(ChatColor.RED + "Error");
 			}
 		} else {
-			v.sendMessage(ChatColor.RED + "You must select exactly two points.");
+			snipeData.sendMessage(ChatColor.RED + "You must select exactly two points.");
 		}
 	}
 

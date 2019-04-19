@@ -16,33 +16,30 @@ public class EntityBrush extends AbstractBrush {
 
 	private EntityType entityType = EntityType.ZOMBIE;
 
-	/**
-	 *
-	 */
 	public EntityBrush() {
 		this.setName("Entity");
 	}
 
-	private void spawn(SnipeData v) {
-		for (int x = 0; x < v.getBrushSize(); x++) {
+	private void spawn(SnipeData snipeData) {
+		for (int x = 0; x < snipeData.getBrushSize(); x++) {
 			try {
 				this.getWorld()
 					.spawn(this.getLastBlock()
 						.getLocation(), this.entityType.getEntityClass());
 			} catch (IllegalArgumentException exception) {
-				v.sendMessage(ChatColor.RED + "Cannot spawn entity!");
+				snipeData.sendMessage(ChatColor.RED + "Cannot spawn entity!");
 			}
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.spawn(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.spawn(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.spawn(v);
+	protected final void powder(SnipeData snipeData) {
+		this.spawn(snipeData);
 	}
 
 	@SuppressWarnings("deprecation")

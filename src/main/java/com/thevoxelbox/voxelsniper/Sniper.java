@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class Sniper {
 	private VoxelSniperPlugin plugin;
 	private UUID player;
 	private boolean enabled = true;
-	private LinkedList<Undo> undoList = new LinkedList<>();
+	private List<Undo> undoList = new LinkedList<>();
 	private Map<String, SniperTool> tools = new HashMap<>();
 
 	public Sniper(VoxelSniperPlugin plugin, Player player) {
@@ -67,6 +68,24 @@ public class Sniper {
 			.orElse(null);
 	}
 
+	public void sendMessages(String... messages) {
+		Player player = getPlayer();
+		if (player == null) {
+			return;
+		}
+		for (String message : messages) {
+			player.sendMessage(message);
+		}
+	}
+
+	public void sendMessage(String message) {
+		Player player = getPlayer();
+		if (player == null) {
+			return;
+		}
+		player.sendMessage(message);
+	}
+
 	@Nullable
 	public Player getPlayer() {
 		return Bukkit.getPlayer(this.player);
@@ -94,18 +113,19 @@ public class Sniper {
 				return false;
 		}
 		if (sniperTool.hasToolAssigned(itemInHand)) {
+			Player player = getPlayer();
 			if (sniperTool.getCurrentBrush() == null) {
-				getPlayer().sendMessage("No Brush selected.");
+				player.sendMessage("No Brush selected.");
 				return true;
 			}
-			if (!getPlayer().hasPermission(sniperTool.getCurrentBrush()
+			if (!player.hasPermission(sniperTool.getCurrentBrush()
 				.getPermissionNode())) {
-				getPlayer().sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush()
+				player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush()
 					.getPermissionNode() + "'");
 				return true;
 			}
 			SnipeData snipeData = sniperTool.getSnipeData();
-			if (getPlayer().isSneaking()) {
+			if (player.isSneaking()) {
 				Block targetBlock;
 				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
 				switch (action) {
@@ -114,7 +134,7 @@ public class Sniper {
 						if (clickedBlock != null) {
 							targetBlock = clickedBlock;
 						} else {
-							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
+							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
 							targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
 						}
 						switch (snipeAction) {
@@ -165,7 +185,7 @@ public class Sniper {
 						if (clickedBlock != null) {
 							targetBlock = clickedBlock;
 						} else {
-							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
+							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
 							targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
 						}
 						switch (snipeAction) {
@@ -231,15 +251,15 @@ public class Sniper {
 					targetBlock = clickedBlock;
 					lastBlock = clickedBlock.getRelative(clickedFace);
 					if (lastBlock == null) {
-						getPlayer().sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 						return true;
 					}
 				} else {
-					RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(getPlayer(), getPlayer().getWorld(), snipeData.getRange()) : new RangeBlockHelper(getPlayer(), getPlayer().getWorld());
+					RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
 					targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
 					lastBlock = rangeBlockHelper.getLastBlock();
 					if (targetBlock == null || lastBlock == null) {
-						getPlayer().sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 						return true;
 					}
 				}
@@ -254,6 +274,7 @@ public class Sniper {
 		return false;
 	}
 
+	@Nullable
 	public Brush setBrush(String toolId, Class<? extends Brush> brush) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
@@ -262,6 +283,7 @@ public class Sniper {
 			.setCurrentBrush(brush);
 	}
 
+	@Nullable
 	public Brush getBrush(String toolId) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
@@ -270,6 +292,7 @@ public class Sniper {
 			.getCurrentBrush();
 	}
 
+	@Nullable
 	public Brush previousBrush(String toolId) {
 		if (!this.tools.containsKey(toolId)) {
 			return null;
@@ -364,6 +387,7 @@ public class Sniper {
 		this.tools.put(toolId, newTool);
 	}
 
+	@Nullable
 	public SnipeData getSnipeData(String toolId) {
 		return this.tools.containsKey(toolId) ? this.tools.get(toolId)
 			.getSnipeData() : null;
@@ -448,6 +472,7 @@ public class Sniper {
 			return this.messageHelper;
 		}
 
+		@Nullable
 		public Brush getCurrentBrush() {
 			if (this.currentBrush == null) {
 				return null;
@@ -455,6 +480,7 @@ public class Sniper {
 			return this.brushes.getInstance(this.currentBrush);
 		}
 
+		@Nullable
 		public Brush setCurrentBrush(Class<? extends Brush> brush) {
 			Preconditions.checkNotNull(brush, "Can't set brush to null.");
 			Brush brushInstance = this.brushes.get(brush);

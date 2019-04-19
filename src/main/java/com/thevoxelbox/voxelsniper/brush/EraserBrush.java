@@ -55,13 +55,13 @@ public class EraserBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.doErase(v, false);
+	protected final void arrow(SnipeData snipeData) {
+		this.doErase(snipeData, false);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.doErase(v, true);
+	protected final void powder(SnipeData snipeData) {
+		this.doErase(snipeData, true);
 	}
 
 	@Override

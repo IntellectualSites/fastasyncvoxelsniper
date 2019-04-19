@@ -90,16 +90,16 @@ public class SignOverwriteBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		if (this.rangedMode) {
-			setRanged(v);
+			setRanged(snipeData);
 		} else {
-			setSingle(v);
+			setSingle(snipeData);
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.getTargetBlock()
 			.getState() instanceof Sign) {
 			Sign sign = (Sign) this.getTargetBlock()
@@ -109,9 +109,9 @@ public class SignOverwriteBrush extends AbstractBrush {
 					this.signTextLines[i] = sign.getLine(i);
 				}
 			}
-			displayBuffer(v);
+			displayBuffer(snipeData);
 		} else {
-			v.sendMessage(ChatColor.RED + "Target block is not a sign.");
+			snipeData.sendMessage(ChatColor.RED + "Target block is not a sign.");
 		}
 	}
 

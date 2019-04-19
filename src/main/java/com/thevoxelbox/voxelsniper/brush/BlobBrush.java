@@ -183,13 +183,13 @@ public class BlobBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.growBlob(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.growBlob(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.digBlob(v);
+	protected final void powder(SnipeData snipeData) {
+		this.digBlob(snipeData);
 	}
 
 	@Override

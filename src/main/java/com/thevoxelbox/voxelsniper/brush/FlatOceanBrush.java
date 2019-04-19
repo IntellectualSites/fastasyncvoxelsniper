@@ -45,13 +45,13 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		this.flatOcean(this.getWorld()
 			.getChunkAt(this.getTargetBlock()));
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		this.flatOcean(this.getWorld()
 			.getChunkAt(this.getTargetBlock()));
 		this.flatOcean(this.getWorld()

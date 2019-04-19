@@ -35,24 +35,24 @@ public class SplatterVoxelBrush extends PerformBrush {
 		this.setName("Splatter Voxel");
 	}
 
-	private void vSplatterBall(SnipeData v, Block targetBlock) {
+	private void vSplatterBall(SnipeData snipeData, Block targetBlock) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+			snipeData.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+			snipeData.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 			this.growPercent = GROW_PERCENT_DEFAULT;
 		}
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+			snipeData.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		int[][][] splat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
+		int[][][] splat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
 		// Seed the array
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-				for (int z = 2 * v.getBrushSize(); z >= 0; z--) {
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+				for (int z = 2 * snipeData.getBrushSize(); z >= 0; z--) {
 					if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
 						splat[x][y][z] = 1;
 					}
@@ -61,12 +61,12 @@ public class SplatterVoxelBrush extends PerformBrush {
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][][] tempSplat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
+		int[][][] tempSplat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
-			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-					for (int z = 2 * v.getBrushSize(); z >= 0; z--) {
+			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+				for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+					for (int z = 2 * snipeData.getBrushSize(); z >= 0; z--) {
 						tempSplat[x][y][z] = splat[x][y][z]; // prime tempsplat
 						int growcheck = 0;
 						if (splat[x][y][z] == 0) {
@@ -79,13 +79,13 @@ public class SplatterVoxelBrush extends PerformBrush {
 							if (z != 0 && splat[x][y][z - 1] == 1) {
 								growcheck++;
 							}
-							if (x != 2 * v.getBrushSize() && splat[x + 1][y][z] == 1) {
+							if (x != 2 * snipeData.getBrushSize() && splat[x + 1][y][z] == 1) {
 								growcheck++;
 							}
-							if (y != 2 * v.getBrushSize() && splat[x][y + 1][z] == 1) {
+							if (y != 2 * snipeData.getBrushSize() && splat[x][y + 1][z] == 1) {
 								growcheck++;
 							}
-							if (z != 2 * v.getBrushSize() && splat[x][y][z + 1] == 1) {
+							if (z != 2 * snipeData.getBrushSize() && splat[x][y][z + 1] == 1) {
 								growcheck++;
 							}
 						}
@@ -96,46 +96,47 @@ public class SplatterVoxelBrush extends PerformBrush {
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
-			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-					if (2 * v.getBrushSize() + 1 >= 0)
-						System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, 2 * v.getBrushSize() + 1);
+			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+				for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+					if (2 * snipeData.getBrushSize() + 1 >= 0) {
+						System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, 2 * snipeData.getBrushSize() + 1);
+					}
 				}
 			}
 		}
 		this.growPercent = gref;
 		// Fill 1x1x1 holes
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-				for (int z = 2 * v.getBrushSize(); z >= 0; z--) {
-					if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * v.getBrushSize())][y][z] == 1 && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * v.getBrushSize(), y + 1)][z] == 1) {
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+				for (int z = 2 * snipeData.getBrushSize(); z >= 0; z--) {
+					if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * snipeData.getBrushSize())][y][z] == 1 && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * snipeData.getBrushSize(), y + 1)][z] == 1) {
 						splat[x][y][z] = 1;
 					}
 				}
 			}
 		}
 		// Make the changes
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-				for (int z = 2 * v.getBrushSize(); z >= 0; z--) {
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+				for (int z = 2 * snipeData.getBrushSize(); z >= 0; z--) {
 					if (splat[x][y][z] == 1) {
-						this.current.perform(targetBlock.getRelative(-v.getBrushSize() + x, -v.getBrushSize() + z, -v.getBrushSize() + y));
+						this.current.perform(targetBlock.getRelative(-snipeData.getBrushSize() + x, -snipeData.getBrushSize() + z, -snipeData.getBrushSize() + y));
 					}
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.vSplatterBall(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.vSplatterBall(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.vSplatterBall(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.vSplatterBall(snipeData, this.getLastBlock());
 	}
 
 	@Override

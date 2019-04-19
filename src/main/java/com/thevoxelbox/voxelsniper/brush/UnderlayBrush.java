@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 
@@ -25,15 +26,15 @@ public class UnderlayBrush extends PerformBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void underlay(SnipeData v) {
-		int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-		double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
-		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
+	private void underlay(SnipeData snipeData) {
+		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
+		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
+			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
 				for (int y = this.getTargetBlock()
 					.getY(); y < this.getTargetBlock()
 					.getY() + this.depth; y++) { // start scanning from the height you clicked at
-					if (memory[x + v.getBrushSize()][z + v.getBrushSize()] != 1) { // if haven't already found the surface in this column
+					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 								switch (this.getBlockIdAt(this.getTargetBlock()
@@ -58,7 +59,7 @@ public class UnderlayBrush extends PerformBrush {
 													.getX() + x, y + d, this.getTargetBlock()
 													.getZ() + z)); // fills down as many layers as you specify in
 												// parameters
-												memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+												memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}
 										}
 										break;
@@ -75,7 +76,7 @@ public class UnderlayBrush extends PerformBrush {
 											.getX() + x, y + d, this.getTargetBlock()
 											.getZ() + z)); // fills down as many layers as you specify in
 										// parameters
-										memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+										memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 									}
 								}
 							}
@@ -84,7 +85,7 @@ public class UnderlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -146,13 +147,13 @@ public class UnderlayBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData v) {
-		this.underlay(v);
+	public final void arrow(SnipeData snipeData) {
+		this.underlay(snipeData);
 	}
 
 	@Override
-	public final void powder(SnipeData v) {
-		this.underlay2(v);
+	public final void powder(SnipeData snipeData) {
+		this.underlay2(snipeData);
 	}
 
 	@Override
@@ -163,41 +164,27 @@ public class UnderlayBrush extends PerformBrush {
 
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
-		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].equalsIgnoreCase("info")) {
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.GOLD + "Reverse Overlay brush parameters:");
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.");
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			Sniper owner = snipeData.getOwner();
+			if (parameter.equalsIgnoreCase("info")) {
+				owner.sendMessages(ChatColor.GOLD + "Reverse Overlay brush parameters:", ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.", ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
 				if (this.depth < 1) {
 					this.depth = 1;
 				}
 				return;
 			}
-			if (parameters[i].startsWith("d")) {
-				this.depth = Integer.parseInt(parameters[i].replace("d", ""));
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
-			} else if (parameters[i].startsWith("all")) {
+			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+				this.depth = Integer.parseInt(parameter.replace("d", ""));
+				owner.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+			} else if (parameter.startsWith("all")) {
 				this.allBlocks = true;
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.BLUE + "Will underlay over any block." + this.depth);
-			} else if (parameters[i].startsWith("some")) {
+				owner.sendMessage(ChatColor.BLUE + "Will underlay over any block." + this.depth);
+			} else if (parameter.startsWith("some")) {
 				this.allBlocks = false;
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + this.depth);
+				owner.sendMessage(ChatColor.BLUE + "Will underlay only natural block types." + this.depth);
 			} else {
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				owner.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

@@ -33,34 +33,34 @@ public class ThreePointCircleBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		if (this.coordsOne == null) {
 			this.coordsOne = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			v.sendMessage(ChatColor.GRAY + "First Corner set.");
+			snipeData.sendMessage(ChatColor.GRAY + "First Corner set.");
 		} else if (this.coordsTwo == null) {
 			this.coordsTwo = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			v.sendMessage(ChatColor.GRAY + "Second Corner set.");
+			snipeData.sendMessage(ChatColor.GRAY + "Second Corner set.");
 		} else if (this.coordsThree == null) {
 			this.coordsThree = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			v.sendMessage(ChatColor.GRAY + "Third Corner set.");
+			snipeData.sendMessage(ChatColor.GRAY + "Third Corner set.");
 		} else {
 			this.coordsOne = this.getTargetBlock()
 				.getLocation()
 				.toVector();
 			this.coordsTwo = null;
 			this.coordsThree = null;
-			v.sendMessage(ChatColor.GRAY + "First Corner set.");
+			snipeData.sendMessage(ChatColor.GRAY + "First Corner set.");
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
 			return;
 		}
@@ -73,7 +73,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 		vectorThree.subtract(vectorTwo);
 		// Redundant data check
 		if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne.angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0) {
-			v.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
+			snipeData.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
 			this.coordsOne = null;
 			this.coordsTwo = null;
 			this.coordsThree = null;
@@ -123,8 +123,8 @@ public class ThreePointCircleBrush extends PerformBrush {
 				}
 			}
 		}
-		v.sendMessage(ChatColor.GREEN + "Done.");
-		v.getOwner()
+		snipeData.sendMessage(ChatColor.GREEN + "Done.");
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 		// Reset Brush
 		this.coordsOne = null;

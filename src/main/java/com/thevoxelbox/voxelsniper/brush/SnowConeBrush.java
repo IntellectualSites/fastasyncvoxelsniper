@@ -111,21 +111,21 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		switch (getTargetBlock().getType()) {
 			case SNOW:
-				this.addSnow(v, this.getTargetBlock());
+				this.addSnow(snipeData, this.getTargetBlock());
 				break;
 			default:
 				Block blockAbove = getTargetBlock().getRelative(BlockFace.UP);
 				if (blockAbove != null && blockAbove.getType() == Material.LEGACY_AIR) {
-					addSnow(v, blockAbove);
+					addSnow(snipeData, blockAbove);
 				} else {
-					v.getOwner()
+					snipeData.getOwner()
 						.getPlayer()
 						.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
 				}

@@ -30,7 +30,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void single(SnipeData v, Block targetBlock) {
+	private void single(SnipeData snipeData, Block targetBlock) {
 		UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
 		BlockState currentState = blockBelow.getState();
@@ -41,7 +41,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Undo undo = undoDelegate.getUndo();
 		blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
 		undo.put(blockBelow);
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -56,24 +56,24 @@ public class TreeSnipeBrush extends AbstractBrush {
 		return 0;
 	}
 
-	private void printTreeType(Message vm) {
+	private void printTreeType(Message message) {
 		String printout = Arrays.stream(TreeType.values())
 			.map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY + treeType.name()
 				.toLowerCase() : ChatColor.DARK_GRAY + treeType.name()
 				.toLowerCase()) + ChatColor.WHITE)
 			.collect(Collectors.joining(", "));
-		vm.custom(printout);
+		message.custom(printout);
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
-		this.single(v, targetBlock);
+		this.single(snipeData, targetBlock);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.single(v, getTargetBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.single(snipeData, getTargetBlock());
 	}
 
 	@Override

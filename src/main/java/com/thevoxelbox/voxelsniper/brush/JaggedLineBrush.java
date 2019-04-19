@@ -63,25 +63,25 @@ public class JaggedLineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData v) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.originCoords == null) {
 			this.originCoords = new Vector();
 		}
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
-		v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+		snipeData.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
 
 	@Override
-	public final void powder(SnipeData v) {
+	public final void powder(SnipeData snipeData) {
 		if (this.originCoords == null) {
-			v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+			snipeData.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
 			this.targetCoords = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			this.jaggedP(v);
+			this.jaggedP(snipeData);
 		}
 	}
 

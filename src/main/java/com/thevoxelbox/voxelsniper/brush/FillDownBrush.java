@@ -15,15 +15,12 @@ public class FillDownBrush extends PerformBrush {
 	private boolean fillLiquid = true;
 	private boolean fromExisting;
 
-	/**
-	 *
-	 */
 	public FillDownBrush() {
 		this.setName("Fill Down");
 	}
 
-	private void fillDown(SnipeData v, Block b) {
-		int brushSize = v.getBrushSize();
+	private void fillDown(SnipeData snipeData, Block block) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Block targetBlock = this.getTargetBlock();
 		for (int x = -brushSize; x <= brushSize; x++) {
@@ -33,7 +30,7 @@ public class FillDownBrush extends PerformBrush {
 					int y = 0;
 					if (this.fromExisting) {
 						boolean found = false;
-						for (y = -v.getVoxelHeight(); y < v.getVoxelHeight(); y++) {
+						for (y = -snipeData.getVoxelHeight(); y < snipeData.getVoxelHeight(); y++) {
 							Block currentBlock = this.getWorld()
 								.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
 							if (!currentBlock.isEmpty()) {
@@ -58,18 +55,18 @@ public class FillDownBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.fillDown(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.fillDown(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.fillDown(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.fillDown(snipeData, this.getLastBlock());
 	}
 
 	@Override

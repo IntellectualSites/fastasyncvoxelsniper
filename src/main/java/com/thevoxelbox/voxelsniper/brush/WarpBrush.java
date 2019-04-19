@@ -23,8 +23,8 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		Player player = v.getOwner()
+	protected final void arrow(SnipeData snipeData) {
+		Player player = snipeData.getOwner()
 			.getPlayer();
 		Location location = this.getLastBlock()
 			.getLocation();
@@ -35,8 +35,8 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		Player player = v.getOwner()
+	protected final void powder(SnipeData snipeData) {
+		Player player = snipeData.getOwner()
 			.getPlayer();
 		Location location = this.getLastBlock()
 			.getLocation();

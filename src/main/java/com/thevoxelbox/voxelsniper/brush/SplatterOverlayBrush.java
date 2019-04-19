@@ -274,13 +274,13 @@ public class SplatterOverlayBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.sOverlay(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.sOverlay(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.soverlayTwo(v);
+	protected final void powder(SnipeData snipeData) {
+		this.soverlayTwo(snipeData);
 	}
 
 	@Override

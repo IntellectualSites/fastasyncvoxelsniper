@@ -21,8 +21,8 @@ public class ShellVoxelBrush extends AbstractBrush {
 		this.setName("Shell Voxel");
 	}
 
-	private void vShell(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
+	private void vShell(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
 		int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -49,26 +49,26 @@ public class ShellVoxelBrush extends AbstractBrush {
 			for (int z = 0; z <= brushSizeSquared; z++) {
 				for (int y = 0; y <= brushSizeSquared; y++) {
 					int temp = 0;
-					if (oldMaterials[x + 1 + 1][z + 1][y + 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1 + 1][z + 1][y + 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1 - 1][z + 1][y + 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1 - 1][z + 1][y + 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1 + 1][y + 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1][z + 1 + 1][y + 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1 - 1][y + 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1][z + 1 - 1][y + 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1][y + 1 + 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1][z + 1][y + 1 + 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1][y + 1 - 1] == v.getReplaceId()) {
+					if (oldMaterials[x + 1][z + 1][y + 1 - 1] == snipeData.getReplaceId()) {
 						temp++;
 					}
 					if (temp == 0) {
-						newMaterials[x][z][y] = v.getVoxelId();
+						newMaterials[x][z][y] = snipeData.getVoxelId();
 					}
 				}
 			}
@@ -85,21 +85,21 @@ public class ShellVoxelBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
-		v.getOwner()
+		snipeData.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.vShell(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.vShell(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.vShell(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.vShell(snipeData, this.getLastBlock());
 	}
 
 	@Override

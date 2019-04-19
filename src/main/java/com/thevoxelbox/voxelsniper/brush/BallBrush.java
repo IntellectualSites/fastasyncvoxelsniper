@@ -25,8 +25,8 @@ public class BallBrush extends PerformBrush {
 		this.setName("Ball");
 	}
 
-	private void ball(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
+	private void ball(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -70,18 +70,18 @@ public class BallBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.ball(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.ball(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.ball(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.ball(snipeData, this.getLastBlock());
 	}
 
 	@Override

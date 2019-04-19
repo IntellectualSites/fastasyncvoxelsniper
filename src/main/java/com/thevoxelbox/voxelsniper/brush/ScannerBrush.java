@@ -35,11 +35,11 @@ public class ScannerBrush extends AbstractBrush {
 		}
 	}
 
-	private void scan(SnipeData v, BlockFace bf) {
-		if (bf == null) {
+	private void scan(SnipeData snipeData, BlockFace blockFace) {
+		if (blockFace == null) {
 			return;
 		}
-		switch (bf) {
+		switch (blockFace) {
 			case NORTH:
 				// Scan south
 				for (int i = 1; i < this.depth + 1; i++) {
@@ -48,11 +48,11 @@ public class ScannerBrush extends AbstractBrush {
 						.getY(), this.getTargetBlock()
 						.getZ())
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			case SOUTH:
 				// Scan north
@@ -62,11 +62,11 @@ public class ScannerBrush extends AbstractBrush {
 						.getY(), this.getTargetBlock()
 						.getZ())
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			case EAST:
 				// Scan west
@@ -76,11 +76,11 @@ public class ScannerBrush extends AbstractBrush {
 						.getY(), this.getTargetBlock()
 						.getZ() + i)
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			case WEST:
 				// Scan east
@@ -90,11 +90,11 @@ public class ScannerBrush extends AbstractBrush {
 						.getY(), this.getTargetBlock()
 						.getZ() - i)
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			case UP:
 				// Scan down
@@ -108,17 +108,17 @@ public class ScannerBrush extends AbstractBrush {
 						.getY() - i, this.getTargetBlock()
 						.getZ())
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			case DOWN:
 				// Scan up
 				for (int i = 1; i < this.depth + 1; i++) {
 					if ((this.getTargetBlock()
-						.getY() + i) >= v.getWorld()
+						.getY() + i) >= snipeData.getWorld()
 						.getMaxHeight()) {
 						break;
 					}
@@ -127,11 +127,11 @@ public class ScannerBrush extends AbstractBrush {
 						.getY() + i, this.getTargetBlock()
 						.getZ())
 						.getType() == this.checkFor) {
-						v.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
+						snipeData.sendMessage(ChatColor.GREEN + "" + this.checkFor + " found after " + i + " blocks.");
 						return;
 					}
 				}
-				v.sendMessage(ChatColor.GRAY + "Nope.");
+				snipeData.sendMessage(ChatColor.GRAY + "Nope.");
 				break;
 			default:
 				break;
@@ -140,17 +140,17 @@ public class ScannerBrush extends AbstractBrush {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.checkFor = Material.getMaterial(v.getVoxelId());
-		this.scan(v, this.getTargetBlock()
+	protected final void arrow(SnipeData snipeData) {
+		this.checkFor = Material.getMaterial(snipeData.getVoxelId());
+		this.scan(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void powder(SnipeData v) {
-		this.checkFor = Material.getMaterial(v.getVoxelId());
-		this.scan(v, this.getTargetBlock()
+	protected final void powder(SnipeData snipeData) {
+		this.checkFor = Material.getMaterial(snipeData.getVoxelId());
+		this.scan(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()));
 	}
 
@@ -164,13 +164,14 @@ public class ScannerBrush extends AbstractBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].equalsIgnoreCase("info")) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
 				return;
 			}
-			if (parameters[i].startsWith("d")) {
-				this.depth = this.clamp(Integer.parseInt(parameters[i].substring(1)), DEPTH_MIN, DEPTH_MAX);
+			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+				this.depth = this.clamp(Integer.parseInt(parameter.substring(1)), DEPTH_MIN, DEPTH_MAX);
 				snipeData.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
 			} else {
 				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");

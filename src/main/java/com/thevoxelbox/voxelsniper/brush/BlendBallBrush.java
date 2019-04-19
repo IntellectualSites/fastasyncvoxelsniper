@@ -19,8 +19,8 @@ public class BlendBallBrush extends BlendBrushBase {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void blend(SnipeData v) {
-		int brushSize = v.getBrushSize();
+	protected final void blend(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
 		// Array that holds the original materials plus a buffer
 		int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1];
@@ -108,7 +108,7 @@ public class BlendBallBrush extends BlendBrushBase {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 

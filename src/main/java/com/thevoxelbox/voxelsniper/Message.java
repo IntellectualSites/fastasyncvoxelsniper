@@ -91,9 +91,9 @@ public class Message {
 	 * Display toggle lightning message.
 	 */
 	public void toggleLightning() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
-			.getSnipeData(this.snipeData.getOwner()
-				.getCurrentToolId())
+		Sniper owner = this.snipeData.getOwner();
+		String currentToolId = owner.getCurrentToolId();
+		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
 			.isLightningEnabled()) ? "on" : "off"));
 	}
 
@@ -101,9 +101,9 @@ public class Message {
 	 * Display toggle printout message.
 	 */
 	public final void togglePrintout() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
-			.getSnipeData(this.snipeData.getOwner()
-				.getCurrentToolId())
+		Sniper owner = this.snipeData.getOwner();
+		String currentToolId = owner.getCurrentToolId();
+		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
 			.isLightningEnabled()) ? "on" : "off"));
 	}
 
@@ -111,12 +111,10 @@ public class Message {
 	 * Display toggle range message.
 	 */
 	public void toggleRange() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((this.snipeData.getOwner()
-			.getSnipeData(this.snipeData.getOwner()
-				.getCurrentToolId())
-			.isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) this.snipeData.getOwner()
-			.getSnipeData(this.snipeData.getOwner()
-				.getCurrentToolId())
+		Sniper owner = this.snipeData.getOwner();
+		String currentToolId = owner.getCurrentToolId();
+		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
+			.isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) owner.getSnipeData(currentToolId)
 			.getRange());
 	}
 

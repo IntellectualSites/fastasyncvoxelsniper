@@ -24,34 +24,34 @@ public class HeatRayBrush extends AbstractBrush {
 	 * @author MikeMatrix
 	 */
 	private enum FlameableBlock {
-		WOOD(Material.LEGACY_LEGACY_WOOD),
-		SAPLING(Material.LEGACY_LEGACY_SAPLING),
-		LOG(Material.LEGACY_LEGACY_LOG),
-		LEAVES(Material.LEGACY_LEGACY_LEAVES),
-		SPONGE(Material.LEGACY_LEGACY_SPONGE),
-		WEB(Material.LEGACY_LEGACY_WEB),
-		LONG_GRASS(Material.LEGACY_LEGACY_LONG_GRASS),
-		DEAD_BUSH(Material.LEGACY_LEGACY_DEAD_BUSH),
-		WOOL(Material.LEGACY_LEGACY_WOOL),
-		YELLOW_FLOWER(Material.LEGACY_LEGACY_YELLOW_FLOWER),
-		RED_ROSE(Material.LEGACY_LEGACY_RED_ROSE),
-		TORCH(Material.LEGACY_LEGACY_TORCH),
-		FIRE(Material.LEGACY_LEGACY_FIRE),
-		WOOD_STAIRS(Material.LEGACY_LEGACY_WOOD_STAIRS),
-		CROPS(Material.LEGACY_LEGACY_CROPS),
-		SIGN_POST(Material.LEGACY_LEGACY_SIGN_POST),
-		WOODEN_DOOR(Material.LEGACY_LEGACY_WOODEN_DOOR),
-		LADDER(Material.LEGACY_LEGACY_LADDER),
-		WALL_SIGN(Material.LEGACY_LEGACY_WALL_SIGN),
-		WOOD_PLATE(Material.LEGACY_LEGACY_WOOD_PLATE),
-		SNOW(Material.LEGACY_LEGACY_SNOW),
-		ICE(Material.LEGACY_LEGACY_ICE),
-		SUGAR_CANE_BLOCK(Material.LEGACY_LEGACY_SUGAR_CANE_BLOCK),
-		FENCE(Material.LEGACY_LEGACY_FENCE),
-		TRAP_DOOR(Material.LEGACY_LEGACY_TRAP_DOOR),
-		VINE(Material.LEGACY_LEGACY_VINE),
-		FENCE_GATE(Material.LEGACY_LEGACY_FENCE_GATE),
-		WATER_LILLY(Material.LEGACY_LEGACY_WATER_LILY);
+		WOOD(Material.LEGACY_WOOD),
+		SAPLING(Material.LEGACY_SAPLING),
+		LOG(Material.LEGACY_LOG),
+		LEAVES(Material.LEGACY_LEAVES),
+		SPONGE(Material.LEGACY_SPONGE),
+		WEB(Material.LEGACY_WEB),
+		LONG_GRASS(Material.LEGACY_LONG_GRASS),
+		DEAD_BUSH(Material.LEGACY_DEAD_BUSH),
+		WOOL(Material.LEGACY_WOOL),
+		YELLOW_FLOWER(Material.LEGACY_YELLOW_FLOWER),
+		RED_ROSE(Material.LEGACY_RED_ROSE),
+		TORCH(Material.LEGACY_TORCH),
+		FIRE(Material.LEGACY_FIRE),
+		WOOD_STAIRS(Material.LEGACY_WOOD_STAIRS),
+		CROPS(Material.LEGACY_CROPS),
+		SIGN_POST(Material.LEGACY_SIGN_POST),
+		WOODEN_DOOR(Material.LEGACY_WOODEN_DOOR),
+		LADDER(Material.LEGACY_LADDER),
+		WALL_SIGN(Material.LEGACY_WALL_SIGN),
+		WOOD_PLATE(Material.LEGACY_WOOD_PLATE),
+		SNOW(Material.LEGACY_SNOW),
+		ICE(Material.LEGACY_ICE),
+		SUGAR_CANE_BLOCK(Material.LEGACY_SUGAR_CANE_BLOCK),
+		FENCE(Material.LEGACY_FENCE),
+		TRAP_DOOR(Material.LEGACY_TRAP_DOOR),
+		VINE(Material.LEGACY_VINE),
+		FENCE_GATE(Material.LEGACY_FENCE_GATE),
+		WATER_LILLY(Material.LEGACY_WATER_LILY);
 
 		private Material material;
 
@@ -88,7 +88,7 @@ public class HeatRayBrush extends AbstractBrush {
 	/**
 	 * Heat Ray executer.
 	 */
-	public final void heatRay(SnipeData v) {
+	public final void heatRay(SnipeData snipeData) {
 		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(new Random());
 		Vector targetLocation = this.getTargetBlock()
 			.getLocation()
@@ -96,9 +96,9 @@ public class HeatRayBrush extends AbstractBrush {
 		Location currentLocation = new Location(this.getTargetBlock()
 			.getWorld(), 0, 0, 0);
 		Undo undo = new Undo();
-		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-				for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
+			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+				for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
 					currentLocation.setX(this.getTargetBlock()
 						.getX() + x);
 					currentLocation.setY(this.getTargetBlock()
@@ -106,7 +106,7 @@ public class HeatRayBrush extends AbstractBrush {
 					currentLocation.setZ(this.getTargetBlock()
 						.getZ() + z);
 					if (currentLocation.toVector()
-						.isInSphere(targetLocation, v.getBrushSize())) {
+						.isInSphere(targetLocation, snipeData.getBrushSize())) {
 						Block currentBlock = currentLocation.getBlock();
 						if (currentBlock == null || currentBlock.getType() == Material.LEGACY_CHEST) {
 							continue;
@@ -153,18 +153,18 @@ public class HeatRayBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.heatRay(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.heatRay(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.heatRay(v);
+	protected final void powder(SnipeData snipeData) {
+		this.heatRay(snipeData);
 	}
 
 	@Override

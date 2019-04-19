@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -23,8 +24,8 @@ public class ExtrudeBrush extends AbstractBrush {
 		this.setName("Extrude");
 	}
 
-	private void extrudeUpOrDown(SnipeData v, boolean isUp) {
-		int brushSize = v.getBrushSize();
+	private void extrudeUpOrDown(SnipeData snipeData, boolean isUp) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
@@ -32,7 +33,7 @@ public class ExtrudeBrush extends AbstractBrush {
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
 					int direction = (isUp ? 1 : -1);
-					for (int y = 0; y < Math.abs(v.getVoxelHeight()); y++) {
+					for (int y = 0; y < Math.abs(snipeData.getVoxelHeight()); y++) {
 						int tempY = y * direction;
 						undo = this.perform(this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
@@ -40,13 +41,13 @@ public class ExtrudeBrush extends AbstractBrush {
 							.getZ() + z), this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY() + tempY + direction, this.getTargetBlock()
-							.getZ() + z), v, undo);
+							.getZ() + z), snipeData, undo);
 					}
 				}
 			}
 		}
-		v.getOwner()
-			.storeUndo(undo);
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(undo);
 	}
 
 	private void extrudeNorthOrSouth(SnipeData v, boolean isSouth) {
@@ -134,14 +135,14 @@ public class ExtrudeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.selectExtrudeMethod(v, this.getTargetBlock()
+	protected final void arrow(SnipeData snipeData) {
+		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), false);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.selectExtrudeMethod(v, this.getTargetBlock()
+	protected final void powder(SnipeData snipeData) {
+		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), true);
 	}
 

@@ -166,13 +166,13 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		applyBrush(v);
+	protected final void arrow(SnipeData snipeData) {
+		applyBrush(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		applyBrush(v);
+	protected final void powder(SnipeData snipeData) {
+		applyBrush(snipeData);
 	}
 
 	@Override

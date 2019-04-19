@@ -67,8 +67,8 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.erosion(v, this.currentPreset);
+	protected final void arrow(SnipeData snipeData) {
+		this.erosion(snipeData, this.currentPreset);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -146,19 +146,19 @@ public class ErodeBrush extends AbstractBrush {
 		}
 	}
 
-	private void erosionIteration(SnipeData v, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
+	private void erosionIteration(SnipeData snipeData, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
 		int currentIteration = blockChangeTracker.nextIteration();
 		for (int x = this.getTargetBlock()
-			.getX() - v.getBrushSize(); x <= this.getTargetBlock()
-			.getX() + v.getBrushSize(); ++x) {
+			.getX() - snipeData.getBrushSize(); x <= this.getTargetBlock()
+			.getX() + snipeData.getBrushSize(); ++x) {
 			for (int z = this.getTargetBlock()
-				.getZ() - v.getBrushSize(); z <= this.getTargetBlock()
-				.getZ() + v.getBrushSize(); ++z) {
+				.getZ() - snipeData.getBrushSize(); z <= this.getTargetBlock()
+				.getZ() + snipeData.getBrushSize(); ++z) {
 				for (int y = this.getTargetBlock()
-					.getY() - v.getBrushSize(); y <= this.getTargetBlock()
-					.getY() + v.getBrushSize(); ++y) {
+					.getY() - snipeData.getBrushSize(); y <= this.getTargetBlock()
+					.getY() + snipeData.getBrushSize(); ++y) {
 					Vector currentPosition = new Vector(x, y, z);
-					if (currentPosition.isInSphere(targetBlockVector, v.getBrushSize())) {
+					if (currentPosition.isInSphere(targetBlockVector, snipeData.getBrushSize())) {
 						BlockWrapper currentBlock = blockChangeTracker.get(currentPosition, currentIteration);
 						if (currentBlock.isEmpty() || currentBlock.isLiquid()) {
 							continue;
@@ -182,8 +182,8 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.erosion(v, this.currentPreset.getInverted());
+	protected final void powder(SnipeData snipeData) {
+		this.erosion(snipeData, this.currentPreset.getInverted());
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class ErodeBrush extends AbstractBrush {
 		FILL(new ErosionPreset(5, 1, 2, 1)),
 		SMOOTH(new ErosionPreset(3, 1, 3, 1)),
 		LIFT(new ErosionPreset(6, 0, 1, 1)),
-		FLOATCLEAN(new ErosionPreset(6, 1, 6, 1));
+		FLOAT_CLEAN(new ErosionPreset(6, 1, 6, 1));
 
 		private ErosionPreset preset;
 
@@ -304,13 +304,11 @@ public class ErodeBrush extends AbstractBrush {
 		}
 
 		public BlockWrapper get(Vector position, int iteration) {
-			BlockWrapper changedBlock;
 			for (int i = iteration - 1; i >= 0; --i) {
 				if (this.blockChanges.containsKey(i) && this.blockChanges.get(i)
 					.containsKey(position)) {
-					changedBlock = this.blockChanges.get(i)
+					return this.blockChanges.get(i)
 						.get(position);
-					return changedBlock;
 				}
 			}
 			return new BlockWrapper(position.toLocation(this.world)
@@ -390,10 +388,10 @@ public class ErodeBrush extends AbstractBrush {
 		 */
 		public boolean isLiquid() {
 			switch (this.material) {
-				case WATER:
-				case STATIONARY_WATER:
-				case LAVA:
-				case STATIONARY_LAVA:
+				case LEGACY_WATER:
+				case LEGACY_STATIONARY_WATER:
+				case LEGACY_LAVA:
+				case LEGACY_STATIONARY_LAVA:
 					return true;
 				default:
 					return false;

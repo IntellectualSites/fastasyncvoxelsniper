@@ -53,13 +53,13 @@ public class EllipsoidBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.execute(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.execute(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.execute(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.execute(snipeData, this.getLastBlock());
 	}
 
 	@Override

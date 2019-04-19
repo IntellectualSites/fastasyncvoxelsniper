@@ -77,13 +77,13 @@ public class CometBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.doFireball(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.doFireball(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.doFireball(v);
+	protected final void powder(SnipeData snipeData) {
+		this.doFireball(snipeData);
 	}
 
 	@Override

@@ -138,13 +138,13 @@ public class SplatterBallBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.splatterBall(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.splatterBall(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.splatterBall(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.splatterBall(snipeData, this.getLastBlock());
 	}
 
 	@Override

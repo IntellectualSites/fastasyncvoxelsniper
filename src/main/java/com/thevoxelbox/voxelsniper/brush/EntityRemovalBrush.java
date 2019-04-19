@@ -10,16 +10,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 
-/**
- *
- */
 public class EntityRemovalBrush extends AbstractBrush {
 
 	private final List<String> exemptions = new ArrayList<>(3);
 
-	/**
-	 *
-	 */
 	public EntityRemovalBrush() {
 		this.setName("Entity Removal");
 		this.exemptions.add("org.bukkit.entity.Player");
@@ -27,25 +21,25 @@ public class EntityRemovalBrush extends AbstractBrush {
 		this.exemptions.add("org.bukkit.entity.NPC");
 	}
 
-	private void radialRemoval(SnipeData v) {
+	private void radialRemoval(SnipeData snipeData) {
 		Chunk targetChunk = getTargetBlock().getChunk();
 		int entityCount = 0;
 		int chunkCount = 0;
 		try {
 			entityCount += removeEntities(targetChunk);
-			int radius = Math.round(v.getBrushSize() / 16);
+			int radius = Math.round(snipeData.getBrushSize() / 16);
 			for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++) {
 				for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++) {
 					entityCount += removeEntities(getWorld().getChunkAt(x, z));
 					chunkCount++;
 				}
 			}
-		} catch (PatternSyntaxException pse) {
-			pse.printStackTrace();
-			v.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + pse.getPattern());
-			v.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", pse.getDescription(), pse.getIndex()));
+		} catch (PatternSyntaxException exception) {
+			exception.printStackTrace();
+			snipeData.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + exception.getPattern());
+			snipeData.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", exception.getDescription(), exception.getIndex()));
 		}
-		v.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
+		snipeData.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
 	}
 
 	private int removeEntities(Chunk chunk) throws PatternSyntaxException {
@@ -82,13 +76,13 @@ public class EntityRemovalBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected void arrow(SnipeData v) {
-		this.radialRemoval(v);
+	protected void arrow(SnipeData snipeData) {
+		this.radialRemoval(snipeData);
 	}
 
 	@Override
-	protected void powder(SnipeData v) {
-		this.radialRemoval(v);
+	protected void powder(SnipeData snipeData) {
+		this.radialRemoval(snipeData);
 	}
 
 	@Override

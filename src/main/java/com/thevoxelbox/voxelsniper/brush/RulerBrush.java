@@ -28,13 +28,13 @@ public class RulerBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		int voxelMaterialId = v.getVoxelId();
+	protected final void arrow(SnipeData snipeData) {
+		int voxelMaterialId = snipeData.getVoxelId();
 		this.coords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
 		if (this.xOff == 0 && this.yOff == 0 && this.zOff == 0) {
-			v.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+			snipeData.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 			this.first = !this.first;
 		} else {
 			Undo undo = new Undo();
@@ -46,23 +46,23 @@ public class RulerBrush extends AbstractBrush {
 				.getZ() + this.zOff, this.getTargetBlock()
 				.getX() + this.xOff, this.getTargetBlock()
 				.getY() + this.yOff, voxelMaterialId);
-			v.getOwner()
+			snipeData.getOwner()
 				.storeUndo(undo);
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.coords == null || this.coords.lengthSquared() == 0) {
-			v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow. Comparing to point 0,0,0 instead.");
+			snipeData.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow. Comparing to point 0,0,0 instead.");
 			return;
 		}
-		v.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
-		v.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock()
+		snipeData.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
+		snipeData.sendMessage(ChatColor.AQUA + "X change: " + (this.getTargetBlock()
 			.getX() - this.coords.getX()));
-		v.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock()
+		snipeData.sendMessage(ChatColor.AQUA + "Y change: " + (this.getTargetBlock()
 			.getY() - this.coords.getY()));
-		v.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock()
+		snipeData.sendMessage(ChatColor.AQUA + "Z change: " + (this.getTargetBlock()
 			.getZ() - this.coords.getZ()));
 		double distance = Math.round(this.getTargetBlock()
 			.getLocation()
@@ -73,8 +73,8 @@ public class RulerBrush extends AbstractBrush {
 			.getX() - this.coords.getX()), Math.abs(this.getTargetBlock()
 			.getY() - this.coords.getY())), Math.abs(this.getTargetBlock()
 			.getZ() - this.coords.getZ()))) + 1) * 100) / 100.0;
-		v.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
-		v.sendMessage(ChatColor.AQUA + "Block distance = " + blockDistance);
+		snipeData.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
+		snipeData.sendMessage(ChatColor.AQUA + "Block distance = " + blockDistance);
 	}
 
 	@Override

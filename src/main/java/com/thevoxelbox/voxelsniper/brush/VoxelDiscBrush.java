@@ -12,31 +12,28 @@ import org.bukkit.block.Block;
  */
 public class VoxelDiscBrush extends PerformBrush {
 
-	/**
-	 *
-	 */
 	public VoxelDiscBrush() {
 		this.setName("Voxel Disc");
 	}
 
-	private void disc(SnipeData v, Block targetBlock) {
-		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-			for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
+	private void disc(SnipeData snipeData, Block targetBlock) {
+		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+			for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
 				this.current.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.disc(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.disc(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.disc(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.disc(snipeData, this.getLastBlock());
 	}
 
 	@Override

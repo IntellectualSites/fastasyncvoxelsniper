@@ -129,15 +129,15 @@ public class Rot2DvertBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void arrow(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:
 				this.getMatrix();
-				this.rotate(v);
+				this.rotate(snipeData);
 				break;
 			default:
-				v.getOwner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;
@@ -145,15 +145,15 @@ public class Rot2DvertBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void powder(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:
 				this.getMatrix();
-				this.rotate(v);
+				this.rotate(snipeData);
 				break;
 			default:
-				v.getOwner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;

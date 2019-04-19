@@ -264,8 +264,8 @@ public class RandomErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.bsize = v.getBrushSize();
+	protected final void arrow(SnipeData snipeData) {
+		this.bsize = snipeData.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(5) + 1;
 		this.fillFace = this.generator.nextInt(3) + 3;
@@ -276,12 +276,12 @@ public class RandomErodeBrush extends AbstractBrush {
 			this.erodeRecursion = this.generator.nextInt(2) + 1;
 			this.fillRecursion = this.generator.nextInt(2) + 1;
 		}
-		this.rerosion(v);
+		this.rerosion(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.bsize = v.getBrushSize();
+	protected final void powder(SnipeData snipeData) {
+		this.bsize = snipeData.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(3) + 3;
 		this.fillFace = this.generator.nextInt(5) + 1;
@@ -292,7 +292,7 @@ public class RandomErodeBrush extends AbstractBrush {
 			this.erodeRecursion = this.generator.nextInt(2) + 1;
 			this.fillRecursion = this.generator.nextInt(2) + 1;
 		}
-		this.rfilling(v);
+		this.rfilling(snipeData);
 	}
 
 	@Override
@@ -319,11 +319,11 @@ public class RandomErodeBrush extends AbstractBrush {
 			this.nativeBlock = bl;
 			this.i = bl.getTypeId();
 			switch (bl.getType()) {
-				case AIR:
-				case WATER:
-				case STATIONARY_WATER:
-				case STATIONARY_LAVA:
-				case LAVA:
+				case LEGACY_AIR:
+				case LEGACY_WATER:
+				case LEGACY_STATIONARY_WATER:
+				case LEGACY_STATIONARY_LAVA:
+				case LEGACY_LAVA:
 					this.solid = false;
 					break;
 				default:

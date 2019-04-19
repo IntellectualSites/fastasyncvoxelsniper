@@ -25,8 +25,8 @@ public class DrainBrush extends AbstractBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void drain(SnipeData v) {
-		int brushSize = v.getBrushSize();
+	private void drain(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		if (this.disc) {
@@ -159,18 +159,18 @@ public class DrainBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.drain(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.drain(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.drain(v);
+	protected final void powder(SnipeData snipeData) {
+		this.drain(snipeData);
 	}
 
 	@Override

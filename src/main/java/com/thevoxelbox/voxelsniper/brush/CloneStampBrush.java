@@ -99,8 +99,8 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.clone(v);
+	protected final void powder(SnipeData snipeData) {
+		this.clone(snipeData);
 	}
 
 	@Override

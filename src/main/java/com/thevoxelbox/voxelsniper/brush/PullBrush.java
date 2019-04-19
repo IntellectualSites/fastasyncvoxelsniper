@@ -120,9 +120,9 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.vh = v.getVoxelHeight();
-		this.getSurface(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.vh = snipeData.getVoxelHeight();
+		this.getSurface(snipeData);
 		if (this.vh > 0) {
 			for (BlockWrapper block : this.surface) {
 				this.setBlock(block);
@@ -136,25 +136,25 @@ public class PullBrush extends AbstractBrush {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void powder(SnipeData v) {
-		this.vh = v.getVoxelHeight();
+	protected final void powder(SnipeData snipeData) {
+		this.vh = snipeData.getVoxelHeight();
 		this.surface.clear();
 		int lastY;
-		double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
+		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
 		// Are we pulling up ?
 		if (this.vh > 0) {
 			// Z - Axis
-			for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
+			for (int z = -snipeData.getBrushSize(); z <= snipeData.getBrushSize(); z++) {
 				int zSquared = z * z;
 				int actualZ = this.getTargetBlock()
 					.getZ() + z;
 				// X - Axis
-				for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
+				for (int x = -snipeData.getBrushSize(); x <= snipeData.getBrushSize(); x++) {
 					int xSquared = x * x;
 					int actualX = this.getTargetBlock()
 						.getX() + x;
 					// Down the Y - Axis
-					for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+					for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
 						double volume = zSquared + xSquared + (y * y);
 						// Is this in the range of the brush?
 						if (volume <= brushSizeSquared && this.getWorld()
@@ -194,15 +194,15 @@ public class PullBrush extends AbstractBrush {
 				}
 			}
 		} else {
-			for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
+			for (int z = -snipeData.getBrushSize(); z <= snipeData.getBrushSize(); z++) {
 				double zSquared = Math.pow(z, 2);
 				int actualZ = this.getTargetBlock()
 					.getZ() + z;
-				for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
+				for (int x = -snipeData.getBrushSize(); x <= snipeData.getBrushSize(); x++) {
 					double xSquared = Math.pow(x, 2);
 					int actualX = this.getTargetBlock()
 						.getX() + x;
-					for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
+					for (int y = -snipeData.getBrushSize(); y <= snipeData.getBrushSize(); y++) {
 						double volume = (xSquared + Math.pow(y, 2) + zSquared);
 						if (volume <= brushSizeSquared && this.getWorld()
 							.getBlockTypeIdAt(actualX, this.getTargetBlock()

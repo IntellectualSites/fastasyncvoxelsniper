@@ -65,30 +65,30 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
 		this.targetWorld = this.getTargetBlock()
 			.getWorld();
-		v.getOwner()
+		snipeData.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.originCoords == null || !this.getTargetBlock()
 			.getWorld()
 			.equals(this.targetWorld)) {
-			v.getOwner()
+			snipeData.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
 			this.targetCoords = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			this.linePowder(v);
+			this.linePowder(snipeData);
 		}
 	}
 

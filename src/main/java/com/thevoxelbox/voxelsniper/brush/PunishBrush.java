@@ -24,14 +24,15 @@ import org.bukkit.util.Vector;
  */
 public class PunishBrush extends PerformBrush {
 
-	private static final int MAXIMAL_RANDOM_TELEPORTATION_RANGE = 400;
+	private static final int MAX_RANDOM_TELEPORTATION_RANGE = 400;
 	private static final int TICKS_PER_SECOND = 20;
 	private static final int INFINIPUNISH_SIZE = -3;
 	private static final int DEFAULT_PUNISH_LEVEL = 10;
-	private static final int DEFAULT_PUSNIH_DURATION = 60;
+	private static final int DEFAULT_PUNISH_DURATION = 60;
+
 	private Punishment punishment = Punishment.FIRE;
 	private int punishLevel = DEFAULT_PUNISH_LEVEL;
-	private int punishDuration = DEFAULT_PUSNIH_DURATION;
+	private int punishDuration = DEFAULT_PUNISH_DURATION;
 	private boolean specificPlayer;
 	private String punishPlayerName = "";
 	private boolean hypnoAffectLandscape;
@@ -45,7 +46,7 @@ public class PunishBrush extends PerformBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void applyPunishment(LivingEntity entity, SnipeData v) {
+	private void applyPunishment(LivingEntity entity, SnipeData snipeData) {
 		switch (this.punishment) {
 			case FIRE:
 				entity.setFireTicks(TICKS_PER_SECOND * this.punishDuration);
@@ -126,8 +127,8 @@ public class PunishBrush extends PerformBrush {
 			case RANDOMTP:
 				Random random = new Random();
 				Location targetLocation = entity.getLocation();
-				targetLocation.setX(targetLocation.getX() + (random.nextInt(MAXIMAL_RANDOM_TELEPORTATION_RANGE) - MAXIMAL_RANDOM_TELEPORTATION_RANGE / 2.0));
-				targetLocation.setZ(targetLocation.getZ() + (random.nextInt(MAXIMAL_RANDOM_TELEPORTATION_RANGE) - MAXIMAL_RANDOM_TELEPORTATION_RANGE / 2.0));
+				targetLocation.setX(targetLocation.getX() + (random.nextInt(MAX_RANDOM_TELEPORTATION_RANGE) - MAX_RANDOM_TELEPORTATION_RANGE / 2.0));
+				targetLocation.setZ(targetLocation.getZ() + (random.nextInt(MAX_RANDOM_TELEPORTATION_RANGE) - MAX_RANDOM_TELEPORTATION_RANGE / 2.0));
 				entity.teleport(targetLocation);
 				break;
 			case ALL_POTION:
@@ -145,7 +146,7 @@ public class PunishBrush extends PerformBrush {
 					.clone();
 				direction.subtract(playerVector);
 				double length = direction.length();
-				double stregth = (1 - (length / v.getBrushSize())) * this.punishLevel;
+				double stregth = (1 - (length / snipeData.getBrushSize())) * this.punishLevel;
 				direction.normalize();
 				direction.multiply(stregth);
 				entity.setVelocity(direction);
@@ -166,7 +167,7 @@ public class PunishBrush extends PerformBrush {
 								}
 								target = location.clone();
 								target.add(x, y, z);
-								((Player) entity).sendBlockChange(target, v.getVoxelId(), v.getData());
+								((Player) entity).sendBlockChange(target, snipeData.getVoxelId(), snipeData.getData());
 							}
 						}
 					}
@@ -180,70 +181,70 @@ public class PunishBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		if (!v.getOwner()
+	protected final void arrow(SnipeData snipeData) {
+		if (!snipeData.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
-			v.sendMessage("The server says no!");
+			snipeData.sendMessage("The server says no!");
 			return;
 		}
-		this.punishDuration = v.getVoxelHeight();
-		this.punishLevel = v.getCylinderCenter();
+		this.punishDuration = snipeData.getVoxelHeight();
+		this.punishLevel = snipeData.getCylinderCenter();
 		if (this.specificPlayer) {
 			Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
 			if (punishedPlayer == null) {
-				v.sendMessage("No player " + this.punishPlayerName + " found.");
+				snipeData.sendMessage("No player " + this.punishPlayerName + " found.");
 				return;
 			}
-			this.applyPunishment(punishedPlayer, v);
+			this.applyPunishment(punishedPlayer, snipeData);
 			return;
 		}
-		int brushSizeSquare = v.getBrushSize() * v.getBrushSize();
-		Location targetLocation = new Location(v.getWorld(), this.getTargetBlock()
+		int brushSizeSquare = snipeData.getBrushSize() * snipeData.getBrushSize();
+		Location targetLocation = new Location(snipeData.getWorld(), this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		List<LivingEntity> entities = v.getWorld()
+		List<LivingEntity> entities = snipeData.getWorld()
 			.getLivingEntities();
 		int numPunishApps = 0;
 		for (LivingEntity entity : entities) {
-			if (v.getOwner()
+			if (snipeData.getOwner()
 				.getPlayer() != entity || this.hitsSelf) {
-				if (v.getBrushSize() >= 0) {
+				if (snipeData.getBrushSize() >= 0) {
 					try {
 						if (entity.getLocation()
 							.distanceSquared(targetLocation) <= brushSizeSquare) {
 							numPunishApps++;
-							this.applyPunishment(entity, v);
+							this.applyPunishment(entity, snipeData);
 						}
 					} catch (RuntimeException exception) {
 						exception.printStackTrace();
-						v.sendMessage("An error occured.");
+						snipeData.sendMessage("An error occured.");
 						return;
 					}
-				} else if (v.getBrushSize() == INFINIPUNISH_SIZE) {
+				} else if (snipeData.getBrushSize() == INFINIPUNISH_SIZE) {
 					numPunishApps++;
-					this.applyPunishment(entity, v);
+					this.applyPunishment(entity, snipeData);
 				}
 			}
 		}
-		v.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+		snipeData.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		if (!v.getOwner()
+	protected final void powder(SnipeData snipeData) {
+		if (!snipeData.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
-			v.sendMessage("The server says no!");
+			snipeData.sendMessage("The server says no!");
 			return;
 		}
-		int brushSizeSquare = v.getBrushSize() * v.getBrushSize();
-		Location targetLocation = new Location(v.getWorld(), this.getTargetBlock()
+		int brushSizeSquare = snipeData.getBrushSize() * snipeData.getBrushSize();
+		Location targetLocation = new Location(snipeData.getWorld(), this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		List<LivingEntity> entities = v.getWorld()
+		List<LivingEntity> entities = snipeData.getWorld()
 			.getLivingEntities();
 		for (LivingEntity entity : entities) {
 			if (entity.getLocation()

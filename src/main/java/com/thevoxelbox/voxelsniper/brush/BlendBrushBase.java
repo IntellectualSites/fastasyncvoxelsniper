@@ -25,18 +25,18 @@ public abstract class BlendBrushBase extends AbstractBrush {
 	/**
 	 *
 	 */
-	protected abstract void blend(SnipeData v);
+	protected abstract void blend(SnipeData snipeData);
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		this.excludeAir = false;
-		this.blend(v);
+		this.blend(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		this.excludeAir = true;
-		this.blend(v);
+		this.blend(snipeData);
 	}
 
 	@Override

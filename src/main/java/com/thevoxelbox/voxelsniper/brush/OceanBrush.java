@@ -74,16 +74,16 @@ public class OceanBrush extends AbstractBrush {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	protected final void oceanator(SnipeData v, Undo undo) {
+	protected final void oceanator(SnipeData snipeData, Undo undo) {
 		World world = this.getWorld();
 		int minX = (int) Math.floor((this.getTargetBlock()
-			.getX() - v.getBrushSize()));
+			.getX() - snipeData.getBrushSize()));
 		int minZ = (int) Math.floor((this.getTargetBlock()
-			.getZ() - v.getBrushSize()));
+			.getZ() - snipeData.getBrushSize()));
 		int maxX = (int) Math.floor((this.getTargetBlock()
-			.getX() + v.getBrushSize()));
+			.getX() + snipeData.getBrushSize()));
 		int maxZ = (int) Math.floor((this.getTargetBlock()
-			.getZ() + v.getBrushSize()));
+			.getZ() + snipeData.getBrushSize()));
 		for (int x = minX; x <= maxX; x++) {
 			for (int z = minZ; z <= maxZ; z++) {
 				int currentHeight = getHeight(x, z);
@@ -102,8 +102,7 @@ public class OceanBrush extends AbstractBrush {
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
 					Block block = world.getBlockAt(x, y, z);
-					if (!block.getType()
-						.equals(Material.LEGACY_STATIONARY_WATER)) {
+					if (block.getType() != Material.LEGACY_STATIONARY_WATER) {
 						// do not put blocks into the undo we already put into
 						if (block.getType() != Material.LEGACY_AIR) {
 							undo.put(block);
@@ -114,9 +113,9 @@ public class OceanBrush extends AbstractBrush {
 				// cover the sea floor of required
 				if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
 					Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-					if (block.getTypeId() != v.getVoxelId()) {
+					if (block.getTypeId() != snipeData.getVoxelId()) {
 						undo.put(block);
-						block.setTypeId(v.getVoxelId());
+						block.setTypeId(snipeData.getVoxelId());
 					}
 				}
 			}
@@ -124,16 +123,16 @@ public class OceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		Undo undo = new Undo();
-		this.oceanator(v, undo);
-		v.getOwner()
+		this.oceanator(snipeData, undo);
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		arrow(v);
+	protected final void powder(SnipeData snipeData) {
+		arrow(snipeData);
 	}
 
 	@Override

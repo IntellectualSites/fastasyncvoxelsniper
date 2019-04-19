@@ -44,13 +44,13 @@ public class RingBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.ring(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.ring(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.ring(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.ring(snipeData, this.getLastBlock());
 	}
 
 	@Override

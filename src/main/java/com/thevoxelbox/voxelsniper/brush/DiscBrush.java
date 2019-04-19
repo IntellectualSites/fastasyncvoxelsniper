@@ -45,13 +45,13 @@ public class DiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.disc(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.disc(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.disc(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.disc(snipeData, this.getLastBlock());
 	}
 
 	@Override

@@ -57,15 +57,15 @@ public class CanyonBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected void arrow(SnipeData v) {
+	protected void arrow(SnipeData snipeData) {
 		Undo undo = new Undo();
 		canyon(getTargetBlock().getChunk(), undo);
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected void powder(SnipeData v) {
+	protected void powder(SnipeData snipeData) {
 		Undo undo = new Undo();
 		Chunk targetChunk = getTargetBlock().getChunk();
 		for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++) {
@@ -73,7 +73,7 @@ public class CanyonBrush extends AbstractBrush {
 				canyon(getWorld().getChunkAt(x, z), undo);
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 

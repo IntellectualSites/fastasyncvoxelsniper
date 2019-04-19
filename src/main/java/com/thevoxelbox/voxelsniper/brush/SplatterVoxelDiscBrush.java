@@ -113,13 +113,13 @@ public class SplatterVoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.vSplatterDisc(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.vSplatterDisc(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.vSplatterDisc(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.vSplatterDisc(snipeData, this.getLastBlock());
 	}
 
 	@Override

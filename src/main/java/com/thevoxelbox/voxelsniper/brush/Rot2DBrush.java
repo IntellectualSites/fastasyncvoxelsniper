@@ -56,7 +56,7 @@ public class Rot2DBrush extends AbstractBrush {
 		}
 	}
 
-	private void rotate(SnipeData v) {
+	private void rotate(SnipeData snipeData) {
 		double brushSiyeSquared = Math.pow(this.bSize + 0.5, 2);
 		double cos = Math.cos(this.se);
 		double sin = Math.sin(this.se);
@@ -130,29 +130,29 @@ public class Rot2DBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void arrow(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:
 				this.getMatrix();
-				this.rotate(v);
+				this.rotate(snipeData);
 				break;
 			default:
-				v.sendMessage(ChatColor.RED + "Something went wrong.");
+				snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void powder(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:
 				this.getMatrix();
-				this.rotate(v);
+				this.rotate(snipeData);
 				break;
 			default:
-				v.sendMessage(ChatColor.RED + "Something went wrong.");
+				snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 				break;
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -122,31 +123,31 @@ public class StampBrush extends AbstractBrush {
 	protected final boolean fallsOff(int id) {
 		switch (id) {
 			// 6, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 65, 66, 69, 70, 71, 72, 75, 76, 77, 83
-			case (6):
-			case (37):
-			case (38):
-			case (39):
-			case (40):
-			case (50):
-			case (51):
-			case (55):
-			case (59):
-			case (63):
-			case (64):
-			case (65):
-			case (66):
-			case (68):
-			case (69):
-			case (70):
-			case (71):
-			case (72):
-			case (75):
-			case (76):
-			case (77):
-			case (78):
-			case (83):
-			case (93):
-			case (94):
+			case 6:
+			case 37:
+			case 38:
+			case 39:
+			case 40:
+			case 50:
+			case 51:
+			case 55:
+			case 59:
+			case 63:
+			case 64:
+			case 65:
+			case 66:
+			case 68:
+			case 69:
+			case 70:
+			case 71:
+			case 72:
+			case 75:
+			case 76:
+			case 77:
+			case 78:
+			case 83:
+			case 93:
+			case 94:
 			default:
 				return false;
 		}
@@ -156,29 +157,29 @@ public class StampBrush extends AbstractBrush {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	protected final void setBlock(BlockWrapper cb) {
+	protected final void setBlock(BlockWrapper blockWrapper) {
 		Block block = this.clampY(this.getTargetBlock()
-			.getX() + cb.getX(), this.getTargetBlock()
-			.getY() + cb.getY(), this.getTargetBlock()
-			.getZ() + cb.getZ());
+			.getX() + blockWrapper.getX(), this.getTargetBlock()
+			.getY() + blockWrapper.getY(), this.getTargetBlock()
+			.getZ() + blockWrapper.getZ());
 		this.undo.put(block);
-		block.setTypeId(cb.getId());
-		block.setData(cb.getD());
+		block.setTypeId(blockWrapper.getId());
+		block.setData(blockWrapper.getD());
 	}
 
 	/**
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	protected final void setBlockFill(BlockWrapper cb) {
+	protected final void setBlockFill(BlockWrapper blockWrapper) {
 		Block block = this.clampY(this.getTargetBlock()
-			.getX() + cb.getX(), this.getTargetBlock()
-			.getY() + cb.getY(), this.getTargetBlock()
-			.getZ() + cb.getZ());
+			.getX() + blockWrapper.getX(), this.getTargetBlock()
+			.getY() + blockWrapper.getY(), this.getTargetBlock()
+			.getZ() + blockWrapper.getZ());
 		if (block.getTypeId() == 0) {
 			this.undo.put(block);
-			block.setTypeId(cb.getId());
-			block.setData(cb.getD());
+			block.setTypeId(blockWrapper.getId());
+			block.setData(blockWrapper.getD());
 		}
 	}
 
@@ -192,7 +193,7 @@ public class StampBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	protected final void stamp(SnipeData v) {
+	protected final void stamp(SnipeData snipeData) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (BlockWrapper block : this.solid) {
@@ -226,14 +227,11 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.undo);
 	}
 
-	/**
-	 *
-	 */
-	protected final void stampFill(SnipeData v) {
+	protected final void stampFill(SnipeData snipeData) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (BlockWrapper block : this.solid) {
@@ -267,14 +265,11 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.getOwner()
-			.storeUndo(this.undo);
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(this.undo);
 	}
 
-	/**
-	 *
-	 */
-	protected final void stampNoAir(SnipeData v) {
+	protected final void stampNoAir(SnipeData snipeData) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (BlockWrapper block : this.solid) {
@@ -308,30 +303,30 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.undo);
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		switch (this.stamp) {
 			case DEFAULT:
-				this.stamp(v);
+				this.stamp(snipeData);
 				break;
 			case NO_AIR:
-				this.stampNoAir(v);
+				this.stampNoAir(snipeData);
 				break;
 			case FILL:
-				this.stampFill(v);
+				this.stampFill(snipeData);
 				break;
 			default:
-				v.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+				snipeData.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
 				break;
 		}
 	}
 
 	@Override
-	protected void powder(SnipeData v) {
+	protected void powder(SnipeData snipeData) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

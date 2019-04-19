@@ -22,8 +22,8 @@ public class CleanSnowBrush extends AbstractBrush {
 		this.setName("Clean Snow");
 	}
 
-	private void cleanSnow(SnipeData v) {
-		int brushSize = v.getBrushSize();
+	private void cleanSnow(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int y = (brushSize + 1) * 2; y >= 0; y--) {
@@ -58,18 +58,18 @@ public class CleanSnowBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.cleanSnow(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.cleanSnow(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.cleanSnow(v);
+	protected final void powder(SnipeData snipeData) {
+		this.cleanSnow(snipeData);
 	}
 
 	@Override

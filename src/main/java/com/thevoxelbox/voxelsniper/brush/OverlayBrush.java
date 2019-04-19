@@ -24,8 +24,8 @@ public class OverlayBrush extends PerformBrush {
 		this.setName("Overlay (Topsoil Filling)");
 	}
 
-	private void overlay(SnipeData v) {
-		int brushSize = v.getBrushSize();
+	private void overlay(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
@@ -61,7 +61,7 @@ public class OverlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
@@ -162,13 +162,13 @@ public class OverlayBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.overlay(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.overlay(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.overlayTwo(v);
+	protected final void powder(SnipeData snipeData) {
+		this.overlayTwo(snipeData);
 	}
 
 	@Override

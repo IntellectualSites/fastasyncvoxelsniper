@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 
 /**
@@ -11,17 +12,25 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
  */
 public class VoxelBrush extends PerformBrush {
 
-	/**
-	 *
-	 */
 	public VoxelBrush() {
 		this.setName("Voxel");
 	}
 
-	private void voxel(SnipeData v) {
-		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-				for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+	@Override
+	protected void arrow(SnipeData snipeData) {
+		voxel(snipeData);
+	}
+
+	@Override
+	protected void powder(SnipeData snipeData) {
+		voxel(snipeData);
+	}
+
+	private void voxel(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
+		for (int z = brushSize; z >= -brushSize; z--) {
+			for (int x = brushSize; x >= -brushSize; x--) {
+				for (int y = brushSize; y >= -brushSize; y--) {
 					this.current.perform(this.clampY(this.getTargetBlock()
 						.getX() + x, this.getTargetBlock()
 						.getY() + z, this.getTargetBlock()
@@ -29,22 +38,12 @@ public class VoxelBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
-			.storeUndo(this.current.getUndo());
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.voxel(v);
-	}
-
-	@Override
-	protected final void powder(SnipeData v) {
-		this.voxel(v);
-	}
-
-	@Override
-	public final void info(Message message) {
+	public void info(Message message) {
 		message.brushName(this.getName());
 		message.size();
 	}

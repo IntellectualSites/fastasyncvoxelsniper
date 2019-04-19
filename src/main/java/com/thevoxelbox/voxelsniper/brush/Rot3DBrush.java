@@ -199,17 +199,17 @@ public class Rot3DBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void arrow(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		this.getMatrix();
-		this.rotate(v);
+		this.rotate(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.bSize = v.getBrushSize();
+	protected final void powder(SnipeData snipeData) {
+		this.bSize = snipeData.getBrushSize();
 		this.getMatrix();
-		this.rotate(v);
+		this.rotate(snipeData);
 	}
 
 	@Override

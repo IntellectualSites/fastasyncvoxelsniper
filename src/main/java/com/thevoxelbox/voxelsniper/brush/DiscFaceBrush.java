@@ -16,15 +16,12 @@ public class DiscFaceBrush extends PerformBrush {
 
 	private double trueCircle;
 
-	/**
-	 *
-	 */
 	public DiscFaceBrush() {
 		this.setName("Disc Face");
 	}
 
-	private void discUD(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
+	private void discUpDown(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -37,12 +34,12 @@ public class DiscFaceBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discNS(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
+	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -55,12 +52,12 @@ public class DiscFaceBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discEW(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
+	private void discEastWest(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -73,11 +70,11 @@ public class DiscFaceBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void pre(SnipeData v, Block targetBlock) {
+	private void pre(SnipeData snipeData, Block targetBlock) {
 		BlockFace blockFace = getTargetBlock().getFace(this.getLastBlock());
 		if (blockFace == null) {
 			return;
@@ -85,15 +82,15 @@ public class DiscFaceBrush extends PerformBrush {
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
-				this.discNS(v, targetBlock);
+				this.discNorthSouth(snipeData, targetBlock);
 				break;
 			case EAST:
 			case WEST:
-				this.discEW(v, targetBlock);
+				this.discEastWest(snipeData, targetBlock);
 				break;
 			case UP:
 			case DOWN:
-				this.discUD(v, targetBlock);
+				this.discUpDown(snipeData, targetBlock);
 				break;
 			default:
 				break;
@@ -101,13 +98,13 @@ public class DiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.pre(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.pre(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.pre(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.pre(snipeData, this.getLastBlock());
 	}
 
 	@Override

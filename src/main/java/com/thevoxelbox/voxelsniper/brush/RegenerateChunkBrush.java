@@ -41,13 +41,13 @@ public class RegenerateChunkBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.generateChunk(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.generateChunk(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.generateChunk(v);
+	protected final void powder(SnipeData snipeData) {
+		this.generateChunk(snipeData);
 	}
 
 	@Override

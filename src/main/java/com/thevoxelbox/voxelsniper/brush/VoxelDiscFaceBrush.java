@@ -20,52 +20,52 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 		this.setName("Voxel Disc Face");
 	}
 
-	private void disc(SnipeData v, Block targetBlock) {
-		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+	private void disc(SnipeData snipeData, Block targetBlock) {
+		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discNS(SnipeData v, Block targetBlock) {
-		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
+		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discEW(SnipeData v, Block targetBlock) {
-		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
+	private void discEastWest(SnipeData snipeData, Block targetBlock) {
+		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void pre(SnipeData v, BlockFace bf, Block targetBlock) {
-		if (bf == null) {
+	private void pre(SnipeData snipeData, BlockFace blockFace, Block targetBlock) {
+		if (blockFace == null) {
 			return;
 		}
-		switch (bf) {
+		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
-				this.discNS(v, targetBlock);
+				this.discNorthSouth(snipeData, targetBlock);
 				break;
 			case EAST:
 			case WEST:
-				this.discEW(v, targetBlock);
+				this.discEastWest(snipeData, targetBlock);
 				break;
 			case UP:
 			case DOWN:
-				this.disc(v, targetBlock);
+				this.disc(snipeData, targetBlock);
 				break;
 			default:
 				break;
@@ -73,14 +73,14 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.pre(v, this.getTargetBlock()
+	protected final void arrow(SnipeData snipeData) {
+		this.pre(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.pre(v, this.getTargetBlock()
+	protected final void powder(SnipeData snipeData) {
+		this.pre(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), this.getLastBlock());
 	}
 

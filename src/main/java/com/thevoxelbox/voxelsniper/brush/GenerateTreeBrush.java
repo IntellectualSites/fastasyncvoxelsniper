@@ -424,7 +424,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		this.undo = new Undo();
 		this.branchBlocks.clear();
 		// Sets the location variables.
@@ -447,14 +447,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 			this.leafNodeCreate();
 		}
 		// Ends the undo function and mos on.
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.undo);
 	}
 
 	// The Powder currently does nothing extra.
 	@Override
-	protected final void powder(SnipeData v) {
-		this.arrow(v);
+	protected final void powder(SnipeData snipeData) {
+		this.arrow(snipeData);
 	}
 
 	@Override

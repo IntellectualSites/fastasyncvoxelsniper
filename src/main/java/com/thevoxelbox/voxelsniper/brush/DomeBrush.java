@@ -80,13 +80,13 @@ public class DomeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.generateDome(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.generateDome(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.generateDome(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.generateDome(snipeData, this.getLastBlock());
 	}
 
 	@Override

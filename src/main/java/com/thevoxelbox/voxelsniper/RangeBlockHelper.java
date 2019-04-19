@@ -15,9 +15,9 @@ public class RangeBlockHelper {
 	private static final double DEFAULT_LOCATION_VIEW_HEIGHT = 0;
 	private static final double DEFAULT_STEP = 0.2;
 	private static final int DEFAULT_RANGE = 250;
-	private Location playerLoc;
-	private double rotX;
-	private double rotY;
+	private Location playerLocation;
+	private double rotationX;
+	private double rotationY;
 	private double viewHeight;
 	private double rotXSin;
 	private double rotXCos;
@@ -289,23 +289,23 @@ public class RangeBlockHelper {
 	}
 
 	private void init(Location location, double range, double step, double viewHeight) {
-		this.playerLoc = location;
+		this.playerLocation = location;
 		this.viewHeight = viewHeight;
-		this.playerX = this.playerLoc.getX();
-		this.playerY = this.playerLoc.getY() + this.viewHeight;
-		this.playerZ = this.playerLoc.getZ();
+		this.playerX = this.playerLocation.getX();
+		this.playerY = this.playerLocation.getY() + this.viewHeight;
+		this.playerZ = this.playerLocation.getZ();
 		this.range = range;
 		this.step = step;
 		this.length = 0;
-		this.rotX = (this.playerLoc.getYaw() + 90) % 360;
-		this.rotY = this.playerLoc.getPitch() * -1;
-		this.rotYCos = Math.cos(Math.toRadians(this.rotY));
-		this.rotYSin = Math.sin(Math.toRadians(this.rotY));
-		this.rotXCos = Math.cos(Math.toRadians(this.rotX));
-		this.rotXSin = Math.sin(Math.toRadians(this.rotX));
-		this.targetX = (int) Math.floor(this.playerLoc.getX());
-		this.targetY = (int) Math.floor(this.playerLoc.getY() + this.viewHeight);
-		this.targetZ = (int) Math.floor(this.playerLoc.getZ());
+		this.rotationX = (this.playerLocation.getYaw() + 90) % 360;
+		this.rotationY = this.playerLocation.getPitch() * -1;
+		this.rotYCos = Math.cos(Math.toRadians(this.rotationY));
+		this.rotYSin = Math.sin(Math.toRadians(this.rotationY));
+		this.rotXCos = Math.cos(Math.toRadians(this.rotationX));
+		this.rotXSin = Math.sin(Math.toRadians(this.rotationX));
+		this.targetX = (int) Math.floor(this.playerLocation.getX());
+		this.targetY = (int) Math.floor(this.playerLocation.getY() + this.viewHeight);
+		this.targetZ = (int) Math.floor(this.playerLocation.getZ());
 		this.lastX = this.targetX;
 		this.lastY = this.targetY;
 		this.lastZ = this.targetZ;

@@ -33,7 +33,7 @@ public class EllipseBrush extends PerformBrush {
 		this.setName("Ellipse");
 	}
 
-	private void ellipse(SnipeData v, Block targetBlock) {
+	private void ellipse(SnipeData snipeData, Block targetBlock) {
 		try {
 			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
@@ -59,13 +59,13 @@ public class EllipseBrush extends PerformBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			v.sendMessage(ChatColor.RED + "Invalid target.");
+			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void ellipsefill(SnipeData v, Block targetBlock) {
+	private void ellipseFill(SnipeData snipeData, Block targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
 		this.current.perform(targetBlock);
@@ -126,29 +126,29 @@ public class EllipseBrush extends PerformBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			v.sendMessage(ChatColor.RED + "Invalid target.");
+			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void execute(SnipeData v, Block targetBlock) {
+	private void execute(SnipeData snipeData, Block targetBlock) {
 		this.stepSize = (TWO_PI / this.steps);
 		if (this.fill) {
-			this.ellipsefill(v, targetBlock);
+			this.ellipseFill(snipeData, targetBlock);
 		} else {
-			this.ellipse(v, targetBlock);
+			this.ellipse(snipeData, targetBlock);
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.execute(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.execute(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.execute(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.execute(snipeData, this.getLastBlock());
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public class EllipseBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {

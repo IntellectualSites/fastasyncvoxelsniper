@@ -22,22 +22,22 @@ public class PaintingBrush extends AbstractBrush {
 	/**
 	 * Scroll painting forward.
 	 *
-	 * @param v Sniper caller
+	 * @param snipeData Sniper caller
 	 */
 	@Override
-	protected final void arrow(SnipeData v) {
-		PaintingWrapper.paint(v.getOwner()
+	protected final void arrow(SnipeData snipeData) {
+		PaintingWrapper.paint(snipeData.getOwner()
 			.getPlayer(), true, false, 0);
 	}
 
 	/**
 	 * Scroll painting backwards.
 	 *
-	 * @param v Sniper caller
+	 * @param snipeData Sniper caller
 	 */
 	@Override
-	protected final void powder(SnipeData v) {
-		PaintingWrapper.paint(v.getOwner()
+	protected final void powder(SnipeData snipeData) {
+		PaintingWrapper.paint(snipeData.getOwner()
 			.getPlayer(), true, true, 0);
 	}
 

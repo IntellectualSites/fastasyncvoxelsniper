@@ -16,8 +16,8 @@ import org.bukkit.block.Block;
  */
 public class SplineBrush extends PerformBrush {
 
-	private final ArrayList<Block> endPts = new ArrayList<>();
-	private final ArrayList<Block> ctrlPts = new ArrayList<>();
+	private final List<Block> endPts = new ArrayList<>();
+	private final List<Block> ctrlPts = new ArrayList<>();
 	protected List<Point> spline = new ArrayList<>();
 	protected boolean set;
 	protected boolean ctrl;
@@ -27,20 +27,20 @@ public class SplineBrush extends PerformBrush {
 		this.setName("Spline");
 	}
 
-	public final void addToSet(SnipeData v, boolean ep, Block targetBlock) {
+	public final void addToSet(SnipeData snipeData, boolean ep, Block targetBlock) {
 		if (ep) {
 			if (this.endPts.contains(targetBlock) || this.endPts.size() == 2) {
 				return;
 			}
 			this.endPts.add(targetBlock);
-			v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to endpoint selection");
+			snipeData.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to endpoint selection");
 			return;
 		}
 		if (this.ctrlPts.contains(targetBlock) || this.ctrlPts.size() == 2) {
 			return;
 		}
 		this.ctrlPts.add(targetBlock);
-		v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
+		snipeData.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
 	}
 
 	public final void removeFromSet(SnipeData v, boolean ep, Block targetBlock) {
@@ -97,11 +97,11 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		if (this.set) {
-			this.removeFromSet(v, true, this.getTargetBlock());
+			this.removeFromSet(snipeData, true, this.getTargetBlock());
 		} else if (this.ctrl) {
-			this.removeFromSet(v, false, this.getTargetBlock());
+			this.removeFromSet(snipeData, false, this.getTargetBlock());
 		}
 	}
 
@@ -113,12 +113,12 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.set) {
-			this.addToSet(v, true, this.getTargetBlock());
+			this.addToSet(snipeData, true, this.getTargetBlock());
 		}
 		if (this.ctrl) {
-			this.addToSet(v, false, this.getTargetBlock());
+			this.addToSet(snipeData, false, this.getTargetBlock());
 		}
 	}
 

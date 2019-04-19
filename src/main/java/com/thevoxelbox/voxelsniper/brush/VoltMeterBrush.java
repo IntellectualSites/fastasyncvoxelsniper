@@ -21,39 +21,39 @@ public class VoltMeterBrush extends AbstractBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void data(SnipeData v) {
+	private void data(SnipeData snipeData) {
 		Block block = this.clampY(this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
 		byte data = block.getData();
-		v.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
+		snipeData.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
 	}
 
-	private void volt(SnipeData v) {
+	private void volt(SnipeData snipeData) {
 		Block block = this.clampY(this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
 		boolean indirect = block.isBlockIndirectlyPowered();
 		boolean direct = block.isBlockPowered();
-		v.sendMessage(ChatColor.AQUA + "Direct Power? " + direct + " Indirect Power? " + indirect);
-		v.sendMessage(ChatColor.BLUE + "Top Direct? " + block.isBlockFacePowered(BlockFace.UP) + " Top Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.UP));
-		v.sendMessage(ChatColor.BLUE + "Bottom Direct? " + block.isBlockFacePowered(BlockFace.DOWN) + " Bottom Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.DOWN));
-		v.sendMessage(ChatColor.BLUE + "East Direct? " + block.isBlockFacePowered(BlockFace.EAST) + " East Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.EAST));
-		v.sendMessage(ChatColor.BLUE + "West Direct? " + block.isBlockFacePowered(BlockFace.WEST) + " West Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.WEST));
-		v.sendMessage(ChatColor.BLUE + "North Direct? " + block.isBlockFacePowered(BlockFace.NORTH) + " North Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.NORTH));
-		v.sendMessage(ChatColor.BLUE + "South Direct? " + block.isBlockFacePowered(BlockFace.SOUTH) + " South Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.SOUTH));
+		snipeData.sendMessage(ChatColor.AQUA + "Direct Power? " + direct + " Indirect Power? " + indirect);
+		snipeData.sendMessage(ChatColor.BLUE + "Top Direct? " + block.isBlockFacePowered(BlockFace.UP) + " Top Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.UP));
+		snipeData.sendMessage(ChatColor.BLUE + "Bottom Direct? " + block.isBlockFacePowered(BlockFace.DOWN) + " Bottom Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.DOWN));
+		snipeData.sendMessage(ChatColor.BLUE + "East Direct? " + block.isBlockFacePowered(BlockFace.EAST) + " East Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.EAST));
+		snipeData.sendMessage(ChatColor.BLUE + "West Direct? " + block.isBlockFacePowered(BlockFace.WEST) + " West Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.WEST));
+		snipeData.sendMessage(ChatColor.BLUE + "North Direct? " + block.isBlockFacePowered(BlockFace.NORTH) + " North Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.NORTH));
+		snipeData.sendMessage(ChatColor.BLUE + "South Direct? " + block.isBlockFacePowered(BlockFace.SOUTH) + " South Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.SOUTH));
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.volt(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.volt(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.data(v);
+	protected final void powder(SnipeData snipeData) {
+		this.data(snipeData);
 	}
 
 	@Override

@@ -225,14 +225,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		commandRegistry.registerCommand(new VoxelBrushCommand(this));
 		commandRegistry.registerCommand(new VoxelBrushToolCommand(this));
 		commandRegistry.registerCommand(new VoxelCenterCommand(this));
-		commandRegistry.registerCommand(new VoxelChunkCommand(this));
+		commandRegistry.registerCommand(new VoxelChunkCommand());
 		commandRegistry.registerCommand(new VoxelDefaultCommand(this));
-		commandRegistry.registerCommand(new VoxelGoToCommand(this));
+		commandRegistry.registerCommand(new VoxelGoToCommand());
 		commandRegistry.registerCommand(new VoxelHeightCommand(this));
 		commandRegistry.registerCommand(new VoxelInkCommand(this));
 		commandRegistry.registerCommand(new VoxelInkReplaceCommand(this));
 		commandRegistry.registerCommand(new VoxelListCommand(this));
-		commandRegistry.registerCommand(new VoxelPaintCommand(this));
+		commandRegistry.registerCommand(new VoxelPaintCommand());
 		commandRegistry.registerCommand(new VoxelPerformerCommand(this));
 		commandRegistry.registerCommand(new VoxelReplaceCommand(this));
 		commandRegistry.registerCommand(new VoxelSniperCommand(this));

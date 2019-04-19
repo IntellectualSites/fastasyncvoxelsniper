@@ -20,30 +20,30 @@ public class CylinderBrush extends PerformBrush {
 		this.setName("Cylinder");
 	}
 
-	private void cylinder(SnipeData v, Block targetBlock) {
-		int brushSize = v.getBrushSize();
-		int yStartingPoint = targetBlock.getY() + v.getCylinderCenter();
-		int yEndPoint = targetBlock.getY() + v.getVoxelHeight() + v.getCylinderCenter();
+	private void cylinder(SnipeData snipeData, Block targetBlock) {
+		int brushSize = snipeData.getBrushSize();
+		int yStartingPoint = targetBlock.getY() + snipeData.getCylinderCenter();
+		int yEndPoint = targetBlock.getY() + snipeData.getVoxelHeight() + snipeData.getCylinderCenter();
 		if (yEndPoint < yStartingPoint) {
 			yEndPoint = yStartingPoint;
 		}
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
-			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		} else if (yStartingPoint > this.getWorld()
 			.getMaxHeight() - 1) {
 			yStartingPoint = this.getWorld()
 				.getMaxHeight() - 1;
-			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
-			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		} else if (yEndPoint > this.getWorld()
 			.getMaxHeight() - 1) {
 			yEndPoint = this.getWorld()
 				.getMaxHeight() - 1;
-			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
 		double bSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int y = yEndPoint; y >= yStartingPoint; y--) {
@@ -59,18 +59,18 @@ public class CylinderBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.cylinder(v, this.getTargetBlock());
+	protected final void arrow(SnipeData snipeData) {
+		this.cylinder(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		this.cylinder(v, this.getLastBlock());
+	protected final void powder(SnipeData snipeData) {
+		this.cylinder(snipeData, this.getLastBlock());
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class JockeyBrush extends AbstractBrush {
 		this.setName("Jockey");
 	}
 
-	private void sitOn(SnipeData v) {
+	private void sitOn(SnipeData snipeData) {
 		Chunk targetChunk = this.getWorld()
 			.getChunkAt(this.getTargetBlock()
 				.getLocation());
@@ -45,7 +45,7 @@ public class JockeyBrush extends AbstractBrush {
 				for (Entity entity : this.getWorld()
 					.getChunkAt(x, y)
 					.getEntities()) {
-					if (entity.getEntityId() == v.getOwner()
+					if (entity.getEntityId() == snipeData.getOwner()
 						.getPlayer()
 						.getEntityId()) {
 						continue;
@@ -56,7 +56,7 @@ public class JockeyBrush extends AbstractBrush {
 						}
 					}
 					Location entityLocation = entity.getLocation();
-					double entityDistance = entityLocation.distance(v.getOwner()
+					double entityDistance = entityLocation.distance(snipeData.getOwner()
 						.getPlayer()
 						.getLocation());
 					if (entityDistance < range) {
@@ -67,7 +67,7 @@ public class JockeyBrush extends AbstractBrush {
 			}
 		}
 		if (closest != null) {
-			Player player = v.getOwner()
+			Player player = snipeData.getOwner()
 				.getPlayer();
 			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 			Bukkit.getPluginManager()
@@ -79,19 +79,19 @@ public class JockeyBrush extends AbstractBrush {
 					closest.setPassenger(player);
 					this.jockeyedEntity = closest;
 				}
-				v.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
+				snipeData.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
 			}
 		} else {
-			v.sendMessage(ChatColor.RED + "Could not find any entities");
+			snipeData.sendMessage(ChatColor.RED + "Could not find any entities");
 		}
 	}
 
-	private void stack(SnipeData v) {
-		int brushSizeDoubled = v.getBrushSize() * 2;
-		List<Entity> nearbyEntities = v.getOwner()
+	private void stack(SnipeData snipeData) {
+		int brushSizeDoubled = snipeData.getBrushSize() * 2;
+		List<Entity> nearbyEntities = snipeData.getOwner()
 			.getPlayer()
 			.getNearbyEntities(brushSizeDoubled, brushSizeDoubled, brushSizeDoubled);
-		Entity lastEntity = v.getOwner()
+		Entity lastEntity = snipeData.getOwner()
 			.getPlayer();
 		int stackHeight = 0;
 		for (Entity entity : nearbyEntities) {
@@ -107,7 +107,7 @@ public class JockeyBrush extends AbstractBrush {
 						stackHeight++;
 					}
 				} else {
-					v.getOwner()
+					snipeData.getOwner()
 						.getPlayer()
 						.sendMessage("You broke stack! :O");
 				}
@@ -118,28 +118,28 @@ public class JockeyBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
+	protected final void arrow(SnipeData snipeData) {
 		if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES || this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
-			stack(v);
+			stack(snipeData);
 		} else {
-			this.sitOn(v);
+			this.sitOn(snipeData);
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
+	protected final void powder(SnipeData snipeData) {
 		if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-			v.getOwner()
+			snipeData.getOwner()
 				.getPlayer()
 				.eject();
-			v.getOwner()
+			snipeData.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
 		} else {
 			if (this.jockeyedEntity != null) {
 				this.jockeyedEntity.eject();
 				this.jockeyedEntity = null;
-				v.getOwner()
+				snipeData.getOwner()
 					.getPlayer()
 					.sendMessage(ChatColor.GOLD + "You have been ejected!");
 			}

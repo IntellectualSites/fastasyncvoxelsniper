@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 
@@ -29,7 +30,7 @@ public class TriangleBrush extends PerformBrush {
 		this.setName("Triangle");
 	}
 
-	private void triangleA(SnipeData v) {
+	private void triangleA(SnipeData snipeData) {
 		switch (this.cornernumber) {
 			case 1:
 				this.coordsOne[0] = this.getTargetBlock()
@@ -44,7 +45,7 @@ public class TriangleBrush extends PerformBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 2;
-				v.sendMessage(ChatColor.GRAY + "First Corner set.");
+				snipeData.sendMessage(ChatColor.GRAY + "First Corner set.");
 				break;
 			case 2:
 				this.coordsTwo[0] = this.getTargetBlock()
@@ -59,7 +60,7 @@ public class TriangleBrush extends PerformBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 3;
-				v.sendMessage(ChatColor.GRAY + "Second Corner set.");
+				snipeData.sendMessage(ChatColor.GRAY + "Second Corner set.");
 				break;
 			case 3:
 				this.coordsThree[0] = this.getTargetBlock()
@@ -74,14 +75,14 @@ public class TriangleBrush extends PerformBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 1;
-				v.sendMessage(ChatColor.GRAY + "Third Corner set.");
+				snipeData.sendMessage(ChatColor.GRAY + "Third Corner set.");
 				break;
 			default:
 				break;
 		}
 	}
 
-	private void triangleP(SnipeData v) {
+	private void triangleP(SnipeData snipeData) {
 		// Calculate slope vectors
 		for (int i = 0; i < 3; i++) {
 			this.vectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
@@ -103,7 +104,7 @@ public class TriangleBrush extends PerformBrush {
 		// Calculate the area of the full triangle
 		double heronBig = 0.25 * Math.pow(Math.pow(Math.pow(lengthOne, 2) + Math.pow(lengthTwo, 2) + Math.pow(lengthThree, 2), 2) - 2 * (Math.pow(lengthOne, 4) + Math.pow(lengthTwo, 4) + Math.pow(lengthThree, 4)), 0.5);
 		if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0) || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0) || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0)) {
-			v.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
+			snipeData.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
 		} else {
 			// Make the Changes
 			double[] cVectorOne = new double[3];
@@ -233,8 +234,8 @@ public class TriangleBrush extends PerformBrush {
 					}
 				}
 			} // END Z DEPENDENT
-			v.getOwner()
-				.storeUndo(this.current.getUndo());
+			Sniper owner = snipeData.getOwner();
+			owner.storeUndo(this.current.getUndo());
 		}
 		// RESET BRUSH
 		this.coordsOne[0] = 0;
@@ -250,13 +251,13 @@ public class TriangleBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		this.triangleA(v);
+	protected final void arrow(SnipeData snipeData) {
+		this.triangleA(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData v) { // Add a point
-		this.triangleP(v);
+	protected final void powder(SnipeData snipeData) { // Add a point
+		this.triangleP(snipeData);
 	}
 
 	@Override

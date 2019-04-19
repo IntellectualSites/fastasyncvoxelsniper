@@ -61,21 +61,21 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData v) {
-		if (this.set(this.getTargetBlock(), v)) {
-			v.sendMessage(ChatColor.GRAY + "Point one");
+	protected final void arrow(SnipeData snipeData) {
+		if (this.set(this.getTargetBlock(), snipeData)) {
+			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.getOwner()
+			snipeData.getOwner()
 				.storeUndo(this.current.getUndo());
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) {
-		if (this.set(this.getLastBlock(), v)) {
-			v.sendMessage(ChatColor.GRAY + "Point one");
+	protected final void powder(SnipeData snipeData) {
+		if (this.set(this.getLastBlock(), snipeData)) {
+			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			v.getOwner()
+			snipeData.getOwner()
 				.storeUndo(this.current.getUndo());
 		}
 	}

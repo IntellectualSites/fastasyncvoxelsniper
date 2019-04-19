@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import com.google.common.io.Files;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
@@ -51,9 +50,9 @@ public class StencilBrush extends AbstractBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste(SnipeData v) {
+	private void stencilPaste(SnipeData snipeData) {
 		if (this.filename.matches("NoFileLoaded")) {
-			v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
+			snipeData.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
 			return;
 		}
 		Undo undo = new Undo();
@@ -199,19 +198,19 @@ public class StencilBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				v.getOwner()
+				snipeData.getOwner()
 					.storeUndo(undo);
 			} catch (IOException exception) {
-				v.sendMessage(ChatColor.RED + "Something went wrong.");
+				snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			v.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+			snipeData.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilSave(SnipeData v) {
+	private void stencilSave(SnipeData snipeData) {
 		File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 		try {
 			this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
@@ -221,10 +220,10 @@ public class StencilBrush extends AbstractBrush {
 			this.zRef = (short) ((this.firstPoint[1] > this.secondPoint[1]) ? (this.pastePoint[1] - this.secondPoint[1]) : (this.pastePoint[1] - this.firstPoint[1]));
 			this.yRef = (short) ((this.firstPoint[2] > this.secondPoint[2]) ? (this.pastePoint[2] - this.secondPoint[2]) : (this.pastePoint[2] - this.firstPoint[2]));
 			if ((this.x * this.y * this.z) > 50000) {
-				v.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
+				snipeData.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
 				return;
 			}
-			Files.createParentDirs(file);
+			createParentDirs(file);
 			file.createNewFile();
 			DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
@@ -236,7 +235,7 @@ public class StencilBrush extends AbstractBrush {
 			out.writeShort(this.xRef);
 			out.writeShort(this.zRef);
 			out.writeShort(this.yRef);
-			v.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
+			snipeData.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 			byte[] blockArray = new byte[this.x * this.z * this.y];
 			byte[] dataArray = new byte[this.x * this.z * this.y];
 			byte[] runSizeArray = new byte[this.x * this.z * this.y];
@@ -281,16 +280,28 @@ public class StencilBrush extends AbstractBrush {
 				out.writeByte(blockArray[i]);
 				out.writeByte(dataArray[i]);
 			}
-			v.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
+			snipeData.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
 			out.close();
 		} catch (IOException exception) {
-			v.sendMessage(ChatColor.RED + "Something went wrong.");
+			snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 			exception.printStackTrace();
 		}
 	}
 
+	private void createParentDirs(File file) throws IOException {
+		File canonicalFile = file.getCanonicalFile();
+		File parent = canonicalFile.getParentFile();
+		if (parent == null) {
+			return;
+		}
+		parent.mkdirs();
+		if (!parent.isDirectory()) {
+			throw new IOException("Unable to create parent directories of " + file);
+		}
+	}
+
 	@Override
-	protected final void arrow(SnipeData v) { // will be used to copy/save later on?
+	protected final void arrow(SnipeData snipeData) { // will be used to copy/save later on?
 		if (this.point == 1) {
 			this.firstPoint[0] = this.getTargetBlock()
 				.getX();
@@ -298,8 +309,8 @@ public class StencilBrush extends AbstractBrush {
 				.getZ();
 			this.firstPoint[2] = this.getTargetBlock()
 				.getY();
-			v.sendMessage(ChatColor.GRAY + "First point");
-			v.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
+			snipeData.sendMessage(ChatColor.GRAY + "First point");
+			snipeData.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
 			this.point = 2;
 		} else if (this.point == 2) {
 			this.secondPoint[0] = this.getTargetBlock()
@@ -309,11 +320,11 @@ public class StencilBrush extends AbstractBrush {
 			this.secondPoint[2] = this.getTargetBlock()
 				.getY();
 			if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000) {
-				v.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
+				snipeData.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
 				this.point = 1;
 			} else {
-				v.sendMessage(ChatColor.GRAY + "Second point");
-				v.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
+				snipeData.sendMessage(ChatColor.GRAY + "Second point");
+				snipeData.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
 				this.point = 3;
 			}
 		} else if (this.point == 3) {
@@ -323,16 +334,16 @@ public class StencilBrush extends AbstractBrush {
 				.getZ();
 			this.pastePoint[2] = this.getTargetBlock()
 				.getY();
-			v.sendMessage(ChatColor.GRAY + "Paste Reference point");
-			v.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
+			snipeData.sendMessage(ChatColor.GRAY + "Paste Reference point");
+			snipeData.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
 			this.point = 1;
-			this.stencilSave(v);
+			this.stencilSave(snipeData);
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData v) { // will be used to paste later on
-		this.stencilPaste(v);
+	protected final void powder(SnipeData snipeData) { // will be used to paste later on
+		this.stencilPaste(snipeData);
 	}
 
 	@Override
