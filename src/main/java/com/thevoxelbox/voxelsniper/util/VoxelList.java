@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.google.common.collect.ImmutableList;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
@@ -91,6 +90,6 @@ public class VoxelList {
 	 * @return defensive copy of the List with pairs
 	 */
 	public List<int[]> getList() {
-		return ImmutableList.copyOf(this.valuePairs);
+		return List.copyOf(this.valuePairs);
 	}
 }

@@ -4,16 +4,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.MutableClassToInstanceMap;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
@@ -36,15 +29,15 @@ public class Sniper {
 	private VoxelSniperPlugin plugin;
 	private UUID player;
 	private boolean enabled = true;
-	private List<Undo> undoList = new LinkedList<>();
+	private LinkedList<Undo> undoList = new LinkedList<>();
 	private Map<String, SniperTool> tools = new HashMap<>();
 
 	public Sniper(VoxelSniperPlugin plugin, Player player) {
 		this.plugin = plugin;
 		this.player = player.getUniqueId();
 		SniperTool sniperTool = new SniperTool(this);
-		sniperTool.assignAction(SnipeAction.ARROW, Material.LEGACY_ARROW);
-		sniperTool.assignAction(SnipeAction.GUNPOWDER, Material.LEGACY_SULPHUR);
+		sniperTool.assignAction(Material.LEGACY_ARROW, SnipeAction.ARROW);
+		sniperTool.assignAction(Material.LEGACY_SULPHUR, SnipeAction.GUNPOWDER);
 		this.tools.put(null, sniperTool);
 	}
 
@@ -314,7 +307,7 @@ public class Sniper {
 			this.tools.put(toolId, tool);
 		}
 		this.tools.get(toolId)
-			.assignAction(action, itemInHand);
+			.assignAction(itemInHand, action);
 		return true;
 	}
 
@@ -380,7 +373,7 @@ public class Sniper {
 	public void reset(String toolId) {
 		SniperTool backup = this.tools.remove(toolId);
 		SniperTool newTool = new SniperTool(this);
-		for (Map.Entry<SnipeAction, Material> entry : backup.getActionTools()
+		for (Map.Entry<Material, SnipeAction> entry : backup.getActionTools()
 			.entrySet()) {
 			newTool.assignAction(entry.getKey(), entry.getValue());
 		}
@@ -414,8 +407,8 @@ public class Sniper {
 
 	public static class SniperTool {
 
-		private BiMap<SnipeAction, Material> actionTools = HashBiMap.create();
-		private ClassToInstanceMap<Brush> brushes = MutableClassToInstanceMap.create();
+		private Map<Material, SnipeAction> actionTools = new HashMap<>();
+		private Map<Class<? extends Brush>, Brush> brushes = new HashMap<>();
 		private Class<? extends Brush> currentBrush;
 		private Class<? extends Brush> previousBrush;
 		private SnipeData snipeData;
@@ -429,7 +422,7 @@ public class Sniper {
 			this.snipeData = snipeData;
 			this.messageHelper = new Message(snipeData);
 			snipeData.setMessage(this.messageHelper);
-			Brush newBrushInstance = instanciateBrush(currentBrush);
+			Brush newBrushInstance = createBrushInstance(currentBrush);
 			if (snipeData.getOwner()
 				.getPlayer()
 				.hasPermission(newBrushInstance.getPermissionNode())) {
@@ -439,29 +432,23 @@ public class Sniper {
 		}
 
 		public boolean hasToolAssigned(Material material) {
-			return this.actionTools.containsValue(material);
+			return this.actionTools.containsKey(material);
 		}
 
 		public SnipeAction getActionAssigned(Material itemInHand) {
-			return this.actionTools.inverse()
-				.get(itemInHand);
+			return this.actionTools.get(itemInHand);
 		}
 
-		public Material getToolAssigned(SnipeAction action) {
-			return this.actionTools.get(action);
-		}
-
-		public void assignAction(SnipeAction action, Material itemInHand) {
-			this.actionTools.forcePut(action, itemInHand);
+		public void assignAction(Material itemInHand, SnipeAction action) {
+			this.actionTools.put(itemInHand, action);
 		}
 
 		public void unassignAction(Material itemInHand) {
-			this.actionTools.inverse()
-				.remove(itemInHand);
+			this.actionTools.remove(itemInHand);
 		}
 
-		public BiMap<SnipeAction, Material> getActionTools() {
-			return ImmutableBiMap.copyOf(this.actionTools);
+		public Map<Material, SnipeAction> getActionTools() {
+			return Map.copyOf(this.actionTools);
 		}
 
 		public SnipeData getSnipeData() {
@@ -477,16 +464,14 @@ public class Sniper {
 			if (this.currentBrush == null) {
 				return null;
 			}
-			return this.brushes.getInstance(this.currentBrush);
+			return this.brushes.get(this.currentBrush);
 		}
 
 		@Nullable
 		public Brush setCurrentBrush(Class<? extends Brush> brush) {
-			Preconditions.checkNotNull(brush, "Can't set brush to null.");
 			Brush brushInstance = this.brushes.get(brush);
 			if (brushInstance == null) {
-				brushInstance = instanciateBrush(brush);
-				Preconditions.checkNotNull(brushInstance, "Could not instanciate brush class.");
+				brushInstance = createBrushInstance(brush);
 				if (this.snipeData.getOwner()
 					.getPlayer()
 					.hasPermission(brushInstance.getPermissionNode())) {
@@ -515,7 +500,7 @@ public class Sniper {
 		}
 
 		@Nullable
-		private Brush instanciateBrush(Class<? extends Brush> brush) {
+		private Brush createBrushInstance(Class<? extends Brush> brush) {
 			try {
 				Constructor<? extends Brush> constructor = brush.getConstructor();
 				return constructor.newInstance();

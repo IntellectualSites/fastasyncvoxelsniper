@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.google.common.base.Objects;
+import java.util.Objects;
 import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
@@ -418,14 +418,14 @@ public class ErodeBrush extends AbstractBrush {
 
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(this.erosionFaces, this.erosionRecursion, this.fillFaces, this.fillRecursion);
+			return Objects.hash(this.erosionFaces, this.erosionRecursion, this.fillFaces, this.fillRecursion);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
 			if (obj instanceof ErosionPreset) {
 				ErosionPreset other = (ErosionPreset) obj;
-				return Objects.equal(this.erosionFaces, other.erosionFaces) && Objects.equal(this.erosionRecursion, other.erosionRecursion) && Objects.equal(this.fillFaces, other.fillFaces) && Objects.equal(this.fillRecursion, other.fillRecursion);
+				return this.erosionFaces == other.erosionFaces && this.erosionRecursion == other.erosionRecursion && this.fillFaces == other.fillFaces && this.fillRecursion == other.fillRecursion;
 			}
 			return false;
 		}

@@ -15,7 +15,6 @@ repositories {
 
 dependencies {
 	implementation("com.martiansoftware:jsap:2.1")
-	implementation("com.google.guava:guava:17.0")
 	compileOnly("com.destroystokyo.paper:paper-api:1.13.2-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
 }
