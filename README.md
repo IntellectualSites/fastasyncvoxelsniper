@@ -1,31 +1,28 @@
-VoxelSniper
-===========
+# VoxelSniper
 
-The premiere long-distance brush editor for [Bukkit][Bukkit].
+This is the fork of [VoxelSniper](https://github.com/TVPT/VoxelSniper).
 
-Compilation
------------
+The premiere long-distance brush editor for [Paper](http://papermc.io/).
 
-We use maven to handle our dependencies.
+## Compilation
 
-- Install [Maven 3][Maven]
-- Check out this repository.
-- Run ```mvn clean package```
+We use gradle to handle our dependencies.
 
-The master branch is automatically build on our jenkins server ([VoxelSniper Jenkins Job][JenkinsJob]).
+* Clone this repository
+* Run `./gradlew build`
 
-Issue Tracker Notes
--------------------
+## Issue Tracker Notes
 
 How do I create a ticket the right way?
 
-- Seperate your reports. You think there is something wrong, but also want this new brush? Make life easier for us and create two tickets. We'd appriciate it big times.
-- Don't tell us your story of life. We want facts and information. The more information about `the Problem` you give us, the easier it is for us to figure out what's wrong.
-- Check the closed tickets first. Maybe someone created a similiar ticket already. If you think it's unresolved, then give us more information on there instead.
+* Separate your reports. You think there is something wrong, but also want this new brush? Make life easier for us and create two tickets. We'd appreciate it big times.
+* Don't tell us your story of life. We want facts and information. The more information about the problem you give us, the easier it is for us to figure out what's wrong.
+* Check the closed tickets first. Maybe someone created a similar ticket already. If you think it's unresolved, then give us more information on there instead.
 
 ### Bug Report
 
 Make sure to not tell us your story of life. We want brief descriptions of what's wrong to get directly to fixing.
+
 Also try to make the title describe briefly what's wrong and attach things like logs or screenshots to help illustrate the issue further.
 
 Here is an example, where an imaginary brush that should create a ball, creates a cube:
@@ -48,7 +45,7 @@ Java(TM) SE Runtime Environment (build 1.7.0_07-b11)
 Java HotSpot(TM) Client VM (build 23.3-b01, mixed mode)
 ```
 
-Additional Information like what java version the server runs on would be appriciated, but is not required at all times.
+Additional Information like what java version the server runs on would be appreciated, but is not required at all times.
 
 ### Enhancement Request
 
@@ -70,21 +67,15 @@ It would be useful, since off angle lines are sometimes hard to make.
 ```
 
 Keep in mind that those are guidelines.
-We will still look into stuff that does not follow these guidlines, but it will give you an idea what we want in a ticket and make our life easier.
 
-Pull Requests
--------------
+We will still look into stuff that does not follow these guidelines, but it will give you an idea what we want in a ticket and make our life easier.
+
+## Pull Requests
 
 We do accept pull requests and enhancements from third parties. Guidelines how to submit your pull requests properly and how to format your code will come.
 
 Some rough guidelines for now:
 
-- Keep the number of commits to a minimum. We want to look over the commit and basically see what you've done.
-- Coding guidelines should try to comply to the checkstyle rules (checkstyle.xml) but not blindly. Use your mind to make smart decissions.
-- Give us a good description to what you've done.
-- Try to submit one change in one pull request and try to link it to the issue in the tracker if possible.
-
-[VoxelSniperWiki]: http://voxelwiki.com/minecraft/VoxelSniper/
-[JenkinsJob]: http://ci.thevoxelbox.com/job/VoxelSniper/
-[Bukkit]: http://bukkit.org/
-[Maven]: http://maven.apache.org/
+* Keep the number of commits to a minimum. We want to look over the commit and basically see what you've done.
+* Give us a good description to what you've done.
+* Try to submit one change in one pull request and try to link it to the issue in the tracker if possible.
