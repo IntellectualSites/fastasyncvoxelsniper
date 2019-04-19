@@ -324,12 +324,12 @@ public class Sniper {
 
 	public void storeUndo(@Nullable Undo undo) {
 		if (VoxelSniper.getInstance()
-			.getVoxelSniperConfiguration()
+			.getVoxelSniperConfig()
 			.getUndoCacheSize() <= 0) {
 			return;
 		}
 		if (undo != null && undo.getSize() > 0) {
-			while (this.undoList.size() >= this.plugin.getVoxelSniperConfiguration()
+			while (this.undoList.size() >= this.plugin.getVoxelSniperConfig()
 				.getUndoCacheSize()) {
 				this.undoList.pollLast();
 			}

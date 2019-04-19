@@ -33,11 +33,11 @@ public class VoxelBrushCommand extends VoxelCommand {
 		} else if (args.length > 0) {
 			try {
 				int newBrushSize = Integer.parseInt(args[0]);
-				if (!player.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfiguration()
+				if (!player.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfig()
 					.getLiteSniperMaxBrushSize()) {
-					player.sendMessage("Size is restricted to " + this.plugin.getVoxelSniperConfiguration()
+					player.sendMessage("Size is restricted to " + this.plugin.getVoxelSniperConfig()
 						.getLiteSniperMaxBrushSize() + " for you.");
-					newBrushSize = this.plugin.getVoxelSniperConfiguration()
+					newBrushSize = this.plugin.getVoxelSniperConfig()
 						.getLiteSniperMaxBrushSize();
 				}
 				int originalSize = snipeData.getBrushSize();

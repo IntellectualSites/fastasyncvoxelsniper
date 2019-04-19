@@ -122,7 +122,7 @@ public class VoxelSniperListener implements Listener {
 		Player player = event.getPlayer();
 		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
-		if (player.hasPermission(SNIPER_PERMISSION) && this.plugin.getVoxelSniperConfiguration()
+		if (player.hasPermission(SNIPER_PERMISSION) && this.plugin.getVoxelSniperConfig()
 			.isMessageOnLoginEnabled()) {
 			sniper.displayInfo();
 		}

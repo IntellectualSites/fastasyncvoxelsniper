@@ -26,7 +26,7 @@ public class VoxelVoxelCommand extends VoxelCommand {
 		if (args.length == 0) {
 			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
-				if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfiguration()
+				if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfig()
 					.getLiteSniperRestrictedItems()
 					.contains(targetBlock.getTypeId())) {
 					player.sendMessage("You are not allowed to use " + targetBlock.getType()
@@ -41,7 +41,7 @@ public class VoxelVoxelCommand extends VoxelCommand {
 		}
 		Material material = Material.matchMaterial(args[0]);
 		if (material != null && material.isBlock()) {
-			if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfiguration()
+			if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfig()
 				.getLiteSniperRestrictedItems()
 				.contains(material.getId())) {
 				player.sendMessage("You are not allowed to use " + material.name() + ".");

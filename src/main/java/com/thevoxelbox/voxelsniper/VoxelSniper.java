@@ -89,7 +89,7 @@ public class VoxelSniper extends JavaPlugin {
 	private static VoxelSniper instance;
 	private SniperManager sniperManager = new SniperManager(this);
 	private final VoxelSniperListener voxelSniperListener = new VoxelSniperListener(this);
-	private VoxelSniperConfiguration voxelSniperConfiguration;
+	private VoxelSniperConfig voxelSniperConfig;
 
 	/**
 	 * Returns {@link com.thevoxelbox.voxelsniper.Brushes} for current instance.
@@ -109,10 +109,10 @@ public class VoxelSniper extends JavaPlugin {
 	/**
 	 * Returns object for accessing global VoxelSniper options.
 	 *
-	 * @return {@link VoxelSniperConfiguration} object for accessing global VoxelSniper options.
+	 * @return {@link VoxelSniperConfig} object for accessing global VoxelSniper options.
 	 */
-	public VoxelSniperConfiguration getVoxelSniperConfiguration() {
-		return this.voxelSniperConfiguration;
+	public VoxelSniperConfig getVoxelSniperConfig() {
+		return this.voxelSniperConfig;
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class VoxelSniper extends JavaPlugin {
 		registerBrushes();
 		getLogger().info("Registered " + this.brushManager.registeredSniperBrushes() + " Sniper Brushes with " + this.brushManager.registeredSniperBrushHandles() + " handles.");
 		saveDefaultConfig();
-		this.voxelSniperConfiguration = new VoxelSniperConfiguration(getConfig());
+		this.voxelSniperConfig = new VoxelSniperConfig(getConfig());
 		Bukkit.getPluginManager()
 			.registerEvents(this.voxelSniperListener, this);
 		getLogger().info("Registered Sniper Listener.");
