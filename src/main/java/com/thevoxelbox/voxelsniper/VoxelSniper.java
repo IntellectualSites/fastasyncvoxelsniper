@@ -107,23 +107,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VoxelSniper extends JavaPlugin {
 
-	@Deprecated
-	private static VoxelSniper instance;
-
 	private BrushRegistry brushRegistry;
 	private CommandRegistry commandRegistry;
 	private SniperManager sniperManager;
 	private VoxelSniperListener voxelSniperListener;
 	private VoxelSniperConfig voxelSniperConfig;
 
-	@Deprecated
-	public static VoxelSniper getInstance() {
-		return instance;
-	}
-
 	@Override
 	public void onEnable() {
-		instance = this;
 		this.brushRegistry = loadBrushRegistry();
 		this.voxelSniperConfig = loadConfig();
 		this.sniperManager = new SniperManager(this);

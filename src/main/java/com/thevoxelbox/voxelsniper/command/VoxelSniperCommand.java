@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import java.util.ArrayList;
 import java.util.List;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
+import java.util.Map;
+import com.thevoxelbox.voxelsniper.BrushRegistry;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
 import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -23,21 +24,18 @@ public class VoxelSniperCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = VoxelSniper.getInstance()
-			.getSniperManager()
-			.getSniperForPlayer(player);
+		SniperManager sniperManager = this.plugin.getSniperManager();
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("brushes")) {
-				Multimap<Class<? extends Brush>, String> registeredBrushesMultimap = VoxelSniper.getInstance()
-					.getBrushRegistry()
-					.getBrushes();
-				List<String> allHandles = Lists.newLinkedList();
-				for (Class<? extends Brush> brushClass : registeredBrushesMultimap.keySet()) {
-					allHandles.addAll(registeredBrushesMultimap.get(brushClass));
+				BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
+				List<String> allHandles = new ArrayList<>();
+				Map<Class<? extends Brush>, List<String>> brushes = brushRegistry.getBrushes();
+				for (List<String> strings : brushes.values()) {
+					allHandles.addAll(strings);
 				}
-				player.sendMessage(Joiner.on(", ")
-					.skipNulls()
-					.join(allHandles));
+				String join = String.join(", ", allHandles);
+				player.sendMessage(join);
 				return true;
 			} else if (args[0].equalsIgnoreCase("range")) {
 				SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
