@@ -16,7 +16,7 @@ public class InkPerformer extends AbstractPerformer {
 	private byte d;
 
 	public InkPerformer() {
-		this.setName("Ink");
+		super("Ink");
 	}
 
 	@Override

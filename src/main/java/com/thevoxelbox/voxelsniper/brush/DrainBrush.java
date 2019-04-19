@@ -17,11 +17,8 @@ public class DrainBrush extends AbstractBrush {
 	private double trueCircle;
 	private boolean disc;
 
-	/**
-	 *
-	 */
 	public DrainBrush() {
-		this.setName("Drain");
+		super("Drain");
 	}
 
 	private void drain(SnipeData snipeData) {

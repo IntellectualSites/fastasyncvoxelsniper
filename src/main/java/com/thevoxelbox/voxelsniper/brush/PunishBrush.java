@@ -42,7 +42,7 @@ public class PunishBrush extends PerformBrush {
 	 * Default Constructor.
 	 */
 	public PunishBrush() {
-		this.setName("Punish");
+		super("Punish");
 	}
 
 	private void applyPunishment(LivingEntity entity, SnipeData snipeData) {

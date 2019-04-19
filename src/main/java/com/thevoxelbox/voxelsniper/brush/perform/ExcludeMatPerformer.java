@@ -18,7 +18,7 @@ public class ExcludeMatPerformer extends AbstractPerformer {
 	private int id;
 
 	public ExcludeMatPerformer() {
-		this.setName("Exclude Material");
+		super("Exclude Material");
 	}
 
 	@Override

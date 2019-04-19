@@ -14,7 +14,7 @@ public class WarpBrush extends AbstractBrush {
 	 *
 	 */
 	public WarpBrush() {
-		this.setName("Warp");
+		super("Warp");
 	}
 
 	@Override

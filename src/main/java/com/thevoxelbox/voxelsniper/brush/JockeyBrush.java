@@ -29,7 +29,7 @@ public class JockeyBrush extends AbstractBrush {
 	 *
 	 */
 	public JockeyBrush() {
-		this.setName("Jockey");
+		super("Jockey");
 	}
 
 	private void sitOn(SnipeData snipeData) {

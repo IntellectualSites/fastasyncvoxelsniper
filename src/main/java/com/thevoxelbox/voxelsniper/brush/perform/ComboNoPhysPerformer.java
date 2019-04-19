@@ -17,7 +17,7 @@ public class ComboNoPhysPerformer extends AbstractPerformer {
 	private byte d;
 
 	public ComboNoPhysPerformer() {
-		this.setName("Combo NoPhysics");
+		super("Combo NoPhysics");
 	}
 
 	@Override

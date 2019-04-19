@@ -16,7 +16,7 @@ public class NoUndoPerformer extends AbstractPerformer {
 	private int i;
 
 	public NoUndoPerformer() {
-		this.setName("BOMB SQUAD");
+		super("BOMB SQUAD");
 	}
 
 	@Override

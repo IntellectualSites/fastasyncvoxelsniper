@@ -18,7 +18,7 @@ public class MatComboPerformer extends AbstractPerformer {
 	private int ir;
 
 	public MatComboPerformer() {
-		this.setName("Mat-Combo");
+		super("Mat-Combo");
 	}
 
 	@Override

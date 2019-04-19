@@ -18,7 +18,7 @@ public class InkComboPerformer extends AbstractPerformer {
 	private int ir;
 
 	public InkComboPerformer() {
-		this.setName("Ink-Combo");
+		super("Ink-Combo");
 	}
 
 	@Override

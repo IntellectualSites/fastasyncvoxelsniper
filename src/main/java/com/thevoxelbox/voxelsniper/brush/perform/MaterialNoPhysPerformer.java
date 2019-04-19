@@ -16,7 +16,7 @@ public class MaterialNoPhysPerformer extends AbstractPerformer {
 	private int i;
 
 	public MaterialNoPhysPerformer() {
-		this.setName("Set, No-Physics");
+		super("Set, No-Physics");
 	}
 
 	@Override

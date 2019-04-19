@@ -16,7 +16,7 @@ public class FillDownBrush extends PerformBrush {
 	private boolean fromExisting;
 
 	public FillDownBrush() {
-		this.setName("Fill Down");
+		super("Fill Down");
 	}
 
 	private void fillDown(SnipeData snipeData, Block block) {

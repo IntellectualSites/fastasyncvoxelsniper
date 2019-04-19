@@ -17,7 +17,7 @@ public class MatInkNoPhysPerformer extends AbstractPerformer {
 	private byte dr;
 
 	public MatInkNoPhysPerformer() {
-		this.setName("Mat-Ink, No Physics");
+		super("Mat-Ink, No Physics");
 	}
 
 	@Override

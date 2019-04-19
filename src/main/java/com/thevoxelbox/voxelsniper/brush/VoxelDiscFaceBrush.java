@@ -17,7 +17,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 	 *
 	 */
 	public VoxelDiscFaceBrush() {
-		this.setName("Voxel Disc Face");
+		super("Voxel Disc Face");
 	}
 
 	private void disc(SnipeData snipeData, Block targetBlock) {

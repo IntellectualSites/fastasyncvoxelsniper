@@ -17,7 +17,7 @@ public class MatMatPerformer extends AbstractPerformer {
 	private int r;
 
 	public MatMatPerformer() {
-		this.setName("Mat-Mat");
+		super("Mat-Mat");
 	}
 
 	@Override

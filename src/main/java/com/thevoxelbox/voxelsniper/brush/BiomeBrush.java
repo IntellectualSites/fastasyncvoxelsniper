@@ -20,11 +20,11 @@ public class BiomeBrush extends AbstractBrush {
 	 *
 	 */
 	public BiomeBrush() {
-		this.setName("Biome (/b biome [Biome Name])");
+		super("Biome (/b biome [Biome Name])");
 	}
 
-	private void biome(SnipeData v) {
-		int brushSize = v.getBrushSize();
+	private void biome(SnipeData snipeData) {
+		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize, 2);
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double xSquared = Math.pow(x, 2);

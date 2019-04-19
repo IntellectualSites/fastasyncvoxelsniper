@@ -21,7 +21,7 @@ public class ExtrudeBrush extends AbstractBrush {
 	 *
 	 */
 	public ExtrudeBrush() {
-		this.setName("Extrude");
+		super("Extrude");
 	}
 
 	private void extrudeUpOrDown(SnipeData snipeData, boolean isUp) {

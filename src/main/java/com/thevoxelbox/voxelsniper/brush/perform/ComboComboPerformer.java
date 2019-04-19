@@ -19,7 +19,7 @@ public class ComboComboPerformer extends AbstractPerformer {
 	private int ir;
 
 	public ComboComboPerformer() {
-		this.setName("Combo-Combo");
+		super("Combo-Combo");
 	}
 
 	@Override

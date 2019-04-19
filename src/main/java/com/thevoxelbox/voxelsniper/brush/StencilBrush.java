@@ -46,7 +46,7 @@ public class StencilBrush extends AbstractBrush {
 	 *
 	 */
 	public StencilBrush() {
-		this.setName("Stencil");
+		super("Stencil");
 	}
 
 	private void stencilPaste(SnipeData snipeData) {

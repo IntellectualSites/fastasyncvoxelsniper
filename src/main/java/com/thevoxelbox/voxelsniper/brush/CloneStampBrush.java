@@ -16,7 +16,7 @@ public class CloneStampBrush extends StampBrush {
 	 *
 	 */
 	public CloneStampBrush() {
-		this.setName("Clone");
+		super("Clone");
 	}
 
 	/**

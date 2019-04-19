@@ -34,7 +34,7 @@ public class StencilListBrush extends AbstractBrush {
 	 *
 	 */
 	public StencilListBrush() {
-		this.setName("StencilList");
+		super("StencilList");
 	}
 
 	private String readRandomStencil(SnipeData snipeData) {

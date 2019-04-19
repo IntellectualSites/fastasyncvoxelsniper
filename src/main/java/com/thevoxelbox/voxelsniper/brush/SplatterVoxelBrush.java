@@ -32,7 +32,7 @@ public class SplatterVoxelBrush extends PerformBrush {
 	 *
 	 */
 	public SplatterVoxelBrush() {
-		this.setName("Splatter Voxel");
+		super("Splatter Voxel");
 	}
 
 	private void vSplatterBall(SnipeData snipeData, Block targetBlock) {

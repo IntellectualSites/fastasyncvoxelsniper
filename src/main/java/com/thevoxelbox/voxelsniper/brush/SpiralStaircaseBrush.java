@@ -22,7 +22,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	 *
 	 */
 	public SpiralStaircaseBrush() {
-		this.setName("Spiral Staircase");
+		super("Spiral Staircase");
 	}
 
 	private void buildStairWell(SnipeData snipeData, Block targetBlock) {

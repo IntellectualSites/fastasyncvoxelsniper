@@ -26,11 +26,8 @@ public class EllipseBrush extends PerformBrush {
 	private double stepSize;
 	private boolean fill;
 
-	/**
-	 *
-	 */
 	public EllipseBrush() {
-		this.setName("Ellipse");
+		super("Ellipse");
 	}
 
 	private void ellipse(SnipeData snipeData, Block targetBlock) {

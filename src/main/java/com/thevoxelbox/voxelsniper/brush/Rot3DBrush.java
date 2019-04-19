@@ -23,7 +23,7 @@ public class Rot3DBrush extends AbstractBrush {
 	 *
 	 */
 	public Rot3DBrush() {
-		this.setName("3D Rotation");
+		super("3D Rotation");
 	}
 
 	@Override

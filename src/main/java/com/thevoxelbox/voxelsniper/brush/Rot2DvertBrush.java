@@ -24,7 +24,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 	 *
 	 */
 	public Rot2DvertBrush() {
-		this.setName("2D Rotation");
+		super("2D Rotation");
 	}
 
 	private void getMatrix() {

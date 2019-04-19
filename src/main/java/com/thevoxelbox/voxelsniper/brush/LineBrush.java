@@ -28,7 +28,7 @@ public class LineBrush extends PerformBrush {
 	 *
 	 */
 	public LineBrush() {
-		this.setName("Line");
+		super("Line");
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class ShellVoxelBrush extends AbstractBrush {
 	 *
 	 */
 	public ShellVoxelBrush() {
-		this.setName("Shell Voxel");
+		super("Shell Voxel");
 	}
 
 	private void vShell(SnipeData snipeData, Block targetBlock) {

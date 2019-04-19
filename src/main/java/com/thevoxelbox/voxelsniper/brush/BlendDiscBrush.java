@@ -10,11 +10,8 @@ import org.bukkit.Material;
  */
 public class BlendDiscBrush extends BlendBrushBase {
 
-	/**
-	 *
-	 */
 	public BlendDiscBrush() {
-		this.setName("Blend Disc");
+		super("Blend Disc");
 	}
 
 	@Override

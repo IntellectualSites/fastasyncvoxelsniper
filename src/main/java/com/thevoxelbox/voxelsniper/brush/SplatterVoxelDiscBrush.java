@@ -32,7 +32,7 @@ public class SplatterVoxelDiscBrush extends PerformBrush {
 	 *
 	 */
 	public SplatterVoxelDiscBrush() {
-		this.setName("Splatter Voxel Disc");
+		super("Splatter Voxel Disc");
 	}
 
 	private void vSplatterDisc(SnipeData v, Block targetBlock) {

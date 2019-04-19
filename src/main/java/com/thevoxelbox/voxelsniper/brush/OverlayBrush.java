@@ -21,7 +21,7 @@ public class OverlayBrush extends PerformBrush {
 	 *
 	 */
 	public OverlayBrush() {
-		this.setName("Overlay (Topsoil Filling)");
+		super("Overlay (Topsoil Filling)");
 	}
 
 	private void overlay(SnipeData snipeData) {

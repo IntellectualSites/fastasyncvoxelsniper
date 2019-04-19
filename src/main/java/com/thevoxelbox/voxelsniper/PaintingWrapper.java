@@ -34,11 +34,11 @@ public final class PaintingWrapper {
 		Chunk paintingChunk = player.getTargetBlock(null, 4)
 			.getLocation()
 			.getChunk();
-		Double bestDistanceMatch = 50.00D;
+		double bestDistanceMatch = 50.0;
 		Painting bestMatch = null;
 		for (Entity entity : paintingChunk.getEntities()) {
 			if (entity.getType() == EntityType.PAINTING) {
-				Double distance = targetLocation.distanceSquared(entity.getLocation());
+				double distance = targetLocation.distanceSquared(entity.getLocation());
 				if (distance <= 4 && distance < bestDistanceMatch) {
 					bestDistanceMatch = distance;
 					bestMatch = (Painting) entity;
@@ -49,7 +49,7 @@ public final class PaintingWrapper {
 			if (auto) {
 				try {
 					int i = bestMatch.getArt()
-						.getId() + (back ? -1 : 1) + Art.values().length % Art.values().length;
+						.getId() + (back ? -1 : 1);
 					Art art = Art.getById(i);
 					if (art == null) {
 						player.sendMessage(ChatColor.RED + "This is the final painting, try scrolling to the other direction.");

@@ -19,6 +19,10 @@ public abstract class PerformBrush extends AbstractBrush implements BrushPerform
 
 	protected Performer current = new MaterialPerformer();
 
+	public PerformBrush(String name) {
+		super(name);
+	}
+
 	public Performer getCurrentPerformer() {
 		return this.current;
 	}

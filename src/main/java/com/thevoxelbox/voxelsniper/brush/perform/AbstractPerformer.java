@@ -14,10 +14,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class AbstractPerformer implements Performer {
 
-	private String name = "Performer";
+	private String name;
 	@Nullable
 	protected Undo undo;
 	protected World world;
+
+	public AbstractPerformer(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public void setUndo() {

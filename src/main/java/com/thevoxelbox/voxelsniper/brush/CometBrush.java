@@ -21,7 +21,7 @@ public class CometBrush extends AbstractBrush {
 	 *
 	 */
 	public CometBrush() {
-		this.setName("Comet");
+		super("Comet");
 	}
 
 	private void doFireball(SnipeData v) {

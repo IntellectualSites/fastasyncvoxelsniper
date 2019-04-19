@@ -17,7 +17,7 @@ public class ComboPerformer extends AbstractPerformer {
 	private byte d;
 
 	public ComboPerformer() {
-		this.setName("Combo");
+		super("Combo");
 	}
 
 	@Override

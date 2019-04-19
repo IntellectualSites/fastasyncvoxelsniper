@@ -23,7 +23,7 @@ public class CanyonBrush extends AbstractBrush {
 	 *
 	 */
 	public CanyonBrush() {
-		this.setName("Canyon");
+		super("Canyon");
 	}
 
 	/**

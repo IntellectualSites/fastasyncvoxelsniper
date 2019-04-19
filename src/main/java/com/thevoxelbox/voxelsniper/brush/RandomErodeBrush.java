@@ -29,7 +29,7 @@ public class RandomErodeBrush extends AbstractBrush {
 	 *
 	 */
 	public RandomErodeBrush() {
-		this.setName("RandomErode");
+		super("RandomErode");
 	}
 
 	private boolean erode(int x, int y, int z) {

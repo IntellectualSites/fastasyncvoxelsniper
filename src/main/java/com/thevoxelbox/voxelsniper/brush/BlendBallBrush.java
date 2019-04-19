@@ -10,17 +10,13 @@ import org.bukkit.Material;
  */
 public class BlendBallBrush extends BlendBrushBase {
 
-	/**
-	 *
-	 */
 	public BlendBallBrush() {
-		this.setName("Blend Ball");
+		super("Blend Ball");
 	}
 
 	@Override
 	protected final void blend(SnipeData snipeData) {
 		int brushSize = snipeData.getBrushSize();
-		int brushSizeDoubled = 2 * brushSize;
 		// Array that holds the original materials plus a buffer
 		int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1];
 		// Array that holds the blended materials
@@ -36,6 +32,7 @@ public class BlendBallBrush extends BlendBrushBase {
 			}
 		}
 		// Log current materials into newmats
+		int brushSizeDoubled = 2 * brushSize;
 		int[][][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int y = 0; y <= brushSizeDoubled; y++) {

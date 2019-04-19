@@ -84,7 +84,7 @@ public class MoveBrush extends AbstractBrush {
 	 *
 	 */
 	public MoveBrush() {
-		this.setName("Move");
+		super("Move");
 	}
 
 	/**

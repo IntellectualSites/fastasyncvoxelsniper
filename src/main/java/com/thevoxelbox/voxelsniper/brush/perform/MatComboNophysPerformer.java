@@ -18,7 +18,7 @@ public class MatComboNophysPerformer extends AbstractPerformer {
 	private int ir;
 
 	public MatComboNophysPerformer() {
-		this.setName("Mat-Combo, No Physics");
+		super("Mat-Combo, No Physics");
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class LightningBrush extends AbstractBrush {
 	 *
 	 */
 	public LightningBrush() {
-		this.setName("Lightning");
+		super("Lightning");
 	}
 
 	@Override

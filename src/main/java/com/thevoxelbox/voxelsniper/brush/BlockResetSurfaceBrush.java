@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * This brush only looks for solid blocks, and then changes those plus any air blocks touching them. If it works, this brush should be faster than the original
@@ -25,142 +26,55 @@ import org.bukkit.block.Block;
  */
 public class BlockResetSurfaceBrush extends AbstractBrush {
 
-	private static final List<Material> DENIED_UPDATES = new ArrayList<>();
+	private static final Set<Material> DENIED_UPDATES = EnumSet.of(Material.LEGACY_SIGN, Material.LEGACY_SIGN_POST, Material.LEGACY_WALL_SIGN, Material.LEGACY_CHEST, Material.LEGACY_FURNACE, Material.LEGACY_BURNING_FURNACE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_REDSTONE_WIRE, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_WOOD_DOOR, Material.LEGACY_IRON_DOOR, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_FENCE_GATE, Material.LEGACY_AIR);
 
-	static {
-		DENIED_UPDATES.add(Material.LEGACY_SIGN);
-		DENIED_UPDATES.add(Material.LEGACY_SIGN_POST);
-		DENIED_UPDATES.add(Material.LEGACY_WALL_SIGN);
-		DENIED_UPDATES.add(Material.LEGACY_CHEST);
-		DENIED_UPDATES.add(Material.LEGACY_FURNACE);
-		DENIED_UPDATES.add(Material.LEGACY_BURNING_FURNACE);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_OFF);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_ON);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_WIRE);
-		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_OFF);
-		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_ON);
-		DENIED_UPDATES.add(Material.LEGACY_WOODEN_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_WOOD_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR_BLOCK);
-		DENIED_UPDATES.add(Material.LEGACY_FENCE_GATE);
-		DENIED_UPDATES.add(Material.LEGACY_AIR);
-	}
-
-	/**
-	 *
-	 */
 	public BlockResetSurfaceBrush() {
-		this.setName("Block Reset Brush Surface Only");
+		super("Block Reset Brush Surface Only");
 	}
 
-	private void applyBrush(SnipeData v) {
-		World world = this.getWorld();
-		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
-			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
-				for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
-					Block block = world.getBlockAt(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + y, this.getTargetBlock()
-						.getZ() + z);
-					if (DENIED_UPDATES.contains(block.getType())) {
-						continue;
-					}
-					boolean airFound = false;
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x + 1, this.getTargetBlock()
-						.getY() + y, this.getTargetBlock()
-						.getZ() + z)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x + 1, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x - 1, this.getTargetBlock()
-						.getY() + y, this.getTargetBlock()
-						.getZ() + z)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x - 1, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + y + 1, this.getTargetBlock()
-						.getZ() + z)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y + 1, this.getTargetBlock()
-							.getZ() + z);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + y - 1, this.getTargetBlock()
-						.getZ() + z)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y - 1, this.getTargetBlock()
-							.getZ() + z);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + y, this.getTargetBlock()
-						.getZ() + z + 1)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z + 1);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (world.getBlockAt(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + y, this.getTargetBlock()
-						.getZ() + z - 1)
-						.getTypeId() == 0) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z - 1);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
-						airFound = true;
-					}
-					if (airFound) {
-						Block blockAt = world.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z);
-						byte oldData = blockAt.getData();
-						resetBlock(blockAt, oldData);
+	private void applyBrush(SnipeData snipeData) {
+		int size = snipeData.getBrushSize();
+		for (int x = -size; x <= size; x++) {
+			for (int y = -size; y <= size; y++) {
+				for (int z = -size; z <= size; z++) {
+					Block block = getBlockAtRelativeToTarget(x, y, z);
+					Material type = block.getType();
+					if (!DENIED_UPDATES.contains(type) && isAirAround(x, y, z)) {
+						resetBlock(block);
 					}
 				}
 			}
 		}
 	}
 
-	private void resetBlock(Block block, byte oldData) {
-		block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
-		block.setTypeIdAndData(block.getTypeId(), oldData, true);
+	private boolean isAirAround(int x, int y, int z) {
+		return findAir(x + 1, y, z) || findAir(x - 1, y, z) || findAir(x, y + 1, z) || findAir(x, y - 1, z) || findAir(x, y, z + 1) || findAir(x, y, z - 1);
+	}
+
+	private boolean findAir(int x, int y, int z) {
+		Block block = getBlockAtRelativeToTarget(x, y, z);
+		if (!block.isEmpty()) {
+			return false;
+		}
+		resetBlock(block);
+		return true;
+	}
+
+	private Block getBlockAtRelativeToTarget(int x, int y, int z) {
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
+		int targetBlockX = targetBlock.getX();
+		int targetBlockY = targetBlock.getY();
+		int targetBlockZ = targetBlock.getZ();
+		return world.getBlockAt(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
+	}
+
+	private void resetBlock(Block block) {
+		BlockData oldData = block.getBlockData();
+		Material type = block.getType();
+		BlockData defaultData = type.createBlockData();
+		block.setBlockData(defaultData);
+		block.setBlockData(oldData);
 	}
 
 	@Override

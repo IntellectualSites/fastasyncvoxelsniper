@@ -17,7 +17,7 @@ public class DiscFaceBrush extends PerformBrush {
 	private double trueCircle;
 
 	public DiscFaceBrush() {
-		this.setName("Disc Face");
+		super("Disc Face");
 	}
 
 	private void discUpDown(SnipeData snipeData, Block targetBlock) {

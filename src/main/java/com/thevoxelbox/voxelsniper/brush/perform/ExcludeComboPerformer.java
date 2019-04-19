@@ -19,7 +19,7 @@ public class ExcludeComboPerformer extends AbstractPerformer {
 	private byte data;
 
 	public ExcludeComboPerformer() {
-		this.setName("Exclude Combo");
+		super("Exclude Combo");
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class SplatterBallBrush extends PerformBrush {
 	 *
 	 */
 	public SplatterBallBrush() {
-		this.setName("Splatter Ball");
+		super("Splatter Ball");
 	}
 
 	private void splatterBall(SnipeData v, Block targetBlock) {

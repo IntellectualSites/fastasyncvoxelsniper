@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
+import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Material;
@@ -12,32 +12,10 @@ import org.bukkit.block.Block;
  */
 public class BlockResetBrush extends AbstractBrush {
 
-	private static final List<Material> DENIED_UPDATES = new ArrayList<>();
+	private static final Set<Material> DENIED_UPDATES = EnumSet.of(Material.LEGACY_SIGN, Material.LEGACY_SIGN_POST, Material.LEGACY_WALL_SIGN, Material.LEGACY_CHEST, Material.LEGACY_FURNACE, Material.LEGACY_BURNING_FURNACE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_REDSTONE_WIRE, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_WOOD_DOOR, Material.LEGACY_IRON_DOOR, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_FENCE_GATE);
 
-	static {
-		DENIED_UPDATES.add(Material.LEGACY_SIGN);
-		DENIED_UPDATES.add(Material.LEGACY_SIGN_POST);
-		DENIED_UPDATES.add(Material.LEGACY_WALL_SIGN);
-		DENIED_UPDATES.add(Material.LEGACY_CHEST);
-		DENIED_UPDATES.add(Material.LEGACY_FURNACE);
-		DENIED_UPDATES.add(Material.LEGACY_BURNING_FURNACE);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_OFF);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_ON);
-		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_WIRE);
-		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_OFF);
-		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_ON);
-		DENIED_UPDATES.add(Material.LEGACY_WOODEN_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_WOOD_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR);
-		DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR_BLOCK);
-		DENIED_UPDATES.add(Material.LEGACY_FENCE_GATE);
-	}
-
-	/**
-	 *
-	 */
 	public BlockResetBrush() {
-		this.setName("Block Reset Brush");
+		super("Block Reset Brush");
 	}
 
 	private void applyBrush(SnipeData v) {

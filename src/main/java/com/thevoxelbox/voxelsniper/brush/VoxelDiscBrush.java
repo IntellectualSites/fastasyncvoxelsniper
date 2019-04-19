@@ -13,7 +13,7 @@ import org.bukkit.block.Block;
 public class VoxelDiscBrush extends PerformBrush {
 
 	public VoxelDiscBrush() {
-		this.setName("Voxel Disc");
+		super("Voxel Disc");
 	}
 
 	private void disc(SnipeData snipeData, Block targetBlock) {

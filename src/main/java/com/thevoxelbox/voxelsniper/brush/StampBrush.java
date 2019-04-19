@@ -100,7 +100,7 @@ public class StampBrush extends AbstractBrush {
 	 *
 	 */
 	public StampBrush() {
-		this.setName("Stamp");
+		super("Stamp");
 	}
 
 	/**

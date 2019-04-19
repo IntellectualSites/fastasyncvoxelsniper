@@ -12,7 +12,7 @@ public class InkMatNoPhysPerformer extends AbstractPerformer {
 	private int ir;
 
 	public InkMatNoPhysPerformer() {
-		this.setName("Ink-Mat, No Physics");
+		super("Ink-Mat, No Physics");
 	}
 
 	@Override

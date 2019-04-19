@@ -29,7 +29,7 @@ public class ErodeBrush extends AbstractBrush {
 	private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 
 	public ErodeBrush() {
-		this.setName("Erode");
+		super("Erode");
 	}
 
 	@Override

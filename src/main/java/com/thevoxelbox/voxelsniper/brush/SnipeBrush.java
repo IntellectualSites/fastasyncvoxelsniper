@@ -15,7 +15,7 @@ public class SnipeBrush extends PerformBrush {
 	 *
 	 */
 	public SnipeBrush() {
-		this.setName("Snipe");
+		super("Snipe");
 	}
 
 	@Override

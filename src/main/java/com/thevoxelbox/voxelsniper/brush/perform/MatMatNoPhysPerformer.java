@@ -17,7 +17,7 @@ public class MatMatNoPhysPerformer extends AbstractPerformer {
 	private int r;
 
 	public MatMatNoPhysPerformer() {
-		this.setName("Mat-Mat No-Physics");
+		super("Mat-Mat No-Physics");
 	}
 
 	@Override

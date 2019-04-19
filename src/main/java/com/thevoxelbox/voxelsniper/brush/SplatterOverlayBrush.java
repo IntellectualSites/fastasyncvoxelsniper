@@ -35,7 +35,7 @@ public class SplatterOverlayBrush extends PerformBrush {
 	 *
 	 */
 	public SplatterOverlayBrush() {
-		this.setName("Splatter Overlay");
+		super("Splatter Overlay");
 	}
 
 	private void sOverlay(SnipeData v) {

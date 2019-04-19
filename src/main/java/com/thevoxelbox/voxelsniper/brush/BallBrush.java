@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -22,7 +23,7 @@ public class BallBrush extends PerformBrush {
 	 *
 	 */
 	public BallBrush() {
-		this.setName("Ball");
+		super("Ball");
 	}
 
 	private void ball(SnipeData snipeData, Block targetBlock) {
@@ -70,8 +71,8 @@ public class BallBrush extends PerformBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(this.current.getUndo());
 	}
 
 	@Override

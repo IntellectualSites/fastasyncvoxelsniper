@@ -22,7 +22,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	 *
 	 */
 	public SetRedstoneFlipBrush() {
-		this.setName("Set Redstone Flip");
+		super("Set Redstone Flip");
 	}
 
 	private boolean set(Block bl) {

@@ -17,7 +17,7 @@ public class CylinderBrush extends PerformBrush {
 	 *
 	 */
 	public CylinderBrush() {
-		this.setName("Cylinder");
+		super("Cylinder");
 	}
 
 	private void cylinder(SnipeData snipeData, Block targetBlock) {

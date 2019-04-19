@@ -23,7 +23,7 @@ public class ShellSetBrush extends AbstractBrush {
 	private Block block;
 
 	public ShellSetBrush() {
-		this.setName("Shell Set");
+		super("Shell Set");
 	}
 
 	private boolean set(Block block, SnipeData snipeData) {

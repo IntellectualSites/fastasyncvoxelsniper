@@ -10,11 +10,8 @@ import org.bukkit.Material;
  */
 public class BlendVoxelBrush extends BlendBrushBase {
 
-	/**
-	 *
-	 */
 	public BlendVoxelBrush() {
-		this.setName("Blend Voxel");
+		super("Blend Voxel");
 	}
 
 	@Override

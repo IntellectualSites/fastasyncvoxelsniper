@@ -22,7 +22,7 @@ public class SetBrush extends PerformBrush {
 	 *
 	 */
 	public SetBrush() {
-		this.setName("Set");
+		super("Set");
 	}
 
 	private boolean set(Block bl, SnipeData v) {

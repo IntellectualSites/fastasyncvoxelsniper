@@ -11,7 +11,7 @@ public class InkNoPhysPerformer extends AbstractPerformer {
 	private byte d;
 
 	public InkNoPhysPerformer() {
-		this.setName("Ink, No Physics");
+		super("Ink, No Physics");
 	}
 
 	@Override

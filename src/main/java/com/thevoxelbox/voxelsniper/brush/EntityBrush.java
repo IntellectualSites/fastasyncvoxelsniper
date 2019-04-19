@@ -17,7 +17,7 @@ public class EntityBrush extends AbstractBrush {
 	private EntityType entityType = EntityType.ZOMBIE;
 
 	public EntityBrush() {
-		this.setName("Entity");
+		super("Entity");
 	}
 
 	private void spawn(SnipeData snipeData) {

@@ -16,7 +16,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
 	 *
 	 */
 	public RegenerateChunkBrush() {
-		this.setName("Chunk Generator 40k");
+		super("Chunk Generator 40k");
 	}
 
 	private void generateChunk(SnipeData v) {

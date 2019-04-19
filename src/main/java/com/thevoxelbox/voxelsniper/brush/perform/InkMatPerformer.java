@@ -17,7 +17,7 @@ public class InkMatPerformer extends AbstractPerformer {
 	private int ir;
 
 	public InkMatPerformer() {
-		this.setName("Ink-Mat");
+		super("Ink-Mat");
 	}
 
 	@Override

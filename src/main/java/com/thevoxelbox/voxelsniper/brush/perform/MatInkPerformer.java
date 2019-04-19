@@ -17,7 +17,7 @@ public class MatInkPerformer extends AbstractPerformer {
 	private byte dr;
 
 	public MatInkPerformer() {
-		this.setName("Mat-Ink");
+		super("Mat-Ink");
 	}
 
 	@Override

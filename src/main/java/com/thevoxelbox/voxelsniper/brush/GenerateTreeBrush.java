@@ -48,7 +48,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	 *
 	 */
 	public GenerateTreeBrush() {
-		this.setName("Generate Tree");
+		super("Generate Tree");
 	}
 	// Branch Creation based on direction chosen from the parameters passed.
 

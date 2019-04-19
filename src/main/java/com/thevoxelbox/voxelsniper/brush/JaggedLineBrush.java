@@ -36,7 +36,7 @@ public class JaggedLineBrush extends PerformBrush {
 	 *
 	 */
 	public JaggedLineBrush() {
-		this.setName("Jagged Line");
+		super("Jagged Line");
 	}
 
 	private void jaggedP(SnipeData v) {

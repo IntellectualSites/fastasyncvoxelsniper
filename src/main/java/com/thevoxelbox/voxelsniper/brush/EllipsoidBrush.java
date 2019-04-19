@@ -20,7 +20,7 @@ public class EllipsoidBrush extends PerformBrush {
 	 *
 	 */
 	public EllipsoidBrush() {
-		this.setName("Ellipsoid");
+		super("Ellipsoid");
 	}
 
 	private void execute(SnipeData v, Block targetBlock) {

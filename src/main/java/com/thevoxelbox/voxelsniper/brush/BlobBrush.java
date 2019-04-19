@@ -20,17 +20,14 @@ public class BlobBrush extends PerformBrush {
 	private Random randomGenerator = new Random();
 	private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
 
-	/**
-	 *
-	 */
 	public BlobBrush() {
-		this.setName("Blob");
+		super("Blob");
 	}
 
-	private void checkValidGrowPercent(SnipeData v) {
+	private void checkValidGrowPercent(SnipeData snipeData) {
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
 			this.growPercent = GROW_PERCENT_DEFAULT;
-			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+			snipeData.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 		}
 	}
 

@@ -22,7 +22,7 @@ public class ScannerBrush extends AbstractBrush {
 	 *
 	 */
 	public ScannerBrush() {
-		this.setName("Scanner");
+		super("Scanner");
 	}
 
 	private int clamp(int value, int min, int max) {

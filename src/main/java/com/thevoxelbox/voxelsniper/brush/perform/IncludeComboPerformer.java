@@ -19,7 +19,7 @@ public class IncludeComboPerformer extends AbstractPerformer {
 	private byte data;
 
 	public IncludeComboPerformer() {
-		this.setName("Include Combo");
+		super("Include Combo");
 	}
 
 	@Override

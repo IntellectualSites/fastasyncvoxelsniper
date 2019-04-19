@@ -21,7 +21,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	 *
 	 */
 	public CanyonSelectionBrush() {
-		this.setName("Canyon Selection");
+		super("Canyon Selection");
 	}
 
 	private void execute(SnipeData v) {

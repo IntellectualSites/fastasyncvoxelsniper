@@ -18,7 +18,7 @@ public class IncludeMatPerformer extends AbstractPerformer {
 	private int id;
 
 	public IncludeMatPerformer() {
-		this.setName("Include Material");
+		super("Include Material");
 	}
 
 	@Override

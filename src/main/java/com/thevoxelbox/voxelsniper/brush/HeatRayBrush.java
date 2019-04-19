@@ -82,7 +82,7 @@ public class HeatRayBrush extends AbstractBrush {
 	 * Default Constructor.
 	 */
 	public HeatRayBrush() {
-		this.setName("Heat Ray");
+		super("Heat Ray");
 	}
 
 	/**

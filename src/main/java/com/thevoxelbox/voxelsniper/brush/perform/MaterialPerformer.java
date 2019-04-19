@@ -16,7 +16,7 @@ public class MaterialPerformer extends AbstractPerformer {
 	private int i;
 
 	public MaterialPerformer() {
-		this.setName("Material");
+		super("Material");
 	}
 
 	@Override

@@ -22,9 +22,10 @@ public abstract class BlendBrushBase extends AbstractBrush {
 		}
 	}
 
-	/**
-	 *
-	 */
+	public BlendBrushBase(String name) {
+		super(name);
+	}
+
 	protected abstract void blend(SnipeData snipeData);
 
 	@Override
@@ -50,7 +51,8 @@ public abstract class BlendBrushBase extends AbstractBrush {
 	@Override
 	public void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; ++i) {
-			if (parameters[i].equalsIgnoreCase("water")) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("water")) {
 				this.excludeWater = !this.excludeWater;
 				snipeData.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 			}

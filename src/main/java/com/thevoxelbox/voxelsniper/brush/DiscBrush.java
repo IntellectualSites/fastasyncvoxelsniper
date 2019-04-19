@@ -20,7 +20,7 @@ public class DiscBrush extends PerformBrush {
 	 * Default Constructor.
 	 */
 	public DiscBrush() {
-		this.setName("Disc");
+		super("Disc");
 	}
 
 	/**

@@ -15,7 +15,7 @@ public class EntityRemovalBrush extends AbstractBrush {
 	private final List<String> exemptions = new ArrayList<>(3);
 
 	public EntityRemovalBrush() {
-		this.setName("Entity Removal");
+		super("Entity Removal");
 		this.exemptions.add("org.bukkit.entity.Player");
 		this.exemptions.add("org.bukkit.entity.Hanging");
 		this.exemptions.add("org.bukkit.entity.NPC");

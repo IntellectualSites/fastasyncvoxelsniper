@@ -18,7 +18,7 @@ public class ShellBallBrush extends AbstractBrush {
 	 *
 	 */
 	public ShellBallBrush() {
-		this.setName("Shell Ball");
+		super("Shell Ball");
 	}
 
 	// parameters isn't an abstract method, gilt. You can just leave it out if there are none.

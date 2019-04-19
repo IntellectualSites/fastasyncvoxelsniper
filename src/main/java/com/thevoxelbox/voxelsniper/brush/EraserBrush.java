@@ -23,7 +23,7 @@ public class EraserBrush extends AbstractBrush {
 	 *
 	 */
 	public EraserBrush() {
-		this.setName("Eraser");
+		super("Eraser");
 	}
 
 	private void doErase(SnipeData v, boolean keepWater) {

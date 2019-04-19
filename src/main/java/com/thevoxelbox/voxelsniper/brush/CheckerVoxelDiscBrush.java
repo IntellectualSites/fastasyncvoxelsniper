@@ -17,7 +17,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 	 * Default constructor.
 	 */
 	public CheckerVoxelDiscBrush() {
-		this.setName("Checker Voxel Disc");
+		super("Checker Voxel Disc");
 	}
 
 	/**

@@ -13,7 +13,7 @@ public class InkComboNoPhysPerformer extends AbstractPerformer {
 	private int ir;
 
 	public InkComboNoPhysPerformer() {
-		this.setName("Ink-Combo, No Physics");
+		super("Ink-Combo, No Physics");
 	}
 
 	@Override

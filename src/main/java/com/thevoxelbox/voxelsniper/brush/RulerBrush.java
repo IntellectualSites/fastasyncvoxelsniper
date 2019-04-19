@@ -24,7 +24,7 @@ public class RulerBrush extends AbstractBrush {
 	 *
 	 */
 	public RulerBrush() {
-		this.setName("Ruler");
+		super("Ruler");
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class RingBrush extends PerformBrush {
 	 *
 	 */
 	public RingBrush() {
-		this.setName("Ring");
+		super("Ring");
 	}
 
 	private void ring(SnipeData v, Block targetBlock) {

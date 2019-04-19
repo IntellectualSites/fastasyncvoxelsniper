@@ -30,7 +30,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 *
 	 */
 	public SignOverwriteBrush() {
-		this.setName("Sign Overwrite Brush");
+		super("Sign Overwrite Brush");
 		clearBuffer();
 		resetStates();
 	}

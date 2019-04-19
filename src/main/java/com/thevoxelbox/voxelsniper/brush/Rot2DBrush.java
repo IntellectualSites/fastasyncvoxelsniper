@@ -21,7 +21,7 @@ public class Rot2DBrush extends AbstractBrush {
 	 *
 	 */
 	public Rot2DBrush() {
-		this.setName("2D Rotation");
+		super("2D Rotation");
 	}
 
 	private void getMatrix() {

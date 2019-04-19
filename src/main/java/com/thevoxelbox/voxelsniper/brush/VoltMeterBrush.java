@@ -17,7 +17,7 @@ public class VoltMeterBrush extends AbstractBrush {
 	 *
 	 */
 	public VoltMeterBrush() {
-		this.setName("VoltMeter");
+		super("VoltMeter");
 	}
 
 	private void data(SnipeData snipeData) {

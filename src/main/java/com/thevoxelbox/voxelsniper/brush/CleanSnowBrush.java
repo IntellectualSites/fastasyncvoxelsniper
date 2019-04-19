@@ -19,7 +19,7 @@ public class CleanSnowBrush extends AbstractBrush {
 	 *
 	 */
 	public CleanSnowBrush() {
-		this.setName("Clean Snow");
+		super("Clean Snow");
 	}
 
 	private void cleanSnow(SnipeData snipeData) {

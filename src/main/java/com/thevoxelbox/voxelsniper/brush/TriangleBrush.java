@@ -27,7 +27,7 @@ public class TriangleBrush extends PerformBrush {
 	 *
 	 */
 	public TriangleBrush() {
-		this.setName("Triangle");
+		super("Triangle");
 	}
 
 	private void triangleA(SnipeData snipeData) {

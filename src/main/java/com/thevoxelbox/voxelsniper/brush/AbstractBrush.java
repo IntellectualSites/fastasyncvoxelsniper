@@ -32,7 +32,11 @@ public abstract class AbstractBrush implements Brush {
 	/**
 	 * Brush name.
 	 */
-	private String name = "Undefined";
+	private String name;
+
+	public AbstractBrush(String name) {
+		this.name = name;
+	}
 
 	/**
 	 * @return {@link Block}

@@ -16,7 +16,7 @@ public class InkNoUndoPerformer extends AbstractPerformer {
 	private byte d;
 
 	public InkNoUndoPerformer() {
-		this.setName("Ink, No-Undo"); // made name more descriptive - Giltwist
+		super("Ink, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override

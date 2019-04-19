@@ -26,7 +26,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 	 *
 	 */
 	public TreeSnipeBrush() {
-		this.setName("Tree Snipe");
+		super("Tree Snipe");
 	}
 
 	private void single(SnipeData snipeData, Block targetBlock) {

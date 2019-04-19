@@ -20,7 +20,7 @@ public class FlatOceanBrush extends AbstractBrush {
 	 *
 	 */
 	public FlatOceanBrush() {
-		this.setName("FlatOcean");
+		super("FlatOcean");
 	}
 
 	private void flatOcean(Chunk chunk) {

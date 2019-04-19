@@ -32,7 +32,7 @@ public class CopyPastaBrush extends AbstractBrush {
 	 *
 	 */
 	public CopyPastaBrush() {
-		this.setName("CopyPasta");
+		super("CopyPasta");
 	}
 
 	private void doCopy(SnipeData v) {

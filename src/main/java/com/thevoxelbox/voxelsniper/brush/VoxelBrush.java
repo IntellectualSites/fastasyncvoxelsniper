@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 public class VoxelBrush extends PerformBrush {
 
 	public VoxelBrush() {
-		this.setName("Voxel");
+		super("Voxel");
 	}
 
 	@Override

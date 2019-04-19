@@ -18,7 +18,7 @@ public class ExcludeInkPerformer extends AbstractPerformer {
 	private byte data;
 
 	public ExcludeInkPerformer() {
-		this.setName("Exclude Ink");
+		super("Exclude Ink");
 	}
 
 	@Override

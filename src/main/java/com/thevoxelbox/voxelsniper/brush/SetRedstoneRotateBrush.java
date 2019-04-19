@@ -21,7 +21,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	 *
 	 */
 	public SetRedstoneRotateBrush() {
-		this.setName("Set Redstone Rotate");
+		super("Set Redstone Rotate");
 	}
 
 	private boolean set(Block bl) {

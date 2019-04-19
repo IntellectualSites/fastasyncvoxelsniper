@@ -22,7 +22,7 @@ public class UnderlayBrush extends PerformBrush {
 	 *
 	 */
 	public UnderlayBrush() {
-		this.setName("Underlay (Reverse Overlay)");
+		super("Underlay (Reverse Overlay)");
 	}
 
 	private void underlay(SnipeData snipeData) {

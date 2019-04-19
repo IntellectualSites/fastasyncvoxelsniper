@@ -32,7 +32,7 @@ public class SplatterDiscBrush extends PerformBrush {
 	 *
 	 */
 	public SplatterDiscBrush() {
-		this.setName("Splatter Disc");
+		super("Splatter Disc");
 	}
 
 	private void splatterDisc(SnipeData v, Block targetBlock) {

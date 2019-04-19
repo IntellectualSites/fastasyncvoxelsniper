@@ -29,7 +29,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 	 * Default Constructor.
 	 */
 	public ThreePointCircleBrush() {
-		this.setName("3-Point Circle");
+		super("3-Point Circle");
 	}
 
 	@Override

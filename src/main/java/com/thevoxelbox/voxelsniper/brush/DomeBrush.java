@@ -21,7 +21,7 @@ public class DomeBrush extends AbstractBrush {
 	 *
 	 */
 	public DomeBrush() {
-		this.setName("Dome");
+		super("Dome");
 	}
 
 	@Override

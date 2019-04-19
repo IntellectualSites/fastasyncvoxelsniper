@@ -55,7 +55,7 @@ public class OceanBrush extends AbstractBrush {
 	 *
 	 */
 	public OceanBrush() {
-		this.setName("OCEANATOR 5000(tm)");
+		super("OCEANATOR 5000(tm)");
 	}
 
 	private int getHeight(int bx, int bz) {

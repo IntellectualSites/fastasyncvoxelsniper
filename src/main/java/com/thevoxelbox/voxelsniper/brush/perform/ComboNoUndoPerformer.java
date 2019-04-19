@@ -17,7 +17,7 @@ public class ComboNoUndoPerformer extends AbstractPerformer {
 	private byte d;
 
 	public ComboNoUndoPerformer() {
-		this.setName("Combo, No-Undo"); // made name more descriptive - Giltwist
+		super("Combo, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override

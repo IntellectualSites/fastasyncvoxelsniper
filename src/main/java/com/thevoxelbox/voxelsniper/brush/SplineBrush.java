@@ -24,7 +24,7 @@ public class SplineBrush extends PerformBrush {
 	protected String[] sparams = {"ss", "sc", "clear"};
 
 	public SplineBrush() {
-		this.setName("Spline");
+		super("Spline");
 	}
 
 	public final void addToSet(SnipeData snipeData, boolean ep, Block targetBlock) {
