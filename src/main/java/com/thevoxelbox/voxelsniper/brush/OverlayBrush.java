@@ -15,7 +15,7 @@ public class OverlayBrush extends PerformBrush {
 
 	private static final int DEFAULT_DEPTH = 3;
 	private int depth = DEFAULT_DEPTH;
-	private boolean allBlocks = false;
+	private boolean allBlocks;
 
 	/**
 	 *
@@ -24,14 +24,14 @@ public class OverlayBrush extends PerformBrush {
 		this.setName("Overlay (Topsoil Filling)");
 	}
 
-	private void overlay(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
+	private void overlay(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				// check if column is valid
 				// column is valid if it has no solid block right above the clicked layer
-				final int materialId = this.getBlockIdAt(this.getTargetBlock()
+				int materialId = this.getBlockIdAt(this.getTargetBlock()
 					.getX() + x, this.getTargetBlock()
 					.getY() + 1, this.getTargetBlock()
 					.getZ() + z);
@@ -40,12 +40,12 @@ public class OverlayBrush extends PerformBrush {
 						for (int y = this.getTargetBlock()
 							.getY(); y > 0; y--) {
 							// check for surface
-							final int layerBlockId = this.getBlockIdAt(this.getTargetBlock()
+							int layerBlockId = this.getBlockIdAt(this.getTargetBlock()
 								.getX() + x, y, this.getTargetBlock()
 								.getZ() + z);
 							if (!isIgnoredBlock(layerBlockId)) {
-								for (int currentDepth = y; y - currentDepth < depth; currentDepth--) {
-									final int currentBlockId = this.getBlockIdAt(this.getTargetBlock()
+								for (int currentDepth = y; y - currentDepth < this.depth; currentDepth--) {
+									int currentBlockId = this.getBlockIdAt(this.getTargetBlock()
 										.getX() + x, currentDepth, this.getTargetBlock()
 										.getZ() + z);
 									if (isOverrideableMaterial(currentBlockId)) {
@@ -73,7 +73,7 @@ public class OverlayBrush extends PerformBrush {
 
 	@SuppressWarnings("deprecation")
 	private boolean isOverrideableMaterial(int materialId) {
-		if (allBlocks && !(materialId == Material.AIR.getId())) {
+		if (this.allBlocks && materialId != Material.AIR.getId()) {
 			return true;
 		}
 		switch (materialId) {
@@ -93,10 +93,10 @@ public class OverlayBrush extends PerformBrush {
 		}
 	}
 
-	private void overlayTwo(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
-		final int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
+	private void overlayTwo(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
+		int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				boolean surfaceFound = false;
@@ -162,25 +162,25 @@ public class OverlayBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.overlay(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.overlayTwo(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
 				v.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");

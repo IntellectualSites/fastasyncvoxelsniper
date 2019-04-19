@@ -27,14 +27,14 @@ public class HelpJSAP extends JSAP {
 	/**
 	 *
 	 */
-	public HelpJSAP(final String name, final String explanation, final int screenWidth) {
-		super();
+	public HelpJSAP(String name, String explanation, int screenWidth) {
 		this.name = name;
 		this.explanation = explanation;
 		this.screenWidth = screenWidth;
 		try {
 			this.registerParameter(new Switch("help", JSAP.NO_SHORTFLAG, "help", "Displays this help page."));
-		} catch (final JSAPException e) {
+		} catch (JSAPException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -42,14 +42,15 @@ public class HelpJSAP extends JSAP {
 	 * @throws java.io.IOException if an I/O error occurs
 	 * @throws com.martiansoftware.jsap.JSAPException if the configuration is not valid
 	 */
-	public HelpJSAP(final String name, final String explanation, final int screenWidth, final String resourceName) throws IOException, JSAPException {
+	public HelpJSAP(String name, String explanation, int screenWidth, String resourceName) throws IOException, JSAPException {
 		super(resourceName);
 		this.name = name;
 		this.explanation = explanation;
 		this.screenWidth = screenWidth;
 		try {
 			this.registerParameter(new Switch("help", JSAP.NO_SHORTFLAG, "help", "Displays this help page."));
-		} catch (final JSAPException e) {
+		} catch (JSAPException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -57,14 +58,15 @@ public class HelpJSAP extends JSAP {
 	 * @throws java.io.IOException if an I/O error occurs
 	 * @throws com.martiansoftware.jsap.JSAPException if the configuration is not valid
 	 */
-	public HelpJSAP(final String name, final String explanation, final int screenWidth, final URL jsapXML) throws IOException, JSAPException {
+	public HelpJSAP(String name, String explanation, int screenWidth, URL jsapXML) throws IOException, JSAPException {
 		super(jsapXML);
 		this.name = name;
 		this.explanation = explanation;
 		this.screenWidth = screenWidth;
 		try {
 			this.registerParameter(new Switch("help", JSAP.NO_SHORTFLAG, "help", "Displays this help page."));
-		} catch (final JSAPException e) {
+		} catch (JSAPException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -78,7 +80,7 @@ public class HelpJSAP extends JSAP {
 	/**
 	 * @param explanation the explanation to set
 	 */
-	public final void setExplanation(final String explanation) {
+	public final void setExplanation(String explanation) {
 		this.explanation = explanation;
 	}
 
@@ -92,7 +94,7 @@ public class HelpJSAP extends JSAP {
 	/**
 	 * @param name the name to set
 	 */
-	public final void setName(final String name) {
+	public final void setName(String name) {
 		this.name = name;
 	}
 
@@ -106,33 +108,33 @@ public class HelpJSAP extends JSAP {
 	/**
 	 * @param screenWidth the screenWidth to set
 	 */
-	public final void setScreenWidth(final int screenWidth) {
+	public final void setScreenWidth(int screenWidth) {
 		this.screenWidth = screenWidth;
 	}
 
 	/**
 	 * @return if something has been written on writer.
 	 */
-	public final List<String> writeHelpOrErrorMessageIfRequired(final JSAPResult jsapResult) {
+	public final List<String> writeHelpOrErrorMessageIfRequired(JSAPResult jsapResult) {
 		if (!(jsapResult.success()) || jsapResult.getBoolean("help")) {
-			List<String> returnValue = new LinkedList<String>();
+			List<String> returnValue = new LinkedList<>();
 			// To avoid spurious missing argument errors we never print errors if help is required.
 			if (!jsapResult.getBoolean("help")) {
-				for (final Iterator<?> err = jsapResult.getErrorMessageIterator(); err.hasNext(); ) {
+				for (Iterator<?> err = jsapResult.getErrorMessageIterator(); err.hasNext(); ) {
 					returnValue.add(ChatColor.RED + "Error: " + ChatColor.DARK_RED + err.next());
 				}
 				return returnValue;
 			}
 			returnValue.add(ChatColor.GOLD + "Usage:");
-			List<?> l = StringUtils.wrapToList(this.name + " " + this.getUsage(), this.screenWidth);
-			for (final Object aL : l) {
-				returnValue.add("  " + aL.toString());
+			List<?> list1 = StringUtils.wrapToList(this.name + " " + this.getUsage(), this.screenWidth);
+			for (Object aL : list1) {
+				returnValue.add("  " + aL);
 			}
 			if (this.explanation != null) {
 				returnValue.add("");
-				l = StringUtils.wrapToList(this.explanation, this.screenWidth);
-				for (final Object aL : l) {
-					final String next = (String) aL;
+				List<?> list = StringUtils.wrapToList(this.explanation, this.screenWidth);
+				for (Object aL : list) {
+					String next = (String) aL;
 					returnValue.add(ChatColor.AQUA + next);
 				}
 			}

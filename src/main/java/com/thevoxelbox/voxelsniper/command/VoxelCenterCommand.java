@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelCenterCommand extends VoxelCommand {
 
-	public VoxelCenterCommand(final VoxelSniper plugin) {
+	public VoxelCenterCommand(VoxelSniper plugin) {
 		super("VoxelCenter", plugin);
 		setIdentifier("vc");
 		setPermission("voxelsniper.sniper");
@@ -17,7 +17,7 @@ public class VoxelCenterCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		try {
@@ -26,7 +26,7 @@ public class VoxelCenterCommand extends VoxelCommand {
 			snipeData.getVoxelMessage()
 				.center();
 			return true;
-		} catch (final Exception exception) {
+		} catch (NumberFormatException exception) {
 			player.sendMessage(ChatColor.RED + "Invalid input.");
 			return true;
 		}

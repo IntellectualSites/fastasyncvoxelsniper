@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelChunkCommand extends VoxelCommand {
 
-	public VoxelChunkCommand(final VoxelSniper plugin) {
+	public VoxelChunkCommand(VoxelSniper plugin) {
 		super("VoxelChunk", plugin);
 		setIdentifier("vchunk");
 	}

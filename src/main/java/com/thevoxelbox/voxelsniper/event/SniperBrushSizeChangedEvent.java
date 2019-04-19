@@ -27,19 +27,19 @@ public class SniperBrushSizeChangedEvent extends Event {
 	}
 
 	public int getOriginalSize() {
-		return originalSize;
+		return this.originalSize;
 	}
 
 	public int getNewSize() {
-		return newSize;
+		return this.newSize;
 	}
 
 	public Sniper getSniper() {
-		return sniper;
+		return this.sniper;
 	}
 
 	public String getToolId() {
-		return toolId;
+		return this.toolId;
 	}
 
 	@Override

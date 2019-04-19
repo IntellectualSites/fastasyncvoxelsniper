@@ -19,10 +19,10 @@ public class VoxelDiscBrush extends PerformBrush {
 		this.setName("Voxel Disc");
 	}
 
-	private void disc(final SnipeData v, Block targetBlock) {
+	private void disc(SnipeData v, Block targetBlock) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-				current.perform(targetBlock.getRelative(x, 0, z));
+				this.current.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
 		v.owner()
@@ -30,17 +30,17 @@ public class VoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.disc(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.disc(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}

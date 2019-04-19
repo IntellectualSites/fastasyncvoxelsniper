@@ -24,7 +24,7 @@ public class FlatOceanBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void flatOcean(final Chunk chunk) {
+	private void flatOcean(Chunk chunk) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				for (int y = 0; y < chunk.getWorld()
@@ -45,13 +45,13 @@ public class FlatOceanBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.flatOcean(this.getWorld()
 			.getChunkAt(this.getTargetBlock()));
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.flatOcean(this.getWorld()
 			.getChunkAt(this.getTargetBlock()));
 		this.flatOcean(this.getWorld()
@@ -89,7 +89,7 @@ public class FlatOceanBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
 		vm.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
@@ -97,9 +97,9 @@ public class FlatOceanBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
 				v.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");

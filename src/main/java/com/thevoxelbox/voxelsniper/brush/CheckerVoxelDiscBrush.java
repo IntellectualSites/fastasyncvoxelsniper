@@ -23,10 +23,10 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 	/**
 	 *
 	 */
-	private void applyBrush(final SnipeData v, final Block target) {
+	private void applyBrush(SnipeData v, Block target) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
-				final int sum = this.useWorldCoordinates ? target.getX() + x + target.getZ() + y : x + y;
+				int sum = this.useWorldCoordinates ? target.getX() + x + target.getZ() + y : x + y;
 				if (sum % 2 != 0) {
 					this.current.perform(this.clampY(target.getX() + x, target.getY(), target.getZ() + y));
 				}
@@ -37,25 +37,25 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.applyBrush(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.applyBrush(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int x = 1; x < par.length; x++) {
-			final String parameter = par[x].toLowerCase();
+			String parameter = par[x].toLowerCase();
 			if (parameter.equals("info")) {
 				v.sendMessage(ChatColor.GOLD + this.getName() + " Parameters:");
 				v.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");

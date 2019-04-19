@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelSniperCommand extends VoxelCommand {
 
-	public VoxelSniperCommand(final VoxelSniper plugin) {
+	public VoxelSniperCommand(VoxelSniper plugin) {
 		super("VoxelSniper", plugin);
 		setIdentifier("vs");
 		setPermission("voxelsniper.sniper");
@@ -54,20 +54,19 @@ public class VoxelSniperCommand extends VoxelCommand {
 					} catch (NumberFormatException exception) {
 						player.sendMessage("Can't parse number.");
 					}
-					return true;
 				} else {
 					snipeData.setRanged(!snipeData.isRanged());
 					snipeData.getVoxelMessage()
 						.toggleRange();
-					return true;
 				}
+				return true;
 			} else if (args[0].equalsIgnoreCase("perf")) {
 				player.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");
-				player.sendMessage(PerformerE.performer_list_short);
+				player.sendMessage(PerformerE.getPerformerListShort());
 				return true;
 			} else if (args[0].equalsIgnoreCase("perflong")) {
 				player.sendMessage(ChatColor.AQUA + "Available performers:");
-				player.sendMessage(PerformerE.performer_list_long);
+				player.sendMessage(PerformerE.getPerformerListLong());
 				return true;
 			} else if (args[0].equalsIgnoreCase("enable")) {
 				sniper.setEnabled(true);

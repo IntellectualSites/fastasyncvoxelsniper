@@ -19,13 +19,12 @@ public class BlendBallBrush extends BlendBrushBase {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void blend(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeDoubled = 2 * brushSize;
+	protected final void blend(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		int brushSizeDoubled = 2 * brushSize;
 		// Array that holds the original materials plus a buffer
-		final int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1];
+		int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1];
 		// Array that holds the blended materials
-		final int[][][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		// Log current materials into oldmats
 		for (int x = 0; x <= 2 * (brushSize + 1); x++) {
 			for (int y = 0; y <= 2 * (brushSize + 1); y++) {
@@ -38,21 +37,17 @@ public class BlendBallBrush extends BlendBrushBase {
 			}
 		}
 		// Log current materials into newmats
+		int[][][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
-				for (int z = 0; z <= brushSizeDoubled; z++) {
-					newMaterials[x][y][z] = oldMaterials[x + 1][y + 1][z + 1];
-				}
+				System.arraycopy(oldMaterials[x + 1][y + 1], 1, newMaterials[x][y], 0, brushSizeDoubled + 1);
 			}
 		}
 		// Blend materials
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
 				for (int z = 0; z <= brushSizeDoubled; z++) {
-					final int[] materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
-					int modeMatCount = 0;
-					int modeMatId = 0;
-					boolean tiecheck = true;
+					int[] materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
 					for (int m = -1; m <= 1; m++) {
 						for (int n = -1; n <= 1; n++) {
 							for (int o = -1; o <= 1; o++) {
@@ -63,6 +58,8 @@ public class BlendBallBrush extends BlendBrushBase {
 						}
 					}
 					// Find most common neighboring material.
+					int modeMatId = 0;
+					int modeMatCount = 0;
 					for (int i = 0; i <= BlendBrushBase.getMaxBlockMaterialID(); i++) {
 						if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
 							modeMatCount = materialFrequency[i];
@@ -70,6 +67,7 @@ public class BlendBallBrush extends BlendBrushBase {
 						}
 					}
 					// Make sure there'world not a tie for most common
+					boolean tiecheck = true;
 					for (int i = 0; i < modeMatId; i++) {
 						if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
 							tiecheck = false;
@@ -82,13 +80,13 @@ public class BlendBallBrush extends BlendBrushBase {
 				}
 			}
 		}
-		final Undo undo = new Undo();
-		final double rSquared = Math.pow(brushSize + 1, 2);
+		Undo undo = new Undo();
+		double rSquared = Math.pow(brushSize + 1, 2);
 		// Make the changes
 		for (int x = brushSizeDoubled; x >= 0; x--) {
-			final double xSquared = Math.pow(x - brushSize - 1, 2);
+			double xSquared = Math.pow(x - brushSize - 1, 2);
 			for (int y = 0; y <= brushSizeDoubled; y++) {
-				final double ySquared = Math.pow(y - brushSize - 1, 2);
+				double ySquared = Math.pow(y - brushSize - 1, 2);
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
 						if (!(this.excludeAir && newMaterials[x][y][z] == Material.AIR.getId()) && !(this.excludeWater && (newMaterials[x][y][z] == Material.WATER.getId() || newMaterials[x][y][z] == Material.STATIONARY_WATER.getId()))) {
@@ -115,7 +113,7 @@ public class BlendBallBrush extends BlendBrushBase {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default: exclude) water");

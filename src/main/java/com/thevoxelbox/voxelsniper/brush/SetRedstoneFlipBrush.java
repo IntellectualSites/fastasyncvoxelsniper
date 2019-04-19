@@ -6,13 +6,15 @@ import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Voxel
  */
 public class SetRedstoneFlipBrush extends Brush {
 
-	private Block block = null;
+	@Nullable
+	private Block block;
 	private Undo undo;
 	private boolean northSouth = true;
 
@@ -23,18 +25,18 @@ public class SetRedstoneFlipBrush extends Brush {
 		this.setName("Set Redstone Flip");
 	}
 
-	private boolean set(final Block bl) {
+	private boolean set(Block bl) {
 		if (this.block == null) {
 			this.block = bl;
 			return true;
 		} else {
 			this.undo = new Undo();
-			final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
@@ -48,7 +50,7 @@ public class SetRedstoneFlipBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void perform(final Block bl) {
+	private void perform(Block bl) {
 		if (bl.getType() == Material.DIODE_BLOCK_ON || bl.getType() == Material.DIODE_BLOCK_OFF) {
 			if (this.northSouth) {
 				if ((bl.getData() % 4) == 1) {
@@ -71,7 +73,7 @@ public class SetRedstoneFlipBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		if (this.set(this.getTargetBlock())) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -81,7 +83,7 @@ public class SetRedstoneFlipBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.set(this.getLastBlock())) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -91,13 +93,13 @@ public class SetRedstoneFlipBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		this.block = null;
 		vm.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
 			if (par[i].equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");

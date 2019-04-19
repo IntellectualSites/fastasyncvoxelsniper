@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelBrushToolCommand extends VoxelCommand {
 
-	public VoxelBrushToolCommand(final VoxelSniper plugin) {
+	public VoxelBrushToolCommand(VoxelSniper plugin) {
 		super("VoxelBrushTool", plugin);
 		setIdentifier("btool");
 		setPermission("voxelsniper.sniper");
@@ -17,7 +17,7 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		if (args != null && args.length > 0) {
 			if (args[0].equalsIgnoreCase("assign")) {
@@ -47,7 +47,6 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 			} else if (args[0].equalsIgnoreCase("remove")) {
 				if (args.length == 2 && args[1] != null && !args[1].isEmpty()) {
 					sniper.removeTool(args[1]);
-					return true;
 				} else {
 					Material itemInHand = (player.getItemInHand() != null) ? player.getItemInHand()
 						.getType() : null;
@@ -60,8 +59,8 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 						return true;
 					}
 					sniper.removeTool(sniper.getCurrentToolId(), itemInHand);
-					return true;
 				}
+				return true;
 			}
 		}
 		player.sendMessage("/btool assign <arrow|powder> <toolid>");

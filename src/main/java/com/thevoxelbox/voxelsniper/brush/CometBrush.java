@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
  */
 public class CometBrush extends Brush {
 
-	private boolean useBigBalls = false;
+	private boolean useBigBalls;
 
 	/**
 	 *
@@ -24,20 +24,20 @@ public class CometBrush extends Brush {
 		this.setName("Comet");
 	}
 
-	private void doFireball(final SnipeData v) {
-		final Vector targetCoords = new Vector(this.getTargetBlock()
-			.getX() + .5 * this.getTargetBlock()
+	private void doFireball(SnipeData v) {
+		Vector targetCoords = new Vector(this.getTargetBlock()
+			.getX() + 0.5 * this.getTargetBlock()
 			.getX() / Math.abs(this.getTargetBlock()
 			.getX()), this.getTargetBlock()
-			.getY() + .5, this.getTargetBlock()
-			.getZ() + .5 * this.getTargetBlock()
+			.getY() + 0.5, this.getTargetBlock()
+			.getZ() + 0.5 * this.getTargetBlock()
 			.getZ() / Math.abs(this.getTargetBlock()
 			.getZ()));
-		final Location playerLocation = v.owner()
+		Location playerLocation = v.owner()
 			.getPlayer()
 			.getEyeLocation();
-		final Vector slope = targetCoords.subtract(playerLocation.toVector());
-		if (useBigBalls) {
+		Vector slope = targetCoords.subtract(playerLocation.toVector());
+		if (this.useBigBalls) {
 			v.owner()
 				.getPlayer()
 				.launchProjectile(LargeFireball.class)
@@ -51,7 +51,7 @@ public class CometBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 0; i < par.length; ++i) {
 			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
@@ -64,10 +64,10 @@ public class CometBrush extends Brush {
 				}
 				String newBallSize = par[++i];
 				if (newBallSize.equalsIgnoreCase("big")) {
-					useBigBalls = true;
+					this.useBigBalls = true;
 					v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
 				} else if (newBallSize.equalsIgnoreCase("small")) {
-					useBigBalls = false;
+					this.useBigBalls = false;
 					v.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
 				} else {
 					v.sendMessage("Unknown ball size.");
@@ -77,20 +77,20 @@ public class CometBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.doFireball(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.doFireball(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.voxel();
-		vm.custom("Your balls are " + ChatColor.DARK_RED + (useBigBalls ? "BIG" : "small"));
+		vm.custom("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"));
 	}
 
 	@Override

@@ -18,29 +18,29 @@ public class pIncludeMat extends vPerformer {
 	private int id;
 
 	public pIncludeMat() {
-		name = "Include Material";
+		this.setName("Include Material");
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxelList();
 		vm.voxel();
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		id = v.getVoxelId();
-		includeList = v.getVoxelList();
+		this.world = v.getWorld();
+		this.id = v.getVoxelId();
+		this.includeList = v.getVoxelList();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (includeList.contains(new int[] {b.getTypeId(), b.getData()})) {
-			h.put(b);
-			b.setTypeId(id);
+	public void perform(Block block) {
+		if (this.includeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+			this.h.put(block);
+			block.setTypeId(this.id);
 		}
 	}
 }

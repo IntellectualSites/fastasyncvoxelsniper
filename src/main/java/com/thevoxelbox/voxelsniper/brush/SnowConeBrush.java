@@ -16,7 +16,7 @@ import org.bukkit.block.BlockFace;
 public class SnowConeBrush extends Brush {
 
 	@SuppressWarnings("deprecation")
-	private void addSnow(final SnipeData v, Block targetBlock) {
+	private void addSnow(SnipeData v, Block targetBlock) {
 		int brushSize;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -27,10 +27,10 @@ public class SnowConeBrush extends Brush {
 			brushSize = this.clampY(blockPositionX, blockPositionY, blockPositionZ)
 				.getData() + 1;
 		}
-		final int brushSizeDoubled = 2 * brushSize;
-		final int[][] snowcone = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
-		final int[][] snowconeData = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowcone
-		final int[][] yOffset = new int[brushSizeDoubled + 1][brushSizeDoubled + 1];
+		int brushSizeDoubled = 2 * brushSize;
+		int[][] snowcone = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
+		int[][] snowconeData = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowcone
+		int[][] yOffset = new int[brushSizeDoubled + 1][brushSizeDoubled + 1];
 		// prime the arrays
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int z = 0; z <= brushSizeDoubled; z++) {
@@ -50,11 +50,11 @@ public class SnowConeBrush extends Brush {
 		}
 		// figure out new snowheights
 		for (int x = 0; x <= brushSizeDoubled; x++) {
-			final double xSquared = Math.pow(x - brushSize, 2);
+			double xSquared = Math.pow(x - brushSize, 2);
 			for (int z = 0; z <= 2 * brushSize; z++) {
-				final double zSquared = Math.pow(z - brushSize, 2);
-				final double dist = Math.pow(xSquared + zSquared, .5); // distance from center of array
-				final int snowData = brushSize - (int) Math.ceil(dist);
+				double zSquared = Math.pow(z - brushSize, 2);
+				double dist = Math.pow(xSquared + zSquared, 0.5); // distance from center of array
+				int snowData = brushSize - (int) Math.ceil(dist);
 				if (snowData >= 0) { // no funny business
 					switch (snowData) {
 						case 0:
@@ -75,6 +75,7 @@ public class SnowConeBrush extends Brush {
 									case 0:
 										snowconeData[x][z] = snowData;
 										snowcone[x][z] = Material.SNOW.getId();
+										break;
 									case 78:
 										snowconeData[x][z] = snowData;
 										break;
@@ -93,7 +94,7 @@ public class SnowConeBrush extends Brush {
 				}
 			}
 		}
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int z = 0; z <= brushSizeDoubled; z++) {
 				if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z) != snowcone[x][z] || this.clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z)
@@ -110,11 +111,11 @@ public class SnowConeBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		switch (getTargetBlock().getType()) {
 			case SNOW:
 				this.addSnow(v, this.getTargetBlock());
@@ -133,12 +134,12 @@ public class SnowConeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName("Snow Cone");
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
 		}

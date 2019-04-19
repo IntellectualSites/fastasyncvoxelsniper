@@ -25,7 +25,7 @@ public class ScannerBrush extends Brush {
 		this.setName("Scanner");
 	}
 
-	private int clamp(final int value, final int min, final int max) {
+	private int clamp(int value, int min, int max) {
 		if (value < min) {
 			return min;
 		} else if (value > max) {
@@ -35,7 +35,7 @@ public class ScannerBrush extends Brush {
 		}
 	}
 
-	private void scan(final SnipeData v, final BlockFace bf) {
+	private void scan(SnipeData v, BlockFace bf) {
 		if (bf == null) {
 			return;
 		}
@@ -140,7 +140,7 @@ public class ScannerBrush extends Brush {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.checkFor = Material.getMaterial(v.getVoxelId());
 		this.scan(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()));
@@ -148,21 +148,21 @@ public class ScannerBrush extends Brush {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.checkFor = Material.getMaterial(v.getVoxelId());
 		this.scan(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()));
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
 		vm.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
 			if (par[i].equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");

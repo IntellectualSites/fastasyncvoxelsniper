@@ -12,29 +12,26 @@ import org.mcstats.Metrics.Graph;
  */
 public final class MetricsManager {
 
-	private static int snipesDone = 0;
-	private static long snipeCounterInitTimeStamp = 0;
+	private static int snipesDone;
+	private static long snipeCounterInitTimeStamp;
 	private static MetricsManager instance;
 	private static Map<String, Integer> brushUsageCounter = Maps.newHashMap();
 
 	private MetricsManager() {
 	}
 
-	/**
-	 * @return {@link MetricsManager}
-	 */
 	public static MetricsManager getInstance() {
-		if (MetricsManager.instance == null) {
-			MetricsManager.instance = new MetricsManager();
+		if (instance == null) {
+			instance = new MetricsManager();
 		}
-		return MetricsManager.instance;
+		return instance;
 	}
 
 	/**
 	 * Increase the Snipes Counter.
 	 */
 	public static void increaseSnipeCounter() {
-		MetricsManager.snipesDone++;
+		snipesDone++;
 	}
 
 	/**
@@ -43,17 +40,15 @@ public final class MetricsManager {
 	 * @param brushName Name of the Brush
 	 */
 	public static void increaseBrushUsage(String brushName) {
-		if (brushUsageCounter.get(brushName) == null) {
-			brushUsageCounter.put(brushName, 0);
-		}
+		brushUsageCounter.putIfAbsent(brushName, 0);
 		brushUsageCounter.put(brushName, brushUsageCounter.get(brushName));
 	}
 
 	/**
 	 * Set Initialization time for reference when calculating average Snipes per Minute.
 	 */
-	public static void setSnipeCounterInitTimeStamp(final long currentTimeMillis) {
-		MetricsManager.snipeCounterInitTimeStamp = currentTimeMillis;
+	public static void setSnipeCounterInitTimeStamp(long currentTimeMillis) {
+		snipeCounterInitTimeStamp = currentTimeMillis;
 	}
 
 	/**
@@ -61,20 +56,20 @@ public final class MetricsManager {
 	 */
 	public void start() {
 		try {
-			final Metrics metrics = new Metrics(VoxelSniper.getInstance());
-			final Graph defaultGraph = metrics.createGraph("Default");
+			Metrics metrics = new Metrics(VoxelSniper.getInstance());
+			Graph defaultGraph = metrics.createGraph("Default");
 			defaultGraph.addPlotter(new Metrics.Plotter("Average Snipes per Minute") {
 
 				@Override
 				public int getValue() {
-					final int currentSnipes = MetricsManager.snipesDone;
-					final long initializationTimeStamp = MetricsManager.snipeCounterInitTimeStamp;
-					final double deltaTime = System.currentTimeMillis() - initializationTimeStamp;
-					double average = 0;
+					int currentSnipes = snipesDone;
+					long initializationTimeStamp = snipeCounterInitTimeStamp;
+					double deltaTime = System.currentTimeMillis() - initializationTimeStamp;
+					double average;
 					if (deltaTime < 60000) {
 						average = currentSnipes;
 					} else {
-						final double timeRunning = deltaTime / 60000;
+						double timeRunning = deltaTime / 60000;
 						average = currentSnipes / timeRunning;
 					}
 					// quite unlikely ...
@@ -84,8 +79,8 @@ public final class MetricsManager {
 					return NumberConversions.floor(average);
 				}
 			});
-			final Graph brushUsageGraph = metrics.createGraph("Brush Usage");
-			for (final Map.Entry<String, Integer> entry : brushUsageCounter.entrySet()) {
+			Graph brushUsageGraph = metrics.createGraph("Brush Usage");
+			for (Map.Entry<String, Integer> entry : brushUsageCounter.entrySet()) {
 				brushUsageGraph.addPlotter(new Metrics.Plotter(entry.getKey()) {
 					@Override
 					public int getValue() {
@@ -99,7 +94,7 @@ public final class MetricsManager {
 				});
 			}
 			metrics.start();
-		} catch (final IOException exception) {
+		} catch (IOException exception) {
 			VoxelSniper.getInstance()
 				.getLogger()
 				.finest("Failed to submit Metrics Data.");

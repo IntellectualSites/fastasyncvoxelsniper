@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniper;
@@ -30,7 +31,7 @@ public class SignOverwriteBrush extends Brush {
 	private static final int SIGN_LINE_4 = 4;
 	private String[] signTextLines = new String[NUM_SIGN_LINES];
 	private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
-	private boolean rangedMode = false;
+	private boolean rangedMode;
 
 	/**
 	 *
@@ -44,7 +45,7 @@ public class SignOverwriteBrush extends Brush {
 	/**
 	 * Sets the text of a given sign.
 	 */
-	private void setSignText(final Sign sign) {
+	private void setSignText(Sign sign) {
 		for (int i = 0; i < this.signTextLines.length; i++) {
 			if (this.signLinesEnabled[i]) {
 				sign.setLine(i, this.signTextLines[i]);
@@ -56,27 +57,26 @@ public class SignOverwriteBrush extends Brush {
 	/**
 	 * Sets the text of the target sign if the target block is a sign.
 	 */
-	private void setSingle(final SnipeData v) {
+	private void setSingle(SnipeData v) {
 		if (this.getTargetBlock()
 			.getState() instanceof Sign) {
 			setSignText((Sign) this.getTargetBlock()
 				.getState());
 		} else {
 			v.sendMessage(ChatColor.RED + "Target block is not a sign.");
-			return;
 		}
 	}
 
 	/**
 	 * Sets all signs in a range of box{x=z=brushSize*2+1 ; z=voxelHeight*2+1}.
 	 */
-	private void setRanged(final SnipeData v) {
-		final int minX = getTargetBlock().getX() - v.getBrushSize();
-		final int maxX = getTargetBlock().getX() + v.getBrushSize();
-		final int minY = getTargetBlock().getY() - v.getVoxelHeight();
-		final int maxY = getTargetBlock().getY() + v.getVoxelHeight();
-		final int minZ = getTargetBlock().getZ() - v.getBrushSize();
-		final int maxZ = getTargetBlock().getZ() + v.getBrushSize();
+	private void setRanged(SnipeData v) {
+		int minX = getTargetBlock().getX() - v.getBrushSize();
+		int maxX = getTargetBlock().getX() + v.getBrushSize();
+		int minY = getTargetBlock().getY() - v.getVoxelHeight();
+		int maxY = getTargetBlock().getY() + v.getVoxelHeight();
+		int minZ = getTargetBlock().getZ() - v.getBrushSize();
+		int maxZ = getTargetBlock().getZ() + v.getBrushSize();
 		boolean signFound = false; // indicates whether or not a sign was set
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
@@ -97,7 +97,7 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		if (this.rangedMode) {
 			setRanged(v);
 		} else {
@@ -106,7 +106,7 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.getTargetBlock()
 			.getState() instanceof Sign) {
 			Sign sign = (Sign) this.getTargetBlock()
@@ -123,7 +123,7 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		boolean textChanged = false;
 		for (int i = 0; i < par.length; i++) {
 			String parameter = par[i];
@@ -166,8 +166,8 @@ public class SignOverwriteBrush extends Brush {
 						v.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
 						continue;
 					}
-					rangedMode = (par[++i].equalsIgnoreCase("on") || par[++i].equalsIgnoreCase("yes"));
-					v.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (rangedMode ? "enabled" : "disabled")));
+					this.rangedMode = (par[++i].equalsIgnoreCase("on") || par[++i].equalsIgnoreCase("yes"));
+					v.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
 					if (this.rangedMode) {
 						v.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + v.getBrushSize());
 						v.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + v.getVoxelHeight());
@@ -188,7 +188,7 @@ public class SignOverwriteBrush extends Brush {
 					loadBufferFromFile(fileName, "", v);
 					textChanged = true;
 				}
-			} catch (Exception exception) {
+			} catch (RuntimeException exception) {
 				v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
 				exception.printStackTrace();
 			}
@@ -203,12 +203,12 @@ public class SignOverwriteBrush extends Brush {
 	 * Iterates though the given array until the next top level param (a parameter which starts
 	 * with a dash -) is found.
 	 */
-	private int parseSignLineFromParam(final String[] params, final int lineNumber, final SnipeData v, int i) {
-		final int lineIndex = lineNumber - 1;
-		final String parameter = params[i];
+	private int parseSignLineFromParam(String[] params, int lineNumber, SnipeData v, int i) {
+		int lineIndex = lineNumber - 1;
+		String parameter = params[i];
 		boolean statusSet = false;
 		if (parameter.contains(":")) {
-			this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(":"))
+			this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(':'))
 				.equalsIgnoreCase(":enabled");
 			v.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
 			statusSet = true;
@@ -219,25 +219,27 @@ public class SignOverwriteBrush extends Brush {
 				return i;
 			}
 			v.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
-			signTextLines[lineIndex] = "";
+			this.signTextLines[lineIndex] = "";
 			return i;
 		}
-		String newText = "";
+		StringBuilder newText = new StringBuilder();
 		// go through the array until the next top level parameter is found
 		for (i++; i < params.length; i++) {
-			final String currentParameter = params[i];
+			String currentParameter = params[i];
 			if (currentParameter.startsWith("-")) {
 				i--;
 				break;
 			} else {
-				newText += currentParameter + " ";
+				newText.append(currentParameter)
+					.append(" ");
 			}
 		}
-		newText = ChatColor.translateAlternateColorCodes('&', newText);
+		newText = new StringBuilder(ChatColor.translateAlternateColorCodes('&', newText.toString()));
 		// remove last space or return if the string is empty and the user just wanted to set the status
-		if (!newText.isEmpty() && newText.endsWith(" ")) {
-			newText = newText.substring(0, newText.length() - 1);
-		} else if (newText.isEmpty()) {
+		if ((newText.length() > 0) && newText.toString()
+			.endsWith(" ")) {
+			newText = new StringBuilder(newText.substring(0, newText.length() - 1));
+		} else if (newText.length() == 0) {
 			if (statusSet) {
 				return i;
 			}
@@ -246,13 +248,13 @@ public class SignOverwriteBrush extends Brush {
 		// check the line length and cut the text if needed
 		if (newText.length() > MAX_SIGN_LINE_LENGTH) {
 			v.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
-			newText = newText.substring(0, MAX_SIGN_LINE_LENGTH);
+			newText = new StringBuilder(newText.substring(0, MAX_SIGN_LINE_LENGTH));
 		}
-		this.signTextLines[lineIndex] = newText;
+		this.signTextLines[lineIndex] = newText.toString();
 		return i;
 	}
 
-	private void displayBuffer(final SnipeData v) {
+	private void displayBuffer(SnipeData v) {
 		v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
 		for (int i = 0; i < this.signTextLines.length; i++) {
 			v.sendMessage((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
@@ -262,8 +264,8 @@ public class SignOverwriteBrush extends Brush {
 	/**
 	 * Saves the buffer to file.
 	 */
-	private void saveBufferToFile(final String fileName, final SnipeData v) {
-		final File store = new File(VoxelSniper.getInstance()
+	private void saveBufferToFile(String fileName, SnipeData v) {
+		File store = new File(VoxelSniper.getInstance()
 			.getDataFolder() + "/" + fileName + ".vsign");
 		if (store.exists()) {
 			v.sendMessage("This file already exists.");
@@ -274,7 +276,7 @@ public class SignOverwriteBrush extends Brush {
 			FileWriter outFile = new FileWriter(store);
 			BufferedWriter outStream = new BufferedWriter(outFile);
 			for (int i = 0; i < this.signTextLines.length; i++) {
-				outStream.write(String.valueOf(this.signLinesEnabled[i]) + "\n");
+				outStream.write(this.signLinesEnabled[i] + "\n");
 				outStream.write(this.signTextLines[i] + "\n");
 			}
 			outStream.close();
@@ -289,8 +291,8 @@ public class SignOverwriteBrush extends Brush {
 	/**
 	 * Loads a buffer from a file.
 	 */
-	private void loadBufferFromFile(final String fileName, final String userDomain, final SnipeData v) {
-		final File store = new File(VoxelSniper.getInstance()
+	private void loadBufferFromFile(String fileName, String userDomain, SnipeData v) {
+		File store = new File(VoxelSniper.getInstance()
 			.getDataFolder() + "/" + fileName + ".vsign");
 		if (!store.exists()) {
 			v.sendMessage("This file does not exist.");
@@ -316,9 +318,7 @@ public class SignOverwriteBrush extends Brush {
 	 * Clears the internal text buffer. (Sets it to empty strings)
 	 */
 	private void clearBuffer() {
-		for (int i = 0; i < this.signTextLines.length; i++) {
-			this.signTextLines[i] = "";
-		}
+		Arrays.fill(this.signTextLines, "");
 	}
 
 	/**
@@ -331,14 +331,14 @@ public class SignOverwriteBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName("Sign Overwrite Brush");
 		vm.custom(ChatColor.BLUE + "Buffer text: ");
 		for (int i = 0; i < this.signTextLines.length; i++) {
 			vm.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
 		}
-		vm.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (rangedMode ? "enabled" : "disabled")));
-		if (rangedMode) {
+		vm.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+		if (this.rangedMode) {
 			vm.size();
 			vm.height();
 		}

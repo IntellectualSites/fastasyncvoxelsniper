@@ -20,7 +20,7 @@ public class UndoTest {
 
 	@Before
 	public void setUp() throws Exception {
-		undo = new Undo();
+        this.undo = new Undo();
 	}
 
 	@Test
@@ -36,9 +36,9 @@ public class UndoTest {
 				.thenReturn(blockState);
 			Mockito.when(blockState.getLocation())
 				.thenReturn(location);
-			undo.put(block);
+            this.undo.put(block);
 		}
-		Assert.assertEquals(5, undo.getSize());
+		Assert.assertEquals(5, this.undo.getSize());
 		Block block = Mockito.mock(Block.class);
 		BlockState blockState = Mockito.mock(BlockState.class);
 		Location location = new Location(world, 0, 0, 6);
@@ -48,10 +48,10 @@ public class UndoTest {
 			.thenReturn(blockState);
 		Mockito.when(blockState.getLocation())
 			.thenReturn(location);
-		undo.put(block);
-		Assert.assertEquals(6, undo.getSize());
-		undo.put(block);
-		Assert.assertEquals(6, undo.getSize());
+        this.undo.put(block);
+		Assert.assertEquals(6, this.undo.getSize());
+        this.undo.put(block);
+		Assert.assertEquals(6, this.undo.getSize());
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class UndoTest {
 			.thenReturn(blockState);
 		Mockito.when(blockState.getLocation())
 			.thenReturn(location);
-		undo.put(block);
+        this.undo.put(block);
 	}
 
 	@Test
@@ -111,10 +111,10 @@ public class UndoTest {
 			.thenReturn(waterBlockLocation);
 		Mockito.when(waterBlockState.getBlock())
 			.thenReturn(waterBlock);
-		undo.put(waterBlock);
-		undo.put(fragileBlock);
-		undo.put(normalBlock);
-		undo.undo();
+        this.undo.put(waterBlock);
+        this.undo.put(fragileBlock);
+        this.undo.put(normalBlock);
+        this.undo.undo();
 		InOrder inOrder = Mockito.inOrder(normalBlockState, waterBlockState, fragileBlockState);
 		inOrder.verify(normalBlockState)
 			.update(Mockito.anyBoolean(), Mockito.anyBoolean());

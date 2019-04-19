@@ -15,20 +15,20 @@ import org.bukkit.entity.Entity;
  */
 public class EntityRemovalBrush extends Brush {
 
-	private final List<String> exemptions = new ArrayList<String>(3);
+	private final List<String> exemptions = new ArrayList<>(3);
 
 	/**
 	 *
 	 */
 	public EntityRemovalBrush() {
 		this.setName("Entity Removal");
-		exemptions.add("org.bukkit.entity.Player");
-		exemptions.add("org.bukkit.entity.Hanging");
-		exemptions.add("org.bukkit.entity.NPC");
+		this.exemptions.add("org.bukkit.entity.Player");
+		this.exemptions.add("org.bukkit.entity.Hanging");
+		this.exemptions.add("org.bukkit.entity.NPC");
 	}
 
 	private void radialRemoval(SnipeData v) {
-		final Chunk targetChunk = getTargetBlock().getChunk();
+		Chunk targetChunk = getTargetBlock().getChunk();
 		int entityCount = 0;
 		int chunkCount = 0;
 		try {
@@ -40,7 +40,7 @@ public class EntityRemovalBrush extends Brush {
 					chunkCount++;
 				}
 			}
-		} catch (final PatternSyntaxException pse) {
+		} catch (PatternSyntaxException pse) {
 			pse.printStackTrace();
 			v.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + pse.getPattern());
 			v.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", pse.getDescription(), pse.getIndex()));
@@ -62,17 +62,17 @@ public class EntityRemovalBrush extends Brush {
 
 	private boolean isClassInExemptionList(Class<? extends Entity> entityClass) throws PatternSyntaxException {
 		// Create a list of superclasses and interfaces implemented by the current entity type
-		final List<String> entityClassHierarchy = new ArrayList<String>();
+		List<String> entityClassHierarchy = new ArrayList<>();
 		Class<?> currentClass = entityClass;
 		while (currentClass != null && !currentClass.equals(Object.class)) {
 			entityClassHierarchy.add(currentClass.getCanonicalName());
-			for (final Class<?> intrf : currentClass.getInterfaces()) {
+			for (Class<?> intrf : currentClass.getInterfaces()) {
 				entityClassHierarchy.add(intrf.getCanonicalName());
 			}
 			currentClass = currentClass.getSuperclass();
 		}
-		for (final String exemptionPattern : exemptions) {
-			for (final String typeName : entityClassHierarchy) {
+		for (String exemptionPattern : this.exemptions) {
+			for (String typeName : entityClassHierarchy) {
 				if (typeName.matches(exemptionPattern)) {
 					return true;
 				}
@@ -94,8 +94,8 @@ public class EntityRemovalBrush extends Brush {
 	@Override
 	public void info(Message vm) {
 		vm.brushName(getName());
-		final StringBuilder exemptionsList = new StringBuilder(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE);
-		for (Iterator it = exemptions.iterator(); it.hasNext(); ) {
+		StringBuilder exemptionsList = new StringBuilder(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE);
+		for (Iterator<String> it = this.exemptions.iterator(); it.hasNext(); ) {
 			exemptionsList.append(it.next());
 			if (it.hasNext()) {
 				exemptionsList.append(", ");
@@ -106,22 +106,22 @@ public class EntityRemovalBrush extends Brush {
 	}
 
 	@Override
-	public void parameters(final String[] par, final SnipeData v) {
-		for (final String currentParam : par) {
+	public void parameters(String[] par, SnipeData v) {
+		for (String currentParam : par) {
 			if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
-				final boolean isAddOperation = currentParam.startsWith("+");
+				boolean isAddOperation = currentParam.startsWith("+");
 				// +#/-# will suppress auto-prefixing
-				final String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(2) : (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
+				String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(2) : (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
 				if (isAddOperation) {
-					exemptions.add(exemptionPattern);
+					this.exemptions.add(exemptionPattern);
 					v.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
 				} else {
-					exemptions.remove(exemptionPattern);
+					this.exemptions.remove(exemptionPattern);
 					v.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
 				}
 			}
 			if (currentParam.equalsIgnoreCase("list-exemptions") || currentParam.equalsIgnoreCase("lex")) {
-				for (final String exemption : exemptions) {
+				for (String exemption : this.exemptions) {
 					v.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
 				}
 			}

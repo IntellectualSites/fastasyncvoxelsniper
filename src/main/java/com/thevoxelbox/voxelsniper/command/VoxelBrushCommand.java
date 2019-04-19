@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelBrushCommand extends VoxelCommand {
 
-	public VoxelBrushCommand(final VoxelSniper plugin) {
+	public VoxelBrushCommand(VoxelSniper plugin) {
 		super("VoxelBrush", plugin);
 		setIdentifier("b");
 		setPermission("voxelsniper.sniper");
@@ -22,7 +22,7 @@ public class VoxelBrushCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
@@ -33,11 +33,11 @@ public class VoxelBrushCommand extends VoxelCommand {
 		} else if (args.length > 0) {
 			try {
 				int newBrushSize = Integer.parseInt(args[0]);
-				if (!player.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > plugin.getVoxelSniperConfiguration()
+				if (!player.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfiguration()
 					.getLiteSniperMaxBrushSize()) {
-					player.sendMessage("Size is restricted to " + plugin.getVoxelSniperConfiguration()
+					player.sendMessage("Size is restricted to " + this.plugin.getVoxelSniperConfiguration()
 						.getLiteSniperMaxBrushSize() + " for you.");
-					newBrushSize = plugin.getVoxelSniperConfiguration()
+					newBrushSize = this.plugin.getVoxelSniperConfiguration()
 						.getLiteSniperMaxBrushSize();
 				}
 				int originalSize = snipeData.getBrushSize();
@@ -48,9 +48,10 @@ public class VoxelBrushCommand extends VoxelCommand {
 				snipeData.getVoxelMessage()
 					.size();
 				return true;
-			} catch (NumberFormatException ingored) {
+			} catch (NumberFormatException exception) {
+				exception.printStackTrace();
 			}
-			Class<? extends IBrush> brush = plugin.getBrushManager()
+			Class<? extends IBrush> brush = this.plugin.getBrushManager()
 				.getBrushForHandle(args[0]);
 			if (brush != null) {
 				IBrush orignalBrush = sniper.getBrush(currentToolId);
@@ -69,11 +70,10 @@ public class VoxelBrushCommand extends VoxelCommand {
 				}
 				SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, currentToolId, orignalBrush, sniper.getBrush(currentToolId));
 				sniper.displayInfo();
-				return true;
 			} else {
 				player.sendMessage("Couldn't find Brush for brush handle \"" + args[0] + "\"");
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}

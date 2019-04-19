@@ -27,8 +27,8 @@ public class CloneStampBrush extends StampBrush {
 	 *
 	 * @param v the caller
 	 */
-	private void clone(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
+	private void clone(SnipeData v) {
+		int brushSize = v.getBrushSize();
 		this.clone.clear();
 		this.fall.clear();
 		this.drop.clear();
@@ -56,7 +56,7 @@ public class CloneStampBrush extends StampBrush {
 				.getMaxHeight() - 1;
 			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
-		final double bSquared = Math.pow(brushSize, 2);
+		double bSquared = Math.pow(brushSize, 2);
 		for (int z = yStartingPoint; z < yEndPoint; z++) {
 			this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock()
 				.getX(), z, this.getTargetBlock()
@@ -76,7 +76,7 @@ public class CloneStampBrush extends StampBrush {
 					.getZ()), -y, z - yStartingPoint, 0));
 			}
 			for (int x = 1; x <= brushSize; x++) {
-				final double xSquared = Math.pow(x, 2);
+				double xSquared = Math.pow(x, 2);
 				for (int y = 1; y <= brushSize; y++) {
 					if ((xSquared + Math.pow(y, 2)) <= bSquared) {
 						this.clone.add(new BlockWrapper(this.clampY(this.getTargetBlock()
@@ -99,12 +99,12 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.clone(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.height();
@@ -126,8 +126,8 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-		final String parameter = par[1];
+	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
+		String parameter = par[1];
 		if (parameter.equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
 			v.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");

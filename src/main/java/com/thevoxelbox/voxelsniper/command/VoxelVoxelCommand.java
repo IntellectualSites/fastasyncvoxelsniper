@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelVoxelCommand extends VoxelCommand {
 
-	public VoxelVoxelCommand(final VoxelSniper plugin) {
+	public VoxelVoxelCommand(VoxelSniper plugin) {
 		super("VoxelVoxel", plugin);
 		setIdentifier("v");
 		setPermission("voxelsniper.sniper");
@@ -20,13 +20,13 @@ public class VoxelVoxelCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		if (args.length == 0) {
 			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
-				if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration()
+				if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfiguration()
 					.getLiteSniperRestrictedItems()
 					.contains(targetBlock.getTypeId())) {
 					player.sendMessage("You are not allowed to use " + targetBlock.getType()
@@ -41,7 +41,7 @@ public class VoxelVoxelCommand extends VoxelCommand {
 		}
 		Material material = Material.matchMaterial(args[0]);
 		if (material != null && material.isBlock()) {
-			if (!player.hasPermission("voxelsniper.ignorelimitations") && plugin.getVoxelSniperConfiguration()
+			if (!player.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfiguration()
 				.getLiteSniperRestrictedItems()
 				.contains(material.getId())) {
 				player.sendMessage("You are not allowed to use " + material.name() + ".");
@@ -50,10 +50,9 @@ public class VoxelVoxelCommand extends VoxelCommand {
 			snipeData.setVoxelId(material.getId());
 			snipeData.getVoxelMessage()
 				.voxel();
-			return true;
 		} else {
 			player.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
-			return true;
 		}
+		return true;
 	}
 }

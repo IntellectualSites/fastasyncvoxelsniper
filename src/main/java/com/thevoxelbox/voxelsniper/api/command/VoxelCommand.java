@@ -11,15 +11,15 @@ public abstract class VoxelCommand {
 	private String identifier = "";
 	protected final VoxelSniper plugin;
 
-	public VoxelCommand(String name, final VoxelSniper plugin) {
+	public VoxelCommand(String name, VoxelSniper plugin) {
 		this.name = name;
 		this.plugin = plugin;
 	}
 
-	public abstract boolean onCommand(final Player player, final String[] args);
+	public abstract boolean onCommand(Player player, String[] args);
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public String getPermission() {

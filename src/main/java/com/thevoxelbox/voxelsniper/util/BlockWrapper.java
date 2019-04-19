@@ -19,13 +19,13 @@ public class BlockWrapper {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	public BlockWrapper(final Block block) {
-		this.setId(block.getTypeId());
-		this.setX(block.getX());
-		this.setY(block.getY());
-		this.setZ(block.getZ());
-		this.setData(block.getData());
-		this.setWorld(block.getWorld());
+	public BlockWrapper(Block block) {
+		this.id = block.getTypeId();
+		this.x = block.getX();
+		this.y = block.getY();
+		this.z = block.getZ();
+		this.data = block.getData();
+		this.world = block.getWorld();
 	}
 
 	/**
@@ -73,42 +73,42 @@ public class BlockWrapper {
 	/**
 	 * @param data the data to set
 	 */
-	public final void setData(final byte data) {
+	public final void setData(byte data) {
 		this.data = data;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public final void setId(final int id) {
+	public final void setId(int id) {
 		this.id = id;
 	}
 
 	/**
 	 * @param world the world to set
 	 */
-	public final void setWorld(final World world) {
+	public final void setWorld(World world) {
 		this.world = world;
 	}
 
 	/**
 	 * @param x the x to set
 	 */
-	public final void setX(final int x) {
+	public final void setX(int x) {
 		this.x = x;
 	}
 
 	/**
 	 * @param y the y to set
 	 */
-	public final void setY(final int y) {
+	public final void setY(int y) {
 		this.y = y;
 	}
 
 	/**
 	 * @param z the z to set
 	 */
-	public final void setZ(final int z) {
+	public final void setZ(int z) {
 		this.z = z;
 	}
 }

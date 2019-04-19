@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelUndoUserCommand extends VoxelCommand {
 
-	public VoxelUndoUserCommand(final VoxelSniper plugin) {
+	public VoxelUndoUserCommand(VoxelSniper plugin) {
 		super("VoxelUndoUser", plugin);
 		setIdentifier("uu");
 		setPermission("voxelsniper.sniper");
@@ -17,11 +17,11 @@ public class VoxelUndoUserCommand extends VoxelCommand {
 	@Override
 	public boolean onCommand(Player player, String[] args) {
 		try {
-			plugin.getSniperManager()
+			this.plugin.getSniperManager()
 				.getSniperForPlayer(Bukkit.getPlayer(args[0]))
 				.undo();
 			return true;
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			player.sendMessage(ChatColor.GREEN + "Player not found.");
 			return true;
 		}

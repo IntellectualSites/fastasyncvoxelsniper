@@ -16,8 +16,8 @@ public class CopyPastaBrush extends Brush {
 	private static final int BLOCK_LIMIT = 10000;
 
 	private boolean pasteAir = true; // False = no air, true = air
-	private int points = 0; //
-	private int numBlocks = 0;
+	private int points; //
+	private int numBlocks;
 	private int[] firstPoint = new int[3];
 	private int[] secondPoint = new int[3];
 	private int[] pastePoint = new int[3];
@@ -26,7 +26,7 @@ public class CopyPastaBrush extends Brush {
 	private int[] blockArray;
 	private byte[] dataArray;
 	private int[] arraySize = new int[3];
-	private int pivot = 0; // ccw degrees
+	private int pivot; // ccw degrees
 
 	/**
 	 *
@@ -36,20 +36,20 @@ public class CopyPastaBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void doCopy(final SnipeData v) {
+	private void doCopy(SnipeData v) {
 		for (int i = 0; i < 3; i++) {
 			this.arraySize[i] = Math.abs(this.firstPoint[i] - this.secondPoint[i]) + 1;
 			this.minPoint[i] = Math.min(this.firstPoint[i], this.secondPoint[i]);
 			this.offsetPoint[i] = this.minPoint[i] - this.firstPoint[i]; // will always be negative or zero
 		}
 		this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
-		if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT) {
+		if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
 			this.blockArray = new int[this.numBlocks];
 			this.dataArray = new byte[this.numBlocks];
 			for (int i = 0; i < this.arraySize[0]; i++) {
 				for (int j = 0; j < this.arraySize[1]; j++) {
 					for (int k = 0; k < this.arraySize[2]; k++) {
-						final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
+						int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
 						this.blockArray[currentPosition] = this.getWorld()
 							.getBlockTypeIdAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
 						this.dataArray[currentPosition] = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k)
@@ -59,17 +59,17 @@ public class CopyPastaBrush extends Brush {
 			}
 			v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks copied.");
 		} else {
-			v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + CopyPastaBrush.BLOCK_LIMIT + ")");
+			v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	private void doPasta(final SnipeData v) {
-		final Undo undo = new Undo();
+	private void doPasta(SnipeData v) {
+		Undo undo = new Undo();
 		for (int i = 0; i < this.arraySize[0]; i++) {
 			for (int j = 0; j < this.arraySize[1]; j++) {
 				for (int k = 0; k < this.arraySize[2]; k++) {
-					final int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
+					int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
 					Block block;
 					switch (this.pivot) {
 						case 180:
@@ -100,7 +100,7 @@ public class CopyPastaBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final com.thevoxelbox.voxelsniper.SnipeData v) {
+	protected final void arrow(com.thevoxelbox.voxelsniper.SnipeData v) {
 		switch (this.points) {
 			case 0:
 				this.firstPoint[0] = this.getTargetBlock()
@@ -135,11 +135,11 @@ public class CopyPastaBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final com.thevoxelbox.voxelsniper.SnipeData v) {
+	protected final void powder(com.thevoxelbox.voxelsniper.SnipeData v) {
 		if (this.points == 2) {
 			if (this.numBlocks == 0) {
 				this.doCopy(v);
-			} else if (this.numBlocks > 0 && this.numBlocks < CopyPastaBrush.BLOCK_LIMIT) {
+			} else if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
 				this.pastePoint[0] = this.getTargetBlock()
 					.getX();
 				this.pastePoint[1] = this.getTargetBlock()
@@ -156,15 +156,15 @@ public class CopyPastaBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
 		vm.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
 	}
 
 	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
-		final String parameter = par[1];
+	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
+		String parameter = par[1];
 		if (parameter.equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");

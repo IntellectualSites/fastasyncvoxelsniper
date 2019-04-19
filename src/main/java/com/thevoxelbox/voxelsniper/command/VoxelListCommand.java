@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelListCommand extends VoxelCommand {
 
-	public VoxelListCommand(final VoxelSniper plugin) {
+	public VoxelListCommand(VoxelSniper plugin) {
 		super("VoxelList", plugin);
 		setIdentifier("vl");
 		setPermission("voxelsniper.sniper");
@@ -19,12 +19,12 @@ public class VoxelListCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		if (args.length == 0) {
-			final RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
-			final Block targetBlock = rangeBlockHelper.getTargetBlock();
+			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
+			Block targetBlock = rangeBlockHelper.getTargetBlock();
 			snipeData.getVoxelList()
 				.add(new int[] {targetBlock.getTypeId(), targetBlock.getData()});
 			snipeData.getVoxelMessage()
@@ -40,10 +40,8 @@ public class VoxelListCommand extends VoxelCommand {
 			}
 		}
 		boolean remove = false;
-		for (final String string : args) {
+		for (String string : args) {
 			String tmpint;
-			Integer xint;
-			Integer xdat;
 			if (string.startsWith("-")) {
 				remove = true;
 				tmpint = string.replaceAll("-", "");
@@ -51,6 +49,8 @@ public class VoxelListCommand extends VoxelCommand {
 				tmpint = string;
 			}
 			try {
+				Integer xdat;
+				Integer xint;
 				if (tmpint.contains(":")) {
 					String[] tempintsplit = tmpint.split(":");
 					xint = Integer.parseInt(tempintsplit[0]);
@@ -64,14 +64,12 @@ public class VoxelListCommand extends VoxelCommand {
 					if (!remove) {
 						snipeData.getVoxelList()
 							.add(new int[] {xint, xdat});
-						snipeData.getVoxelMessage()
-							.voxelList();
 					} else {
 						snipeData.getVoxelList()
 							.removeValue(new int[] {xint, xdat});
-						snipeData.getVoxelMessage()
-							.voxelList();
 					}
+					snipeData.getVoxelMessage()
+						.voxelList();
 				}
 			} catch (NumberFormatException ignored) {
 			}

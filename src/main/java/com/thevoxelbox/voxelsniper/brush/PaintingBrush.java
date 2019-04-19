@@ -25,7 +25,7 @@ public class PaintingBrush extends Brush {
 	 * @param v Sniper caller
 	 */
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		PaintingWrapper.paint(v.owner()
 			.getPlayer(), true, false, 0);
 	}
@@ -36,13 +36,13 @@ public class PaintingBrush extends Brush {
 	 * @param v Sniper caller
 	 */
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		PaintingWrapper.paint(v.owner()
 			.getPlayer(), true, true, 0);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 

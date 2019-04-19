@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 import com.thevoxelbox.voxelsniper.Message;
@@ -24,8 +26,8 @@ public class StencilListBrush extends Brush {
 	private short xRef;
 	private short zRef;
 	private short yRef;
-	private byte pasteParam = 0;
-	private HashMap<Integer, String> stencilList = new HashMap<Integer, String>();
+	private byte pasteParam;
+	private HashMap<Integer, String> stencilList = new HashMap<>();
 
 	/**
 	 *
@@ -34,51 +36,51 @@ public class StencilListBrush extends Brush {
 		this.setName("StencilList");
 	}
 
-	private String readRandomStencil(final SnipeData v) {
+	private String readRandomStencil(SnipeData v) {
 		double rand = Math.random() * (this.stencilList.size());
-		final int choice = (int) rand;
+		int choice = (int) rand;
 		return this.stencilList.get(choice);
 	}
 
-	private void readStencilList(final String listname, final SnipeData v) {
-		final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+	private void readStencilList(String listname, SnipeData v) {
+		File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 		if (file.exists()) {
 			try {
-				final Scanner scanner = new Scanner(file);
+				Scanner scanner = new Scanner(file);
 				int counter = 0;
 				while (scanner.hasNext()) {
 					this.stencilList.put(counter, scanner.nextLine());
 					counter++;
 				}
 				scanner.close();
-			} catch (final Exception exception) {
+			} catch (FileNotFoundException exception) {
 				exception.printStackTrace();
 			}
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste(final SnipeData v) {
+	private void stencilPaste(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
 			v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		final String stencilName = this.readRandomStencil(v);
+		String stencilName = this.readRandomStencil(v);
 		v.sendMessage(stencilName);
-		final Undo undo = new Undo();
-		final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+		Undo undo = new Undo();
+		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
 			try {
-				final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 				this.x = in.readShort();
 				this.z = in.readShort();
 				this.y = in.readShort();
 				this.xRef = in.readShort();
 				this.zRef = in.readShort();
 				this.yRef = in.readShort();
-				final int numRuns = in.readInt();
+				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-				final int volume = this.x * this.y * this.z;
+				int volume = this.x * this.y * this.z;
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
@@ -91,7 +93,7 @@ public class StencilListBrush extends Brush {
 				if (this.pasteOption == 0) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -138,7 +140,7 @@ public class StencilListBrush extends Brush {
 				} else if (this.pasteOption == 1) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -199,7 +201,7 @@ public class StencilListBrush extends Brush {
 				} else { // replace
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < (numLoops); j++) {
@@ -253,7 +255,7 @@ public class StencilListBrush extends Brush {
 				in.close();
 				v.owner()
 					.storeUndo(undo);
-			} catch (final Exception exception) {
+			} catch (IOException exception) {
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
@@ -267,41 +269,41 @@ public class StencilListBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste180(final SnipeData v) {
+	private void stencilPaste180(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
 			v.owner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		final String stencilName = this.readRandomStencil(v);
-		final Undo undo = new Undo();
-		final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+		String stencilName = this.readRandomStencil(v);
+		Undo undo = new Undo();
+		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
 			try {
-				final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 				this.x = in.readShort();
 				this.z = in.readShort();
 				this.y = in.readShort();
 				this.xRef = in.readShort();
 				this.zRef = in.readShort();
 				this.yRef = in.readShort();
-				final int numRuns = in.readInt();
+				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-				final int volume = this.x * this.y * this.z;
+				int volume = this.x * this.y * this.z;
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
-				int currX = +this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+				int currX = this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
 				// corner, for example.
-				int currZ = +this.zRef;
+				int currZ = this.zRef;
 				int currY = -this.yRef;
 				int id;
 				int data;
 				if (this.pasteOption == 0) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -319,7 +321,7 @@ public class StencilListBrush extends Brush {
 									currX = this.xRef;
 									currZ--;
 									if (currZ == -this.z + this.zRef) {
-										currZ = +this.zRef;
+										currZ = this.zRef;
 										currY++;
 									}
 								}
@@ -339,7 +341,7 @@ public class StencilListBrush extends Brush {
 								currX = this.xRef;
 								currZ--;
 								if (currZ == -this.z + this.zRef) {
-									currZ = +this.zRef;
+									currZ = this.zRef;
 									currY++;
 								}
 							}
@@ -348,7 +350,7 @@ public class StencilListBrush extends Brush {
 				} else if (this.pasteOption == 1) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -372,7 +374,7 @@ public class StencilListBrush extends Brush {
 									currX = this.xRef;
 									currZ--;
 									if (currZ == -this.z + this.zRef) {
-										currZ = +this.zRef;
+										currZ = this.zRef;
 										currY++;
 									}
 								}
@@ -400,7 +402,7 @@ public class StencilListBrush extends Brush {
 								currX = this.xRef;
 								currZ--;
 								if (currZ == -this.z + this.zRef) {
-									currZ = +this.zRef;
+									currZ = this.zRef;
 									currY++;
 								}
 							}
@@ -409,7 +411,7 @@ public class StencilListBrush extends Brush {
 				} else { // replace
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < (numLoops); j++) {
@@ -429,7 +431,7 @@ public class StencilListBrush extends Brush {
 									currX = this.xRef;
 									currZ--;
 									if (currZ == -this.z + this.zRef) {
-										currZ = +this.zRef;
+										currZ = this.zRef;
 										currY++;
 									}
 								}
@@ -453,7 +455,7 @@ public class StencilListBrush extends Brush {
 								currX = this.xRef;
 								currZ--;
 								if (currZ == -this.z + this.zRef) {
-									currZ = +this.zRef;
+									currZ = this.zRef;
 									currY++;
 								}
 							}
@@ -463,7 +465,7 @@ public class StencilListBrush extends Brush {
 				in.close();
 				v.owner()
 					.storeUndo(undo);
-			} catch (final Exception exception) {
+			} catch (IOException exception) {
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
@@ -477,32 +479,32 @@ public class StencilListBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste270(final SnipeData v) {
+	private void stencilPaste270(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
 			v.owner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		final String stencilName = this.readRandomStencil(v);
-		final Undo undo = new Undo();
-		final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+		String stencilName = this.readRandomStencil(v);
+		Undo undo = new Undo();
+		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
 			try {
-				final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 				this.x = in.readShort();
 				this.z = in.readShort();
 				this.y = in.readShort();
 				this.xRef = in.readShort();
 				this.zRef = in.readShort();
 				this.yRef = in.readShort();
-				final int numRuns = in.readInt();
+				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-				final int volume = this.x * this.y * this.z;
+				int volume = this.x * this.y * this.z;
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
-				int currX = +this.zRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
+				int currX = this.zRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
 				// corner, for example.
 				int currZ = -this.xRef;
 				int currY = -this.yRef;
@@ -511,7 +513,7 @@ public class StencilListBrush extends Brush {
 				if (this.pasteOption == 0) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -529,7 +531,7 @@ public class StencilListBrush extends Brush {
 									currZ = -this.xRef;
 									currX--;
 									if (currX == -this.z + this.zRef) {
-										currX = +this.zRef;
+										currX = this.zRef;
 										currY++;
 									}
 								}
@@ -550,7 +552,7 @@ public class StencilListBrush extends Brush {
 								currZ = -this.xRef;
 								currX--;
 								if (currX == -this.z + this.zRef) {
-									currX = +this.zRef;
+									currX = this.zRef;
 									currY++;
 								}
 							}
@@ -559,7 +561,7 @@ public class StencilListBrush extends Brush {
 				} else if (this.pasteOption == 1) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -587,7 +589,7 @@ public class StencilListBrush extends Brush {
 									currZ = -this.xRef;
 									currX--;
 									if (currX == -this.z + this.zRef) {
-										currX = +this.zRef;
+										currX = this.zRef;
 										currY++;
 									}
 								}
@@ -618,7 +620,7 @@ public class StencilListBrush extends Brush {
 								currZ = -this.xRef;
 								currX--;
 								if (currX == -this.z + this.zRef) {
-									currX = +this.zRef;
+									currX = this.zRef;
 									currY++;
 								}
 							}
@@ -627,7 +629,7 @@ public class StencilListBrush extends Brush {
 				} else { // replace
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < (numLoops); j++) {
@@ -647,7 +649,7 @@ public class StencilListBrush extends Brush {
 									currZ = -this.xRef;
 									currX--;
 									if (currX == -this.z + this.zRef) {
-										currX = +this.zRef;
+										currX = this.zRef;
 										currY++;
 									}
 								}
@@ -671,7 +673,7 @@ public class StencilListBrush extends Brush {
 								currZ = -this.xRef;
 								currX--;
 								if (currX == -this.z + this.zRef) {
-									currX = +this.zRef;
+									currX = this.zRef;
 									currY++;
 								}
 							}
@@ -681,7 +683,7 @@ public class StencilListBrush extends Brush {
 				in.close();
 				v.owner()
 					.storeUndo(undo);
-			} catch (final Exception exception) {
+			} catch (IOException exception) {
 				v.owner()
 					.getPlayer()
 					.sendMessage(ChatColor.RED + "Something went wrong.");
@@ -695,37 +697,37 @@ public class StencilListBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste90(final SnipeData v) {
+	private void stencilPaste90(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
 			v.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		final String stencilName = this.readRandomStencil(v);
-		final Undo undo = new Undo();
-		final File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+		String stencilName = this.readRandomStencil(v);
+		Undo undo = new Undo();
+		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
 			try {
-				final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 				this.x = in.readShort();
 				this.z = in.readShort();
 				this.y = in.readShort();
 				this.xRef = in.readShort();
 				this.zRef = in.readShort();
 				this.yRef = in.readShort();
-				final int numRuns = in.readInt();
+				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
-				final int volume = this.x * this.y * this.z;
+				int volume = this.x * this.y * this.z;
 				v.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
 				int currX = -this.zRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
 				// corner, for example.
-				int currZ = +this.xRef;
+				int currZ = this.xRef;
 				int currY = -this.yRef;
 				int id;
 				int data;
 				if (this.pasteOption == 0) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -772,7 +774,7 @@ public class StencilListBrush extends Brush {
 				} else if (this.pasteOption == 1) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -833,7 +835,7 @@ public class StencilListBrush extends Brush {
 				} else { // replace
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < (numLoops); j++) {
@@ -887,7 +889,7 @@ public class StencilListBrush extends Brush {
 				in.close();
 				v.owner()
 					.storeUndo(undo);
-			} catch (final Exception exception) {
+			} catch (IOException exception) {
 				v.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
@@ -898,10 +900,10 @@ public class StencilListBrush extends Brush {
 		}
 	}
 
-	private void stencilPasteRotation(final SnipeData v) {
+	private void stencilPasteRotation(SnipeData v) {
 		// just randomly chooses a rotation and then calls stencilPaste.
 		this.readStencilList(this.filename, v);
-		final double random = Math.random();
+		double random = Math.random();
 		if (random < 0.26) {
 			this.stencilPaste(v);
 		} else if (random < 0.51) {
@@ -914,23 +916,23 @@ public class StencilListBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.stencilPaste(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.stencilPasteRotation(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom("File loaded: " + this.filename);
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
@@ -947,7 +949,7 @@ public class StencilListBrush extends Brush {
 		}
 		try {
 			this.filename = par[1 + this.pasteParam];
-			final File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+			File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 			if (file.exists()) {
 				v.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
 				this.readStencilList(this.filename, v);
@@ -955,7 +957,7 @@ public class StencilListBrush extends Brush {
 				v.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
 				this.filename = "NoFileLoaded";
 			}
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
 		}
 	}

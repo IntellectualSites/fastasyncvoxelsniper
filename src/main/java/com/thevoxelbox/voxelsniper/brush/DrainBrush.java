@@ -14,8 +14,8 @@ import org.bukkit.Material;
  */
 public class DrainBrush extends Brush {
 
-	private double trueCircle = 0;
-	private boolean disc = false;
+	private double trueCircle;
+	private boolean disc;
 
 	/**
 	 *
@@ -25,13 +25,13 @@ public class DrainBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void drain(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		final Undo undo = new Undo();
+	private void drain(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+		Undo undo = new Undo();
 		if (this.disc) {
 			for (int x = brushSize; x >= 0; x--) {
-				final double xSquared = Math.pow(x, 2);
+				double xSquared = Math.pow(x, 2);
 				for (int y = brushSize; y >= 0; y--) {
 					if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
 						if (this.getBlockIdAt(this.getTargetBlock()
@@ -127,9 +127,9 @@ public class DrainBrush extends Brush {
 			}
 		} else {
 			for (int y = (brushSize + 1) * 2; y >= 0; y--) {
-				final double ySquared = Math.pow(y - brushSize, 2);
+				double ySquared = Math.pow(y - brushSize, 2);
 				for (int x = (brushSize + 1) * 2; x >= 0; x--) {
-					final double xSquared = Math.pow(x - brushSize, 2);
+					double xSquared = Math.pow(x - brushSize, 2);
 					for (int z = (brushSize + 1) * 2; z >= 0; z--) {
 						if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared) {
 							if (this.getBlockIdAt(this.getTargetBlock()
@@ -164,17 +164,17 @@ public class DrainBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.drain(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.drain(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.custom(ChatColor.AQUA + ((this.trueCircle == 0.5) ? "True circle mode ON" : "True circle mode OFF"));
@@ -182,9 +182,9 @@ public class DrainBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");

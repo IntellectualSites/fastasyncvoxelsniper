@@ -14,8 +14,8 @@ public class UndoDelegate implements BlockChangeDelegate {
 	private Undo currentUndo;
 
 	public Undo getUndo() {
-		final Undo pastUndo = currentUndo;
-		currentUndo = new Undo();
+		Undo pastUndo = this.currentUndo;
+		this.currentUndo = new Undo();
 		return pastUndo;
 	}
 
@@ -27,7 +27,7 @@ public class UndoDelegate implements BlockChangeDelegate {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setRawTypeId(int x, int y, int z, int typeId) {
-		this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
+		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
 		return this.targetWorld.getBlockAt(x, y, z)
 			.setTypeId(typeId, false);
 	}
@@ -35,7 +35,7 @@ public class UndoDelegate implements BlockChangeDelegate {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data) {
-		this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
+		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
 		return this.targetWorld.getBlockAt(x, y, z)
 			.setTypeIdAndData(typeId, (byte) data, false);
 	}
@@ -43,7 +43,7 @@ public class UndoDelegate implements BlockChangeDelegate {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setTypeId(int x, int y, int z, int typeId) {
-		this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
+		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
 		return this.targetWorld.getBlockAt(x, y, z)
 			.setTypeId(typeId);
 	}
@@ -51,16 +51,16 @@ public class UndoDelegate implements BlockChangeDelegate {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setTypeIdAndData(int x, int y, int z, int typeId, int data) {
-		this.currentUndo.put(targetWorld.getBlockAt(x, y, z));
+		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
 		return this.targetWorld.getBlockAt(x, y, z)
 			.setTypeIdAndData(typeId, (byte) data, true);
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean setBlock(Block b) {
-		this.currentUndo.put(this.targetWorld.getBlockAt(b.getLocation()));
-		return this.targetWorld.getBlockAt(b.getLocation())
-			.setTypeIdAndData(b.getTypeId(), b.getData(), true);
+	public boolean setBlock(Block block) {
+		this.currentUndo.put(this.targetWorld.getBlockAt(block.getLocation()));
+		return this.targetWorld.getBlockAt(block.getLocation())
+			.setTypeIdAndData(block.getTypeId(), block.getData(), true);
 	}
 
 	@SuppressWarnings("deprecation")

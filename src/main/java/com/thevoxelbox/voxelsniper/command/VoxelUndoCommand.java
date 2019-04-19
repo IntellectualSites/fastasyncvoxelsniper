@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelUndoCommand extends VoxelCommand {
 
-	public VoxelUndoCommand(final VoxelSniper plugin) {
+	public VoxelUndoCommand(VoxelSniper plugin) {
 		super("VoxelUndo", plugin);
 		setIdentifier("u");
 		setPermission("voxelsniper.sniper");
@@ -15,7 +15,7 @@ public class VoxelUndoCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		if (args.length == 1) {
 			try {
@@ -27,7 +27,7 @@ public class VoxelUndoCommand extends VoxelCommand {
 		} else {
 			sniper.undo();
 		}
-		plugin.getLogger()
+		this.plugin.getLogger()
 			.info("Player \"" + player.getName() + "\" used /u");
 		return true;
 	}

@@ -18,20 +18,20 @@ public class pMatCombo extends vPerformer {
 	private int ir;
 
 	public pMatCombo() {
-		name = "Mat-Combo";
+		this.setName("Mat-Combo");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		dr = v.getReplaceData();
-		i = v.getVoxelId();
-		ir = v.getReplaceId();
+		this.world = v.getWorld();
+		this.dr = v.getReplaceData();
+		this.i = v.getVoxelId();
+		this.ir = v.getReplaceId();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.replace();
 		vm.replaceData();
@@ -39,10 +39,10 @@ public class pMatCombo extends vPerformer {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() == ir && b.getData() == dr) {
-			h.put(b);
-			b.setTypeId(i, true);
+	public void perform(Block block) {
+		if (block.getTypeId() == this.ir && block.getData() == this.dr) {
+			this.h.put(block);
+			block.setTypeId(this.i, true);
 		}
 	}
 

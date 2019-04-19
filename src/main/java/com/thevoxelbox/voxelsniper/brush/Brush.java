@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Abstract implementation of the {@link IBrush} interface.
@@ -24,6 +25,7 @@ public abstract class Brush implements IBrush {
 	/**
 	 * Last Block before targeted Block.
 	 */
+	@Nullable
 	private Block lastBlock;
 	/**
 	 * Brush name.
@@ -33,7 +35,7 @@ public abstract class Brush implements IBrush {
 	/**
 	 * @return {@link Block}
 	 */
-	public final Block clampY(final int x, final int y, final int z) {
+	public final Block clampY(int x, int y, int z) {
 		int clampedY = y;
 		if (clampedY < 0) {
 			clampedY = 0;
@@ -46,10 +48,10 @@ public abstract class Brush implements IBrush {
 			.getBlockAt(x, clampedY, z);
 	}
 
-	private boolean preparePerform(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
-		if (this.getTarget(v, clickedBlock, clickedFace)) {
+	private boolean preparePerform(SnipeData snipeData, Block clickedBlock, BlockFace clickedFace) {
+		if (this.getTarget(snipeData, clickedBlock, clickedFace)) {
 			if (this instanceof PerformBrush) {
-				((PerformBrush) this).initP(v);
+				((PerformBrush) this).initP(snipeData);
 			}
 			return true;
 		}
@@ -58,8 +60,8 @@ public abstract class Brush implements IBrush {
 
 	@Override
 	public boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock) {
-		this.setTargetBlock(targetBlock);
-		this.setLastBlock(lastBlock);
+		this.targetBlock = targetBlock;
+		this.lastBlock = lastBlock;
 		switch (action) {
 			case ARROW:
 				this.arrow(data);
@@ -77,7 +79,7 @@ public abstract class Brush implements IBrush {
 	 *
 	 * @param v Sniper caller
 	 */
-	protected void arrow(final SnipeData v) {
+	protected void arrow(SnipeData v) {
 	}
 
 	/**
@@ -85,14 +87,11 @@ public abstract class Brush implements IBrush {
 	 *
 	 * @param v Sniper caller
 	 */
-	protected void powder(final SnipeData v) {
+	protected void powder(SnipeData v) {
 	}
 
 	@Override
-	public abstract void info(Message vm);
-
-	@Override
-	public void parameters(final String[] par, final SnipeData v) {
+	public void parameters(String[] par, SnipeData v) {
 		v.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
 	}
 
@@ -101,11 +100,11 @@ public abstract class Brush implements IBrush {
 	 *
 	 * @return boolean
 	 */
-	protected final boolean getTarget(final SnipeData v, final Block clickedBlock, final BlockFace clickedFace) {
+	protected final boolean getTarget(SnipeData v, Block clickedBlock, BlockFace clickedFace) {
 		if (clickedBlock != null) {
-			this.setTargetBlock(clickedBlock);
-			this.setLastBlock(clickedBlock.getRelative(clickedFace));
-			if (this.getLastBlock() == null) {
+			this.targetBlock = clickedBlock;
+			this.lastBlock = clickedBlock.getRelative(clickedFace);
+			if (this.lastBlock == null) {
 				v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
@@ -114,8 +113,7 @@ public abstract class Brush implements IBrush {
 					.getCurrentToolId())
 				.isLightningEnabled()) {
 				this.getWorld()
-					.strikeLightning(this.getTargetBlock()
-						.getLocation());
+					.strikeLightning(this.targetBlock.getLocation());
 			}
 			return true;
 		} else {
@@ -127,21 +125,21 @@ public abstract class Brush implements IBrush {
 				rangeBlockHelper = new RangeBlockHelper(v.owner()
 					.getPlayer(), v.owner()
 					.getPlayer()
-					.getWorld(), (double) v.owner()
+					.getWorld(), v.owner()
 					.getSnipeData(v.owner()
 						.getCurrentToolId())
 					.getRange());
-				this.setTargetBlock(rangeBlockHelper.getRangeBlock());
+				this.targetBlock = rangeBlockHelper.getRangeBlock();
 			} else {
 				rangeBlockHelper = new RangeBlockHelper(v.owner()
 					.getPlayer(), v.owner()
 					.getPlayer()
 					.getWorld());
-				this.setTargetBlock(rangeBlockHelper.getTargetBlock());
+				this.targetBlock = rangeBlockHelper.getTargetBlock();
 			}
-			if (this.getTargetBlock() != null) {
-				this.setLastBlock(rangeBlockHelper.getLastBlock());
-				if (this.getLastBlock() == null) {
+			if (this.targetBlock != null) {
+				this.lastBlock = rangeBlockHelper.getLastBlock();
+				if (this.lastBlock == null) {
 					v.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
 				}
@@ -150,8 +148,7 @@ public abstract class Brush implements IBrush {
 						.getCurrentToolId())
 					.isLightningEnabled()) {
 					this.getWorld()
-						.strikeLightning(this.getTargetBlock()
-							.getLocation());
+						.strikeLightning(this.targetBlock.getLocation());
 				}
 				return true;
 			} else {
@@ -167,7 +164,7 @@ public abstract class Brush implements IBrush {
 	}
 
 	@Override
-	public final void setName(final String name) {
+	public final void setName(String name) {
 		this.name = name;
 	}
 
@@ -186,7 +183,7 @@ public abstract class Brush implements IBrush {
 	/**
 	 * @param targetBlock the targetBlock to set
 	 */
-	protected final void setTargetBlock(final Block targetBlock) {
+	protected final void setTargetBlock(Block targetBlock) {
 		this.targetBlock = targetBlock;
 	}
 
@@ -194,7 +191,7 @@ public abstract class Brush implements IBrush {
 	 * @return the world
 	 */
 	protected final World getWorld() {
-		return targetBlock.getWorld();
+		return this.targetBlock.getWorld();
 	}
 
 	/**
@@ -228,6 +225,7 @@ public abstract class Brush implements IBrush {
 	/**
 	 * @return Block before target Block.
 	 */
+	@Nullable
 	protected final Block getLastBlock() {
 		return this.lastBlock;
 	}
@@ -235,7 +233,7 @@ public abstract class Brush implements IBrush {
 	/**
 	 * @param lastBlock Last Block before target Block.
 	 */
-	protected final void setLastBlock(Block lastBlock) {
+	protected final void setLastBlock(@Nullable Block lastBlock) {
 		this.lastBlock = lastBlock;
 	}
 

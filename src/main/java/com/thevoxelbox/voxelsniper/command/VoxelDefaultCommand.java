@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelDefaultCommand extends VoxelCommand {
 
-	public VoxelDefaultCommand(final VoxelSniper plugin) {
+	public VoxelDefaultCommand(VoxelSniper plugin) {
 		super("VoxelDefault", plugin);
 		setIdentifier("d");
 		setPermission("voxelsniper.sniper");
@@ -16,7 +16,7 @@ public class VoxelDefaultCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		sniper.reset(sniper.getCurrentToolId());
 		player.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");

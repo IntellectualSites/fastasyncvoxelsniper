@@ -1,11 +1,9 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.Set;
 import org.bukkit.Art;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
@@ -24,19 +22,19 @@ public final class PaintingWrapper {
 	/**
 	 * The paint method used to scroll or set a painting to a specific type.
 	 *
-	 * @param p The player executing the method
+	 * @param player The player executing the method
 	 * @param auto Scroll automatically? If false will use 'choice' to try and set the painting
 	 * @param back Scroll in reverse?
 	 * @param choice Chosen index to set the painting to
 	 */
 	@SuppressWarnings("deprecation")
-	public static void paint(final Player p, final boolean auto, final boolean back, final int choice) {
-		Location targetLocation = p.getTargetBlock((Set<Material>) null, 4)
+	public static void paint(Player player, boolean auto, boolean back, int choice) {
+		Location targetLocation = player.getTargetBlock(null, 4)
 			.getLocation();
-		Chunk paintingChunk = p.getTargetBlock((Set<Material>) null, 4)
+		Chunk paintingChunk = player.getTargetBlock(null, 4)
 			.getLocation()
 			.getChunk();
-		Double bestDistanceMatch = 50D;
+		Double bestDistanceMatch = 50.00D;
 		Painting bestMatch = null;
 		for (Entity entity : paintingChunk.getEntities()) {
 			if (entity.getType() == EntityType.PAINTING) {
@@ -50,25 +48,25 @@ public final class PaintingWrapper {
 		if (bestMatch != null) {
 			if (auto) {
 				try {
-					final int i = bestMatch.getArt()
+					int i = bestMatch.getArt()
 						.getId() + (back ? -1 : 1) + Art.values().length % Art.values().length;
 					Art art = Art.getById(i);
 					if (art == null) {
-						p.sendMessage(ChatColor.RED + "This is the final painting, try scrolling to the other direction.");
+						player.sendMessage(ChatColor.RED + "This is the final painting, try scrolling to the other direction.");
 						return;
 					}
 					bestMatch.setArt(art);
-					p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (i));
-				} catch (final Exception e) {
-					p.sendMessage(ChatColor.RED + "Oops. Something went wrong.");
+					player.sendMessage(ChatColor.GREEN + "Painting set to ID: " + (i));
+				} catch (RuntimeException exception) {
+					player.sendMessage(ChatColor.RED + "Oops. Something went wrong.");
 				}
 			} else {
 				try {
 					Art art = Art.getById(choice);
 					bestMatch.setArt(art);
-					p.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
-				} catch (final Exception exception) {
-					p.sendMessage(ChatColor.RED + "Your input was invalid somewhere.");
+					player.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
+				} catch (RuntimeException exception) {
+					player.sendMessage(ChatColor.RED + "Your input was invalid somewhere.");
 				}
 			}
 		}

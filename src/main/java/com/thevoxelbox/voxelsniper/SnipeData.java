@@ -23,27 +23,27 @@ public class SnipeData {
 	/**
 	 * Brush size -- set blockPositionY /b #.
 	 */
-	private int brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
+	private int brushSize = DEFAULT_BRUSH_SIZE;
 	/**
 	 * Voxel Id -- set blockPositionY /v (#,name).
 	 */
 	@Deprecated
-	private int voxelId = SnipeData.DEFAULT_VOXEL_ID;
+	private int voxelId = DEFAULT_VOXEL_ID;
 	/**
 	 * Voxel Replace Id -- set blockPositionY /vr #.
 	 */
 	@Deprecated
-	private int replaceId = SnipeData.DEFAULT_REPLACE_ID;
+	private int replaceId = DEFAULT_REPLACE_ID;
 	/**
 	 * Voxel 'ink' -- set blockPositionY /vi #.
 	 */
 	@Deprecated
-	private byte data = SnipeData.DEFAULT_DATA_VALUE;
+	private byte data = DEFAULT_DATA_VALUE;
 	/**
 	 * Voxel 'ink' Replace -- set blockPositionY /vir #.
 	 */
 	@Deprecated
-	private byte replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
+	private byte replaceData = DEFAULT_REPLACE_DATA_VALUE;
 	/**
 	 * Voxel List of ID's -- set blockPositionY /vl # # # -#.
 	 */
@@ -51,20 +51,20 @@ public class SnipeData {
 	/**
 	 * Voxel 'heigth' -- set blockPositionY /vh #.
 	 */
-	private int voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
+	private int voxelHeight = DEFAULT_VOXEL_HEIGHT;
 	/**
 	 * Voxel centroid -- set Cylynder center /vc #.
 	 */
-	private int cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
-	private int range = 0;
-	private boolean ranged = false;
-	private boolean lightning = false;
+	private int cCen = DEFAULT_CYLINDER_CENTER;
+	private int range;
+	private boolean ranged;
+	private boolean lightning;
 	private BlockData blockData = Material.AIR.createBlockData();
 
 	/**
 	 *
 	 */
-	public SnipeData(final Sniper vs) {
+	public SnipeData(Sniper vs) {
 		this.owner = vs;
 	}
 
@@ -154,20 +154,20 @@ public class SnipeData {
 	 * Reset to default values.
 	 */
 	public final void reset() {
-		this.voxelId = SnipeData.DEFAULT_VOXEL_ID;
-		this.replaceId = SnipeData.DEFAULT_REPLACE_ID;
-		this.data = SnipeData.DEFAULT_DATA_VALUE;
-		this.brushSize = SnipeData.DEFAULT_BRUSH_SIZE;
-		this.voxelHeight = SnipeData.DEFAULT_VOXEL_HEIGHT;
-		this.cCen = SnipeData.DEFAULT_CYLINDER_CENTER;
-		this.replaceData = SnipeData.DEFAULT_REPLACE_DATA_VALUE;
+		this.voxelId = DEFAULT_VOXEL_ID;
+		this.replaceId = DEFAULT_REPLACE_ID;
+		this.data = DEFAULT_DATA_VALUE;
+		this.brushSize = DEFAULT_BRUSH_SIZE;
+		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
+		this.cCen = DEFAULT_CYLINDER_CENTER;
+		this.replaceData = DEFAULT_REPLACE_DATA_VALUE;
 		this.voxelList = new VoxelList();
 	}
 
 	/**
 	 *
 	 */
-	public final void sendMessage(final String message) {
+	public final void sendMessage(String message) {
 		this.owner.getPlayer()
 			.sendMessage(message);
 	}
@@ -175,68 +175,68 @@ public class SnipeData {
 	/**
 	 * @param brushSize the brushSize to set
 	 */
-	public final void setBrushSize(final int brushSize) {
+	public final void setBrushSize(int brushSize) {
 		this.brushSize = brushSize;
 	}
 
 	/**
 	 * @param cCen the cCen to set
 	 */
-	public final void setcCen(final int cCen) {
+	public final void setcCen(int cCen) {
 		this.cCen = cCen;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public final void setData(final byte data) {
+	public final void setData(byte data) {
 		this.data = data;
 	}
 
 	/**
 	 * @param replaceData the replaceData to set
 	 */
-	public final void setReplaceData(final byte replaceData) {
+	public final void setReplaceData(byte replaceData) {
 		this.replaceData = replaceData;
 	}
 
 	/**
 	 * @param replaceId the replaceId to set
 	 */
-	public final void setReplaceId(final int replaceId) {
+	public final void setReplaceId(int replaceId) {
 		this.replaceId = replaceId;
 	}
 
 	/**
 	 * @param voxelHeight the voxelHeight to set
 	 */
-	public final void setVoxelHeight(final int voxelHeight) {
+	public final void setVoxelHeight(int voxelHeight) {
 		this.voxelHeight = voxelHeight;
 	}
 
 	/**
 	 * @param voxelId the voxelId to set
 	 */
-	public final void setVoxelId(final int voxelId) {
+	public final void setVoxelId(int voxelId) {
 		this.voxelId = voxelId;
 	}
 
 	/**
 	 * @param voxelList the voxelList to set
 	 */
-	public final void setVoxelList(final VoxelList voxelList) {
+	public final void setVoxelList(VoxelList voxelList) {
 		this.voxelList = voxelList;
 	}
 
 	/**
 	 * @param voxelMessage the voxelMessage to set
 	 */
-	public final void setVoxelMessage(final Message voxelMessage) {
+	public final void setVoxelMessage(Message voxelMessage) {
 		this.voxelMessage = voxelMessage;
 	}
 
 	public int getRange() {
-		return range;
+		return this.range;
 	}
 
 	public void setRange(int range) {
@@ -244,7 +244,7 @@ public class SnipeData {
 	}
 
 	public boolean isRanged() {
-		return ranged;
+		return this.ranged;
 	}
 
 	public void setRanged(boolean ranged) {
@@ -252,7 +252,7 @@ public class SnipeData {
 	}
 
 	public boolean isLightningEnabled() {
-		return lightning;
+		return this.lightning;
 	}
 
 	public void setLightningEnabled(boolean lightning) {

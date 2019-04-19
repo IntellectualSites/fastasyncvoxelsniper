@@ -21,11 +21,9 @@ public class ShellVoxelBrush extends Brush {
 		this.setName("Shell Voxel");
 	}
 
-	private void vShell(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeSquared = 2 * brushSize;
-		final int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
-		final int[][][] newMaterials = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1]; // Array that holds the hollowed materials
+	private void vShell(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
+		int[][][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
@@ -38,19 +36,19 @@ public class ShellVoxelBrush extends Brush {
 			}
 		}
 		// Log current materials into newmats
+		// Array that holds the hollowed materials
+		int[][][] newMaterials = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
+		int brushSizeSquared = 2 * brushSize;
 		for (int x = 0; x <= brushSizeSquared; x++) {
 			for (int y = 0; y <= brushSizeSquared; y++) {
-				for (int z = 0; z <= brushSizeSquared; z++) {
-					newMaterials[x][y][z] = oldMaterials[x + 1][y + 1][z + 1];
-				}
+				System.arraycopy(oldMaterials[x + 1][y + 1], 1, newMaterials[x][y], 0, brushSizeSquared + 1);
 			}
 		}
-		int temp;
 		// Hollow Brush Area
 		for (int x = 0; x <= brushSizeSquared; x++) {
 			for (int z = 0; z <= brushSizeSquared; z++) {
 				for (int y = 0; y <= brushSizeSquared; y++) {
-					temp = 0;
+					int temp = 0;
 					if (oldMaterials[x + 1 + 1][z + 1][y + 1] == v.getReplaceId()) {
 						temp++;
 					}
@@ -76,7 +74,7 @@ public class ShellVoxelBrush extends Brush {
 			}
 		}
 		// Make the changes
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		for (int x = brushSizeSquared; x >= 0; x--) {
 			for (int y = 0; y <= brushSizeSquared; y++) {
 				for (int z = brushSizeSquared; z >= 0; z--) {
@@ -95,17 +93,17 @@ public class ShellVoxelBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.vShell(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.vShell(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.voxel();
@@ -113,7 +111,7 @@ public class ShellVoxelBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
 		} else {

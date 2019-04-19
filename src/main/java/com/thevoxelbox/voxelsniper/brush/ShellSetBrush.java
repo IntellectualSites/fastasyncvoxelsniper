@@ -1,11 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
+import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
@@ -15,7 +17,8 @@ import org.bukkit.block.Block;
 public class ShellSetBrush extends Brush {
 
 	private static final int MAX_SIZE = 5000000;
-	private Block block = null;
+	@Nullable
+	private Block block;
 
 	/**
 	 *
@@ -25,7 +28,7 @@ public class ShellSetBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean set(final Block bl, final SnipeData v) {
+	private boolean set(Block bl, SnipeData v) {
 		if (this.block == null) {
 			this.block = bl;
 			return true;
@@ -38,40 +41,33 @@ public class ShellSetBrush extends Brush {
 				this.block = null;
 				return true;
 			}
-			final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE) {
 				v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
-				final ArrayList<Block> blocks = new ArrayList<Block>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
+				List<Block> blocks = new ArrayList<>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
 							if (this.getWorld()
 								.getBlockTypeIdAt(x, y, z) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x + 1, y, z) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x - 1, y, z) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x, y, z + 1) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x, y, z - 1) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x, y + 1, z) == v.getReplaceId()) {
-								continue;
 							} else if (this.getWorld()
 								.getBlockTypeIdAt(x, y - 1, z) == v.getReplaceId()) {
-								continue;
 							} else {
 								blocks.add(this.getWorld()
 									.getBlockAt(x, y, z));
@@ -79,8 +75,8 @@ public class ShellSetBrush extends Brush {
 						}
 					}
 				}
-				final Undo undo = new Undo();
-				for (final Block currentBlock : blocks) {
+				Undo undo = new Undo();
+				for (Block currentBlock : blocks) {
 					if (currentBlock.getTypeId() != v.getVoxelId()) {
 						undo.put(currentBlock);
 						currentBlock.setTypeId(v.getVoxelId());
@@ -96,7 +92,7 @@ public class ShellSetBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		if (this.set(this.getTargetBlock(), v)) {
 			v.owner()
 				.getPlayer()
@@ -105,7 +101,7 @@ public class ShellSetBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.set(this.getLastBlock(), v)) {
 			v.owner()
 				.getPlayer()
@@ -114,7 +110,7 @@ public class ShellSetBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.voxel();

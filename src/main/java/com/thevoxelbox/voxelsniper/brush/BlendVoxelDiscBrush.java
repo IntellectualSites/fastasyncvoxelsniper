@@ -19,11 +19,10 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected final void blend(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeDoubled = 2 * brushSize;
-		final int[][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
-		final int[][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Array that holds the blended materials
+	protected final void blend(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		int brushSizeDoubled = 2 * brushSize;
+		int[][] oldMaterials = new int[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
 		// Log current materials into oldmats
 		for (int x = 0; x <= 2 * (brushSize + 1); x++) {
 			for (int z = 0; z <= 2 * (brushSize + 1); z++) {
@@ -34,18 +33,15 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 			}
 		}
 		// Log current materials into newmats
+		// Array that holds the blended materials
+		int[][] newMaterials = new int[brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int x = 0; x <= brushSizeDoubled; x++) {
-			for (int z = 0; z <= brushSizeDoubled; z++) {
-				newMaterials[x][z] = oldMaterials[x + 1][z + 1];
-			}
+			System.arraycopy(oldMaterials[x + 1], 1, newMaterials[x], 0, brushSizeDoubled + 1);
 		}
 		// Blend materials
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int z = 0; z <= brushSizeDoubled; z++) {
-				final int[] materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
-				int modeMatCount = 0;
-				int modeMatId = 0;
-				boolean tiecheck = true;
+				int[] materialFrequency = new int[BlendBrushBase.getMaxBlockMaterialID() + 1]; // Array that tracks frequency of materials neighboring given block
 				for (int m = -1; m <= 1; m++) {
 					for (int n = -1; n <= 1; n++) {
 						if (!(m == 0 && n == 0)) {
@@ -54,6 +50,8 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 					}
 				}
 				// Find most common neighboring material.
+				int modeMatId = 0;
+				int modeMatCount = 0;
 				for (int i = 0; i <= BlendBrushBase.getMaxBlockMaterialID(); i++) {
 					if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
 						modeMatCount = materialFrequency[i];
@@ -61,6 +59,7 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 					}
 				}
 				// Make sure there'world not a tie for most common
+				boolean tiecheck = true;
 				for (int i = 0; i < modeMatId; i++) {
 					if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.AIR.getId()) && !(this.excludeWater && (i == Material.WATER.getId() || i == Material.STATIONARY_WATER.getId()))) {
 						tiecheck = false;
@@ -72,7 +71,7 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 				}
 			}
 		}
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		// Make the changes
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			for (int z = brushSizeDoubled; z >= 0; z--) {
@@ -98,7 +97,7 @@ public class BlendVoxelDiscBrush extends BlendBrushBase {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");

@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 public class LineBrush extends PerformBrush {
 
 	private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
-	private Vector originCoords = null;
+	private Vector originCoords;
 	private Vector targetCoords = new Vector();
 	private World targetWorld;
 
@@ -32,31 +32,31 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
 		}
 	}
 
-	private void linePowder(final SnipeData v) {
-		final Vector originClone = this.originCoords.clone()
-			.add(LineBrush.HALF_BLOCK_OFFSET);
-		final Vector targetClone = this.targetCoords.clone()
-			.add(LineBrush.HALF_BLOCK_OFFSET);
-		final Vector direction = targetClone.clone()
+	private void linePowder(SnipeData v) {
+		Vector originClone = this.originCoords.clone()
+			.add(HALF_BLOCK_OFFSET);
+		Vector targetClone = this.targetCoords.clone()
+			.add(HALF_BLOCK_OFFSET);
+		Vector direction = targetClone.clone()
 			.subtract(originClone);
-		final double length = this.targetCoords.distance(this.originCoords);
+		double length = this.targetCoords.distance(this.originCoords);
 		if (length == 0) {
 			this.current.perform(this.targetCoords.toLocation(this.targetWorld)
 				.getBlock());
 		} else {
-			for (final BlockIterator blockIterator = new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length)); blockIterator.hasNext(); ) {
-				final Block currentBlock = blockIterator.next();
+			for (BlockIterator blockIterator = new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length)); blockIterator.hasNext(); ) {
+				Block currentBlock = blockIterator.next();
 				this.current.perform(currentBlock);
 			}
 		}
@@ -65,7 +65,7 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
@@ -77,7 +77,7 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.originCoords == null || !this.getTargetBlock()
 			.getWorld()
 			.equals(this.targetWorld)) {

@@ -23,17 +23,17 @@ public class ExtrudeBrush extends Brush {
 		this.setName("Extrude");
 	}
 
-	private void extrudeUpOrDown(final SnipeData v, boolean isUp) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void extrudeUpOrDown(SnipeData v, boolean isUp) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					final int direction = (isUp ? 1 : -1);
+					int direction = (isUp ? 1 : -1);
 					for (int y = 0; y < Math.abs(v.getVoxelHeight()); y++) {
-						final int tempY = y * direction;
+						int tempY = y * direction;
 						undo = this.perform(this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY() + tempY, this.getTargetBlock()
@@ -49,17 +49,17 @@ public class ExtrudeBrush extends Brush {
 			.storeUndo(undo);
 	}
 
-	private void extrudeNorthOrSouth(final SnipeData v, boolean isSouth) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void extrudeNorthOrSouth(SnipeData v, boolean isSouth) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int y = -brushSize; y <= brushSize; y++) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					final int direction = (isSouth) ? 1 : -1;
+					int direction = (isSouth) ? 1 : -1;
 					for (int z = 0; z < Math.abs(v.getVoxelHeight()); z++) {
-						final int tempZ = z * direction;
+						int tempZ = z * direction;
 						undo = this.perform(this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY() + y, this.getTargetBlock()
@@ -75,17 +75,17 @@ public class ExtrudeBrush extends Brush {
 			.storeUndo(undo);
 	}
 
-	private void extrudeEastOrWest(final SnipeData v, boolean isEast) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void extrudeEastOrWest(SnipeData v, boolean isEast) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int y = -brushSize; y <= brushSize; y++) {
-			final double ySquared = Math.pow(y, 2);
+			double ySquared = Math.pow(y, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((ySquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					final int direction = (isEast) ? 1 : -1;
+					int direction = (isEast) ? 1 : -1;
 					for (int x = 0; x < Math.abs(v.getVoxelHeight()); x++) {
-						final int tempX = x * direction;
+						int tempX = x * direction;
 						undo = this.perform(this.clampY(this.getTargetBlock()
 							.getX() + tempX, this.getTargetBlock()
 							.getY() + y, this.getTargetBlock()
@@ -102,7 +102,7 @@ public class ExtrudeBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private Undo perform(final Block b1, final Block b2, final SnipeData v, final Undo undo) {
+	private Undo perform(Block b1, Block b2, SnipeData v, Undo undo) {
 		if (v.getVoxelList()
 			.contains(new int[] {this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())})) {
 			undo.put(b2);
@@ -114,26 +114,19 @@ public class ExtrudeBrush extends Brush {
 		return undo;
 	}
 
-	private void selectExtrudeMethod(final SnipeData v, final BlockFace blockFace, final boolean towardsUser) {
+	private void selectExtrudeMethod(SnipeData v, BlockFace blockFace, boolean towardsUser) {
 		if (blockFace == null || v.getVoxelHeight() == 0) {
 			return;
 		}
-		boolean tempDirection = towardsUser;
 		switch (blockFace) {
-			case DOWN:
-				tempDirection = !towardsUser;
 			case UP:
-				extrudeUpOrDown(v, tempDirection);
+				extrudeUpOrDown(v, towardsUser);
 				break;
-			case NORTH:
-				tempDirection = !towardsUser;
 			case SOUTH:
-				extrudeNorthOrSouth(v, tempDirection);
+				extrudeNorthOrSouth(v, towardsUser);
 				break;
-			case WEST:
-				tempDirection = !towardsUser;
 			case EAST:
-				extrudeEastOrWest(v, tempDirection);
+				extrudeEastOrWest(v, towardsUser);
 				break;
 			default:
 				break;
@@ -141,19 +134,19 @@ public class ExtrudeBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.selectExtrudeMethod(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()), false);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.selectExtrudeMethod(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()), true);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.height();
@@ -162,9 +155,9 @@ public class ExtrudeBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					v.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
@@ -180,7 +173,7 @@ public class ExtrudeBrush extends Brush {
 					v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 					return;
 				}
-			} catch (final Exception exception) {
+			} catch (RuntimeException exception) {
 				v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}

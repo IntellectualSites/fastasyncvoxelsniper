@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
  */
 public class RandomErodeBrush extends Brush {
 
-	private final double trueCircle = 0.5;
+	private static final double TRUE_CIRCLE = 0.5;
 	private BlockWrapper[][][] snap;
 	private BlockWrapper[][][] firstSnap;
 	private int bsize;
@@ -32,7 +32,7 @@ public class RandomErodeBrush extends Brush {
 		this.setName("RandomErode");
 	}
 
-	private boolean erode(final int x, final int y, final int z) {
+	private boolean erode(int x, int y, int z) {
 		if (this.snap[x][y][z].isSolid()) {
 			int d = 0;
 			if (!this.snap[x + 1][y][z].isSolid()) {
@@ -60,7 +60,7 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean fill(final int x, final int y, final int z) {
+	private boolean fill(int x, int y, int z) {
 		if (this.snap[x][y][z].isSolid()) {
 			return false;
 		} else {
@@ -150,16 +150,16 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void rerosion(final SnipeData v) {
-		final Undo undo = new Undo();
+	private void rerosion(SnipeData v) {
+		Undo undo = new Undo();
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
 			for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
 				this.getMatrix();
-				final double brushSizeSquared = Math.pow(this.bsize + this.trueCircle, 2);
+				double brushSizeSquared = Math.pow(this.bsize + TRUE_CIRCLE, 2);
 				for (int z = 1; z < this.snap.length - 1; z++) {
-					final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+					double zSquared = Math.pow(z - (this.bsize + 1), 2);
 					for (int x = 1; x < this.snap.length - 1; x++) {
-						final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+						double xSquared = Math.pow(x - (this.bsize + 1), 2);
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= brushSizeSquared)) {
 								if (this.erode(x, y, z)) {
@@ -173,13 +173,13 @@ public class RandomErodeBrush extends Brush {
 			}
 		}
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
-			final double brushSizeSquared = Math.pow(this.bsize + 0.5, 2);
+			double brushSizeSquared = Math.pow(this.bsize + 0.5, 2);
 			for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++) {
 				this.getMatrix();
 				for (int z = 1; z < this.snap.length - 1; z++) {
-					final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+					double zSquared = Math.pow(z - (this.bsize + 1), 2);
 					for (int x = 1; x < this.snap.length - 1; x++) {
-						final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+						double xSquared = Math.pow(x - (this.bsize + 1), 2);
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= brushSizeSquared)) {
 								if (this.fill(x, y, z)) {
@@ -194,7 +194,7 @@ public class RandomErodeBrush extends Brush {
 		}
 		for (BlockWrapper[][] firstSnapSlice : this.firstSnap) {
 			for (BlockWrapper[] firstSnapString : firstSnapSlice) {
-				for (final BlockWrapper block : firstSnapString) {
+				for (BlockWrapper block : firstSnapString) {
 					if (block.getI() != block.getNativeBlock()
 						.getTypeId()) {
 						undo.put(block.getNativeBlock());
@@ -207,16 +207,16 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void rfilling(final SnipeData v) {
-		final Undo undo = new Undo();
+	private void rfilling(SnipeData v) {
+		Undo undo = new Undo();
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
-			final double bSquared = Math.pow(this.bsize + 0.5, 2);
+			double bSquared = Math.pow(this.bsize + 0.5, 2);
 			for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++) {
 				this.getMatrix();
 				for (int z = 1; z < this.snap.length - 1; z++) {
-					final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+					double zSquared = Math.pow(z - (this.bsize + 1), 2);
 					for (int x = 1; x < this.snap.length - 1; x++) {
-						final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+						double xSquared = Math.pow(x - (this.bsize + 1), 2);
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= bSquared)) {
 								if (this.fill(x, y, z)) {
@@ -230,13 +230,13 @@ public class RandomErodeBrush extends Brush {
 			}
 		}
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
-			final double bSquared = Math.pow(this.bsize + this.trueCircle, 2);
+			double bSquared = Math.pow(this.bsize + TRUE_CIRCLE, 2);
 			for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
 				this.getMatrix();
 				for (int z = 1; z < this.snap.length - 1; z++) {
-					final double zSquared = Math.pow(z - (this.bsize + 1), 2);
+					double zSquared = Math.pow(z - (this.bsize + 1), 2);
 					for (int x = 1; x < this.snap.length - 1; x++) {
-						final double xSquared = Math.pow(x - (this.bsize + 1), 2);
+						double xSquared = Math.pow(x - (this.bsize + 1), 2);
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.bsize + 1), 2) + zSquared) <= bSquared)) {
 								if (this.erode(x, y, z)) {
@@ -251,7 +251,7 @@ public class RandomErodeBrush extends Brush {
 		}
 		for (BlockWrapper[][] firstSnapSlice : this.firstSnap) {
 			for (BlockWrapper[] firstSnapString : firstSnapSlice) {
-				for (final BlockWrapper block : firstSnapString) {
+				for (BlockWrapper block : firstSnapString) {
 					if (block.getI() != block.getNativeBlock()
 						.getTypeId()) {
 						undo.put(block.getNativeBlock());
@@ -264,7 +264,7 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.bsize = v.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(5) + 1;
@@ -280,7 +280,7 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.bsize = v.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(3) + 3;
@@ -296,7 +296,7 @@ public class RandomErodeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
@@ -315,32 +315,24 @@ public class RandomErodeBrush extends Brush {
 		 *
 		 */
 		@SuppressWarnings("deprecation")
-		public BlockWrapper(final Block bl) {
-			this.setNativeBlock(bl);
-			this.setI(bl.getTypeId());
+		private BlockWrapper(Block bl) {
+			this.nativeBlock = bl;
+			this.i = bl.getTypeId();
 			switch (bl.getType()) {
 				case AIR:
-					this.setSolid(false);
-					break;
 				case WATER:
-					this.setSolid(false);
-					break;
 				case STATIONARY_WATER:
-					this.setSolid(false);
-					break;
 				case STATIONARY_LAVA:
-					this.setSolid(false);
-					break;
 				case LAVA:
-					this.setSolid(false);
+					this.solid = false;
 					break;
 				default:
-					this.setSolid(true);
+					this.solid = true;
 			}
 		}
 
 		public boolean isSolid() {
-			return solid;
+			return this.solid;
 		}
 
 		public void setSolid(boolean solid) {
@@ -348,7 +340,7 @@ public class RandomErodeBrush extends Brush {
 		}
 
 		public Block getNativeBlock() {
-			return nativeBlock;
+			return this.nativeBlock;
 		}
 
 		public void setNativeBlock(Block nativeBlock) {
@@ -356,7 +348,7 @@ public class RandomErodeBrush extends Brush {
 		}
 
 		public int getId() {
-			return id;
+			return this.id;
 		}
 
 		public void setId(int id) {
@@ -364,7 +356,7 @@ public class RandomErodeBrush extends Brush {
 		}
 
 		public int getI() {
-			return i;
+			return this.i;
 		}
 
 		public void setI(int i) {

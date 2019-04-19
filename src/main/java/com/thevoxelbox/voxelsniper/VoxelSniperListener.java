@@ -34,12 +34,12 @@ public class VoxelSniperListener implements Listener {
 
 	private static final String SNIPER_PERMISSION = "voxelsniper.sniper";
 	private final VoxelSniper plugin;
-	private Map<String, VoxelCommand> commands = new HashMap<String, VoxelCommand>();
+	private Map<String, VoxelCommand> commands = new HashMap<>();
 
 	/**
 	 *
 	 */
-	public VoxelSniperListener(final VoxelSniper plugin) {
+	public VoxelSniperListener(VoxelSniper plugin) {
 		this.plugin = plugin;
 		MetricsManager.setSnipeCounterInitTimeStamp(System.currentTimeMillis());
 		addCommand(new VoxelBrushCommand(plugin));
@@ -61,7 +61,7 @@ public class VoxelSniperListener implements Listener {
 		addCommand(new VoxelVoxelCommand(plugin));
 	}
 
-	private void addCommand(final VoxelCommand command) {
+	private void addCommand(VoxelCommand command) {
 		this.commands.put(command.getIdentifier()
 			.toLowerCase(), command);
 	}
@@ -69,7 +69,7 @@ public class VoxelSniperListener implements Listener {
 	/**
 	 * @return boolean Success.
 	 */
-	public boolean onCommand(final Player player, final String[] split, final String command) {
+	public boolean onCommand(Player player, String[] split, String command) {
 		VoxelCommand found = this.commands.get(command.toLowerCase());
 		if (found == null) {
 			return false;
@@ -81,7 +81,7 @@ public class VoxelSniperListener implements Listener {
 		return found.onCommand(player, split);
 	}
 
-	private boolean hasPermission(final VoxelCommand command, final Player player) {
+	private boolean hasPermission(VoxelCommand command, Player player) {
 		if (command == null || player == null) {
 			// Just a usual check for nulls
 			return false;
@@ -98,20 +98,21 @@ public class VoxelSniperListener implements Listener {
 	/**
 	 *
 	 */
-	@EventHandler(ignoreCancelled = false)
-	public final void onPlayerInteract(final PlayerInteractEvent event) {
+	@EventHandler
+	public final void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (!player.hasPermission(SNIPER_PERMISSION)) {
 			return;
 		}
 		try {
-			Sniper sniper = plugin.getSniperManager()
+			Sniper sniper = this.plugin.getSniperManager()
 				.getSniperForPlayer(player);
 			if (sniper.isEnabled() && sniper.snipe(event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace())) {
 				MetricsManager.increaseSnipeCounter();
 				event.setCancelled(true);
 			}
-		} catch (final Exception ignored) {
+		} catch (RuntimeException exception) {
+			exception.printStackTrace();
 		}
 	}
 
@@ -119,11 +120,11 @@ public class VoxelSniperListener implements Listener {
 	 *
 	 */
 	@EventHandler
-	public final void onPlayerJoin(final PlayerJoinEvent event) {
+	public final void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
-		if (player.hasPermission(SNIPER_PERMISSION) && plugin.getVoxelSniperConfiguration()
+		if (player.hasPermission(SNIPER_PERMISSION) && this.plugin.getVoxelSniperConfiguration()
 			.isMessageOnLoginEnabled()) {
 			sniper.displayInfo();
 		}

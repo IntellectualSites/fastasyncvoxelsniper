@@ -26,12 +26,12 @@ public class EraserBrush extends Brush {
 		this.setName("Eraser");
 	}
 
-	private void doErase(final SnipeData v, final boolean keepWater) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeDoubled = 2 * brushSize;
+	private void doErase(SnipeData v, boolean keepWater) {
+		int brushSize = v.getBrushSize();
+		int brushSizeDoubled = 2 * brushSize;
 		World world = this.getTargetBlock()
 			.getWorld();
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			int currentX = this.getTargetBlock()
 				.getX() - brushSize + x;
@@ -55,17 +55,17 @@ public class EraserBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.doErase(v, false);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.doErase(v, true);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}

@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 public class JaggedLineBrush extends PerformBrush {
 
 	private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
-	private static int timesUsed = 0;
+	private static int timesUsed;
 
 	private static final int RECURSION_MIN = 1;
 	private static final int RECURSION_DEFAULT = 3;
@@ -27,7 +27,7 @@ public class JaggedLineBrush extends PerformBrush {
 	private static final int SPREAD_DEFAULT = 3;
 
 	private Random random = new Random();
-	private Vector originCoords = null;
+	private Vector originCoords;
 	private Vector targetCoords = new Vector();
 	private int recursion = RECURSION_DEFAULT;
 	private int spread = SPREAD_DEFAULT;
@@ -39,22 +39,22 @@ public class JaggedLineBrush extends PerformBrush {
 		this.setName("Jagged Line");
 	}
 
-	private void jaggedP(final SnipeData v) {
-		final Vector originClone = this.originCoords.clone()
-			.add(JaggedLineBrush.HALF_BLOCK_OFFSET);
-		final Vector targetClone = this.targetCoords.clone()
-			.add(JaggedLineBrush.HALF_BLOCK_OFFSET);
-		final Vector direction = targetClone.clone()
+	private void jaggedP(SnipeData v) {
+		Vector originClone = this.originCoords.clone()
+			.add(HALF_BLOCK_OFFSET);
+		Vector targetClone = this.targetCoords.clone()
+			.add(HALF_BLOCK_OFFSET);
+		Vector direction = targetClone.clone()
 			.subtract(originClone);
-		final double length = this.targetCoords.distance(this.originCoords);
+		double length = this.targetCoords.distance(this.originCoords);
 		if (length == 0) {
 			this.current.perform(this.targetCoords.toLocation(this.getWorld())
 				.getBlock());
 		} else {
-			for (final BlockIterator iterator = new BlockIterator(this.getWorld(), originClone, direction, 0, NumberConversions.round(length)); iterator.hasNext(); ) {
-				final Block block = iterator.next();
-				for (int i = 0; i < recursion; i++) {
-					this.current.perform(this.clampY(Math.round(block.getX() + this.random.nextInt(spread * 2) - spread), Math.round(block.getY() + this.random.nextInt(spread * 2) - spread), Math.round(block.getZ() + this.random.nextInt(spread * 2) - spread)));
+			for (BlockIterator iterator = new BlockIterator(this.getWorld(), originClone, direction, 0, NumberConversions.round(length)); iterator.hasNext(); ) {
+				Block block = iterator.next();
+				for (int i = 0; i < this.recursion; i++) {
+					this.current.perform(this.clampY(Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread)));
 				}
 			}
 		}
@@ -63,9 +63,9 @@ public class JaggedLineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void arrow(final SnipeData v) {
-		if (originCoords == null) {
-			originCoords = new Vector();
+	public final void arrow(SnipeData v) {
+		if (this.originCoords == null) {
+			this.originCoords = new Vector();
 		}
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
@@ -74,8 +74,8 @@ public class JaggedLineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void powder(final SnipeData v) {
-		if (originCoords == null) {
+	public final void powder(SnipeData v) {
+		if (this.originCoords == null) {
 			v.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
 			this.targetCoords = this.getTargetBlock()
@@ -86,15 +86,15 @@ public class JaggedLineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
 		vm.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
-		for (final String parameter : par) {
+	public final void parameters(String[] par, SnipeData v) {
+		for (String parameter : par) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					v.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
@@ -103,7 +103,7 @@ public class JaggedLineBrush extends PerformBrush {
 					return;
 				}
 				if (parameter.startsWith("r")) {
-					final int temp = Integer.parseInt(parameter.substring(1));
+					int temp = Integer.parseInt(parameter.substring(1));
 					if (temp >= RECURSION_MIN && temp <= RECURSION_MAX) {
 						this.recursion = temp;
 						v.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
@@ -112,11 +112,10 @@ public class JaggedLineBrush extends PerformBrush {
 					}
 					return;
 				} else if (parameter.startsWith("s")) {
-					final int temp = Integer.parseInt(parameter.substring(1));
-					this.spread = temp;
+					this.spread = Integer.parseInt(parameter.substring(1));
 					v.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
 				}
-			} catch (Exception exception) {
+			} catch (NumberFormatException exception) {
 				v.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
 				exception.printStackTrace();
 			}

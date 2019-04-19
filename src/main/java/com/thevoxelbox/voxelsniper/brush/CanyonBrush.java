@@ -30,25 +30,25 @@ public class CanyonBrush extends Brush {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	protected final void canyon(final Chunk chunk, final Undo undo) {
+	protected final void canyon(Chunk chunk, Undo undo) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				int currentYLevel = this.yLevel;
 				for (int y = 63; y < this.getWorld()
 					.getMaxHeight(); y++) {
-					final Block block = chunk.getBlock(x, y, z);
-					final Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
+					Block block = chunk.getBlock(x, y, z);
+					Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
 					undo.put(block);
 					undo.put(currentYLevelBlock);
 					currentYLevelBlock.setTypeId(block.getTypeId(), false);
 					block.setType(Material.AIR);
 					currentYLevel++;
 				}
-				final Block block = chunk.getBlock(x, 0, z);
+				Block block = chunk.getBlock(x, 0, z);
 				undo.put(block);
 				block.setTypeId(Material.BEDROCK.getId());
 				for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
-					final Block currentBlock = chunk.getBlock(x, y, z);
+					Block currentBlock = chunk.getBlock(x, y, z);
 					undo.put(currentBlock);
 					currentBlock.setType(Material.STONE);
 				}
@@ -57,16 +57,16 @@ public class CanyonBrush extends Brush {
 	}
 
 	@Override
-	protected void arrow(final SnipeData v) {
-		final Undo undo = new Undo();
+	protected void arrow(SnipeData v) {
+		Undo undo = new Undo();
 		canyon(getTargetBlock().getChunk(), undo);
 		v.owner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	protected void powder(final SnipeData v) {
-		final Undo undo = new Undo();
+	protected void powder(SnipeData v) {
+		Undo undo = new Undo();
 		Chunk targetChunk = getTargetBlock().getChunk();
 		for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++) {
 			for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++) {
@@ -78,13 +78,13 @@ public class CanyonBrush extends Brush {
 	}
 
 	@Override
-	public void info(final Message vm) {
+	public void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
 		}
@@ -101,7 +101,7 @@ public class CanyonBrush extends Brush {
 	}
 
 	protected final int getYLevel() {
-		return yLevel;
+		return this.yLevel;
 	}
 
 	protected final void setYLevel(int yLevel) {

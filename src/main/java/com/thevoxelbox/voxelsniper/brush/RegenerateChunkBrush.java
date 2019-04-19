@@ -19,10 +19,10 @@ public class RegenerateChunkBrush extends Brush {
 		this.setName("Chunk Generator 40k");
 	}
 
-	private void generateChunk(final SnipeData v) {
-		final Chunk chunk = this.getTargetBlock()
+	private void generateChunk(SnipeData v) {
+		Chunk chunk = this.getTargetBlock()
 			.getChunk();
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		for (int z = CHUNK_SIZE; z >= 0; z--) {
 			for (int x = CHUNK_SIZE; x >= 0; x--) {
 				for (int y = this.getWorld()
@@ -41,17 +41,17 @@ public class RegenerateChunkBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.generateChunk(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.generateChunk(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.brushMessage("Tread lightly.");
 		vm.brushMessage("This brush will melt your spleen and sell your kidneys.");

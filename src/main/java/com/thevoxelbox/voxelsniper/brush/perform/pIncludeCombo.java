@@ -19,12 +19,12 @@ public class pIncludeCombo extends vPerformer {
 	private byte data;
 
 	public pIncludeCombo() {
-		name = "Include Combo";
+		this.setName("Include Combo");
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxelList();
 		vm.voxel();
 		vm.data();
@@ -32,18 +32,18 @@ public class pIncludeCombo extends vPerformer {
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		id = v.getVoxelId();
-		data = v.getData();
-		includeList = v.getVoxelList();
+		this.world = v.getWorld();
+		this.id = v.getVoxelId();
+		this.data = v.getData();
+		this.includeList = v.getVoxelList();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (includeList.contains(new int[] {b.getTypeId(), b.getData()})) {
-			h.put(b);
-			b.setTypeIdAndData(id, data, true);
+	public void perform(Block block) {
+		if (this.includeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+			this.h.put(block);
+			block.setTypeIdAndData(this.id, this.data, true);
 		}
 	}
 }

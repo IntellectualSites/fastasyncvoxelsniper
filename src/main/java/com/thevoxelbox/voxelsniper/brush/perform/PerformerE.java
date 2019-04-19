@@ -5,12 +5,14 @@
 
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Voxel
@@ -90,55 +92,49 @@ public enum PerformerE {
 	//COMBO_COMBO_NOPHYS_UPDATE(pComboComboNoPhysUpdate.class,  "ccup",         "combo-combo-update-nophys"),//             place combo, replace combo, graphical update, no physics
 
 	private static Map<String, vPerformer> performers;
-	private static Map<String, String> long_names;
+	private static Map<String, String> longNames;
 	private Class<? extends vPerformer> pclass;
-	private String short_name;
-	private String long_name;
-	public static String performer_list_short = "";
-	public static String performer_list_long = "";
+	private String shortName;
+	private String longName;
+	private static String performerListShort = "";
+	private static String performerListLong = "";
 
-	private PerformerE(Class<? extends vPerformer> c, String s, String l) {
-		pclass = c;
-		short_name = s;
-		long_name = l;
+	PerformerE(Class<? extends vPerformer> clazz, String s, String l) {
+		this.pclass = clazz;
+		this.shortName = s;
+		this.longName = l;
 	}
 
+	public static String getPerformerListShort() {
+		return performerListShort;
+	}
+
+	public static void setPerformerListShort(String performerListShort) {
+		PerformerE.performerListShort = performerListShort;
+	}
+
+	public static String getPerformerListLong() {
+		return performerListLong;
+	}
+
+	public static void setPerformerListLong(String performerListLong) {
+		PerformerE.performerListLong = performerListLong;
+	}
+
+	@Nullable
 	private vPerformer getPerformer() {
-		vPerformer p;
 		try {
-			try {
-				p = pclass.getConstructor()
-					.newInstance();
-				return p;
-			} catch (InstantiationException ex) {
-				Logger.getLogger(PerformerE.class.getName())
-					.log(Level.SEVERE, null, ex);
-			} catch (IllegalAccessException ex) {
-				Logger.getLogger(PerformerE.class.getName())
-					.log(Level.SEVERE, null, ex);
-			} catch (IllegalArgumentException ex) {
-				Logger.getLogger(PerformerE.class.getName())
-					.log(Level.SEVERE, null, ex);
-			} catch (InvocationTargetException ex) {
-				Logger.getLogger(PerformerE.class.getName())
-					.log(Level.SEVERE, null, ex);
-			}
-		} catch (NoSuchMethodException ex) {
+			Constructor<? extends vPerformer> constructor = this.pclass.getConstructor();
+			return constructor.newInstance();
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
 			Logger.getLogger(PerformerE.class.getName())
-				.log(Level.SEVERE, null, ex);
-		} catch (SecurityException ex) {
-			Logger.getLogger(PerformerE.class.getName())
-				.log(Level.SEVERE, null, ex);
+				.log(Level.SEVERE, null, exception);
 		}
 		return null;
 	}
 
 	public static vPerformer getPerformer(String s) {
-		if (performers.containsKey(s)) {
-			return performers.get(s);
-		} else {
-			return performers.get(long_names.get(s));
-		}
+		return performers.containsKey(s) ? performers.get(s) : performers.get(longNames.get(s));
 	}
 
 	public static boolean has(String s) {
@@ -146,15 +142,15 @@ public enum PerformerE {
 	}
 
 	static {
-		performers = new TreeMap<String, vPerformer>();
-		long_names = new TreeMap<String, String>();
+		performers = new TreeMap<>();
+		longNames = new TreeMap<>();
 		for (PerformerE pe : values()) {
-			performers.put(pe.short_name, pe.getPerformer());
-			long_names.put(pe.long_name, pe.short_name);
-			performer_list_short = performer_list_short + ChatColor.GREEN + pe.short_name + ChatColor.RED + ", ";
-			performer_list_long = performer_list_long + ChatColor.GREEN + pe.long_name + ChatColor.RED + ", ";
+			performers.put(pe.shortName, pe.getPerformer());
+			longNames.put(pe.longName, pe.shortName);
+			performerListShort = performerListShort + ChatColor.GREEN + pe.shortName + ChatColor.RED + ", ";
+			performerListLong = performerListLong + ChatColor.GREEN + pe.longName + ChatColor.RED + ", ";
 		}
-		performer_list_short = performer_list_short.substring(0, performer_list_short.length() - 2);
-		performer_list_long = performer_list_long.substring(0, performer_list_long.length() - 2);
+		performerListShort = performerListShort.substring(0, performerListShort.length() - 2);
+		performerListLong = performerListLong.substring(0, performerListLong.length() - 2);
 	}
 }

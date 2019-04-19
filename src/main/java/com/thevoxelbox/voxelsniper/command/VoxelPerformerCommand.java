@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelPerformerCommand extends VoxelCommand {
 
-	public VoxelPerformerCommand(final VoxelSniper plugin) {
+	public VoxelPerformerCommand(VoxelSniper plugin) {
 		super("VoxelPerformer", plugin);
 		setIdentifier("p");
 		setPermission("voxelsniper.sniper");
@@ -19,7 +19,7 @@ public class VoxelPerformerCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		try {
@@ -39,8 +39,8 @@ public class VoxelPerformerCommand extends VoxelCommand {
 				}
 			}
 			return true;
-		} catch (Exception exception) {
-			plugin.getLogger()
+		} catch (NumberFormatException exception) {
+			this.plugin.getLogger()
 				.log(Level.WARNING, "Command error from " + player.getName(), exception);
 			return true;
 		}

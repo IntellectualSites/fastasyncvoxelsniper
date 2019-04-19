@@ -27,20 +27,19 @@ public class BlobBrush extends PerformBrush {
 		this.setName("Blob");
 	}
 
-	private void checkValidGrowPercent(final SnipeData v) {
+	private void checkValidGrowPercent(SnipeData v) {
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
 			this.growPercent = GROW_PERCENT_DEFAULT;
 			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 		}
 	}
 
-	private void digBlob(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeDoubled = 2 * brushSize;
-		final int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
-		final int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+	private void digBlob(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		int brushSizeDoubled = 2 * brushSize;
 		this.checkValidGrowPercent(v);
 		// Seed the array
+		int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			for (int y = brushSizeDoubled; y >= 0; y--) {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
@@ -53,6 +52,7 @@ public class BlobBrush extends PerformBrush {
 			}
 		}
 		// Grow the seed
+		int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int r = 0; r < brushSize; r++) {
 			for (int x = brushSizeDoubled; x >= 0; x--) {
 				for (int y = brushSizeDoubled; y >= 0; y--) {
@@ -89,18 +89,16 @@ public class BlobBrush extends PerformBrush {
 			// integrate tempsplat back into splat at end of iteration
 			for (int x = brushSizeDoubled; x >= 0; x--) {
 				for (int y = brushSizeDoubled; y >= 0; y--) {
-					for (int z = brushSizeDoubled; z >= 0; z--) {
-						splat[x][y][z] = tempSplat[x][y][z];
-					}
+					System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, brushSizeDoubled + 1);
 				}
 			}
 		}
-		final double rSquared = Math.pow(brushSize + 1, 2);
+		double rSquared = Math.pow(brushSize + 1, 2);
 		// Make the changes
 		for (int x = brushSizeDoubled; x >= 0; x--) {
-			final double xSquared = Math.pow(x - brushSize - 1, 2);
+			double xSquared = Math.pow(x - brushSize - 1, 2);
 			for (int y = brushSizeDoubled; y >= 0; y--) {
-				final double ySquared = Math.pow(y - brushSize - 1, 2);
+				double ySquared = Math.pow(y - brushSize - 1, 2);
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
 						this.current.perform(this.clampY(this.getTargetBlock()
@@ -115,15 +113,15 @@ public class BlobBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void growBlob(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final int brushSizeDoubled = 2 * brushSize;
-		final int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
-		final int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+	private void growBlob(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		int brushSizeDoubled = 2 * brushSize;
 		this.checkValidGrowPercent(v);
 		// Seed the array
+		int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		splat[brushSize][brushSize][brushSize] = 1;
 		// Grow the seed
+		int[][][] tempSplat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
 		for (int r = 0; r < brushSize; r++) {
 			for (int x = brushSizeDoubled; x >= 0; x--) {
 				for (int y = brushSizeDoubled; y >= 0; y--) {
@@ -160,18 +158,16 @@ public class BlobBrush extends PerformBrush {
 			// integrate tempsplat back into splat at end of iteration
 			for (int x = brushSizeDoubled; x >= 0; x--) {
 				for (int y = brushSizeDoubled; y >= 0; y--) {
-					for (int z = brushSizeDoubled; z >= 0; z--) {
-						splat[x][y][z] = tempSplat[x][y][z];
-					}
+					System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, brushSizeDoubled + 1);
 				}
 			}
 		}
-		final double rSquared = Math.pow(brushSize + 1, 2);
+		double rSquared = Math.pow(brushSize + 1, 2);
 		// Make the changes
 		for (int x = brushSizeDoubled; x >= 0; x--) {
-			final double xSquared = Math.pow(x - brushSize - 1, 2);
+			double xSquared = Math.pow(x - brushSize - 1, 2);
 			for (int y = brushSizeDoubled; y >= 0; y--) {
-				final double ySquared = Math.pow(y - brushSize - 1, 2);
+				double ySquared = Math.pow(y - brushSize - 1, 2);
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
 						this.current.perform(this.clampY(this.getTargetBlock()
@@ -187,17 +183,17 @@ public class BlobBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.growBlob(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.digBlob(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		this.checkValidGrowPercent(null);
 		vm.brushName(this.getName());
 		vm.size();
@@ -205,16 +201,16 @@ public class BlobBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
 				return;
 			}
 			if (parameter.startsWith("g")) {
-				final int temp = Integer.parseInt(parameter.replace("g", ""));
+				int temp = Integer.parseInt(parameter.replace("g", ""));
 				if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
 					v.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
 					this.growPercent = temp;

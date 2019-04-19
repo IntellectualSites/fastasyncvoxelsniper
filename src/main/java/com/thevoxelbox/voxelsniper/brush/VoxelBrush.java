@@ -18,7 +18,7 @@ public class VoxelBrush extends PerformBrush {
 		this.setName("Voxel");
 	}
 
-	private void voxel(final SnipeData v) {
+	private void voxel(SnipeData v) {
 		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
 			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 				for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
@@ -34,17 +34,17 @@ public class VoxelBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.voxel(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.voxel(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}

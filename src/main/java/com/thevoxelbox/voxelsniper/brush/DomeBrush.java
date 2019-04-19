@@ -25,7 +25,7 @@ public class DomeBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.voxel();
@@ -36,38 +36,38 @@ public class DomeBrush extends Brush {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	private void generateDome(final SnipeData v, final Block targetBlock) {
+	private void generateDome(SnipeData v, Block targetBlock) {
 		if (v.getVoxelHeight() == 0) {
 			v.sendMessage("VoxelHeight must not be 0.");
 			return;
 		}
-		final int absoluteHeight = Math.abs(v.getVoxelHeight());
-		final boolean negative = v.getVoxelHeight() < 0;
-		final Set<Vector> changeablePositions = new HashSet<Vector>();
-		final Undo undo = new Undo();
-		final int brushSizeTimesVoxelHeight = v.getBrushSize() * absoluteHeight;
-		final double stepScale = ((v.getBrushSize() * v.getBrushSize()) + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5;
-		final double stepSize = 1 / stepScale;
+		int absoluteHeight = Math.abs(v.getVoxelHeight());
+		boolean negative = v.getVoxelHeight() < 0;
+		Set<Vector> changeablePositions = new HashSet<>();
+		Undo undo = new Undo();
+		int brushSizeTimesVoxelHeight = v.getBrushSize() * absoluteHeight;
+		double stepScale = ((v.getBrushSize() * v.getBrushSize()) + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5;
+		double stepSize = 1 / stepScale;
 		for (double u = 0; u <= Math.PI / 2; u += stepSize) {
-			final double y = absoluteHeight * Math.sin(u);
+			double y = absoluteHeight * Math.sin(u);
 			for (double stepV = -Math.PI; stepV <= -(Math.PI / 2); stepV += stepSize) {
-				final double x = v.getBrushSize() * Math.cos(u) * Math.cos(stepV);
-				final double z = v.getBrushSize() * Math.cos(u) * Math.sin(stepV);
-				final double targetBlockX = targetBlock.getX() + 0.5;
-				final double targetBlockZ = targetBlock.getZ() + 0.5;
-				final int targetY = NumberConversions.floor(targetBlock.getY() + (negative ? -y : y));
-				final int currentBlockXAdd = NumberConversions.floor(targetBlockX + x);
-				final int currentBlockZAdd = NumberConversions.floor(targetBlockZ + z);
-				final int currentBlockXSubtract = NumberConversions.floor(targetBlockX - x);
-				final int currentBlockZSubtract = NumberConversions.floor(targetBlockZ - z);
+				double x = v.getBrushSize() * Math.cos(u) * Math.cos(stepV);
+				double z = v.getBrushSize() * Math.cos(u) * Math.sin(stepV);
+				double targetBlockX = targetBlock.getX() + 0.5;
+				double targetBlockZ = targetBlock.getZ() + 0.5;
+				int targetY = NumberConversions.floor(targetBlock.getY() + (negative ? -y : y));
+				int currentBlockXAdd = NumberConversions.floor(targetBlockX + x);
+				int currentBlockZAdd = NumberConversions.floor(targetBlockZ + z);
+				int currentBlockXSubtract = NumberConversions.floor(targetBlockX - x);
+				int currentBlockZSubtract = NumberConversions.floor(targetBlockZ - z);
 				changeablePositions.add(new Vector(currentBlockXAdd, targetY, currentBlockZAdd));
 				changeablePositions.add(new Vector(currentBlockXSubtract, targetY, currentBlockZAdd));
 				changeablePositions.add(new Vector(currentBlockXAdd, targetY, currentBlockZSubtract));
 				changeablePositions.add(new Vector(currentBlockXSubtract, targetY, currentBlockZSubtract));
 			}
 		}
-		for (final Vector vector : changeablePositions) {
-			final Block currentTargetBlock = vector.toLocation(this.getTargetBlock()
+		for (Vector vector : changeablePositions) {
+			Block currentTargetBlock = vector.toLocation(this.getTargetBlock()
 				.getWorld())
 				.getBlock();
 			if (currentTargetBlock.getTypeId() != v.getVoxelId() || currentTargetBlock.getData() != v.getData()) {
@@ -80,12 +80,12 @@ public class DomeBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.generateDome(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.generateDome(v, this.getLastBlock());
 	}
 

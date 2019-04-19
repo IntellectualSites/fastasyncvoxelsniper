@@ -18,12 +18,12 @@ public class WarpBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		Player player = v.owner()
 			.getPlayer();
 		Location location = this.getLastBlock()
@@ -35,7 +35,7 @@ public class WarpBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		Player player = v.owner()
 			.getPlayer();
 		Location location = this.getLastBlock()

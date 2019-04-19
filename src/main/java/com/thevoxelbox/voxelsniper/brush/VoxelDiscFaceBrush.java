@@ -20,7 +20,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 		this.setName("Voxel Disc Face");
 	}
 
-	private void disc(final SnipeData v, Block targetBlock) {
+	private void disc(SnipeData v, Block targetBlock) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
@@ -30,7 +30,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discNS(final SnipeData v, Block targetBlock) {
+	private void discNS(SnipeData v, Block targetBlock) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
@@ -40,7 +40,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discEW(final SnipeData v, Block targetBlock) {
+	private void discEW(SnipeData v, Block targetBlock) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
 				this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
@@ -50,7 +50,7 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void pre(final SnipeData v, final BlockFace bf, Block targetBlock) {
+	private void pre(SnipeData v, BlockFace bf, Block targetBlock) {
 		if (bf == null) {
 			return;
 		}
@@ -73,19 +73,19 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.pre(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()), this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.pre(v, this.getTargetBlock()
 			.getFace(this.getLastBlock()), this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}

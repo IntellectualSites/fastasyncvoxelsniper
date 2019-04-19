@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelInkCommand extends VoxelCommand {
 
-	public VoxelInkCommand(final VoxelSniper plugin) {
+	public VoxelInkCommand(VoxelSniper plugin) {
 		super("VoxelInk", plugin);
 		setIdentifier("vi");
 		setPermission("voxelsniper.sniper");
@@ -18,7 +18,7 @@ public class VoxelInkCommand extends VoxelCommand {
 
 	@Override
 	public boolean onCommand(Player player, String[] args) {
-		Sniper sniper = plugin.getSniperManager()
+		Sniper sniper = this.plugin.getSniperManager()
 			.getSniperForPlayer(player);
 		byte dataValue;
 		if (args.length == 0) {

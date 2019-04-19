@@ -6,7 +6,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import com.google.common.io.Files;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
@@ -36,7 +38,7 @@ public class StencilBrush extends Brush {
 	private short xRef;
 	private short zRef;
 	private short yRef;
-	private byte pasteParam = 0;
+	private byte pasteParam;
 	private int[] firstPoint = new int[3];
 	private int[] secondPoint = new int[3];
 	private int[] pastePoint = new int[3];
@@ -50,23 +52,23 @@ public class StencilBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilPaste(final SnipeData v) {
+	private void stencilPaste(SnipeData v) {
 		if (this.filename.matches("NoFileLoaded")) {
 			v.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
 			return;
 		}
-		final Undo undo = new Undo();
-		final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+		Undo undo = new Undo();
+		File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 		if (file.exists()) {
 			try {
-				final DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
 				this.x = in.readShort();
 				this.z = in.readShort();
 				this.y = in.readShort();
 				this.xRef = in.readShort();
 				this.zRef = in.readShort();
 				this.yRef = in.readShort();
-				final int numRuns = in.readInt();
+				int numRuns = in.readInt();
 				int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
 				// corner, for example.
 				int currZ = -this.zRef;
@@ -79,7 +81,7 @@ public class StencilBrush extends Brush {
 				if (this.pasteOption == 0) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -114,7 +116,7 @@ public class StencilBrush extends Brush {
 				} else if (this.pasteOption == 1) {
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < numLoops; j++) {
@@ -158,7 +160,7 @@ public class StencilBrush extends Brush {
 				} else { // replace
 					for (int i = 1; i < numRuns + 1; i++) {
 						if (in.readBoolean()) {
-							final int numLoops = in.readByte() + 128;
+							int numLoops = in.readByte() + 128;
 							id = (in.readByte() + 128);
 							data = (in.readByte() + 128);
 							for (int j = 0; j < (numLoops); j++) {
@@ -200,7 +202,7 @@ public class StencilBrush extends Brush {
 				in.close();
 				v.owner()
 					.storeUndo(undo);
-			} catch (final Exception exception) {
+			} catch (IOException exception) {
 				v.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
@@ -210,8 +212,8 @@ public class StencilBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void stencilSave(final SnipeData v) {
-		final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+	private void stencilSave(SnipeData v) {
+		File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 		try {
 			this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
 			this.z = (short) (Math.abs((this.firstPoint[1] - this.secondPoint[1])) + 1);
@@ -225,7 +227,7 @@ public class StencilBrush extends Brush {
 			}
 			Files.createParentDirs(file);
 			file.createNewFile();
-			final DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+			DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 			int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
 			int blockPositionZ = (this.firstPoint[1] > this.secondPoint[1]) ? this.secondPoint[1] : this.firstPoint[1];
 			int blockPositionY = (this.firstPoint[2] > this.secondPoint[2]) ? this.secondPoint[2] : this.firstPoint[2];
@@ -243,29 +245,25 @@ public class StencilBrush extends Brush {
 				.getBlockTypeIdAt(blockPositionX, blockPositionY, blockPositionZ) - 128);
 			byte lastData = (byte) (this.clampY(blockPositionX, blockPositionY, blockPositionZ)
 				.getData() - 128);
-			byte thisId;
-			byte thisData;
 			int counter = 0;
 			int arrayIndex = 0;
 			for (int y = 0; y < this.y; y++) {
 				for (int z = 0; z < this.z; z++) {
 					for (int x = 0; x < this.x; x++) {
 						Block currentBlock = getWorld().getBlockAt(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
-						thisId = (byte) (currentBlock.getTypeId() - 128);
-						thisData = (byte) (currentBlock.getData() - 128);
+						byte thisId = (byte) (currentBlock.getTypeId() - 128);
+						byte thisData = (byte) (currentBlock.getData() - 128);
 						if (thisId != lastId || thisData != lastData || counter == 255) {
 							blockArray[arrayIndex] = lastId;
 							dataArray[arrayIndex] = lastData;
 							runSizeArray[arrayIndex] = (byte) (counter - 128);
 							arrayIndex++;
 							counter = 1;
-							lastId = thisId;
-							lastData = thisData;
 						} else {
 							counter++;
-							lastId = thisId;
-							lastData = thisData;
 						}
+						lastId = thisId;
+						lastData = thisData;
 					}
 				}
 			}
@@ -278,24 +276,22 @@ public class StencilBrush extends Brush {
 				if (runSizeArray[i] > -127) {
 					out.writeBoolean(true);
 					out.writeByte(runSizeArray[i]);
-					out.writeByte(blockArray[i]);
-					out.writeByte(dataArray[i]);
 				} else {
 					out.writeBoolean(false);
-					out.writeByte(blockArray[i]);
-					out.writeByte(dataArray[i]);
 				}
+				out.writeByte(blockArray[i]);
+				out.writeByte(dataArray[i]);
 			}
 			v.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
 			out.close();
-		} catch (final Exception exception) {
+		} catch (IOException exception) {
 			v.sendMessage(ChatColor.RED + "Something went wrong.");
 			exception.printStackTrace();
 		}
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) { // will be used to copy/save later on?
+	protected final void arrow(SnipeData v) { // will be used to copy/save later on?
 		if (this.point == 1) {
 			this.firstPoint[0] = this.getTargetBlock()
 				.getX();
@@ -336,18 +332,18 @@ public class StencilBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) { // will be used to paste later on
+	protected final void powder(SnipeData v) { // will be used to paste later on
 		this.stencilPaste(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom("File loaded: " + this.filename);
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
@@ -365,13 +361,13 @@ public class StencilBrush extends Brush {
 		}
 		try {
 			this.filename = par[1 + this.pasteParam];
-			final File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+			File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 			if (file.exists()) {
 				v.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
 			} else {
 				v.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
 			}
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "You need to type a stencil name.");
 		}
 	}

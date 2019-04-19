@@ -14,7 +14,7 @@ import org.bukkit.block.Block;
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rot2DvertBrush extends Brush {
 
-	private int mode = 0;
+	private int mode;
 	private int bSize;
 	private int brushSize;
 	private BlockWrapper[][][] snap;
@@ -44,7 +44,7 @@ public class Rot2DvertBrush extends Brush {
 				sy = this.getTargetBlock()
 					.getY() - this.bSize;
 				for (int y = 0; y < this.snap.length; y++) {
-					final Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+					Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
 					this.snap[x][y][z] = new BlockWrapper(block);
 					block.setTypeId(0);
 					sy++;
@@ -55,26 +55,26 @@ public class Rot2DvertBrush extends Brush {
 		}
 	}
 
-	private void rotate(final SnipeData v) {
-		final double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
-		final double cos = Math.cos(this.se);
-		final double sin = Math.sin(this.se);
-		final boolean[][] doNotFill = new boolean[this.snap.length][this.snap.length];
+	private void rotate(SnipeData v) {
+		double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
+		double cos = Math.cos(this.se);
+		double sin = Math.sin(this.se);
+		boolean[][] doNotFill = new boolean[this.snap.length][this.snap.length];
 		// I put y in the inside loop, since it doesn't have any power functions, should be much faster.
 		// Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
 		// do a targeted filling of only those columns later that were left out.
 		for (int x = 0; x < this.snap.length; x++) {
-			final int xx = x - this.bSize;
-			final double xSquared = Math.pow(xx, 2);
+			int xx = x - this.bSize;
+			double xSquared = Math.pow(xx, 2);
 			for (int z = 0; z < this.snap.length; z++) {
-				final int zz = z - this.bSize;
+				int zz = z - this.bSize;
 				if (xSquared + Math.pow(zz, 2) <= brushSizeSquared) {
-					final double newX = (xx * cos) - (zz * sin);
-					final double newZ = (xx * sin) + (zz * cos);
+					double newX = (xx * cos) - (zz * sin);
+					double newZ = (xx * sin) + (zz * cos);
 					doNotFill[(int) newX + this.bSize][(int) newZ + this.bSize] = true;
 					for (int y = 0; y < this.snap.length; y++) {
-						final int yy = y - this.bSize;
-						final BlockWrapper block = this.snap[y][x][z];
+						int yy = y - this.bSize;
+						BlockWrapper block = this.snap[y][x][z];
 						if (block.getId() == 0) {
 							continue;
 						}
@@ -87,25 +87,25 @@ public class Rot2DvertBrush extends Brush {
 			}
 		}
 		for (int x = 0; x < this.snap.length; x++) {
-			final double xSquared = Math.pow(x - this.bSize, 2);
-			final int fx = x + this.getTargetBlock()
+			double xSquared = Math.pow(x - this.bSize, 2);
+			int fx = x + this.getTargetBlock()
 				.getX() - this.bSize;
 			for (int z = 0; z < this.snap.length; z++) {
 				if (xSquared + Math.pow(z - this.bSize, 2) <= brushSizeSquared) {
-					final int fz = z + this.getTargetBlock()
+					int fz = z + this.getTargetBlock()
 						.getZ() - this.bSize;
 					if (!doNotFill[x][z]) {
 						// smart fill stuff
 						for (int y = 0; y < this.snap.length; y++) {
-							final int fy = y + this.getTargetBlock()
+							int fy = y + this.getTargetBlock()
 								.getY() - this.bSize;
-							final int a = this.getBlockIdAt(fy, fx + 1, fz);
-							final byte aData = this.getBlockDataAt(fy, fx + 1, fz);
-							final int d = this.getBlockIdAt(fy, fx - 1, fz);
-							final byte dData = this.getBlockDataAt(fy, fx - 1, fz);
-							final int c = this.getBlockIdAt(fy, fx, fz + 1);
-							final int b = this.getBlockIdAt(fy, fx, fz - 1);
-							final byte bData = this.getBlockDataAt(fy, fx, fz - 1);
+							int a = this.getBlockIdAt(fy, fx + 1, fz);
+							byte aData = this.getBlockDataAt(fy, fx + 1, fz);
+							int d = this.getBlockIdAt(fy, fx - 1, fz);
+							byte dData = this.getBlockDataAt(fy, fx - 1, fz);
+							int c = this.getBlockIdAt(fy, fx, fz + 1);
+							int b = this.getBlockIdAt(fy, fx, fz - 1);
+							byte bData = this.getBlockDataAt(fy, fx, fz - 1);
 							int winner;
 							byte winnerData;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
@@ -129,7 +129,7 @@ public class Rot2DvertBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.bSize = v.getBrushSize();
 		switch (this.mode) {
 			case 0:
@@ -145,7 +145,7 @@ public class Rot2DvertBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.bSize = v.getBrushSize();
 		switch (this.mode) {
 			case 0:
@@ -161,19 +161,19 @@ public class Rot2DvertBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		try {
 			this.se = Math.toRadians(Double.parseDouble(par[1]));
 			v.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
-		} catch (Exception _ex) {
+		} catch (NumberFormatException exception) {
 			v.sendMessage("Exception while parsing parameter: " + par[1]);
 			Bukkit.getLogger()
-				.severe(_ex.getMessage());
+				.severe(exception.getMessage());
 		}
 	}
 

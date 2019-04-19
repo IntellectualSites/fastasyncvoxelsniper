@@ -17,28 +17,28 @@ public class pComboNoUndo extends vPerformer {
 	private byte d;
 
 	public pComboNoUndo() {
-		name = "Combo, No-Undo"; // made name more descriptive - Giltwist
+		this.setName("Combo, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		i = v.getVoxelId();
-		d = v.getData();
+		this.world = v.getWorld();
+		this.i = v.getVoxelId();
+		this.d = v.getData();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.data();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() != i || b.getData() != d) {
-			b.setTypeIdAndData(i, d, true);
+	public void perform(Block block) {
+		if (block.getTypeId() != this.i || block.getData() != this.d) {
+			block.setTypeIdAndData(this.i, this.d, true);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
+import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Material;
@@ -11,25 +12,25 @@ import org.bukkit.block.Block;
  */
 public class BlockResetBrush extends Brush {
 
-	private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
+	private static final List<Material> DENIED_UPDATES = new ArrayList<>();
 
 	static {
-		BlockResetBrush.DENIED_UPDATES.add(Material.SIGN);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_SIGN_POST);
-		BlockResetBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
-		BlockResetBrush.DENIED_UPDATES.add(Material.CHEST);
-		BlockResetBrush.DENIED_UPDATES.add(Material.FURNACE);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_BURNING_FURNACE);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_OFF);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_ON);
-		BlockResetBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_OFF);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_ON);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_WOODEN_DOOR);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_WOOD_DOOR);
-		BlockResetBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR_BLOCK);
-		BlockResetBrush.DENIED_UPDATES.add(Material.LEGACY_FENCE_GATE);
+		DENIED_UPDATES.add(Material.SIGN);
+		DENIED_UPDATES.add(Material.LEGACY_SIGN_POST);
+		DENIED_UPDATES.add(Material.WALL_SIGN);
+		DENIED_UPDATES.add(Material.CHEST);
+		DENIED_UPDATES.add(Material.FURNACE);
+		DENIED_UPDATES.add(Material.LEGACY_BURNING_FURNACE);
+		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_OFF);
+		DENIED_UPDATES.add(Material.LEGACY_REDSTONE_TORCH_ON);
+		DENIED_UPDATES.add(Material.REDSTONE_WIRE);
+		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_OFF);
+		DENIED_UPDATES.add(Material.LEGACY_DIODE_BLOCK_ON);
+		DENIED_UPDATES.add(Material.LEGACY_WOODEN_DOOR);
+		DENIED_UPDATES.add(Material.LEGACY_WOOD_DOOR);
+		DENIED_UPDATES.add(Material.IRON_DOOR);
+		DENIED_UPDATES.add(Material.LEGACY_IRON_DOOR_BLOCK);
+		DENIED_UPDATES.add(Material.LEGACY_FENCE_GATE);
 	}
 
 	/**
@@ -40,16 +41,16 @@ public class BlockResetBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void applyBrush(final SnipeData v) {
+	private void applyBrush(SnipeData v) {
 		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
 			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
 				for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
-					final Block block = this.getWorld()
+					Block block = this.getWorld()
 						.getBlockAt(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY() + y, this.getTargetBlock()
 							.getZ() + z);
-					if (BlockResetBrush.DENIED_UPDATES.contains(block.getType())) {
+					if (DENIED_UPDATES.contains(block.getType())) {
 						continue;
 					}
 					block.setBlockData(block.getType()
@@ -60,17 +61,17 @@ public class BlockResetBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		applyBrush(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		applyBrush(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 

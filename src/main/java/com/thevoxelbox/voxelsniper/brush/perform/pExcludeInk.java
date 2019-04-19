@@ -18,29 +18,29 @@ public class pExcludeInk extends vPerformer {
 	private byte data;
 
 	public pExcludeInk() {
-		name = "Exclude Ink";
+		this.setName("Exclude Ink");
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxelList();
 		vm.data();
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		data = v.getData();
-		excludeList = v.getVoxelList();
+		this.world = v.getWorld();
+		this.data = v.getData();
+		this.excludeList = v.getVoxelList();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (!excludeList.contains(new int[] {b.getTypeId(), b.getData()})) {
-			h.put(b);
-			b.setData(data);
+	public void perform(Block block) {
+		if (!this.excludeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+			this.h.put(block);
+			block.setData(this.data);
 		}
 	}
 }

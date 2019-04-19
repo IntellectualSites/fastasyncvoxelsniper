@@ -9,33 +9,44 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Voxel
  */
 public abstract class vPerformer {
 
-	public String name = "Performer";
+	private String name = "Performer";
+	@Nullable
 	protected Undo h;
-	protected World w;
+	protected World world;
 
 	public abstract void info(Message vm);
 
 	public abstract void init(com.thevoxelbox.voxelsniper.SnipeData v);
 
 	public void setUndo() {
-		h = new Undo();
+		this.h = new Undo();
 	}
 
-	public abstract void perform(Block b);
+	public abstract void perform(Block block);
 
+	@Nullable
 	public Undo getUndo() {
-		Undo temp = h;
-		h = null;
+		Undo temp = this.h;
+		this.h = null;
 		return temp;
 	}
 
 	public boolean isUsingReplaceMaterial() {
 		return false;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

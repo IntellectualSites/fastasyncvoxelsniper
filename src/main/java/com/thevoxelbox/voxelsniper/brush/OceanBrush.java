@@ -20,7 +20,7 @@ public class OceanBrush extends Brush {
 	private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
 	private static final int WATER_LEVEL_MIN = 12;
 	private static final int LOW_CUT_LEVEL = 12;
-	private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<Material>();
+	private static final List<Material> EXCLUDED_MATERIALS = new LinkedList<>();
 
 	static {
 		EXCLUDED_MATERIALS.add(Material.AIR);
@@ -49,7 +49,7 @@ public class OceanBrush extends Brush {
 	}
 
 	private int waterLevel = WATER_LEVEL_DEFAULT;
-	private boolean coverFloor = false;
+	private boolean coverFloor;
 
 	/**
 	 *
@@ -58,10 +58,10 @@ public class OceanBrush extends Brush {
 		this.setName("OCEANATOR 5000(tm)");
 	}
 
-	private int getHeight(final int bx, final int bz) {
+	private int getHeight(int bx, int bz) {
 		for (int y = this.getWorld()
 			.getHighestBlockYAt(bx, bz); y > 0; y--) {
-			final Material material = this.clampY(bx, y, bz)
+			Material material = this.clampY(bx, y, bz)
 				.getType();
 			if (!EXCLUDED_MATERIALS.contains(material)) {
 				return y;
@@ -74,40 +74,38 @@ public class OceanBrush extends Brush {
 	 *
 	 */
 	@SuppressWarnings("deprecation")
-	protected final void oceanator(final SnipeData v, final Undo undo) {
-		final World world = this.getWorld();
-		final int minX = (int) Math.floor((this.getTargetBlock()
+	protected final void oceanator(SnipeData v, Undo undo) {
+		World world = this.getWorld();
+		int minX = (int) Math.floor((this.getTargetBlock()
 			.getX() - v.getBrushSize()));
-		final int minZ = (int) Math.floor((this.getTargetBlock()
+		int minZ = (int) Math.floor((this.getTargetBlock()
 			.getZ() - v.getBrushSize()));
-		final int maxX = (int) Math.floor((this.getTargetBlock()
+		int maxX = (int) Math.floor((this.getTargetBlock()
 			.getX() + v.getBrushSize()));
-		final int maxZ = (int) Math.floor((this.getTargetBlock()
+		int maxZ = (int) Math.floor((this.getTargetBlock()
 			.getZ() + v.getBrushSize()));
 		for (int x = minX; x <= maxX; x++) {
 			for (int z = minZ; z <= maxZ; z++) {
-				final int currentHeight = getHeight(x, z);
-				final int wLevelDiff = currentHeight - (this.waterLevel - 1);
-				final int newSeaFloorLevel = ((this.waterLevel - wLevelDiff) >= LOW_CUT_LEVEL) ? this.waterLevel - wLevelDiff : LOW_CUT_LEVEL;
-				final int highestY = this.getWorld()
+				int currentHeight = getHeight(x, z);
+				int wLevelDiff = currentHeight - (this.waterLevel - 1);
+				int newSeaFloorLevel = ((this.waterLevel - wLevelDiff) >= LOW_CUT_LEVEL) ? this.waterLevel - wLevelDiff : LOW_CUT_LEVEL;
+				int highestY = this.getWorld()
 					.getHighestBlockYAt(x, z);
 				// go down from highest Y block down to new sea floor
 				for (int y = highestY; y > newSeaFloorLevel; y--) {
-					final Block block = world.getBlockAt(x, y, z);
-					if (!block.getType()
-						.equals(Material.AIR)) {
+					Block block = world.getBlockAt(x, y, z);
+					if (block.getType() != Material.AIR) {
 						undo.put(block);
 						block.setType(Material.AIR);
 					}
 				}
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
-					final Block block = world.getBlockAt(x, y, z);
+					Block block = world.getBlockAt(x, y, z);
 					if (!block.getType()
 						.equals(Material.STATIONARY_WATER)) {
 						// do not put blocks into the undo we already put into
-						if (!block.getType()
-							.equals(Material.AIR)) {
+						if (block.getType() != Material.AIR) {
 							undo.put(block);
 						}
 						block.setType(Material.STATIONARY_WATER);
@@ -126,7 +124,7 @@ public class OceanBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		Undo undo = new Undo();
 		this.oceanator(v, undo);
 		v.owner()
@@ -134,14 +132,14 @@ public class OceanBrush extends Brush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		arrow(v);
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 0; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					v.sendMessage(ChatColor.BLUE + "Parameters:");
@@ -158,7 +156,7 @@ public class OceanBrush extends Brush {
 						continue;
 					}
 					this.waterLevel = temp - 1;
-					v.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
+					v.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
 				} else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor")) {
 					if ((i + 1) >= par.length) {
 						v.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
@@ -167,7 +165,7 @@ public class OceanBrush extends Brush {
 					this.coverFloor = par[++i].equalsIgnoreCase("y");
 					v.sendMessage(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
 				}
-			} catch (Exception exception) {
+			} catch (NumberFormatException exception) {
 				v.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", parameter));
 				exception.printStackTrace();
 			}
@@ -175,9 +173,9 @@ public class OceanBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
-		vm.custom(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (waterLevel + 1)); // +1 since we are working with 0-based array indices
+		vm.custom(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
 		vm.custom(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
 	}
 

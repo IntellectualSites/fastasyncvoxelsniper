@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
  */
 public class DiscBrush extends PerformBrush {
 
-	private double trueCircle = 0;
+	private double trueCircle;
 
 	/**
 	 * Default Constructor.
@@ -26,11 +26,11 @@ public class DiscBrush extends PerformBrush {
 	/**
 	 * Disc executor.
 	 */
-	private void disc(final SnipeData v, final Block targetBlock) {
-		final double radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
-		final Vector centerPoint = targetBlock.getLocation()
+	private void disc(SnipeData v, Block targetBlock) {
+		double radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
+		Vector centerPoint = targetBlock.getLocation()
 			.toVector();
-		final Vector currentPoint = centerPoint.clone();
+		Vector currentPoint = centerPoint.clone();
 		for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
 			currentPoint.setX(centerPoint.getX() + x);
 			for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
@@ -45,25 +45,25 @@ public class DiscBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.disc(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.disc(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i].toLowerCase();
+			String parameter = par[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");

@@ -18,20 +18,20 @@ public class pComboMatNoPhys extends vPerformer {
 	private int ir;
 
 	public pComboMatNoPhys() {
-		name = "Combo-Mat, No Physics";
+		this.setName("Combo-Mat, No Physics");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		d = v.getData();
-		i = v.getVoxelId();
-		ir = v.getReplaceId();
+		this.world = v.getWorld();
+		this.d = v.getData();
+		this.i = v.getVoxelId();
+		this.ir = v.getReplaceId();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.replace();
 		vm.data();
@@ -39,10 +39,10 @@ public class pComboMatNoPhys extends vPerformer {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() == ir) {
-			h.put(b);
-			b.setTypeIdAndData(i, d, false);
+	public void perform(Block block) {
+		if (block.getTypeId() == this.ir) {
+			this.h.put(block);
+			block.setTypeIdAndData(this.i, this.d, false);
 		}
 	}
 

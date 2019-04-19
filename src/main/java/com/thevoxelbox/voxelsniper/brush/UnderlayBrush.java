@@ -15,7 +15,7 @@ public class UnderlayBrush extends PerformBrush {
 
 	private static final int DEFAULT_DEPTH = 3;
 	private int depth = DEFAULT_DEPTH;
-	private boolean allBlocks = false;
+	private boolean allBlocks;
 
 	/**
 	 *
@@ -25,9 +25,9 @@ public class UnderlayBrush extends PerformBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void underlay(final SnipeData v) {
-		final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-		final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
+	private void underlay(SnipeData v) {
+		int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
 		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
 			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 				for (int y = this.getTargetBlock()
@@ -88,9 +88,9 @@ public class UnderlayBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void underlay2(final SnipeData v) {
-		final int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-		final double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
+	private void underlay2(SnipeData v) {
+		int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
 		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
 			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 				for (int y = this.getTargetBlock()
@@ -146,23 +146,23 @@ public class UnderlayBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void arrow(final SnipeData v) {
+	public final void arrow(SnipeData v) {
 		this.underlay(v);
 	}
 
 	@Override
-	public final void powder(final SnipeData v) {
+	public final void powder(SnipeData v) {
 		this.underlay2(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
 			if (par[i].equalsIgnoreCase("info")) {
 				v.owner()

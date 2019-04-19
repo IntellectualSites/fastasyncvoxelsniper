@@ -16,20 +16,20 @@ public class LightningBrush extends Brush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.brushMessage("Lightning Brush!  Please use in moderation.");
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());

@@ -21,22 +21,22 @@ public class VoltMeterBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void data(final SnipeData v) {
-		final Block block = this.clampY(this.getTargetBlock()
+	private void data(SnipeData v) {
+		Block block = this.clampY(this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		final byte data = block.getData();
+		byte data = block.getData();
 		v.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
 	}
 
-	private void volt(final SnipeData v) {
-		final Block block = this.clampY(this.getTargetBlock()
+	private void volt(SnipeData v) {
+		Block block = this.clampY(this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		final boolean indirect = block.isBlockIndirectlyPowered();
-		final boolean direct = block.isBlockPowered();
+		boolean indirect = block.isBlockIndirectlyPowered();
+		boolean direct = block.isBlockPowered();
 		v.sendMessage(ChatColor.AQUA + "Direct Power? " + direct + " Indirect Power? " + indirect);
 		v.sendMessage(ChatColor.BLUE + "Top Direct? " + block.isBlockFacePowered(BlockFace.UP) + " Top Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.UP));
 		v.sendMessage(ChatColor.BLUE + "Bottom Direct? " + block.isBlockFacePowered(BlockFace.DOWN) + " Bottom Indirect? " + block.isBlockFaceIndirectlyPowered(BlockFace.DOWN));
@@ -47,17 +47,17 @@ public class VoltMeterBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.volt(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.data(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
 	}

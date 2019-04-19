@@ -14,7 +14,7 @@ import org.bukkit.block.BlockFace;
  */
 public class DiscFaceBrush extends PerformBrush {
 
-	private double trueCircle = 0;
+	private double trueCircle;
 
 	/**
 	 *
@@ -23,17 +23,17 @@ public class DiscFaceBrush extends PerformBrush {
 		this.setName("Disc Face");
 	}
 
-	private void discUD(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void discUD(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int z = brushSize; z >= 0; z--) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					current.perform(targetBlock.getRelative(x, 0, z));
-					current.perform(targetBlock.getRelative(x, 0, -z));
-					current.perform(targetBlock.getRelative(-x, 0, z));
-					current.perform(targetBlock.getRelative(-x, 0, -z));
+					this.current.perform(targetBlock.getRelative(x, 0, z));
+					this.current.perform(targetBlock.getRelative(x, 0, -z));
+					this.current.perform(targetBlock.getRelative(-x, 0, z));
+					this.current.perform(targetBlock.getRelative(-x, 0, -z));
 				}
 			}
 		}
@@ -41,17 +41,17 @@ public class DiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discNS(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void discNS(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					current.perform(targetBlock.getRelative(x, y, 0));
-					current.perform(targetBlock.getRelative(x, -y, 0));
-					current.perform(targetBlock.getRelative(-x, y, 0));
-					current.perform(targetBlock.getRelative(-x, -y, 0));
+					this.current.perform(targetBlock.getRelative(x, y, 0));
+					this.current.perform(targetBlock.getRelative(x, -y, 0));
+					this.current.perform(targetBlock.getRelative(-x, y, 0));
+					this.current.perform(targetBlock.getRelative(-x, -y, 0));
 				}
 			}
 		}
@@ -59,17 +59,17 @@ public class DiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void discEW(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void discEW(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					current.perform(targetBlock.getRelative(0, x, y));
-					current.perform(targetBlock.getRelative(0, x, -y));
-					current.perform(targetBlock.getRelative(0, -x, y));
-					current.perform(targetBlock.getRelative(0, -x, -y));
+					this.current.perform(targetBlock.getRelative(0, x, y));
+					this.current.perform(targetBlock.getRelative(0, x, -y));
+					this.current.perform(targetBlock.getRelative(0, -x, y));
+					this.current.perform(targetBlock.getRelative(0, -x, -y));
 				}
 			}
 		}
@@ -77,7 +77,7 @@ public class DiscFaceBrush extends PerformBrush {
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void pre(final SnipeData v, Block targetBlock) {
+	private void pre(SnipeData v, Block targetBlock) {
 		BlockFace blockFace = getTargetBlock().getFace(this.getLastBlock());
 		if (blockFace == null) {
 			return;
@@ -101,25 +101,25 @@ public class DiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.pre(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.pre(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");

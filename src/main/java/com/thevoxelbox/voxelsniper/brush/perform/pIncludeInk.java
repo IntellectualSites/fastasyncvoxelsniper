@@ -18,29 +18,29 @@ public class pIncludeInk extends vPerformer {
 	private byte data;
 
 	public pIncludeInk() {
-		name = "Include Ink";
+		this.setName("Include Ink");
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxelList();
 		vm.data();
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		data = v.getData();
-		includeList = v.getVoxelList();
+		this.world = v.getWorld();
+		this.data = v.getData();
+		this.includeList = v.getVoxelList();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (includeList.contains(new int[] {b.getTypeId(), b.getData()})) {
-			h.put(b);
-			b.setData(data);
+	public void perform(Block block) {
+		if (this.includeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+			this.h.put(block);
+			block.setData(this.data);
 		}
 	}
 }

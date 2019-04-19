@@ -25,20 +25,16 @@ public class SpiralStaircaseBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void buildStairWell(final SnipeData v, Block targetBlock) {
+	private void buildStairWell(SnipeData v, Block targetBlock) {
 		if (v.getVoxelHeight() < 1) {
 			v.setVoxelHeight(1);
 			v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
-		final int[][][] spiral = new int[2 * v.getBrushSize() + 1][v.getVoxelHeight()][2 * v.getBrushSize() + 1];
+		int[][][] spiral = new int[2 * v.getBrushSize() + 1][v.getVoxelHeight()][2 * v.getBrushSize() + 1];
 		// locate first block in staircase
 		// Note to self, fix these
-		int startX = 0;
-		int startZ = 0;
-		int y = 0;
-		int xOffset = 0;
-		int zOffset = 0;
-		int toggle = 0;
+		int startX;
+		int startZ;
 		if (this.sdirect.equalsIgnoreCase("cc")) {
 			if (this.sopen.equalsIgnoreCase("n")) {
 				startX = 0;
@@ -68,6 +64,10 @@ public class SpiralStaircaseBrush extends Brush {
 				startZ = 2 * v.getBrushSize();
 			}
 		}
+		int toggle = 0;
+		int zOffset = 0;
+		int xOffset = 0;
+		int y = 0;
 		while (y < v.getVoxelHeight()) {
 			if (this.stairtype.equalsIgnoreCase("block")) {
 				// 1x1x1 voxel material steps
@@ -77,9 +77,6 @@ public class SpiralStaircaseBrush extends Brush {
 				// alternating step-doublestep, uses data value to determine type
 				switch (toggle) {
 					case 0:
-						toggle = 2;
-						spiral[startX + xOffset][y][startZ + zOffset] = 1;
-						break;
 					case 1:
 						toggle = 2;
 						spiral[startX + xOffset][y][startZ + zOffset] = 1;
@@ -192,7 +189,7 @@ public class SpiralStaircaseBrush extends Brush {
 				}
 			}
 		}
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		// Make the changes
 		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
 			for (int i = v.getVoxelHeight() - 1; i >= 0; i--) {
@@ -286,21 +283,17 @@ public class SpiralStaircaseBrush extends Brush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void digStairWell(final SnipeData v, Block targetBlock) {
+	private void digStairWell(SnipeData v, Block targetBlock) {
 		if (v.getVoxelHeight() < 1) {
 			v.setVoxelHeight(1);
 			v.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
 		// initialize array
-		final int[][][] spiral = new int[2 * v.getBrushSize() + 1][v.getVoxelHeight()][2 * v.getBrushSize() + 1];
+		int[][][] spiral = new int[2 * v.getBrushSize() + 1][v.getVoxelHeight()][2 * v.getBrushSize() + 1];
 		// locate first block in staircase
 		// Note to self, fix these
-		int startX = 0;
-		int startZ = 0;
-		int y = 0;
-		int xOffset = 0;
-		int zOffset = 0;
-		int toggle = 0;
+		int startX;
+		int startZ;
 		if (this.sdirect.equalsIgnoreCase("cc")) {
 			if (this.sopen.equalsIgnoreCase("n")) {
 				startX = 0;
@@ -330,6 +323,10 @@ public class SpiralStaircaseBrush extends Brush {
 				startZ = 2 * v.getBrushSize();
 			}
 		}
+		int toggle = 0;
+		int zOffset = 0;
+		int xOffset = 0;
+		int y = 0;
 		while (y < v.getVoxelHeight()) {
 			if (this.stairtype.equalsIgnoreCase("block")) {
 				// 1x1x1 voxel material steps
@@ -339,9 +336,6 @@ public class SpiralStaircaseBrush extends Brush {
 				// alternating step-doublestep, uses data value to determine type
 				switch (toggle) {
 					case 0:
-						toggle = 2;
-						spiral[startX + xOffset][y][startZ + zOffset] = 2;
-						break;
 					case 1:
 						toggle = 2;
 						spiral[startX + xOffset][y][startZ + zOffset] = 2;
@@ -454,7 +448,7 @@ public class SpiralStaircaseBrush extends Brush {
 				}
 			}
 		}
-		final Undo undo = new Undo();
+		Undo undo = new Undo();
 		// Make the changes
 		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
 			for (int i = v.getVoxelHeight() - 1; i >= 0; i--) {
@@ -539,17 +533,17 @@ public class SpiralStaircaseBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.digStairWell(v, this.getTargetBlock()); // make stairwell below target
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.buildStairWell(v, this.getLastBlock()); // make stairwell above target
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName("Spiral Staircase");
 		vm.size();
 		vm.voxel();
@@ -561,7 +555,7 @@ public class SpiralStaircaseBrush extends Brush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		if (par[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
 			v.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");

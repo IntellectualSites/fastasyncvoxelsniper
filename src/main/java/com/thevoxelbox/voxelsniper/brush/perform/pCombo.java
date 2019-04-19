@@ -17,27 +17,27 @@ public class pCombo extends vPerformer {
 	private byte d;
 
 	public pCombo() {
-		name = "Combo";
+		this.setName("Combo");
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.data();
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		i = v.getVoxelId();
-		d = v.getData();
+		this.world = v.getWorld();
+		this.i = v.getVoxelId();
+		this.d = v.getData();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		h.put(b);
-		b.setTypeIdAndData(i, d, true);
+	public void perform(Block block) {
+		this.h.put(block);
+		block.setTypeIdAndData(this.i, this.d, true);
 	}
 }

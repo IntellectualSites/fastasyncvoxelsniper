@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Set_Brush
@@ -14,7 +15,8 @@ import org.bukkit.block.Block;
 public class SetBrush extends PerformBrush {
 
 	private static final int SELECTION_SIZE_MAX = 5000000;
-	private Block block = null;
+	@Nullable
+	private Block block;
 
 	/**
 	 *
@@ -23,7 +25,7 @@ public class SetBrush extends PerformBrush {
 		this.setName("Set");
 	}
 
-	private boolean set(final Block bl, final SnipeData v) {
+	private boolean set(Block bl, SnipeData v) {
 		if (this.block == null) {
 			this.block = bl;
 			return true;
@@ -36,12 +38,12 @@ public class SetBrush extends PerformBrush {
 				this.block = null;
 				return true;
 			}
-			final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX) {
 				v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
@@ -59,7 +61,7 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		if (this.set(this.getTargetBlock(), v)) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -69,7 +71,7 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.set(this.getLastBlock(), v)) {
 			v.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -79,13 +81,13 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		this.block = null;
 		vm.brushName(this.getName());
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		super.parameters(par, v);
 	}
 

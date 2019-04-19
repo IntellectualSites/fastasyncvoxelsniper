@@ -16,52 +16,68 @@ public class RangeBlockHelper {
 	private static final double DEFAULT_STEP = 0.2;
 	private static final int DEFAULT_RANGE = 250;
 	private Location playerLoc;
-	private double rotX, rotY, viewHeight, rotXSin, rotXCos, rotYSin, rotYCos;
-	private double length, hLength, step;
+	private double rotX;
+	private double rotY;
+	private double viewHeight;
+	private double rotXSin;
+	private double rotXCos;
+	private double rotYSin;
+	private double rotYCos;
+	private double length;
+	private double hLength;
+	private double step;
 	private double range;
-	private double playerX, playerY, playerZ;
-	private double xOffset, yOffset, zOffset;
-	private int lastX, lastY, lastZ;
-	private int targetX, targetY, targetZ;
+	private double playerX;
+	private double playerY;
+	private double playerZ;
+	private double xOffset;
+	private double yOffset;
+	private double zOffset;
+	private int lastX;
+	private int lastY;
+	private int lastZ;
+	private int targetX;
+	private int targetY;
+	private int targetZ;
 	private World world;
 
 	/**
 	 * Constructor requiring location, uses default values.
 	 */
-	public RangeBlockHelper(final Location location) {
-		this.init(location, RangeBlockHelper.DEFAULT_RANGE, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
+	public RangeBlockHelper(Location location) {
+		this.init(location, DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_LOCATION_VIEW_HEIGHT);
 	}
 
 	/**
 	 * Constructor requiring location, max range, and a stepping value.
 	 */
-	public RangeBlockHelper(final Location location, final int range, final double step) {
+	public RangeBlockHelper(Location location, int range, double step) {
 		this.world = location.getWorld();
-		this.init(location, range, step, RangeBlockHelper.DEFAULT_LOCATION_VIEW_HEIGHT);
+		this.init(location, range, step, DEFAULT_LOCATION_VIEW_HEIGHT);
 	}
 
 	/**
 	 * Constructor requiring player, max range, and a stepping value.
 	 */
-	public RangeBlockHelper(final Player player, final int range, final double step) {
-		this.init(player.getLocation(), range, step, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
+	public RangeBlockHelper(Player player, int range, double step) {
+		this.init(player.getLocation(), range, step, DEFAULT_PLAYER_VIEW_HEIGHT);
 	}
 
 	/**
 	 * Constructor requiring player, uses default values.
 	 */
-	public RangeBlockHelper(final Player player, final World world) {
+	public RangeBlockHelper(Player player, World world) {
 		this.world = world;
-		this.init(player.getLocation(), RangeBlockHelper.DEFAULT_RANGE, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
+		this.init(player.getLocation(), DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
 		// values
 	}
 
 	/**
 	 *
 	 */
-	public RangeBlockHelper(final Player player, final World world, final double range) {
+	public RangeBlockHelper(Player player, World world, double range) {
 		this.world = world;
-		this.init(player.getLocation(), range, RangeBlockHelper.DEFAULT_STEP, RangeBlockHelper.DEFAULT_PLAYER_VIEW_HEIGHT);
+		this.init(player.getLocation(), range, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
 		this.fromOffworld();
 	}
 
@@ -69,8 +85,8 @@ public class RangeBlockHelper {
 	 *
 	 */
 	public final void fromOffworld() {
-		if (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT) {
-			while (this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT && this.length <= this.range) {
+		if (this.targetY > MAXIMUM_WORLD_HEIGHT) {
+			while (this.targetY > MAXIMUM_WORLD_HEIGHT && this.length <= this.range) {
 				this.lastX = this.targetX;
 				this.lastY = this.targetY;
 				this.lastZ = this.targetZ;
@@ -110,7 +126,7 @@ public class RangeBlockHelper {
 	 * @return Block
 	 */
 	public final Block getCurBlock() {
-		if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+		if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
 			return null;
 		} else {
 			return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
@@ -140,7 +156,7 @@ public class RangeBlockHelper {
 	 * @return Block
 	 */
 	public final Block getLastBlock() {
-		if (this.lastY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.lastY < 0) {
+		if (this.lastY > MAXIMUM_WORLD_HEIGHT || this.lastY < 0) {
 			return null;
 		}
 		return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
@@ -165,7 +181,7 @@ public class RangeBlockHelper {
 			this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 			this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
 		} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
-		if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+		if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
 			return null;
 		}
 		return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
@@ -201,7 +217,7 @@ public class RangeBlockHelper {
 	 * Sets current block type id.
 	 */
 	@SuppressWarnings("deprecation")
-	public final void setCurBlock(final int type) {
+	public final void setCurBlock(int type) {
 		if (this.getCurBlock() != null) {
 			this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
 				.setTypeId(type);
@@ -212,7 +228,7 @@ public class RangeBlockHelper {
 	 * Sets the type of the block attached to the face at the cursor.
 	 */
 	@SuppressWarnings("deprecation")
-	public final void setFaceBlock(final int type) {
+	public final void setFaceBlock(int type) {
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
 			.getTypeId() == 0)) {
 		}
@@ -226,7 +242,7 @@ public class RangeBlockHelper {
 	 * Sets previous block type id.
 	 */
 	@SuppressWarnings("deprecation")
-	public final void setLastBlock(final int type) {
+	public final void setLastBlock(int type) {
 		if (this.getLastBlock() != null) {
 			this.world.getBlockAt(this.lastX, this.lastY, this.lastZ)
 				.setTypeId(type);
@@ -237,7 +253,7 @@ public class RangeBlockHelper {
 	 * Sets the type of the block at the cursor.
 	 */
 	@SuppressWarnings("deprecation")
-	public final void setTargetBlock(final int type) {
+	public final void setTargetBlock(int type) {
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
 			.getTypeId() == 0)) {
 		}
@@ -249,30 +265,30 @@ public class RangeBlockHelper {
 
 	@SuppressWarnings("deprecation")
 	private Block getRange() {
-		this.lastX = this.targetX;
-		this.lastY = this.targetY;
-		this.lastZ = this.targetZ;
-		do {
-			this.length += this.step;
-			this.hLength = (this.length * this.rotYCos);
-			this.yOffset = (this.length * this.rotYSin);
-			this.xOffset = (this.hLength * this.rotXCos);
-			this.zOffset = (this.hLength * this.rotXSin);
-			this.targetX = (int) Math.floor(this.xOffset + this.playerX);
-			this.targetY = (int) Math.floor(this.yOffset + this.playerY);
-			this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
-		} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
-		if (this.world.getBlockTypeIdAt(this.targetX, this.targetY, this.targetZ) != 0) {
-			return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
-		}
-		if (this.length > this.range || this.targetY > RangeBlockHelper.MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
-			return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
-		} else {
-			return this.getRange();
+		while (true) {
+			this.lastX = this.targetX;
+			this.lastY = this.targetY;
+			this.lastZ = this.targetZ;
+			do {
+				this.length += this.step;
+				this.hLength = (this.length * this.rotYCos);
+				this.yOffset = (this.length * this.rotYSin);
+				this.xOffset = (this.hLength * this.rotXCos);
+				this.zOffset = (this.hLength * this.rotXSin);
+				this.targetX = (int) Math.floor(this.xOffset + this.playerX);
+				this.targetY = (int) Math.floor(this.yOffset + this.playerY);
+				this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
+			} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
+			if (this.world.getBlockTypeIdAt(this.targetX, this.targetY, this.targetZ) != 0) {
+				return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
+			}
+			if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
+				return this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
+			}
 		}
 	}
 
-	private void init(final Location location, final double range, final double step, final double viewHeight) {
+	private void init(Location location, double range, double step, double viewHeight) {
 		this.playerLoc = location;
 		this.viewHeight = viewHeight;
 		this.playerX = this.playerLoc.getX();

@@ -17,29 +17,29 @@ public class pMatMatNoPhys extends vPerformer {
 	private int r;
 
 	public pMatMatNoPhys() {
-		name = "Mat-Mat No-Physics";
+		this.setName("Mat-Mat No-Physics");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		i = v.getVoxelId();
-		r = v.getReplaceId();
+		this.world = v.getWorld();
+		this.i = v.getVoxelId();
+		this.r = v.getReplaceId();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.replace();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() == r) {
-			h.put(b);
-			b.setTypeId(i, false);
+	public void perform(Block block) {
+		if (block.getTypeId() == this.r) {
+			this.h.put(block);
+			block.setTypeId(this.i, false);
 		}
 	}
 

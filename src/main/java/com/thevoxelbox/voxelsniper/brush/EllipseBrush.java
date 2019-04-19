@@ -33,23 +33,24 @@ public class EllipseBrush extends PerformBrush {
 		this.setName("Ellipse");
 	}
 
-	private void ellipse(final SnipeData v, Block targetBlock) {
+	private void ellipse(SnipeData v, Block targetBlock) {
 		try {
-			for (double steps = 0; (steps <= TWO_PI); steps += stepSize) {
-				final int x = (int) Math.round(this.xscl * Math.cos(steps));
-				final int y = (int) Math.round(this.yscl * Math.sin(steps));
+			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
+				int x = (int) Math.round(this.xscl * Math.cos(steps));
+				int y = (int) Math.round(this.yscl * Math.sin(steps));
 				switch (getTargetBlock().getFace(this.getLastBlock())) {
 					case NORTH:
 					case SOUTH:
-						current.perform(targetBlock.getRelative(0, x, y));
+						this.current.perform(targetBlock.getRelative(0, x, y));
 						break;
 					case EAST:
 					case WEST:
-						current.perform(targetBlock.getRelative(x, y, 0));
+						this.current.perform(targetBlock.getRelative(x, y, 0));
 						break;
 					case UP:
 					case DOWN:
-						current.perform(targetBlock.getRelative(x, 0, y));
+						this.current.perform(targetBlock.getRelative(x, 0, y));
+						break;
 					default:
 						break;
 				}
@@ -57,35 +58,36 @@ public class EllipseBrush extends PerformBrush {
 					break;
 				}
 			}
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "Invalid target.");
 		}
 		v.owner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void ellipsefill(final SnipeData v, Block targetBlock) {
+	private void ellipsefill(SnipeData v, Block targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
-		current.perform(targetBlock);
+		this.current.perform(targetBlock);
 		try {
 			if (ix >= iy) { // Need this unless you want weird holes
 				for (iy = this.yscl; iy > 0; iy--) {
-					for (double steps = 0; (steps <= TWO_PI); steps += stepSize) {
-						final int x = (int) Math.round(ix * Math.cos(steps));
-						final int y = (int) Math.round(iy * Math.sin(steps));
+					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
+						int x = (int) Math.round(ix * Math.cos(steps));
+						int y = (int) Math.round(iy * Math.sin(steps));
 						switch (getTargetBlock().getFace(this.getLastBlock())) {
 							case NORTH:
 							case SOUTH:
-								current.perform(targetBlock.getRelative(0, x, y));
+								this.current.perform(targetBlock.getRelative(0, x, y));
 								break;
 							case EAST:
 							case WEST:
-								current.perform(targetBlock.getRelative(x, y, 0));
+								this.current.perform(targetBlock.getRelative(x, y, 0));
 								break;
 							case UP:
 							case DOWN:
-								current.perform(targetBlock.getRelative(x, 0, y));
+								this.current.perform(targetBlock.getRelative(x, 0, y));
+								break;
 							default:
 								break;
 						}
@@ -97,21 +99,22 @@ public class EllipseBrush extends PerformBrush {
 				}
 			} else {
 				for (ix = this.xscl; ix > 0; ix--) {
-					for (double steps = 0; (steps <= TWO_PI); steps += stepSize) {
-						final int x = (int) Math.round(ix * Math.cos(steps));
-						final int y = (int) Math.round(iy * Math.sin(steps));
+					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
+						int x = (int) Math.round(ix * Math.cos(steps));
+						int y = (int) Math.round(iy * Math.sin(steps));
 						switch (getTargetBlock().getFace(this.getLastBlock())) {
 							case NORTH:
 							case SOUTH:
-								current.perform(targetBlock.getRelative(0, x, y));
+								this.current.perform(targetBlock.getRelative(0, x, y));
 								break;
 							case EAST:
 							case WEST:
-								current.perform(targetBlock.getRelative(x, y, 0));
+								this.current.perform(targetBlock.getRelative(x, y, 0));
 								break;
 							case UP:
 							case DOWN:
-								current.perform(targetBlock.getRelative(x, 0, y));
+								this.current.perform(targetBlock.getRelative(x, 0, y));
+								break;
 							default:
 								break;
 						}
@@ -122,14 +125,14 @@ public class EllipseBrush extends PerformBrush {
 					iy--;
 				}
 			}
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "Invalid target.");
 		}
 		v.owner()
 			.storeUndo(this.current.getUndo());
 	}
 
-	private void execute(final SnipeData v, Block targetBlock) {
+	private void execute(SnipeData v, Block targetBlock) {
 		this.stepSize = (TWO_PI / this.steps);
 		if (this.fill) {
 			this.ellipsefill(v, targetBlock);
@@ -139,17 +142,17 @@ public class EllipseBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.execute(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.execute(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		if (this.xscl < SCL_MIN || this.xscl > SCL_MAX) {
 			this.xscl = SCL_DEFAULT;
 		}
@@ -171,9 +174,9 @@ public class EllipseBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					v.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
@@ -217,7 +220,7 @@ public class EllipseBrush extends PerformBrush {
 				} else {
 					v.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 				}
-			} catch (final Exception exception) {
+			} catch (NumberFormatException exception) {
 				v.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}

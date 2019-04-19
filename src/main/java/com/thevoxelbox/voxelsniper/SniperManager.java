@@ -18,9 +18,9 @@ public class SniperManager {
 	}
 
 	public Sniper getSniperForPlayer(Player player) {
-		if (sniperInstances.get(player.getUniqueId()) == null) {
-			sniperInstances.put(player.getUniqueId(), new Sniper(plugin, player));
+		if (this.sniperInstances.get(player.getUniqueId()) == null) {
+            this.sniperInstances.put(player.getUniqueId(), new Sniper(this.plugin, player));
 		}
-		return sniperInstances.get(player.getUniqueId());
+		return this.sniperInstances.get(player.getUniqueId());
 	}
 }

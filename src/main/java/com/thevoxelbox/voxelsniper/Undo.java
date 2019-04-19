@@ -34,9 +34,9 @@ public class Undo {
 	 * Default constructor of a Undo container.
 	 */
 	public Undo() {
-		all = new LinkedList<BlockState>();
-		falloff = new LinkedList<BlockState>();
-		dropdown = new LinkedList<BlockState>();
+		this.all = new LinkedList<>();
+		this.falloff = new LinkedList<>();
+		this.dropdown = new LinkedList<>();
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class Undo {
 	 * @return size of the Undo collection
 	 */
 	public int getSize() {
-		return containing.size();
+		return this.containing.size();
 	}
 
 	/**
@@ -60,12 +60,12 @@ public class Undo {
 			return;
 		}
 		this.containing.add(pos);
-		if (Undo.FALLING_MATERIALS.contains(block.getType())) {
-			dropdown.add(block.getState());
-		} else if (Undo.FALLOFF_MATERIALS.contains(block.getType())) {
-			falloff.add(block.getState());
+		if (FALLING_MATERIALS.contains(block.getType())) {
+			this.dropdown.add(block.getState());
+		} else if (FALLOFF_MATERIALS.contains(block.getType())) {
+			this.falloff.add(block.getState());
 		} else {
-			all.add(block.getState());
+			this.all.add(block.getState());
 		}
 	}
 
@@ -74,15 +74,15 @@ public class Undo {
 	 * were inserted.
 	 */
 	public void undo() {
-		for (BlockState blockState : all) {
+		for (BlockState blockState : this.all) {
 			blockState.update(true, false);
 			updateSpecialBlocks(blockState);
 		}
-		for (BlockState blockState : falloff) {
+		for (BlockState blockState : this.falloff) {
 			blockState.update(true, false);
 			updateSpecialBlocks(blockState);
 		}
-		for (BlockState blockState : dropdown) {
+		for (BlockState blockState : this.dropdown) {
 			blockState.update(true, false);
 			updateSpecialBlocks(blockState);
 		}

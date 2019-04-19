@@ -17,29 +17,29 @@ public class pMatInk extends vPerformer {
 	private byte dr;
 
 	public pMatInk() {
-		name = "Mat-Ink";
+		this.setName("Mat-Ink");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		i = v.getVoxelId();
-		dr = v.getReplaceData();
+		this.world = v.getWorld();
+		this.i = v.getVoxelId();
+		this.dr = v.getReplaceData();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 		vm.replaceData();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getData() == dr) {
-			h.put(b);
-			b.setTypeId(i, true);
+	public void perform(Block block) {
+		if (block.getData() == this.dr) {
+			this.h.put(block);
+			block.setTypeId(this.i, true);
 		}
 	}
 

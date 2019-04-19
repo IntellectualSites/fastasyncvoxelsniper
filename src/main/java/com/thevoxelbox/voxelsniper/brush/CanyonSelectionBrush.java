@@ -24,22 +24,21 @@ public class CanyonSelectionBrush extends CanyonBrush {
 		this.setName("Canyon Selection");
 	}
 
-	private void execute(final SnipeData v) {
-		final Chunk chunk = getTargetBlock().getChunk();
+	private void execute(SnipeData v) {
+		Chunk chunk = getTargetBlock().getChunk();
 		if (this.first) {
 			this.fx = chunk.getX();
 			this.fz = chunk.getZ();
 			v.sendMessage(ChatColor.YELLOW + "First point selected!");
-			this.first = !this.first;
 		} else {
 			v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-			selection(Math.min(fx, chunk.getX()), Math.min(fz, chunk.getZ()), Math.max(fx, chunk.getX()), Math.max(fz, chunk.getZ()), v);
-			this.first = !this.first;
+			selection(Math.min(this.fx, chunk.getX()), Math.min(this.fz, chunk.getZ()), Math.max(this.fx, chunk.getX()), Math.max(this.fz, chunk.getZ()), v);
 		}
+		this.first = !this.first;
 	}
 
-	private void selection(final int lowX, final int lowZ, final int highX, final int highZ, final SnipeData v) {
-		final Undo undo = new Undo();
+	private void selection(int lowX, int lowZ, int highX, int highZ, SnipeData v) {
+		Undo undo = new Undo();
 		for (int x = lowX; x <= highX; x++) {
 			for (int z = lowZ; z <= highZ; z++) {
 				canyon(getWorld().getChunkAt(x, z), undo);
@@ -50,17 +49,17 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		execute(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		execute(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
 	}

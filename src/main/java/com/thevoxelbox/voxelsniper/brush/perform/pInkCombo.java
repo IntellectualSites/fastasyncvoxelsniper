@@ -18,20 +18,20 @@ public class pInkCombo extends vPerformer {
 	private int ir;
 
 	public pInkCombo() {
-		name = "Ink-Combo";
+		this.setName("Ink-Combo");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		d = v.getData();
-		dr = v.getReplaceData();
-		ir = v.getReplaceId();
+		this.world = v.getWorld();
+		this.d = v.getData();
+		this.dr = v.getReplaceData();
+		this.ir = v.getReplaceId();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.replace();
 		vm.data();
 		vm.replaceData();
@@ -39,10 +39,10 @@ public class pInkCombo extends vPerformer {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() == ir && b.getData() == dr) {
-			h.put(b);
-			b.setData(d);
+	public void perform(Block block) {
+		if (block.getTypeId() == this.ir && block.getData() == this.dr) {
+			this.h.put(block);
+			block.setData(this.d);
 		}
 	}
 

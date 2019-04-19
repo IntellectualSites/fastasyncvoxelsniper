@@ -17,29 +17,29 @@ public class pInkInk extends vPerformer {
 	private byte dr;
 
 	public pInkInk() {
-		name = "Ink-Ink";
+		this.setName("Ink-Ink");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		d = v.getData();
-		dr = v.getReplaceData();
+		this.world = v.getWorld();
+		this.d = v.getData();
+		this.dr = v.getReplaceData();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.data();
 		vm.replaceData();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getData() == dr) {
-			h.put(b);
-			b.setData(d, true);
+	public void perform(Block block) {
+		if (block.getData() == this.dr) {
+			this.h.put(block);
+			block.setData(this.d, true);
 		}
 	}
 

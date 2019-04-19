@@ -12,6 +12,6 @@ public class SniperManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		sniperManager = new SniperManager(Mockito.mock(VoxelSniper.class));
+		this.sniperManager = new SniperManager(Mockito.mock(VoxelSniper.class));
 	}
 }

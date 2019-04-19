@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelGoToCommand extends VoxelCommand {
 
-	public VoxelGoToCommand(final VoxelSniper plugin) {
+	public VoxelGoToCommand(VoxelSniper plugin) {
 		super("VoxelGoTo", plugin);
 		setIdentifier("goto");
 		setPermission("voxelsniper.sniper");
@@ -17,13 +17,13 @@ public class VoxelGoToCommand extends VoxelCommand {
 	@Override
 	public boolean onCommand(Player player, String[] args) {
 		try {
-			final int x = Integer.parseInt(args[0]);
-			final int z = Integer.parseInt(args[1]);
+			int x = Integer.parseInt(args[0]);
+			int z = Integer.parseInt(args[1]);
 			player.teleport(new Location(player.getWorld(), x, player.getWorld()
 				.getHighestBlockYAt(x, z), z));
 			player.sendMessage(ChatColor.GREEN + "Woosh!");
 			return true;
-		} catch (final Exception exception) {
+		} catch (NumberFormatException exception) {
 			player.sendMessage(ChatColor.RED + "Invalid syntax.");
 			return true;
 		}

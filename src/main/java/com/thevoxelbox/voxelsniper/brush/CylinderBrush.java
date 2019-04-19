@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
  */
 public class CylinderBrush extends PerformBrush {
 
-	private double trueCircle = 0;
+	private double trueCircle;
 
 	/**
 	 *
@@ -20,8 +20,8 @@ public class CylinderBrush extends PerformBrush {
 		this.setName("Cylinder");
 	}
 
-	private void cylinder(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
+	private void cylinder(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
 		int yStartingPoint = targetBlock.getY() + v.getcCen();
 		int yEndPoint = targetBlock.getY() + v.getVoxelHeight() + v.getcCen();
 		if (yEndPoint < yStartingPoint) {
@@ -45,10 +45,10 @@ public class CylinderBrush extends PerformBrush {
 				.getMaxHeight() - 1;
 			v.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
-		final double bSquared = Math.pow(brushSize + this.trueCircle, 2);
+		double bSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int y = yEndPoint; y >= yStartingPoint; y--) {
 			for (int x = brushSize; x >= 0; x--) {
-				final double xSquared = Math.pow(x, 2);
+				double xSquared = Math.pow(x, 2);
 				for (int z = brushSize; z >= 0; z--) {
 					if ((xSquared + Math.pow(z, 2)) <= bSquared) {
 						this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
@@ -64,17 +64,17 @@ public class CylinderBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.cylinder(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.cylinder(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.height();
@@ -82,9 +82,9 @@ public class CylinderBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");

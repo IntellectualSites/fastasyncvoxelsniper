@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
@@ -20,11 +23,11 @@ public class BiomeBrush extends Brush {
 		this.setName("Biome (/b biome [Biome Name])");
 	}
 
-	private void biome(final SnipeData v) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize, 2);
+	private void biome(SnipeData v) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize, 2);
 		for (int x = -brushSize; x <= brushSize; x++) {
-			final double xSquared = Math.pow(x, 2);
+			double xSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
 					this.getWorld()
@@ -34,24 +37,24 @@ public class BiomeBrush extends Brush {
 				}
 			}
 		}
-		final Block block1 = this.getWorld()
+		Block block1 = this.getWorld()
 			.getBlockAt(this.getTargetBlock()
 				.getX() - brushSize, 0, this.getTargetBlock()
 				.getZ() - brushSize);
-		final Block block2 = this.getWorld()
+		Block block2 = this.getWorld()
 			.getBlockAt(this.getTargetBlock()
 				.getX() + brushSize, 0, this.getTargetBlock()
 				.getZ() + brushSize);
-		final int lowChunkX = (block1.getX() <= block2.getX()) ? block1.getChunk()
+		int lowChunkX = (block1.getX() <= block2.getX()) ? block1.getChunk()
 			.getX() : block2.getChunk()
 			.getX();
-		final int lowChunkZ = (block1.getZ() <= block2.getZ()) ? block1.getChunk()
+		int lowChunkZ = (block1.getZ() <= block2.getZ()) ? block1.getChunk()
 			.getZ() : block2.getChunk()
 			.getZ();
-		final int highChunkX = (block1.getX() >= block2.getX()) ? block1.getChunk()
+		int highChunkX = (block1.getX() >= block2.getX()) ? block1.getChunk()
 			.getX() : block2.getChunk()
 			.getX();
-		final int highChunkZ = (block1.getZ() >= block2.getZ()) ? block1.getChunk()
+		int highChunkZ = (block1.getZ() >= block2.getZ()) ? block1.getChunk()
 			.getZ() : block2.getChunk()
 			.getZ();
 		for (int x = lowChunkX; x <= highChunkX; x++) {
@@ -63,48 +66,46 @@ public class BiomeBrush extends Brush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.biome(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.biome(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 	}
 
 	@Override
-	public final void parameters(final String[] args, final SnipeData v) {
+	public final void parameters(String[] args, SnipeData v) {
 		if (args[1].equalsIgnoreCase("info")) {
 			v.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-			String availableBiomes = "";
-			for (final Biome biome : Biome.values()) {
-				if (availableBiomes.isEmpty()) {
-					availableBiomes = ChatColor.DARK_GREEN + biome.name();
+			StringBuilder availableBiomes = new StringBuilder();
+			for (Biome biome : Biome.values()) {
+				if (availableBiomes.length() == 0) {
+					availableBiomes = new StringBuilder(ChatColor.DARK_GREEN + biome.name());
 					continue;
 				}
-				availableBiomes += ChatColor.RED + ", " + ChatColor.DARK_GREEN + biome.name();
+				availableBiomes.append(ChatColor.RED + ", " + ChatColor.DARK_GREEN)
+					.append(biome.name());
 			}
 			v.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
 		} else {
 			// allows biome names with spaces in their name
-			String biomeName = args[1];
-			for (int i = 2; i < args.length; i++) {
-				biomeName += " " + args[i];
-			}
-			for (final Biome biome : Biome.values()) {
-				if (biome.name()
-					.equalsIgnoreCase(biomeName)) {
-					this.selectedBiome = biome;
-					break;
-				}
-			}
+			String biomeName = IntStream.range(2, args.length)
+				.mapToObj(i -> " " + args[i])
+				.collect(Collectors.joining("", args[1], ""));
+			this.selectedBiome = Arrays.stream(Biome.values())
+				.filter(biome -> biome.name()
+					.equalsIgnoreCase(biomeName))
+				.findFirst()
+				.orElse(this.selectedBiome);
 			v.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 		}
 	}

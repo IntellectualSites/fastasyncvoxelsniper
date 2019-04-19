@@ -25,22 +25,22 @@ public abstract class BlendBrushBase extends Brush {
 	/**
 	 *
 	 */
-	protected abstract void blend(final SnipeData v);
+	protected abstract void blend(SnipeData v);
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.excludeAir = false;
 		this.blend(v);
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.excludeAir = true;
 		this.blend(v);
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 		vm.voxel();
@@ -48,7 +48,7 @@ public abstract class BlendBrushBase extends Brush {
 	}
 
 	@Override
-	public void parameters(final String[] par, final SnipeData v) {
+	public void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; ++i) {
 			if (par[i].equalsIgnoreCase("water")) {
 				this.excludeWater = !this.excludeWater;
@@ -75,7 +75,7 @@ public abstract class BlendBrushBase extends Brush {
 	 *
 	 */
 	protected final boolean isExcludeAir() {
-		return excludeAir;
+		return this.excludeAir;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class BlendBrushBase extends Brush {
 	 *
 	 */
 	protected final boolean isExcludeWater() {
-		return excludeWater;
+		return this.excludeWater;
 	}
 
 	/**

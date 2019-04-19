@@ -16,27 +16,27 @@ public class pMaterial extends vPerformer {
 	private int i;
 
 	public pMaterial() {
-		name = "Material";
+		this.setName("Material");
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		i = v.getVoxelId();
+		this.world = v.getWorld();
+		this.i = v.getVoxelId();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.voxel();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getTypeId() != i) {
-			h.put(b);
-			b.setTypeId(i);
+	public void perform(Block block) {
+		if (block.getTypeId() != this.i) {
+			this.h.put(block);
+			block.setTypeId(this.i);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
+import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
@@ -15,9 +16,9 @@ import org.bukkit.block.Block;
  */
 public class SplineBrush extends PerformBrush {
 
-	private final ArrayList<Block> endPts = new ArrayList<Block>();
-	private final ArrayList<Block> ctrlPts = new ArrayList<Block>();
-	protected ArrayList<Point> spline = new ArrayList<Point>();
+	private final ArrayList<Block> endPts = new ArrayList<>();
+	private final ArrayList<Block> ctrlPts = new ArrayList<>();
+	protected List<Point> spline = new ArrayList<>();
 	protected boolean set;
 	protected boolean ctrl;
 	protected String[] sparams = {"ss", "sc", "clear"};
@@ -26,7 +27,7 @@ public class SplineBrush extends PerformBrush {
 		this.setName("Spline");
 	}
 
-	public final void addToSet(final SnipeData v, final boolean ep, Block targetBlock) {
+	public final void addToSet(SnipeData v, boolean ep, Block targetBlock) {
 		if (ep) {
 			if (this.endPts.contains(targetBlock) || this.endPts.size() == 2) {
 				return;
@@ -42,7 +43,7 @@ public class SplineBrush extends PerformBrush {
 		v.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
 	}
 
-	public final void removeFromSet(final SnipeData v, final boolean ep, Block targetBlock) {
+	public final void removeFromSet(SnipeData v, boolean ep, Block targetBlock) {
 		if (ep) {
 			if (!this.endPts.contains(targetBlock)) {
 				v.sendMessage(ChatColor.RED + "That block is not in the endpoint selection set.");
@@ -60,35 +61,35 @@ public class SplineBrush extends PerformBrush {
 		v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "from control point selection");
 	}
 
-	public final boolean spline(final Point start, final Point end, final Point c1, final Point c2, final SnipeData v) {
+	public final boolean spline(Point start, Point end, Point c1, Point c2, SnipeData v) {
 		this.spline.clear();
 		try {
-			final Point c = (c1.subtract(start)).multiply(3);
-			final Point b = ((c2.subtract(c1)).multiply(3)).subtract(c);
-			final Point a = ((end.subtract(start)).subtract(c)).subtract(b);
+			Point c = (c1.subtract(start)).multiply(3);
+			Point b = ((c2.subtract(c1)).multiply(3)).subtract(c);
+			Point a = ((end.subtract(start)).subtract(c)).subtract(b);
 			for (double t = 0.0; t < 1.0; t += 0.01) {
-				final int px = (int) Math.round((a.getX() * (t * t * t)) + (b.getX() * (t * t)) + (c.getX() * t) + this.endPts.get(0)
+				int px = (int) Math.round((a.getX() * (t * t * t)) + (b.getX() * (t * t)) + (c.getX() * t) + this.endPts.get(0)
 					.getX());
-				final int py = (int) Math.round((a.getY() * (t * t * t)) + (b.getY() * (t * t)) + (c.getY() * t) + this.endPts.get(0)
+				int py = (int) Math.round((a.getY() * (t * t * t)) + (b.getY() * (t * t)) + (c.getY() * t) + this.endPts.get(0)
 					.getY());
-				final int pz = (int) Math.round((a.getZ() * (t * t * t)) + (b.getZ() * (t * t)) + (c.getZ() * t) + this.endPts.get(0)
+				int pz = (int) Math.round((a.getZ() * (t * t * t)) + (b.getZ() * (t * t)) + (c.getZ() * t) + this.endPts.get(0)
 					.getZ());
 				if (!this.spline.contains(new Point(px, py, pz))) {
 					this.spline.add(new Point(px, py, pz));
 				}
 			}
 			return true;
-		} catch (final Exception exception) {
+		} catch (RuntimeException exception) {
 			v.sendMessage(ChatColor.RED + "Not enough points selected; " + this.endPts.size() + " endpoints, " + this.ctrlPts.size() + " control points");
 			return false;
 		}
 	}
 
-	protected final void render(final SnipeData v) {
+	protected final void render(SnipeData v) {
 		if (this.spline.isEmpty()) {
 			return;
 		}
-		for (final Point point : this.spline) {
+		for (Point point : this.spline) {
 			this.current.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
 		}
 		v.owner()
@@ -96,7 +97,7 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		if (this.set) {
 			this.removeFromSet(v, true, this.getTargetBlock());
 		} else if (this.ctrl) {
@@ -104,7 +105,7 @@ public class SplineBrush extends PerformBrush {
 		}
 	}
 
-	protected final void clear(final SnipeData v) {
+	protected final void clear(SnipeData v) {
 		this.spline.clear();
 		this.ctrlPts.clear();
 		this.endPts.clear();
@@ -112,7 +113,7 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		if (this.set) {
 			this.addToSet(v, true, this.getTargetBlock());
 		}
@@ -122,7 +123,7 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		if (this.set) {
 			vm.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
@@ -134,7 +135,7 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(final String[] par, final com.thevoxelbox.voxelsniper.SnipeData v) {
+	public final void parameters(String[] par, com.thevoxelbox.voxelsniper.SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
 			if (par[i].equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Spline brush parameters");
@@ -175,38 +176,38 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	// Vector class for splines
-	protected class Point {
+	protected static class Point {
 
 		private int x;
 		private int y;
 		private int z;
 
-		public Point(final Block b) {
-			this.setX(b.getX());
-			this.setY(b.getY());
-			this.setZ(b.getZ());
+		public Point(Block block) {
+			this.x = block.getX();
+			this.y = block.getY();
+			this.z = block.getZ();
 		}
 
-		public Point(final int x, final int y, final int z) {
-			this.setX(x);
-			this.setY(y);
-			this.setZ(z);
+		public Point(int x, int y, int z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
 		}
 
-		public final Point add(final Point p) {
-			return new Point(this.getX() + p.getX(), this.getY() + p.getY(), this.getZ() + p.getZ());
+		public final Point add(Point point) {
+			return new Point(this.x + point.x, this.y + point.y, this.z + point.z);
 		}
 
-		public final Point multiply(final int scalar) {
-			return new Point(this.getX() * scalar, this.getY() * scalar, this.getZ() * scalar);
+		public final Point multiply(int scalar) {
+			return new Point(this.x * scalar, this.y * scalar, this.z * scalar);
 		}
 
-		public final Point subtract(final Point p) {
-			return new Point(this.getX() - p.getX(), this.getY() - p.getY(), this.getZ() - p.getZ());
+		public final Point subtract(Point point) {
+			return new Point(this.x - point.x, this.y - point.y, this.z - point.z);
 		}
 
 		public int getX() {
-			return x;
+			return this.x;
 		}
 
 		public void setX(int x) {
@@ -214,7 +215,7 @@ public class SplineBrush extends PerformBrush {
 		}
 
 		public int getY() {
-			return y;
+			return this.y;
 		}
 
 		public void setY(int y) {
@@ -222,7 +223,7 @@ public class SplineBrush extends PerformBrush {
 		}
 
 		public int getZ() {
-			return z;
+			return this.z;
 		}
 
 		public void setZ(int z) {

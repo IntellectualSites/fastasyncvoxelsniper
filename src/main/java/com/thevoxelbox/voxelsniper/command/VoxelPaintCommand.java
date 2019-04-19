@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelPaintCommand extends VoxelCommand {
 
-	public VoxelPaintCommand(final VoxelSniper plugin) {
+	public VoxelPaintCommand(VoxelSniper plugin) {
 		super("VoxelPaint", plugin);
 		setIdentifier("paint");
 		setPermission("voxelsniper.paint");
@@ -24,7 +24,7 @@ public class VoxelPaintCommand extends VoxelCommand {
 				try {
 					PaintingWrapper.paint(player, false, false, Integer.parseInt(args[0]));
 					return true;
-				} catch (final Exception exception) {
+				} catch (NumberFormatException exception) {
 					player.sendMessage(ChatColor.RED + "Invalid input.");
 					return true;
 				}

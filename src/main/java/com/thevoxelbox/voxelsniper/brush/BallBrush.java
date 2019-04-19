@@ -16,7 +16,7 @@ public class BallBrush extends PerformBrush {
 
 	public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
 	public static final int TRUE_CIRCLE_OFF_VALUE = 0;
-	private double trueCircle = 0;
+	private double trueCircle;
 
 	/**
 	 *
@@ -25,15 +25,15 @@ public class BallBrush extends PerformBrush {
 		this.setName("Ball");
 	}
 
-	private void ball(final SnipeData v, Block targetBlock) {
-		final int brushSize = v.getBrushSize();
-		final double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+	private void ball(SnipeData v, Block targetBlock) {
+		int brushSize = v.getBrushSize();
+		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
 		this.current.perform(targetBlock);
 		for (int z = 1; z <= brushSize; z++) {
-			final double zSquared = Math.pow(z, 2);
+			double zSquared = Math.pow(z, 2);
 			this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
 			this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
 			this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
@@ -41,7 +41,7 @@ public class BallBrush extends PerformBrush {
 			this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
 			this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
 			for (int x = 1; x <= brushSize; x++) {
-				final double xSquared = Math.pow(x, 2);
+				double xSquared = Math.pow(x, 2);
 				if (zSquared + xSquared <= brushSizeSquared) {
 					this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
 					this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
@@ -75,25 +75,25 @@ public class BallBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.ball(v, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.ball(v, this.getLastBlock());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 		vm.size();
 	}
 
 	@Override
-	public final void parameters(final String[] par, final SnipeData v) {
+	public final void parameters(String[] par, SnipeData v) {
 		for (int i = 1; i < par.length; i++) {
-			final String parameter = par[i];
+			String parameter = par[i];
 			if (parameter.equalsIgnoreCase("info")) {
 				v.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
 				v.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");

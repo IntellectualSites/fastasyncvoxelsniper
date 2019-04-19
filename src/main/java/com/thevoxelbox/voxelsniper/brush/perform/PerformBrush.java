@@ -19,7 +19,7 @@ public abstract class PerformBrush extends Brush implements Performer {
 	protected vPerformer current = new pMaterial();
 
 	public vPerformer getCurrentPerformer() {
-		return current;
+		return this.current;
 	}
 
 	@Override
@@ -28,13 +28,13 @@ public abstract class PerformBrush extends Brush implements Performer {
 		if (PerformerE.has(handle)) {
 			vPerformer p = PerformerE.getPerformer(handle);
 			if (p != null) {
-				current = p;
+				this.current = p;
 				SniperBrushChangedEvent event = new SniperBrushChangedEvent(v.owner(), v.owner()
 					.getCurrentToolId(), this, this);
 				Bukkit.getPluginManager()
 					.callEvent(event);
 				info(v.getVoxelMessage());
-				current.info(v.getVoxelMessage());
+				this.current.info(v.getVoxelMessage());
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
 					parameters(hackTheArray(additionalArguments), v);
@@ -63,12 +63,12 @@ public abstract class PerformBrush extends Brush implements Performer {
 	}
 
 	public void initP(com.thevoxelbox.voxelsniper.SnipeData v) {
-		current.init(v);
-		current.setUndo();
+		this.current.init(v);
+		this.current.setUndo();
 	}
 
 	@Override
 	public void showInfo(Message vm) {
-		current.info(vm);
+		this.current.info(vm);
 	}
 }

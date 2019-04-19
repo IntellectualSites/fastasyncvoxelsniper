@@ -16,26 +16,26 @@ public class pInkNoUndo extends vPerformer {
 	private byte d;
 
 	public pInkNoUndo() {
-		name = "Ink, No-Undo"; // made name more descriptive - Giltwist
+		this.setName("Ink, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override
 	public void init(com.thevoxelbox.voxelsniper.SnipeData v) {
-		w = v.getWorld();
-		d = v.getData();
+		this.world = v.getWorld();
+		this.d = v.getData();
 	}
 
 	@Override
 	public void info(Message vm) {
-		vm.performerName(name);
+		vm.performerName(this.getName());
 		vm.data();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void perform(Block b) {
-		if (b.getData() != d) {
-			b.setData(d);
+	public void perform(Block block) {
+		if (block.getData() != this.d) {
+			block.setData(this.d);
 		}
 	}
 }

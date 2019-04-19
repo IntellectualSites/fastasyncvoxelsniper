@@ -28,19 +28,19 @@ public class SniperMaterialChangedEvent extends Event {
 	}
 
 	public BlockData getOriginalMaterial() {
-		return originalMaterial;
+		return this.originalMaterial;
 	}
 
 	public BlockData getNewMaterial() {
-		return newMaterial;
+		return this.newMaterial;
 	}
 
 	public Sniper getSniper() {
-		return sniper;
+		return this.sniper;
 	}
 
 	public String getToolId() {
-		return toolId;
+		return this.toolId;
 	}
 
 	@Override

@@ -28,19 +28,19 @@ public class SniperBrushChangedEvent extends Event {
 	}
 
 	public IBrush getOriginalBrush() {
-		return originalBrush;
+		return this.originalBrush;
 	}
 
 	public IBrush getNewBrush() {
-		return newBrush;
+		return this.newBrush;
 	}
 
 	public Sniper getSniper() {
-		return sniper;
+		return this.sniper;
 	}
 
 	public String getToolId() {
-		return toolId;
+		return this.toolId;
 	}
 
 	@Override

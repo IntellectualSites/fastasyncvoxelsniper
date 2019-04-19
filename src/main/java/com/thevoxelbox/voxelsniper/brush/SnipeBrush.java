@@ -19,21 +19,21 @@ public class SnipeBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(final SnipeData v) {
+	protected final void arrow(SnipeData v) {
 		this.current.perform(this.getTargetBlock());
 		v.owner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void powder(final SnipeData v) {
+	protected final void powder(SnipeData v) {
 		this.current.perform(this.getLastBlock());
 		v.owner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	public final void info(final Message vm) {
+	public final void info(Message vm) {
 		vm.brushName(this.getName());
 	}
 
