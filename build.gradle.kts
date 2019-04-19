@@ -14,6 +14,7 @@ repositories {
 }
 
 dependencies {
+	implementation("com.flowpowered:flow-math:1.0.3")
 	compileOnly("com.destroystokyo.paper:paper-api:1.13.2-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
 }

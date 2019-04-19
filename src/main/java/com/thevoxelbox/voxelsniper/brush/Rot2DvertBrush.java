@@ -80,7 +80,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 						this.setBlockIdAndDataAt(this.getTargetBlock()
 							.getX() + yy, this.getTargetBlock()
 							.getY() + (int) newX, this.getTargetBlock()
-							.getZ() + (int) newZ, block.getId(), block.getData());
+							.getZ() + (int) newZ, block.getId(), block.getBlockData());
 					}
 				}
 			}

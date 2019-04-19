@@ -81,7 +81,7 @@ public class Rot2DBrush extends AbstractBrush {
 						this.setBlockIdAndDataAt(this.getTargetBlock()
 							.getX() + (int) newX, this.getTargetBlock()
 							.getY() + yy, this.getTargetBlock()
-							.getZ() + (int) newZ, block.getId(), block.getData());
+							.getZ() + (int) newZ, block.getId(), block.getBlockData());
 					}
 				}
 			}

@@ -147,7 +147,7 @@ public class Rot3DBrush extends AbstractBrush {
 						this.setBlockIdAndDataAt(this.getTargetBlock()
 							.getX() + (int) newxyX, this.getTargetBlock()
 							.getY() + (int) newyzY, this.getTargetBlock()
-							.getZ() + (int) newyzZ, block.getId(), block.getData());
+							.getZ() + (int) newyzZ, block.getId(), block.getBlockData());
 					}
 				}
 			}

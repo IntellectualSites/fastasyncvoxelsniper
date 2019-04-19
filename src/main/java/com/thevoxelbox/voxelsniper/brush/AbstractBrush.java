@@ -1,14 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.flowpowered.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -78,16 +81,14 @@ public abstract class AbstractBrush implements Brush {
 	 *
 	 * @param snipeData Sniper caller
 	 */
-	protected void arrow(SnipeData snipeData) {
-	}
+	protected void arrow(SnipeData snipeData) {}
 
 	/**
 	 * The powder action. Executed when a player RightClicks with Gunpowder
 	 *
 	 * @param snipeData Sniper caller
 	 */
-	protected void powder(SnipeData snipeData) {
-	}
+	protected void powder(SnipeData snipeData) {}
 
 	@Override
 	public void parameters(String[] parameters, SnipeData snipeData) {
@@ -100,6 +101,8 @@ public abstract class AbstractBrush implements Brush {
 	 * @return boolean
 	 */
 	protected final boolean getTarget(SnipeData snipeData, Block clickedBlock, BlockFace clickedFace) {
+		Sniper owner = snipeData.getOwner();
+		String toolId = owner.getCurrentToolId();
 		if (clickedBlock != null) {
 			this.targetBlock = clickedBlock;
 			this.lastBlock = clickedBlock.getRelative(clickedFace);
@@ -107,9 +110,7 @@ public abstract class AbstractBrush implements Brush {
 				snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
-			if (snipeData.getOwner()
-				.getSnipeData(snipeData.getOwner()
-					.getCurrentToolId())
+			if (owner.getSnipeData(toolId)
 				.isLightningEnabled()) {
 				this.getWorld()
 					.strikeLightning(this.targetBlock.getLocation());
@@ -117,22 +118,14 @@ public abstract class AbstractBrush implements Brush {
 			return true;
 		} else {
 			RangeBlockHelper rangeBlockHelper;
-			if (snipeData.getOwner()
-				.getSnipeData(snipeData.getOwner()
-					.getCurrentToolId())
+			if (owner.getSnipeData(toolId)
 				.isRanged()) {
-				rangeBlockHelper = new RangeBlockHelper(snipeData.getOwner()
-					.getPlayer(), snipeData.getOwner()
-					.getPlayer()
-					.getWorld(), snipeData.getOwner()
-					.getSnipeData(snipeData.getOwner()
-						.getCurrentToolId())
+				rangeBlockHelper = new RangeBlockHelper(owner.getPlayer(), owner.getPlayer()
+					.getWorld(), owner.getSnipeData(toolId)
 					.getRange());
 				this.targetBlock = rangeBlockHelper.getRangeBlock();
 			} else {
-				rangeBlockHelper = new RangeBlockHelper(snipeData.getOwner()
-					.getPlayer(), snipeData.getOwner()
-					.getPlayer()
+				rangeBlockHelper = new RangeBlockHelper(owner.getPlayer(), owner.getPlayer()
 					.getWorld());
 				this.targetBlock = rangeBlockHelper.getTargetBlock();
 			}
@@ -142,9 +135,7 @@ public abstract class AbstractBrush implements Brush {
 					snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
 				}
-				if (snipeData.getOwner()
-					.getSnipeData(snipeData.getOwner()
-						.getCurrentToolId())
+				if (owner.getSnipeData(toolId)
 					.isLightningEnabled()) {
 					this.getWorld()
 						.strikeLightning(this.targetBlock.getLocation());
@@ -194,34 +185,6 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	/**
-	 * Looks up Type ID of Block at given coordinates in the world of the targeted Block.
-	 *
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 * @param z Z coordinate
-	 * @return Type ID of Block at given coordinates in the world of the targeted Block.
-	 */
-
-	protected int getBlockIdAt(int x, int y, int z) {
-		return getWorld().getBlockTypeIdAt(x, y, z);
-	}
-
-	/**
-	 * Looks up Block Data Value of Block at given coordinates in the world of the targeted Block.
-	 *
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 * @param z Z coordinate
-	 * @return Block Data Value of Block at given coordinates in the world of the targeted Block.
-	 */
-
-	protected byte getBlockDataAt(int x, int y, int z) {
-		return this.getWorld()
-			.getBlockAt(x, y, z)
-			.getData();
-	}
-
-	/**
 	 * @return Block before target Block.
 	 */
 	@Nullable
@@ -236,46 +199,40 @@ public abstract class AbstractBrush implements Brush {
 		this.lastBlock = lastBlock;
 	}
 
+	protected BlockData getBlockData(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return getBlockData(x, y, z);
+	}
+
+	protected BlockData getBlockData(int x, int y, int z) {
+		World world = this.targetBlock.getWorld();
+		Block block = world.getBlockAt(x, y, z);
+		return block.getBlockData();
+	}
+
 	/**
 	 * Set block data with supplied data over BlockWrapper.
 	 *
 	 * @param blockWrapper Block data wrapper
 	 */
-	@Deprecated
 	protected final void setBlock(BlockWrapper blockWrapper) {
-		this.getWorld()
-			.getBlockAt(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ())
-			.setTypeId(blockWrapper.getId());
+		Vector3i position = blockWrapper.getPosition();
+		BlockData blockData = blockWrapper.getBlockData();
+		setBlockData(position, blockData);
 	}
 
-	/**
-	 * Sets the Id of the block at the passed coordinate.
-	 *
-	 * @param z Z coordinate
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 * @param id The id the block will be set to
-	 */
-
-	protected final void setBlockIdAt(int z, int x, int y, int id) {
-		this.getWorld()
-			.getBlockAt(x, y, z)
-			.setTypeId(id);
+	protected final void setBlockData(Vector3i position, BlockData blockData) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		setBlockData(x, y, z, blockData);
 	}
 
-	/**
-	 * Sets the id and data value of the block at the passed coordinate.
-	 *
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 * @param z Z coordinate
-	 * @param id The id the block will be set to
-	 * @param data The data value the block will be set to
-	 */
-
-	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data) {
-		this.getWorld()
-			.getBlockAt(x, y, z)
-			.setTypeIdAndData(id, data, true);
+	protected final void setBlockData(int x, int y, int z, BlockData blockData) {
+		World world = this.targetBlock.getWorld();
+		Block block = world.getBlockAt(x, y, z);
+		block.setBlockData(blockData);
 	}
 }

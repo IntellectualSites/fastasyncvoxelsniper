@@ -41,26 +41,6 @@ public class SnipeData {
 	 * Voxel List of ID's -- set blockPositionY /vl # # # -#.
 	 */
 	private VoxelList voxelList = new VoxelList();
-	/**
-	 * Voxel Id -- set blockPositionY /v (#,name).
-	 */
-	@Deprecated
-	private int voxelId;
-	/**
-	 * Voxel Replace Id -- set blockPositionY /vr #.
-	 */
-	@Deprecated
-	private int replaceId;
-	/**
-	 * Voxel 'ink' -- set blockPositionY /vi #.
-	 */
-	@Deprecated
-	private byte data;
-	/**
-	 * Voxel 'ink' Replace -- set blockPositionY /vir #.
-	 */
-	@Deprecated
-	private byte replaceData;
 
 	public SnipeData(Sniper owner) {
 		this.owner = owner;
@@ -76,10 +56,6 @@ public class SnipeData {
 		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
 		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
 		this.voxelList = new VoxelList();
-		this.voxelId = 0;
-		this.replaceId = 0;
-		this.data = 0;
-		this.replaceData = 0;
 	}
 
 	public void sendMessage(String message) {
@@ -181,69 +157,5 @@ public class SnipeData {
 
 	public void setVoxelList(VoxelList voxelList) {
 		this.voxelList = voxelList;
-	}
-
-	/**
-	 * @return the data
-	 */
-	@Deprecated
-	public byte getData() {
-		return this.data;
-	}
-
-	/**
-	 * @return the replaceData
-	 */
-	@Deprecated
-	public byte getReplaceData() {
-		return this.replaceData;
-	}
-
-	/**
-	 * @return the replaceId
-	 */
-	@Deprecated
-	public int getReplaceId() {
-		return this.replaceId;
-	}
-
-	/**
-	 * @return the voxelId
-	 */
-	@Deprecated
-	public int getVoxelId() {
-		return this.voxelId;
-	}
-
-	/**
-	 * @param data the data to set
-	 */
-	@Deprecated
-	public void setData(byte data) {
-		this.data = data;
-	}
-
-	/**
-	 * @param replaceData the replaceData to set
-	 */
-	@Deprecated
-	public void setReplaceData(byte replaceData) {
-		this.replaceData = replaceData;
-	}
-
-	/**
-	 * @param replaceId the replaceId to set
-	 */
-	@Deprecated
-	public void setReplaceId(int replaceId) {
-		this.replaceId = replaceId;
-	}
-
-	/**
-	 * @param voxelId the voxelId to set
-	 */
-	@Deprecated
-	public void setVoxelId(int voxelId) {
-		this.voxelId = voxelId;
 	}
 }

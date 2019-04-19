@@ -21,6 +21,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,19 +45,24 @@ public class Sniper {
 
 	@Nullable
 	public String getCurrentToolId() {
-		return getToolId((getPlayer().getItemInHand() != null) ? getPlayer().getItemInHand()
-			.getType() : null);
+		Player player = getPlayer();
+		if (player == null) {
+			return null;
+		}
+		PlayerInventory inventory = player.getInventory();
+		ItemStack itemInHand = inventory.getItemInMainHand();
+		Material type = itemInHand.getType();
+		return getToolId(type);
 	}
 
 	@Nullable
-	public String getToolId(Material itemInHand) {
-		if (itemInHand == null) {
-			return null;
-		}
+	public String getToolId(Material material) {
 		return this.tools.entrySet()
 			.stream()
-			.filter(entry -> entry.getValue()
-				.hasToolAssigned(itemInHand))
+			.filter(entry -> {
+				SniperTool tool = entry.getValue();
+				return tool.hasToolAssigned(material);
+			})
 			.findFirst()
 			.map(Entry::getKey)
 			.orElse(null);
