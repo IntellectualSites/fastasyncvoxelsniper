@@ -1,15 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.VoxelSniper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -140,8 +133,6 @@ public class SignOverwriteBrush extends AbstractBrush {
 					snipeData.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
 					snipeData.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
 					snipeData.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
-					snipeData.sendMessage(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)");
-					snipeData.sendMessage(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)");
 				} else if (parameter.startsWith("-1")) {
 					textChanged = true;
 					i = parseSignLineFromParam(parameters, SIGN_LINE_1, snipeData, i);
@@ -172,21 +163,6 @@ public class SignOverwriteBrush extends AbstractBrush {
 						snipeData.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + snipeData.getBrushSize());
 						snipeData.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + snipeData.getVoxelHeight());
 					}
-				} else if (parameter.equalsIgnoreCase("-save") || parameter.equalsIgnoreCase("-s")) {
-					if ((i + 1) >= parameters.length) {
-						snipeData.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
-						continue;
-					}
-					String fileName = parameters[++i];
-					saveBufferToFile(fileName, snipeData);
-				} else if (parameter.equalsIgnoreCase("-open") || parameter.equalsIgnoreCase("-o")) {
-					if ((i + 1) >= parameters.length) {
-						snipeData.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
-						continue;
-					}
-					String fileName = parameters[++i];
-					loadBufferFromFile(fileName, "", snipeData);
-					textChanged = true;
 				}
 			} catch (RuntimeException exception) {
 				snipeData.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
@@ -258,59 +234,6 @@ public class SignOverwriteBrush extends AbstractBrush {
 		v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
 		for (int i = 0; i < this.signTextLines.length; i++) {
 			v.sendMessage((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
-		}
-	}
-
-	/**
-	 * Saves the buffer to file.
-	 */
-	private void saveBufferToFile(String fileName, SnipeData v) {
-		File store = new File(VoxelSniper.getInstance()
-			.getDataFolder() + "/" + fileName + ".vsign");
-		if (store.exists()) {
-			v.sendMessage("This file already exists.");
-			return;
-		}
-		try {
-			store.createNewFile();
-			FileWriter outFile = new FileWriter(store);
-			BufferedWriter outStream = new BufferedWriter(outFile);
-			for (int i = 0; i < this.signTextLines.length; i++) {
-				outStream.write(this.signLinesEnabled[i] + "\n");
-				outStream.write(this.signTextLines[i] + "\n");
-			}
-			outStream.close();
-			outFile.close();
-			v.sendMessage(ChatColor.BLUE + "File saved successfully.");
-		} catch (IOException exception) {
-			v.sendMessage(ChatColor.RED + "Failed to save file. " + exception.getMessage());
-			exception.printStackTrace();
-		}
-	}
-
-	/**
-	 * Loads a buffer from a file.
-	 */
-	private void loadBufferFromFile(String fileName, String userDomain, SnipeData v) {
-		File store = new File(VoxelSniper.getInstance()
-			.getDataFolder() + "/" + fileName + ".vsign");
-		if (!store.exists()) {
-			v.sendMessage("This file does not exist.");
-			return;
-		}
-		try {
-			FileReader inFile = new FileReader(store);
-			BufferedReader inStream = new BufferedReader(inFile);
-			for (int i = 0; i < this.signTextLines.length; i++) {
-				this.signLinesEnabled[i] = Boolean.valueOf(inStream.readLine());
-				this.signTextLines[i] = inStream.readLine();
-			}
-			inStream.close();
-			inFile.close();
-			v.sendMessage(ChatColor.BLUE + "File loaded successfully.");
-		} catch (IOException exception) {
-			v.sendMessage(ChatColor.RED + "Failed to load file. " + exception.getMessage());
-			exception.printStackTrace();
 		}
 	}
 
