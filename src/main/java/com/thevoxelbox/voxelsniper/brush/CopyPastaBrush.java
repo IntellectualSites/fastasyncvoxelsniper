@@ -35,7 +35,6 @@ public class CopyPastaBrush extends AbstractBrush {
 		this.setName("CopyPasta");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void doCopy(SnipeData v) {
 		for (int i = 0; i < 3; i++) {
 			this.arraySize[i] = Math.abs(this.firstPoint[i] - this.secondPoint[i]) + 1;
@@ -63,7 +62,6 @@ public class CopyPastaBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void doPasta(SnipeData v) {
 		Undo undo = new Undo();
 		for (int i = 0; i < this.arraySize[0]; i++) {

@@ -138,7 +138,7 @@ public class RangeBlockHelper {
 	 *
 	 * @return Block
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final Block getFaceBlock() {
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
 			.getTypeId() == 0)) {
@@ -204,7 +204,7 @@ public class RangeBlockHelper {
 	 *
 	 * @return Block
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final Block getTargetBlock() {
 		this.fromOffworld();
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
@@ -216,7 +216,7 @@ public class RangeBlockHelper {
 	/**
 	 * Sets current block type id.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final void setCurBlock(int type) {
 		if (this.getCurBlock() != null) {
 			this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
@@ -227,7 +227,7 @@ public class RangeBlockHelper {
 	/**
 	 * Sets the type of the block attached to the face at the cursor.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final void setFaceBlock(int type) {
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
 			.getTypeId() == 0)) {
@@ -241,7 +241,7 @@ public class RangeBlockHelper {
 	/**
 	 * Sets previous block type id.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final void setLastBlock(int type) {
 		if (this.getLastBlock() != null) {
 			this.world.getBlockAt(this.lastX, this.lastY, this.lastZ)
@@ -252,7 +252,7 @@ public class RangeBlockHelper {
 	/**
 	 * Sets the type of the block at the cursor.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public final void setTargetBlock(int type) {
 		while ((this.getNextBlock() != null) && (this.getCurBlock()
 			.getTypeId() == 0)) {
@@ -263,7 +263,6 @@ public class RangeBlockHelper {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private Block getRange() {
 		while (true) {
 			this.lastX = this.targetX;

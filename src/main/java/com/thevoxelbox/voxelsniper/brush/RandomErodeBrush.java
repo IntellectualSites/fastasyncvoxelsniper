@@ -59,7 +59,6 @@ public class RandomErodeBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean fill(int x, int y, int z) {
 		if (this.snap[x][y][z].isSolid()) {
 			return false;
@@ -149,7 +148,6 @@ public class RandomErodeBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void rerosion(SnipeData v) {
 		Undo undo = new Undo();
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
@@ -206,7 +204,6 @@ public class RandomErodeBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void rfilling(SnipeData v) {
 		Undo undo = new Undo();
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
@@ -314,7 +311,7 @@ public class RandomErodeBrush extends AbstractBrush {
 		/**
 		 *
 		 */
-		@SuppressWarnings("deprecation")
+
 		private BlockWrapper(Block bl) {
 			this.nativeBlock = bl;
 			this.i = bl.getTypeId();

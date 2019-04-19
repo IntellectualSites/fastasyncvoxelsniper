@@ -31,7 +31,6 @@ public class MaterialPerformer extends AbstractPerformer {
 		message.voxel();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getTypeId() != this.i) {

@@ -25,7 +25,6 @@ public class UnderlayBrush extends PerformBrush {
 		this.setName("Underlay (Reverse Overlay)");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void underlay(SnipeData snipeData) {
 		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
 		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);

@@ -42,14 +42,12 @@ public class EntityBrush extends AbstractBrush {
 		this.spawn(snipeData);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public final void info(Message message) {
 		message.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
 		message.size();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		if (parameters[1].equalsIgnoreCase("info")) {

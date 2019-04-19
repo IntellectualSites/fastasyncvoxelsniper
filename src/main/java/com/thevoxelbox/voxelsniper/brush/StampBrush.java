@@ -28,7 +28,7 @@ public class StampBrush extends AbstractBrush {
 		/**
 		 *
 		 */
-		@SuppressWarnings("deprecation")
+
 		public BlockWrapper(Block block, int blx, int bly, int blz) {
 			this.id = block.getTypeId();
 			this.d = block.getData();
@@ -156,7 +156,7 @@ public class StampBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void setBlock(BlockWrapper blockWrapper) {
 		Block block = this.clampY(this.getTargetBlock()
 			.getX() + blockWrapper.getX(), this.getTargetBlock()
@@ -170,7 +170,7 @@ public class StampBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void setBlockFill(BlockWrapper blockWrapper) {
 		Block block = this.clampY(this.getTargetBlock()
 			.getX() + blockWrapper.getX(), this.getTargetBlock()

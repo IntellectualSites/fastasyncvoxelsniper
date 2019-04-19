@@ -35,7 +35,7 @@ public class DomeBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	@SuppressWarnings("deprecation")
+
 	private void generateDome(SnipeData v, Block targetBlock) {
 		if (v.getVoxelHeight() == 0) {
 			v.sendMessage("VoxelHeight must not be 0.");

@@ -38,7 +38,6 @@ public class ExcludeComboPerformer extends AbstractPerformer {
 		this.excludeList = snipeData.getVoxelList();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (!this.excludeList.contains(new int[] {block.getTypeId(), block.getData()})) {

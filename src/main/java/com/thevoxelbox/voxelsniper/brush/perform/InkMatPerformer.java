@@ -34,7 +34,6 @@ public class InkMatPerformer extends AbstractPerformer {
 		message.replace();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getTypeId() == this.ir) {

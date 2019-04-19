@@ -35,7 +35,6 @@ public class IncludeMatPerformer extends AbstractPerformer {
 		this.includeList = snipeData.getVoxelList();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (this.includeList.contains(new int[] {block.getTypeId(), block.getData()})) {

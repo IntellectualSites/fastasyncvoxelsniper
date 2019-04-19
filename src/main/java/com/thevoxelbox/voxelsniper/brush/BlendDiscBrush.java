@@ -17,7 +17,6 @@ public class BlendDiscBrush extends BlendBrushBase {
 		this.setName("Blend Disc");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected final void blend(SnipeData snipeData) {
 		int brushSize = snipeData.getBrushSize();

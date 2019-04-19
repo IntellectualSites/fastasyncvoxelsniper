@@ -31,7 +31,6 @@ public class InkNoUndoPerformer extends AbstractPerformer {
 		message.data();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getData() != this.d) {

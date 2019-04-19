@@ -88,7 +88,6 @@ public class PullBrush extends AbstractBrush {
 		return this.getBlockIdAt(x, y, z) != 0 && ((this.getBlockIdAt(x, y - 1, z) == 0) || (this.getBlockIdAt(x, y + 1, z) == 0) || (this.getBlockIdAt(x + 1, y, z) == 0) || (this.getBlockIdAt(x - 1, y, z) == 0) || (this.getBlockIdAt(x, y, z + 1) == 0) || (this.getBlockIdAt(x, y, z - 1) == 0));
 	}
 
-	@SuppressWarnings("deprecation")
 	private void setBlock(BlockWrapper block) {
 		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
 		if (this.getBlockIdAt(block.getX(), block.getY() - 1, block.getZ()) == 0) {
@@ -108,7 +107,6 @@ public class PullBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void setBlockDown(BlockWrapper block) {
 		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.vh * block.getStr()), block.getZ());
 		currentBlock.setTypeId(block.getId());
@@ -134,7 +132,6 @@ public class PullBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected final void powder(SnipeData snipeData) {
 		this.vh = snipeData.getVoxelHeight();
@@ -252,7 +249,7 @@ public class PullBrush extends AbstractBrush {
 		/**
 		 *
 		 */
-		@SuppressWarnings("deprecation")
+
 		private BlockWrapper(Block block, double st) {
 			this.id = block.getTypeId();
 			this.d = block.getData();

@@ -29,7 +29,6 @@ public class TreeSnipeBrush extends AbstractBrush {
 		this.setName("Tree Snipe");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void single(SnipeData snipeData, Block targetBlock) {
 		UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);

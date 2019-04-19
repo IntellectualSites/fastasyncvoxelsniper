@@ -102,7 +102,6 @@ public class ExtrudeBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	@SuppressWarnings("deprecation")
 	private Undo perform(Block b1, Block b2, SnipeData v, Undo undo) {
 		if (v.getVoxelList()
 			.contains(new int[] {this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())})) {

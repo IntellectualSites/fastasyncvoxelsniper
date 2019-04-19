@@ -73,7 +73,7 @@ public class OceanBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void oceanator(SnipeData snipeData, Undo undo) {
 		World world = this.getWorld();
 		int minX = (int) Math.floor((this.getTargetBlock()

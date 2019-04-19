@@ -27,7 +27,6 @@ public class Rot2DvertBrush extends AbstractBrush {
 		this.setName("2D Rotation");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void getMatrix() {
 		this.brushSize = (this.bSize * 2) + 1;
 		this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];

@@ -65,7 +65,7 @@ public class Message {
 	/**
 	 * Displaye replace material.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public void replace() {
 		this.snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + this.snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(this.snipeData.getReplaceId()) + ")");
 	}
@@ -121,7 +121,7 @@ public class Message {
 	/**
 	 * Display voxel type.
 	 */
-	@SuppressWarnings("deprecation")
+
 	public void voxel() {
 		this.snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + this.snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(this.snipeData.getVoxelId()) + ")");
 	}

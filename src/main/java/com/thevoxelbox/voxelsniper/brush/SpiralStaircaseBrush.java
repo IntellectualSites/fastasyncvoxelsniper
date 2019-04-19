@@ -25,7 +25,6 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 		this.setName("Spiral Staircase");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void buildStairWell(SnipeData snipeData, Block targetBlock) {
 		if (snipeData.getVoxelHeight() < 1) {
 			snipeData.setVoxelHeight(1);
@@ -283,7 +282,6 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void digStairWell(SnipeData snipeData, Block targetBlock) {
 		if (snipeData.getVoxelHeight() < 1) {
 			snipeData.setVoxelHeight(1);

@@ -37,7 +37,6 @@ public class ComboMatPerformer extends AbstractPerformer {
 		message.data();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getTypeId() == this.ir) {

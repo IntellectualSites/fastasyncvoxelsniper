@@ -38,7 +38,6 @@ public class SplatterOverlayBrush extends PerformBrush {
 		this.setName("Splatter Overlay");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void sOverlay(SnipeData v) {
 		// Splatter Time
 		int[][] splat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
@@ -80,8 +79,9 @@ public class SplatterOverlayBrush extends PerformBrush {
 			}
 			// integrate tempsplat back into splat at end of iteration
 			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				if (2 * v.getBrushSize() + 1 >= 0)
+				if (2 * v.getBrushSize() + 1 >= 0) {
 					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * v.getBrushSize() + 1);
+				}
 			}
 		}
 		this.growPercent = gref;
@@ -202,8 +202,9 @@ public class SplatterOverlayBrush extends PerformBrush {
 			}
 			// integrate tempsplat back into splat at end of iteration
 			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				if (2 * v.getBrushSize() + 1 >= 0)
+				if (2 * v.getBrushSize() + 1 >= 0) {
 					System.arraycopy(tempsplat[x], 0, splat[x], 0, 2 * v.getBrushSize() + 1);
+				}
 			}
 		}
 		this.growPercent = gref;

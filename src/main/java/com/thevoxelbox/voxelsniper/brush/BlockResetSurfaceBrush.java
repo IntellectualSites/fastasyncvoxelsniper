@@ -54,7 +54,6 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 		this.setName("Block Reset Brush Surface Only");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void applyBrush(SnipeData v) {
 		World world = this.getWorld();
 		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
@@ -159,7 +158,6 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void resetBlock(Block block, byte oldData) {
 		block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
 		block.setTypeIdAndData(block.getTypeId(), oldData, true);

@@ -23,7 +23,6 @@ public class FlatOceanBrush extends AbstractBrush {
 		this.setName("FlatOcean");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void flatOcean(Chunk chunk) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {

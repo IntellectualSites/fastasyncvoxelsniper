@@ -26,7 +26,6 @@ public class InkNoPhysPerformer extends AbstractPerformer {
 		message.data();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		this.undo.put(block);

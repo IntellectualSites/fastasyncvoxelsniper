@@ -60,7 +60,6 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void stencilPaste(SnipeData snipeData) {
 		if (this.filename.matches("NoFileLoaded")) {
 			snipeData.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
@@ -263,7 +262,6 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void stencilPaste180(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		if (this.filename.matches("NoFileLoaded")) {
@@ -465,7 +463,6 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void stencilPaste270(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		if (this.filename.matches("NoFileLoaded")) {
@@ -675,7 +672,6 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void stencilPaste90(SnipeData snipeData) {
 		if (this.filename.matches("NoFileLoaded")) {
 			snipeData.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");

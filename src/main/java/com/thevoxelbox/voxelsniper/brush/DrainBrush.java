@@ -24,7 +24,6 @@ public class DrainBrush extends AbstractBrush {
 		this.setName("Drain");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void drain(SnipeData snipeData) {
 		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);

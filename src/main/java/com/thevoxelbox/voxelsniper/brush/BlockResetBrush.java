@@ -40,7 +40,6 @@ public class BlockResetBrush extends AbstractBrush {
 		this.setName("Block Reset Brush");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void applyBrush(SnipeData v) {
 		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
 			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {

@@ -37,7 +37,6 @@ public class ComboInkNoPhysPerformer extends AbstractPerformer {
 		message.replaceData();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getData() == this.dr) {

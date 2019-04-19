@@ -34,7 +34,6 @@ public class ComboNoUndoPerformer extends AbstractPerformer {
 		message.data();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getTypeId() != this.i || block.getData() != this.d) {

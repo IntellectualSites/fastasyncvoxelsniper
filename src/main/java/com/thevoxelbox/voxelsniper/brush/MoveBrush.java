@@ -90,7 +90,7 @@ public class MoveBrush extends AbstractBrush {
 	/**
 	 * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
 	 */
-	@SuppressWarnings("deprecation")
+
 	private void moveSelection(SnipeData snipeData, Selection selection, int[] direction) {
 		if (!selection.getBlockStates()
 			.isEmpty()) {

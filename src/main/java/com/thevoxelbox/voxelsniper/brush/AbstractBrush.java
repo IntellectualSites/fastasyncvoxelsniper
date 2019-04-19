@@ -201,7 +201,7 @@ public abstract class AbstractBrush implements Brush {
 	 * @param z Z coordinate
 	 * @return Type ID of Block at given coordinates in the world of the targeted Block.
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected int getBlockIdAt(int x, int y, int z) {
 		return getWorld().getBlockTypeIdAt(x, y, z);
 	}
@@ -214,7 +214,7 @@ public abstract class AbstractBrush implements Brush {
 	 * @param z Z coordinate
 	 * @return Block Data Value of Block at given coordinates in the world of the targeted Block.
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected byte getBlockDataAt(int x, int y, int z) {
 		return this.getWorld()
 			.getBlockAt(x, y, z)
@@ -256,7 +256,7 @@ public abstract class AbstractBrush implements Brush {
 	 * @param y Y coordinate
 	 * @param id The id the block will be set to
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void setBlockIdAt(int z, int x, int y, int id) {
 		this.getWorld()
 			.getBlockAt(x, y, z)
@@ -272,7 +272,7 @@ public abstract class AbstractBrush implements Brush {
 	 * @param id The id the block will be set to
 	 * @param data The data value the block will be set to
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void setBlockIdAndDataAt(int x, int y, int z, int id, byte data) {
 		this.getWorld()
 			.getBlockAt(x, y, z)

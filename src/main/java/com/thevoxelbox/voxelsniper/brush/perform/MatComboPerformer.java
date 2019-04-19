@@ -37,7 +37,6 @@ public class MatComboPerformer extends AbstractPerformer {
 		message.replaceData();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		if (block.getTypeId() == this.ir && block.getData() == this.dr) {

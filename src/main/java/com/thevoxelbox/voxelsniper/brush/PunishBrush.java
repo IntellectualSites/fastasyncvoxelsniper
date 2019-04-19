@@ -45,7 +45,6 @@ public class PunishBrush extends PerformBrush {
 		this.setName("Punish");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void applyPunishment(LivingEntity entity, SnipeData snipeData) {
 		switch (this.punishment) {
 			case FIRE:

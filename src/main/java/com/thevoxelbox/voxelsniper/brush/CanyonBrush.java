@@ -29,7 +29,7 @@ public class CanyonBrush extends AbstractBrush {
 	/**
 	 *
 	 */
-	@SuppressWarnings("deprecation")
+
 	protected final void canyon(Chunk chunk, Undo undo) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {

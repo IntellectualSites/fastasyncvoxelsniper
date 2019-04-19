@@ -20,7 +20,6 @@ public class VoltMeterBrush extends AbstractBrush {
 		this.setName("VoltMeter");
 	}
 
-	@SuppressWarnings("deprecation")
 	private void data(SnipeData snipeData) {
 		Block block = this.clampY(this.getTargetBlock()
 			.getX(), this.getTargetBlock()

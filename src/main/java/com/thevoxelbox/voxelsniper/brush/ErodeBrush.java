@@ -71,7 +71,6 @@ public class ErodeBrush extends AbstractBrush {
 		this.erosion(snipeData, this.currentPreset);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void erosion(SnipeData v, ErosionPreset erosionPreset) {
 		BlockChangeTracker blockChangeTracker = new BlockChangeTracker(this.getTargetBlock()
 			.getWorld());
@@ -342,7 +341,6 @@ public class ErodeBrush extends AbstractBrush {
 		private final Material material;
 		private final byte data;
 
-		@SuppressWarnings("deprecation")
 		private BlockWrapper(Block block) {
 			this.block = block;
 			this.data = block.getData();

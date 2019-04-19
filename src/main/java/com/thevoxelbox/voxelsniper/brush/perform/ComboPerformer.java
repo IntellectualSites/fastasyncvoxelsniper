@@ -34,7 +34,6 @@ public class ComboPerformer extends AbstractPerformer {
 		this.d = snipeData.getData();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void perform(Block block) {
 		this.undo.put(block);

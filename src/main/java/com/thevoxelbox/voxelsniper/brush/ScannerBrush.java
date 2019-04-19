@@ -138,7 +138,6 @@ public class ScannerBrush extends AbstractBrush {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected final void arrow(SnipeData snipeData) {
 		this.checkFor = Material.getMaterial(snipeData.getVoxelId());
@@ -146,7 +145,6 @@ public class ScannerBrush extends AbstractBrush {
 			.getFace(this.getLastBlock()));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected final void powder(SnipeData snipeData) {
 		this.checkFor = Material.getMaterial(snipeData.getVoxelId());

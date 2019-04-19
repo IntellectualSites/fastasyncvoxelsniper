@@ -24,7 +24,6 @@ public class UndoDelegate implements BlockChangeDelegate {
 		this.currentUndo = new Undo();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setRawTypeId(int x, int y, int z, int typeId) {
 		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
@@ -32,7 +31,6 @@ public class UndoDelegate implements BlockChangeDelegate {
 			.setTypeId(typeId, false);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setRawTypeIdAndData(int x, int y, int z, int typeId, int data) {
 		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
@@ -40,7 +38,6 @@ public class UndoDelegate implements BlockChangeDelegate {
 			.setTypeIdAndData(typeId, (byte) data, false);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setTypeId(int x, int y, int z, int typeId) {
 		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
@@ -48,7 +45,6 @@ public class UndoDelegate implements BlockChangeDelegate {
 			.setTypeId(typeId);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean setTypeIdAndData(int x, int y, int z, int typeId, int data) {
 		this.currentUndo.put(this.targetWorld.getBlockAt(x, y, z));
@@ -56,14 +52,12 @@ public class UndoDelegate implements BlockChangeDelegate {
 			.setTypeIdAndData(typeId, (byte) data, true);
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean setBlock(Block block) {
 		this.currentUndo.put(this.targetWorld.getBlockAt(block.getLocation()));
 		return this.targetWorld.getBlockAt(block.getLocation())
 			.setTypeIdAndData(block.getTypeId(), block.getData(), true);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public int getTypeId(int x, int y, int z) {
 		return this.targetWorld.getBlockAt(x, y, z)

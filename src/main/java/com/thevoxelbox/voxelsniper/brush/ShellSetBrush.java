@@ -26,7 +26,6 @@ public class ShellSetBrush extends AbstractBrush {
 		this.setName("Shell Set");
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean set(Block block, SnipeData snipeData) {
 		if (this.block == null) {
 			this.block = block;

@@ -8,7 +8,7 @@ import org.bukkit.Material;
 /**
  * @author Monofraps
  */
-@SuppressWarnings("deprecation")
+
 public abstract class BlendBrushBase extends AbstractBrush {
 
 	private static int maxBlockMaterialID;

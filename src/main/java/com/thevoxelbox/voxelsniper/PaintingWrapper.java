@@ -27,7 +27,7 @@ public final class PaintingWrapper {
 	 * @param back Scroll in reverse?
 	 * @param choice Chosen index to set the painting to
 	 */
-	@SuppressWarnings("deprecation")
+
 	public static void paint(Player player, boolean auto, boolean back, int choice) {
 		Location targetLocation = player.getTargetBlock(null, 4)
 			.getLocation();

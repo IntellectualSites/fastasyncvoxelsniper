@@ -50,9 +50,8 @@ public class GenerateTreeBrush extends AbstractBrush {
 	public GenerateTreeBrush() {
 		this.setName("Generate Tree");
 	}
-
 	// Branch Creation based on direction chosen from the parameters passed.
-	@SuppressWarnings("deprecation")
+
 	private void branchCreate(int xDirection, int zDirection) {
 		// Sets branch origin.
 		int originX = this.blockPositionX;
@@ -89,7 +88,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 		this.blockPositionZ = originZ;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void leafNodeCreate() {
 		// Generates the node size.
 		int nodeRadius = this.randGenerator.nextInt(this.nodeMax - this.nodeMin + 1) + this.nodeMin;
@@ -195,7 +193,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	/**
 	 * Code Concerning Root Generation.
 	 */
-	@SuppressWarnings("deprecation")
+
 	private void rootCreate(int xDirection, int zDirection) {
 		// Sets Origin.
 		int originX = this.blockPositionX;
@@ -276,7 +274,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 		this.rootCreate(-1, -1);
 	}
 
-	@SuppressWarnings("deprecation")
 	private void trunkCreate() {
 		// Creates true circle discs of the set size using the wood type selected.
 		double bSquared = Math.pow(this.thickness + 0.5, 2);

@@ -17,7 +17,6 @@ public class BlendBallBrush extends BlendBrushBase {
 		this.setName("Blend Ball");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected final void blend(SnipeData snipeData) {
 		int brushSize = snipeData.getBrushSize();
