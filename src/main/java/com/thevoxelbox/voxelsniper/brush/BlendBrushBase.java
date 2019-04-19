@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -10,107 +9,93 @@ import org.bukkit.Material;
  * @author Monofraps
  */
 @SuppressWarnings("deprecation")
-public abstract class BlendBrushBase extends Brush
-{
-    private static int maxBlockMaterialID;
-    protected boolean excludeAir = true;
-    protected boolean excludeWater = true;
+public abstract class BlendBrushBase extends Brush {
 
-    static
-    {
-        // Find highest placeable block ID
-        for (Material material : Material.values())
-        {
-            maxBlockMaterialID = ((material.isBlock() && (material.getId() > maxBlockMaterialID)) ? material.getId() : maxBlockMaterialID);
-        }
-    }
+	private static int maxBlockMaterialID;
+	protected boolean excludeAir = true;
+	protected boolean excludeWater = true;
 
-    /**
-     * @param v
-     */
-    protected abstract void blend(final SnipeData v);
+	static {
+		// Find highest placeable block ID
+		for (Material material : Material.values()) {
+			maxBlockMaterialID = ((material.isBlock() && (material.getId() > maxBlockMaterialID)) ? material.getId() : maxBlockMaterialID);
+		}
+	}
 
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        this.excludeAir = false;
-        this.blend(v);
-    }
+	/**
+	 *
+	 */
+	protected abstract void blend(final SnipeData v);
 
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        this.excludeAir = true;
-        this.blend(v);
-    }
+	@Override
+	protected final void arrow(final SnipeData v) {
+		this.excludeAir = false;
+		this.blend(v);
+	}
 
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-        vm.size();
-        vm.voxel();
-        vm.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-    }
+	@Override
+	protected final void powder(final SnipeData v) {
+		this.excludeAir = true;
+		this.blend(v);
+	}
 
-    @Override
-    public void parameters(final String[] par, final SnipeData v)
-    {
-        for (int i = 1; i < par.length; ++i)
-        {
-            if (par[i].equalsIgnoreCase("water"))
-            {
-                this.excludeWater = !this.excludeWater;
-                v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-            }
-        }
-    }
+	@Override
+	public final void info(final Message vm) {
+		vm.brushName(this.getName());
+		vm.size();
+		vm.voxel();
+		vm.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+	}
 
-    /**
-     * @return
-     */
-    protected static int getMaxBlockMaterialID()
-    {
-        return maxBlockMaterialID;
-    }
+	@Override
+	public void parameters(final String[] par, final SnipeData v) {
+		for (int i = 1; i < par.length; ++i) {
+			if (par[i].equalsIgnoreCase("water")) {
+				this.excludeWater = !this.excludeWater;
+				v.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+			}
+		}
+	}
 
-    /**
-     * @param maxBlockMaterialID
-     */
-    protected static void setMaxBlockMaterialID(int maxBlockMaterialID)
-    {
-        BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
-    }
+	/**
+	 *
+	 */
+	protected static int getMaxBlockMaterialID() {
+		return maxBlockMaterialID;
+	}
 
-    /**
-     * @return
-     */
-    protected final boolean isExcludeAir()
-    {
-        return excludeAir;
-    }
+	/**
+	 *
+	 */
+	protected static void setMaxBlockMaterialID(int maxBlockMaterialID) {
+		BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
+	}
 
-    /**
-     * @param excludeAir
-     */
-    protected final void setExcludeAir(boolean excludeAir)
-    {
-        this.excludeAir = excludeAir;
-    }
+	/**
+	 *
+	 */
+	protected final boolean isExcludeAir() {
+		return excludeAir;
+	}
 
-    /**
-     * @return
-     */
-    protected final boolean isExcludeWater()
-    {
-        return excludeWater;
-    }
+	/**
+	 *
+	 */
+	protected final void setExcludeAir(boolean excludeAir) {
+		this.excludeAir = excludeAir;
+	}
 
-    /**
-     * @param excludeWater
-     */
-    protected final void setExcludeWater(boolean excludeWater)
-    {
-        this.excludeWater = excludeWater;
-    }
+	/**
+	 *
+	 */
+	protected final boolean isExcludeWater() {
+		return excludeWater;
+	}
+
+	/**
+	 *
+	 */
+	protected final void setExcludeWater(boolean excludeWater) {
+		this.excludeWater = excludeWater;
+	}
 }

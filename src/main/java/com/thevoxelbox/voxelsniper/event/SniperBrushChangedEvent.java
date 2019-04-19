@@ -2,57 +2,49 @@ package com.thevoxelbox.voxelsniper.event;
 
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.IBrush;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
  *
  */
-public class SniperBrushChangedEvent extends Event
-{
-    private static final HandlerList handlers = new HandlerList();
-    private final Sniper sniper;
-    private final IBrush originalBrush;
-    private final IBrush newBrush;
-    private final String toolId;
+public class SniperBrushChangedEvent extends Event {
 
-    public SniperBrushChangedEvent(Sniper sniper, String toolId, IBrush originalBrush, IBrush newBrush)
-    {
-        this.sniper = sniper;
-        this.originalBrush = originalBrush;
-        this.newBrush = newBrush;
-        this.toolId = toolId;
-    }
+	private static final HandlerList handlers = new HandlerList();
+	private final Sniper sniper;
+	private final IBrush originalBrush;
+	private final IBrush newBrush;
+	private final String toolId;
 
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
-    }
+	public SniperBrushChangedEvent(Sniper sniper, String toolId, IBrush originalBrush, IBrush newBrush) {
+		this.sniper = sniper;
+		this.originalBrush = originalBrush;
+		this.newBrush = newBrush;
+		this.toolId = toolId;
+	}
 
-    public IBrush getOriginalBrush()
-    {
-        return originalBrush;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public IBrush getNewBrush()
-    {
-        return newBrush;
-    }
+	public IBrush getOriginalBrush() {
+		return originalBrush;
+	}
 
-    public Sniper getSniper()
-    {
-        return sniper;
-    }
+	public IBrush getNewBrush() {
+		return newBrush;
+	}
 
-    public String getToolId()
-    {
-        return toolId;
-    }
+	public Sniper getSniper() {
+		return sniper;
+	}
 
-    @Override
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
+	public String getToolId() {
+		return toolId;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

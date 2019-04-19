@@ -7,23 +7,20 @@ import org.bukkit.material.MaterialData;
 /**
  *
  */
-public class SniperReplaceMaterialChangedEvent extends SniperMaterialChangedEvent
-{
-    private static final HandlerList handlers = new HandlerList();
+public class SniperReplaceMaterialChangedEvent extends SniperMaterialChangedEvent {
 
-    public SniperReplaceMaterialChangedEvent(Sniper sniper, String toolId, MaterialData originalMaterial, MaterialData newMaterial)
-    {
-        super(sniper, toolId, originalMaterial, newMaterial);
-    }
+	private static final HandlerList handlers = new HandlerList();
 
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
-    }
+	public SniperReplaceMaterialChangedEvent(Sniper sniper, String toolId, MaterialData originalMaterial, MaterialData newMaterial) {
+		super(sniper, toolId, originalMaterial, newMaterial);
+	}
 
-    @Override
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

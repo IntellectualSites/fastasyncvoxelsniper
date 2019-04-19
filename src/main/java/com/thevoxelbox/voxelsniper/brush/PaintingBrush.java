@@ -10,47 +10,44 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  *
  * @author Voxel
  */
-public class PaintingBrush extends Brush
-{
-    /**
-     *
-     */
-    public PaintingBrush()
-    {
-        this.setName("Painting");
-    }
+public class PaintingBrush extends Brush {
 
-    /**
-     * Scroll painting forward.
-     *
-     * @param v Sniper caller
-     */
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        PaintingWrapper.paint(v.owner().getPlayer(), true, false, 0);
-    }
+	/**
+	 *
+	 */
+	public PaintingBrush() {
+		this.setName("Painting");
+	}
 
-    /**
-     * Scroll painting backwards.
-     *
-     * @param v Sniper caller
-     */
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        PaintingWrapper.paint(v.owner().getPlayer(), true, true, 0);
-    }
+	/**
+	 * Scroll painting forward.
+	 *
+	 * @param v Sniper caller
+	 */
+	@Override
+	protected final void arrow(final SnipeData v) {
+		PaintingWrapper.paint(v.owner()
+			.getPlayer(), true, false, 0);
+	}
 
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-    }
+	/**
+	 * Scroll painting backwards.
+	 *
+	 * @param v Sniper caller
+	 */
+	@Override
+	protected final void powder(final SnipeData v) {
+		PaintingWrapper.paint(v.owner()
+			.getPlayer(), true, true, 0);
+	}
 
-    @Override
-    public String getPermissionNode()
-    {
-        return "voxelsniper.brush.painting";
-    }
+	@Override
+	public final void info(final Message vm) {
+		vm.brushName(this.getName());
+	}
+
+	@Override
+	public String getPermissionNode() {
+		return "voxelsniper.brush.painting";
+	}
 }

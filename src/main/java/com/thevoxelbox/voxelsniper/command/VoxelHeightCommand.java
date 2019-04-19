@@ -7,32 +7,28 @@ import com.thevoxelbox.voxelsniper.api.command.VoxelCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class VoxelHeightCommand extends VoxelCommand
-{
-    public VoxelHeightCommand(final VoxelSniper plugin)
-    {
-        super("VoxelHeight", plugin);
-        setIdentifier("vh");
-        setPermission("voxelsniper.sniper");
-    }
+public class VoxelHeightCommand extends VoxelCommand {
 
-    @Override
-    public boolean onCommand(Player player, String[] args)
-    {
-        Sniper sniper = plugin.getSniperManager().getSniperForPlayer(player);
-        SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+	public VoxelHeightCommand(final VoxelSniper plugin) {
+		super("VoxelHeight", plugin);
+		setIdentifier("vh");
+		setPermission("voxelsniper.sniper");
+	}
 
-        try
-        {
-            int height = Integer.parseInt(args[0]);
-            snipeData.setVoxelHeight(height);
-            snipeData.getVoxelMessage().height();
-            return true;
-        }
-        catch (final Exception exception)
-        {
-            player.sendMessage(ChatColor.RED + "Invalid input.");
-            return true;
-        }
-    }
+	@Override
+	public boolean onCommand(Player player, String[] args) {
+		Sniper sniper = plugin.getSniperManager()
+			.getSniperForPlayer(player);
+		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+		try {
+			int height = Integer.parseInt(args[0]);
+			snipeData.setVoxelHeight(height);
+			snipeData.getVoxelMessage()
+				.height();
+			return true;
+		} catch (final Exception exception) {
+			player.sendMessage(ChatColor.RED + "Invalid input.");
+			return true;
+		}
+	}
 }

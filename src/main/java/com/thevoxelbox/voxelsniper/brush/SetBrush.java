@@ -11,106 +11,86 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class SetBrush extends PerformBrush
-{
-    private static final int SELECTION_SIZE_MAX = 5000000;
-    private Block block = null;
+public class SetBrush extends PerformBrush {
 
-    /**
-     *
-     */
-    public SetBrush()
-    {
-        this.setName("Set");
-    }
+	private static final int SELECTION_SIZE_MAX = 5000000;
+	private Block block = null;
 
-    private boolean set(final Block bl, final SnipeData v)
-    {
-        if (this.block == null)
-        {
-            this.block = bl;
-            return true;
-        }
-        else
-        {
-            if (!this.block.getWorld().getName().equals(bl.getWorld().getName()))
-            {
-                v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
-                this.block = null;
-                return true;
-            }
-            final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-            final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-            final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-            final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-            final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-            final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+	/**
+	 *
+	 */
+	public SetBrush() {
+		this.setName("Set");
+	}
 
-            if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX)
-            {
-                v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
-            }
-            else
-            {
-                for (int y = lowY; y <= highY; y++)
-                {
-                    for (int x = lowX; x <= highX; x++)
-                    {
-                        for (int z = lowZ; z <= highZ; z++)
-                        {
-                            this.current.perform(this.clampY(x, y, z));
-                        }
-                    }
-                }
-            }
+	private boolean set(final Block bl, final SnipeData v) {
+		if (this.block == null) {
+			this.block = bl;
+			return true;
+		} else {
+			if (!this.block.getWorld()
+				.getName()
+				.equals(bl.getWorld()
+					.getName())) {
+				v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+				this.block = null;
+				return true;
+			}
+			final int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
+			final int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
+			final int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			final int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
+			final int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
+			final int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX) {
+				v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+			} else {
+				for (int y = lowY; y <= highY; y++) {
+					for (int x = lowX; x <= highX; x++) {
+						for (int z = lowZ; z <= highZ; z++) {
+							this.current.perform(this.clampY(x, y, z));
+						}
+					}
+				}
+			}
+			this.block = null;
+			return false;
+		}
+	}
 
-            this.block = null;
-            return false;
-        }
-    }
+	@Override
+	protected final void arrow(final SnipeData v) {
+		if (this.set(this.getTargetBlock(), v)) {
+			v.sendMessage(ChatColor.GRAY + "Point one");
+		} else {
+			v.owner()
+				.storeUndo(this.current.getUndo());
+		}
+	}
 
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        if (this.set(this.getTargetBlock(), v))
-        {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        }
-        else
-        {
-            v.owner().storeUndo(this.current.getUndo());
-        }
-    }
+	@Override
+	protected final void powder(final SnipeData v) {
+		if (this.set(this.getLastBlock(), v)) {
+			v.sendMessage(ChatColor.GRAY + "Point one");
+		} else {
+			v.owner()
+				.storeUndo(this.current.getUndo());
+		}
+	}
 
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        if (this.set(this.getLastBlock(), v))
-        {
-            v.sendMessage(ChatColor.GRAY + "Point one");
-        }
-        else
-        {
-            v.owner().storeUndo(this.current.getUndo());
-        }
-    }
+	@Override
+	public final void info(final Message vm) {
+		this.block = null;
+		vm.brushName(this.getName());
+	}
 
-    @Override
-    public final void info(final Message vm)
-    {
-        this.block = null;
-        vm.brushName(this.getName());
-    }
+	@Override
+	public final void parameters(final String[] par, final SnipeData v) {
+		super.parameters(par, v);
+	}
 
-    @Override
-    public final void parameters(final String[] par, final SnipeData v)
-    {
-        super.parameters(par, v);
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
-        return "voxelsniper.brush.set";
-    }
+	@Override
+	public String getPermissionNode() {
+		return "voxelsniper.brush.set";
+	}
 }

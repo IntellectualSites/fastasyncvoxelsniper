@@ -9,71 +9,71 @@ commands:
   paint:
     description: Change the selected painting to another painting.
     usage: |
-           /<command>
-           Example: /<command> -- Cycles through paintings. You must be adjacent to the painting and aiming at it.
+      /<command>
+      Example: /<command> -- Cycles through paintings. You must be adjacent to the painting and aiming at it.
   goto:
     description: Warps to the specified coordinates.
     permission: voxelsniper.goto
     usage: |
-           /<command> [X] [Z]
-           Example: /<command> 100 -100 -- Takes the user to the coordinates X: 100, Z: -100. The Y-coordinate will always be 1 more than the Y-coordinate of the highest block at the X and Z-coordinates provided.
+      /<command> [X] [Z]
+      Example: /<command> 100 -100 -- Takes the user to the coordinates X: 100, Z: -100. The Y-coordinate will always be 1 more than the Y-coordinate of the highest block at the X and Z-coordinates provided.
   u:
     description: Undoes the last snipe.
     permission: voxelsniper.sniper
     usage: |
-           /<command>
-           Example: /<command> -- Undoes your most recent snipe.
+      /<command>
+      Example: /<command> -- Undoes your most recent snipe.
   uu:
     description: UndoUser undoes another sniper user's snipes.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [playername]
-           Example: /<command> bads -- Undoes BadSniper's last snipe.  BadSniper must be online for name detection to function. Truncation allowed.
+      /<command> [playername]
+      Example: /<command> bads -- Undoes BadSniper's last snipe.  BadSniper must be online for name detection to function. Truncation allowed.
   d:
     description: VoxelSniper Default.
     permission: voxelsniper.sniper
     usage: |
-           /<command>
-           Example: /<command> -- Resets the brush settings to their default values.
+      /<command>
+      Example: /<command> -- Resets the brush settings to their default values.
   p:
     description: Voxelsniper performer.
     permission: voxelsniper.sniper
     aliases: [perf, performer]
     usage: |
-           /<command>
-           Example: /<command> -- Sets the performer of the current brush to "m".
-           /<command> <performer>
-           Example: /<command> -- Sets the performer of the current brush to <performer>.
+      /<command>
+      Example: /<command> -- Sets the performer of the current brush to "m".
+      /<command> <performer>
+      Example: /<command> -- Sets the performer of the current brush to <performer>.
   vs:
     description: VoxelSniper Settings.
     permission: voxelsniper.sniper
     usage: |
-           /<command>
-           Example: /<command> -- Returns the current brush settings.
+      /<command>
+      Example: /<command> -- Returns the current brush settings.
   vc:
     description: VoxelCentroid.
     permission: voxelsniper.sniper
     usage: |
-           /<command>
-           Example: /<command> -1 -- Sets the Clone Cylinder's Y value for the base relative to the Clone Point.
+      /<command>
+      Example: /<command> -1 -- Sets the Clone Cylinder's Y value for the base relative to the Clone Point.
   vh:
     description: VoxelHeight.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [voxel-height]
-           Example: /<command> -- Sets the brush height.
+      /<command> [voxel-height]
+      Example: /<command> -- Sets the brush height.
   vi:
     description: VoxelInk (Data Value).
     permission: voxelsniper.sniper
     usage: |
-           /<command> [0-16]
-           Example: /<command> -- sets a data value of 6 (e.g. pink wool).
+      /<command> [0-16]
+      Example: /<command> -- sets a data value of 6 (e.g. pink wool).
   vr:
     description: VoxelReplace.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [0-159]
-           Example: /<command> 12 -- Sets a replace brush to select sand blocks for replacement.
+      /<command> [0-159]
+      Example: /<command> 12 -- Sets a replace brush to select sand blocks for replacement.
   vl:
     description: VoxelBlockExclusion list
     permission: voxelsniper.sniper
@@ -84,31 +84,31 @@ commands:
     description: VoxelInkReplace.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [0-16]
-           Example: /<command> 12 -- Sets a replace ink brush to select data 6 blocks for replacement.
+      /<command> [0-16]
+      Example: /<command> 12 -- Sets a replace ink brush to select data 6 blocks for replacement.
   v:
     description: Voxel input.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [0-159]
-           Example: /<command> 1 -- Loads the sniper with Stone blocks.
+      /<command> [0-159]
+      Example: /<command> 1 -- Loads the sniper with Stone blocks.
   b:
     description: Brush.
     permission: voxelsniper.sniper
     usage: |
-           /<command> [brush-size]
-           Example: /<command> 5 -- Sets a brush radius size of 5 (11 spaces across).
-           Example: /<command> b cm -- Sets your brush to the Ball Brush with the combo-mat performer.
+      /<command> [brush-size]
+      Example: /<command> 5 -- Sets a brush radius size of 5 (11 spaces across).
+      Example: /<command> b cm -- Sets your brush to the Ball Brush with the combo-mat performer.
   btool:
     description: Brush Tool Command.
     permission: voxelsniper.sniper
-    usage : |
-            /<command> -- Prints out command usage information.
+    usage: |
+      /<command> -- Prints out command usage information.
   vchunk:
     description: Update the chunk you are standing in.
     usage: |
-           /<command>
-           Example: /<command> -- Loads the chunk you're standing in.
+      /<command>
+      Example: /<command> -- Loads the chunk you're standing in.
 permissions:
   voxelsniper.sniper:
     default: op

@@ -8,51 +8,48 @@ import org.bukkit.entity.Player;
 /**
  * @author MikeMatrix
  */
-public class WarpBrush extends Brush
-{
-    /**
-     *
-     */
-    public WarpBrush()
-    {
-        this.setName("Warp");
-    }
+public class WarpBrush extends Brush {
 
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-    }
+	/**
+	 *
+	 */
+	public WarpBrush() {
+		this.setName("Warp");
+	}
 
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        Player player = v.owner().getPlayer();
-        Location location = this.getLastBlock().getLocation();
-        Location playerLocation = player.getLocation();
-        location.setPitch(playerLocation.getPitch());
-        location.setYaw(playerLocation.getYaw());
+	@Override
+	public final void info(final Message vm) {
+		vm.brushName(this.getName());
+	}
 
-        player.teleport(location);
-    }
+	@Override
+	protected final void arrow(final SnipeData v) {
+		Player player = v.owner()
+			.getPlayer();
+		Location location = this.getLastBlock()
+			.getLocation();
+		Location playerLocation = player.getLocation();
+		location.setPitch(playerLocation.getPitch());
+		location.setYaw(playerLocation.getYaw());
+		player.teleport(location);
+	}
 
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        Player player = v.owner().getPlayer();
-        Location location = this.getLastBlock().getLocation();
-        Location playerLocation = player.getLocation();
-        location.setPitch(playerLocation.getPitch());
-        location.setYaw(playerLocation.getYaw());
+	@Override
+	protected final void powder(final SnipeData v) {
+		Player player = v.owner()
+			.getPlayer();
+		Location location = this.getLastBlock()
+			.getLocation();
+		Location playerLocation = player.getLocation();
+		location.setPitch(playerLocation.getPitch());
+		location.setYaw(playerLocation.getYaw());
+		getWorld().strikeLightning(location);
+		player.teleport(location);
+		getWorld().strikeLightning(location);
+	}
 
-        getWorld().strikeLightning(location);
-        player.teleport(location);
-        getWorld().strikeLightning(location);
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
-        return "voxelsniper.brush.warp";
-    }
+	@Override
+	public String getPermissionNode() {
+		return "voxelsniper.brush.warp";
+	}
 }

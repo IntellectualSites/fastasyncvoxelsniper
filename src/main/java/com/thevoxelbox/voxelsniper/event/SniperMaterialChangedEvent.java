@@ -2,58 +2,49 @@ package com.thevoxelbox.voxelsniper.event;
 
 import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.material.MaterialData;
 
 /**
  *
  */
-public class SniperMaterialChangedEvent extends Event
-{
-    private static final HandlerList handlers = new HandlerList();
-    private final Sniper sniper;
-    private final BlockData originalMaterial;
-    private final BlockData newMaterial;
-    private final String toolId;
+public class SniperMaterialChangedEvent extends Event {
 
-    public SniperMaterialChangedEvent(Sniper sniper, String toolId, BlockData originalMaterial, BlockData newMaterial)
-    {
-        this.sniper = sniper;
-        this.originalMaterial = originalMaterial;
-        this.newMaterial = newMaterial;
-        this.toolId = toolId;
-    }
+	private static final HandlerList handlers = new HandlerList();
+	private final Sniper sniper;
+	private final BlockData originalMaterial;
+	private final BlockData newMaterial;
+	private final String toolId;
 
-    public static HandlerList getHandlerList()
-    {
-        return handlers;
-    }
+	public SniperMaterialChangedEvent(Sniper sniper, String toolId, BlockData originalMaterial, BlockData newMaterial) {
+		this.sniper = sniper;
+		this.originalMaterial = originalMaterial;
+		this.newMaterial = newMaterial;
+		this.toolId = toolId;
+	}
 
-    public BlockData getOriginalMaterial()
-    {
-        return originalMaterial;
-    }
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 
-    public BlockData getNewMaterial()
-    {
-        return newMaterial;
-    }
+	public BlockData getOriginalMaterial() {
+		return originalMaterial;
+	}
 
-    public Sniper getSniper()
-    {
-        return sniper;
-    }
+	public BlockData getNewMaterial() {
+		return newMaterial;
+	}
 
-    public String getToolId()
-    {
-        return toolId;
-    }
+	public Sniper getSniper() {
+		return sniper;
+	}
 
-    @Override
-    public HandlerList getHandlers()
-    {
-        return handlers;
-    }
+	public String getToolId() {
+		return toolId;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 }

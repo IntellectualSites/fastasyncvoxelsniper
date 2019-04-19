@@ -1,10 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.ArrayList;
-
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -24,146 +22,165 @@ import org.bukkit.block.Block;
  *
  * @author GavJenks
  */
-public class BlockResetSurfaceBrush extends Brush
-{
-    private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
+public class BlockResetSurfaceBrush extends Brush {
 
-    static
-    {
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN_POST);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.CHEST);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FURNACE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BURNING_FURNACE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOODEN_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOOD_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
-        BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.AIR);
-    }
+	private static final ArrayList<Material> DENIED_UPDATES = new ArrayList<Material>();
 
-    /**
-     *
-     */
-    public BlockResetSurfaceBrush()
-    {
-        this.setName("Block Reset Brush Surface Only");
-    }
+	static {
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.SIGN_POST);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WALL_SIGN);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.CHEST);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FURNACE);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.BURNING_FURNACE);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_OFF);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_TORCH_ON);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.REDSTONE_WIRE);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_OFF);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.DIODE_BLOCK_ON);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOODEN_DOOR);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.WOOD_DOOR);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.IRON_DOOR_BLOCK);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.FENCE_GATE);
+		BlockResetSurfaceBrush.DENIED_UPDATES.add(Material.AIR);
+	}
 
-    @SuppressWarnings("deprecation")
-	private void applyBrush(final SnipeData v)
-    {
-        final World world = this.getWorld();
+	/**
+	 *
+	 */
+	public BlockResetSurfaceBrush() {
+		this.setName("Block Reset Brush Surface Only");
+	}
 
-        for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++)
-        {
-            for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++)
-            {
-                for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++)
-                {
+	@SuppressWarnings("deprecation")
+	private void applyBrush(final SnipeData v) {
+		final World world = this.getWorld();
+		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
+			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
+				for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
+					Block block = world.getBlockAt(this.getTargetBlock()
+						.getX() + x, this.getTargetBlock()
+						.getY() + y, this.getTargetBlock()
+						.getZ() + z);
+					if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType())) {
+						continue;
+					}
+					boolean airFound = false;
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x + 1, this.getTargetBlock()
+						.getY() + y, this.getTargetBlock()
+						.getZ() + z)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x + 1, this.getTargetBlock()
+							.getY() + y, this.getTargetBlock()
+							.getZ() + z);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x - 1, this.getTargetBlock()
+						.getY() + y, this.getTargetBlock()
+						.getZ() + z)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x - 1, this.getTargetBlock()
+							.getY() + y, this.getTargetBlock()
+							.getZ() + z);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x, this.getTargetBlock()
+						.getY() + y + 1, this.getTargetBlock()
+						.getZ() + z)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x, this.getTargetBlock()
+							.getY() + y + 1, this.getTargetBlock()
+							.getZ() + z);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x, this.getTargetBlock()
+						.getY() + y - 1, this.getTargetBlock()
+						.getZ() + z)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x, this.getTargetBlock()
+							.getY() + y - 1, this.getTargetBlock()
+							.getZ() + z);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x, this.getTargetBlock()
+						.getY() + y, this.getTargetBlock()
+						.getZ() + z + 1)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x, this.getTargetBlock()
+							.getY() + y, this.getTargetBlock()
+							.getZ() + z + 1);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (world.getBlockAt(this.getTargetBlock()
+						.getX() + x, this.getTargetBlock()
+						.getY() + y, this.getTargetBlock()
+						.getZ() + z - 1)
+						.getTypeId() == 0) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x, this.getTargetBlock()
+							.getY() + y, this.getTargetBlock()
+							.getZ() + z - 1);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+						airFound = true;
+					}
+					if (airFound) {
+						block = world.getBlockAt(this.getTargetBlock()
+							.getX() + x, this.getTargetBlock()
+							.getY() + y, this.getTargetBlock()
+							.getZ() + z);
+						final byte oldData = block.getData();
+						resetBlock(block, oldData);
+					}
+				}
+			}
+		}
+	}
 
-                    Block block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                    if (BlockResetSurfaceBrush.DENIED_UPDATES.contains(block.getType()))
-                    {
-                        continue;
-                    }
+	@SuppressWarnings("deprecation")
+	private void resetBlock(Block block, final byte oldData) {
+		block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
+		block.setTypeIdAndData(block.getTypeId(), oldData, true);
+	}
 
-                    boolean airFound = false;
+	@Override
+	protected final void arrow(final SnipeData v) {
+		applyBrush(v);
+	}
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x + 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
+	@Override
+	protected final void powder(final SnipeData v) {
+		applyBrush(v);
+	}
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x - 1, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
+	@Override
+	public final void info(final Message vm) {
+		vm.brushName(this.getName());
+	}
 
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y + 1, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y - 1, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z + 1);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
-
-                    if (world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1).getTypeId() == 0)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z - 1);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                        airFound = true;
-                    }
-
-                    if (airFound)
-                    {
-                        block = world.getBlockAt(this.getTargetBlock().getX() + x, this.getTargetBlock().getY() + y, this.getTargetBlock().getZ() + z);
-                        final byte oldData = block.getData();
-                        resetBlock(block, oldData);
-                    }
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-	private void resetBlock(Block block, final byte oldData)
-    {
-        block.setTypeIdAndData(block.getTypeId(), (byte) ((block.getData() + 1) & 0xf), true);
-        block.setTypeIdAndData(block.getTypeId(), oldData, true);
-    }
-
-    @Override
-    protected final void arrow(final SnipeData v)
-    {
-        applyBrush(v);
-    }
-
-    @Override
-    protected final void powder(final SnipeData v)
-    {
-        applyBrush(v);
-    }
-
-    @Override
-    public final void info(final Message vm)
-    {
-        vm.brushName(this.getName());
-    }
-
-    @Override
-    public String getPermissionNode()
-    {
-        return "voxelsniper.brush.blockresetsurface";
-    }
+	@Override
+	public String getPermissionNode() {
+		return "voxelsniper.brush.blockresetsurface";
+	}
 }
