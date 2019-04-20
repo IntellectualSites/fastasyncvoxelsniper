@@ -79,7 +79,6 @@ import com.thevoxelbox.voxelsniper.brush.WarpBrush;
 import com.thevoxelbox.voxelsniper.command.VoxelBrushCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelBrushToolCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelCenterCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelChunkCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelDefaultCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelGoToCommand;
 import com.thevoxelbox.voxelsniper.command.VoxelHeightCommand;
@@ -225,7 +224,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		commandRegistry.registerCommand(new VoxelBrushCommand(this));
 		commandRegistry.registerCommand(new VoxelBrushToolCommand(this));
 		commandRegistry.registerCommand(new VoxelCenterCommand(this));
-		commandRegistry.registerCommand(new VoxelChunkCommand());
 		commandRegistry.registerCommand(new VoxelDefaultCommand(this));
 		commandRegistry.registerCommand(new VoxelGoToCommand());
 		commandRegistry.registerCommand(new VoxelHeightCommand(this));

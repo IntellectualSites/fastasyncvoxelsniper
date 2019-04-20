@@ -104,11 +104,6 @@ commands:
     permission: voxelsniper.sniper
     usage: |
       /<command> -- Prints out command usage information.
-  vchunk:
-    description: Update the chunk you are standing in.
-    usage: |
-      /<command>
-      Example: /<command> -- Loads the chunk you're standing in.
 permissions:
   voxelsniper.sniper:
     default: op
