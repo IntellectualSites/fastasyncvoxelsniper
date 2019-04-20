@@ -4,7 +4,9 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
@@ -15,6 +17,7 @@ import org.bukkit.ChatColor;
 public class UnderlayBrush extends PerformBrush {
 
 	private static final int DEFAULT_DEPTH = 3;
+
 	private int depth = DEFAULT_DEPTH;
 	private boolean allBlocks;
 
@@ -27,15 +30,21 @@ public class UnderlayBrush extends PerformBrush {
 		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
 		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
 			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-				for (int y = this.getTargetBlock()
-					.getY(); y < this.getTargetBlock()
-					.getY() + this.depth; y++) { // start scanning from the height you clicked at
+				Block targetBlock = this.getTargetBlock();
+				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
 					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
-							if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								switch (this.getBlockIdAt(this.getTargetBlock()
-									.getX() + x, y, this.getTargetBlock()
-									.getZ() + z)) {
+							if (this.allBlocks) {
+								for (int i = 0; i < this.depth; i++) {
+									if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
+										.isEmpty()) {
+										this.current.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+										// parameters
+										memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+									}
+								}
+							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+								switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
 									case 1:
 									case 2:
 									case 3:
@@ -46,14 +55,10 @@ public class UnderlayBrush extends PerformBrush {
 									case 82:
 									case 49:
 									case 78:
-										for (int d = 0; (d < this.depth); d++) {
-											if (this.clampY(this.getTargetBlock()
-												.getX() + x, y + d, this.getTargetBlock()
-												.getZ() + z)
-												.getTypeId() != 0) {
-												this.current.perform(this.clampY(this.getTargetBlock()
-													.getX() + x, y + d, this.getTargetBlock()
-													.getZ() + z)); // fills down as many layers as you specify in
+										for (int i = 0; (i < this.depth); i++) {
+											if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
+												.isEmpty()) {
+												this.current.perform(this.clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 												// parameters
 												memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}
@@ -62,43 +67,33 @@ public class UnderlayBrush extends PerformBrush {
 									default:
 										break;
 								}
-							} else {
-								for (int d = 0; (d < this.depth); d++) {
-									if (this.clampY(this.getTargetBlock()
-										.getX() + x, y + d, this.getTargetBlock()
-										.getZ() + z)
-										.getTypeId() != 0) {
-										this.current.perform(this.clampY(this.getTargetBlock()
-											.getX() + x, y + d, this.getTargetBlock()
-											.getZ() + z)); // fills down as many layers as you specify in
-										// parameters
-										memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-									}
-								}
 							}
 						}
 					}
 				}
 			}
 		}
-		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(this.current.getUndo());
 	}
 
-	private void underlay2(SnipeData v) {
-		int[][] memory = new int[v.getBrushSize() * 2 + 1][v.getBrushSize() * 2 + 1];
-		double brushSizeSquared = Math.pow(v.getBrushSize() + 0.5, 2);
-		for (int z = v.getBrushSize(); z >= -v.getBrushSize(); z--) {
-			for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
-				for (int y = this.getTargetBlock()
-					.getY(); y < this.getTargetBlock()
-					.getY() + this.depth; y++) { // start scanning from the height you clicked at
-					if (memory[x + v.getBrushSize()][z + v.getBrushSize()] != 1) { // if haven't already found the surface in this column
+	private void underlay2(SnipeData snipeData) {
+		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
+		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
+			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+				Block targetBlock = this.getTargetBlock();
+				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
+					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
-							if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								switch (this.getBlockIdAt(this.getTargetBlock()
-									.getX() + x, y, this.getTargetBlock()
-									.getZ() + z)) {
+							if (this.allBlocks) {
+								for (int i = -1; i < this.depth - 1; i++) {
+									this.current.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+									// parameters
+									memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+								}
+							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+								switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
 									case 1:
 									case 2:
 									case 3:
@@ -113,24 +108,14 @@ public class UnderlayBrush extends PerformBrush {
 									case 82:
 									case 49:
 									case 78:
-										for (int d = -1; (d < this.depth - 1); d++) {
-											this.current.perform(this.clampY(this.getTargetBlock()
-												.getX() + x, y - d, this.getTargetBlock()
-												.getZ() + z)); // fills down as many layers as you specify in
+										for (int i = -1; i < this.depth - 1; i++) {
+											this.current.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 											// parameters
-											memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 										break;
 									default:
 										break;
-								}
-							} else {
-								for (int d = -1; (d < this.depth - 1); d++) {
-									this.current.perform(this.clampY(this.getTargetBlock()
-										.getX() + x, y - d, this.getTargetBlock()
-										.getZ() + z)); // fills down as many layers as you specify in
-									// parameters
-									memory[x + v.getBrushSize()][z + v.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 								}
 							}
 						}
@@ -138,8 +123,8 @@ public class UnderlayBrush extends PerformBrush {
 				}
 			}
 		}
-		v.getOwner()
-			.storeUndo(this.current.getUndo());
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(this.current.getUndo());
 	}
 
 	@Override

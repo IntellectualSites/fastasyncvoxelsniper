@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.util;
 
 import com.flowpowered.math.vector.Vector3i;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -27,6 +28,10 @@ public class BlockWrapper {
 		int blockY = location.getBlockY();
 		int blockZ = location.getBlockZ();
 		return new Vector3i(blockX, blockY, blockZ);
+	}
+
+	public Material getType() {
+		return this.blockData.getMaterial();
 	}
 
 	public BlockData getBlockData() {

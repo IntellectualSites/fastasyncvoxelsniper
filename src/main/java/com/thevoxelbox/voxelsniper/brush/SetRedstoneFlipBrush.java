@@ -1,11 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -18,25 +22,28 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	private Undo undo;
 	private boolean northSouth = true;
 
-	/**
-	 *
-	 */
 	public SetRedstoneFlipBrush() {
 		super("Set Redstone Flip");
 	}
 
-	private boolean set(Block bl) {
+	private boolean set(Block block) {
 		if (this.block == null) {
-			this.block = bl;
+			this.block = block;
 			return true;
 		} else {
 			this.undo = new Undo();
-			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int x1 = this.block.getX();
+			int x2 = block.getX();
+			int y1 = this.block.getY();
+			int y2 = block.getY();
+			int z1 = this.block.getZ();
+			int z2 = block.getZ();
+			int lowX = x1 <= x2 ? x1 : x2;
+			int lowY = y1 <= y2 ? y1 : y2;
+			int lowZ = z1 <= z2 ? z1 : z2;
+			int highX = x1 >= x2 ? x1 : x2;
+			int highY = y1 >= y2 ? y1 : y2;
+			int highZ = z1 >= z2 ? z1 : z2;
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
@@ -49,25 +56,29 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		}
 	}
 
-	private void perform(Block bl) {
-		if (bl.getType() == Material.LEGACY_DIODE_BLOCK_ON || bl.getType() == Material.LEGACY_DIODE_BLOCK_OFF) {
+	private void perform(Block block) {
+		if (block.getType() == Material.REPEATER) {
+			BlockData blockData = block.getBlockData();
+			Repeater repeater = (Repeater) blockData;
+			int delay = repeater.getDelay();
 			if (this.northSouth) {
-				if ((bl.getData() % 4) == 1) {
-					this.undo.put(bl);
-					bl.setData((byte) (bl.getData() + 2));
-				} else if ((bl.getData() % 4) == 3) {
-					this.undo.put(bl);
-					bl.setData((byte) (bl.getData() - 2));
+				if ((delay % 4) == 1) {
+					this.undo.put(block);
+					repeater.setDelay(delay + 2);
+				} else if ((delay % 4) == 3) {
+					this.undo.put(block);
+					repeater.setDelay(delay - 2);
 				}
 			} else {
-				if ((bl.getData() % 4) == 2) {
-					this.undo.put(bl);
-					bl.setData((byte) (bl.getData() - 2));
-				} else if ((bl.getData() % 4) == 0) {
-					this.undo.put(bl);
-					bl.setData((byte) (bl.getData() + 2));
+				if ((delay % 4) == 2) {
+					this.undo.put(block);
+					repeater.setDelay(delay - 2);
+				} else if ((delay % 4) == 0) {
+					this.undo.put(block);
+					repeater.setDelay(delay + 2);
 				}
 			}
+			block.setBlockData(repeater);
 		}
 	}
 
@@ -83,11 +94,15 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Override
 	public final void powder(SnipeData snipeData) {
-		if (this.set(this.getLastBlock())) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		if (this.set(lastBlock)) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
-				.storeUndo(this.undo);
+			Sniper owner = snipeData.getOwner();
+			owner.storeUndo(this.undo);
 		}
 	}
 
@@ -100,15 +115,18 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].equalsIgnoreCase("info")) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
 				return;
 			}
-			if (parameters[i].startsWith("n") || parameters[i].startsWith("s") || parameters[i].startsWith("ns")) {
+			if (Stream.of("n", "s", "ns")
+				.anyMatch(parameter::startsWith)) {
 				this.northSouth = true;
 				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
-			} else if (parameters[i].startsWith("e") || parameters[i].startsWith("world") || parameters[i].startsWith("ew")) {
+			} else if (Stream.of("e", "world", "ew")
+				.anyMatch(parameter::startsWith)) {
 				this.northSouth = false;
 				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
 			} else {

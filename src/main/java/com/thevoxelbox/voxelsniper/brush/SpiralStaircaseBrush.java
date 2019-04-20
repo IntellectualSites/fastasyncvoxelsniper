@@ -199,79 +199,74 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
-					switch (spiral[x][i][z]) {
-						case 0:
-							if (i != voxelHeight - 1) {
-								if (!((this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) && spiral[x][i + 1][z] == 1)) {
-									if (!getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).isEmpty()) {
-										undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-									}
-									this.setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
-								}
-							} else {
+					if (spiral[x][i][z] == 0) {
+						if (i == voxelHeight - 1) {
+							if (!getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).isEmpty()) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
+						} else {
+							if (!((this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) && spiral[x][i + 1][z] == 1)) {
 								if (!getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).isEmpty()) {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
+								this.setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
 							}
-							break;
-						case 1:
-							if (this.stairType.equalsIgnoreCase("block")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, snipeData.getBlockDataType());
-							} else if (this.stairType.equalsIgnoreCase("step")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 44) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
-							} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i - 1, snipeData.getBlockDataType());
+						}
+					} else if (spiral[x][i][z] == 1) {
+						if (this.stairType.equalsIgnoreCase("block")) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
-							break;
-						case 2:
-							if (this.stairType.equalsIgnoreCase("step")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 43) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_DOUBLE_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
-							} else if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 53) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
-								clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.AIR.createBlockData());
-							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 67) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_COBBLESTONE_STAIRS);
-								clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.AIR.createBlockData());
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, snipeData.getBlockDataType());
+						} else if (this.stairType.equalsIgnoreCase("step")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 44) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
-							break;
-						default:
-							if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 53) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
-								//TODO: convert data to stair shape
-								//clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
-							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 67) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_COBBLESTONE_STAIRS);
-								//TODO: convert data to stair shape
-								//clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_STEP);
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+						} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z));
 							}
-							break;
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i - 1, snipeData.getBlockDataType());
+						}
+					} else if (spiral[x][i][z] == 2) {
+						if (this.stairType.equalsIgnoreCase("step")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 43) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_DOUBLE_STEP);
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+						} else if (this.stairType.equalsIgnoreCase("woodstair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 53) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
+						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 67) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_COBBLESTONE_STAIRS);
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_COBBLESTONE_STAIRS.createBlockData());
+						}
+					} else {
+						if (this.stairType.equalsIgnoreCase("woodstair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 53) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
+							//TODO:
+							//clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 67) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_COBBLESTONE_STAIRS);
+							//TODO:
+							//clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+						}
 					}
 				}
 			}
@@ -457,70 +452,66 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionZ = targetBlock.getZ();
 					switch (spiral[x][i][z]) {
 						case 0:
-							if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 0) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+							if (!getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty()) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
-							this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 0);
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.AIR);
 							break;
 						case 1:
 							if (this.stairType.equalsIgnoreCase("block")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getVoxelId()) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getVoxelId());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getBlockDataType());
 							} else if (this.stairType.equalsIgnoreCase("step")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 44) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 44) {
+									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 44);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData(snipeData.getData());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_STEP);
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
 							} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getVoxelId()) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getVoxelId());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getBlockDataType());
 							}
 							break;
 						case 2:
 							if (this.stairType.equalsIgnoreCase("step")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 43) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 43) {
+									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 43);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData(snipeData.getData());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_DOUBLE_STEP);
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
 							} else if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 53) {
-									undo.put(this.clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
+									undo.put(clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 53);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData((byte) 0);
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
 							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 67) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
+									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 67);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData((byte) 0);
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_COBBLESTONE_STAIRS.createBlockData());
 							}
 							break;
 						default:
 							if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 53) {
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
 									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 53);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData((byte) (spiral[x][i][z] - 2));
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
+								//TODO:
+								//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
 							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (this.getBlockIdAt(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != 67) {
+								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
 									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								this.setBlockIdAt(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, 67);
-								this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)
-									.setData((byte) (spiral[x][i][z] - 2));
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
+								//TODO:
+								//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
 							}
 							break;
 					}

@@ -166,7 +166,7 @@ public class PunishBrush extends PerformBrush {
 								}
 								target = location.clone();
 								target.add(x, y, z);
-								((Player) entity).sendBlockChange(target, snipeData.getVoxelId(), snipeData.getData());
+								((Player) entity).sendBlockChange(target, snipeData.getBlockData());
 							}
 						}
 					}

@@ -2,10 +2,13 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Gavjenks, hack job from the other 2d rotation brush blockPositionY piotr
@@ -15,37 +18,29 @@ import org.bukkit.block.Block;
 public class Rot2DvertBrush extends AbstractBrush {
 
 	private int mode;
-	private int bSize;
 	private int brushSize;
 	private BlockWrapper[][][] snap;
-	private double se;
+	private double angle;
 
-	/**
-	 *
-	 */
 	public Rot2DvertBrush() {
 		super("2D Rotation");
 	}
 
 	private void getMatrix() {
-		this.brushSize = (this.bSize * 2) + 1;
-		this.snap = new BlockWrapper[this.brushSize][this.brushSize][this.brushSize];
-		int sx = this.getTargetBlock()
-			.getX() - this.bSize;
-		int sy = this.getTargetBlock()
-			.getY() - this.bSize;
-		int sz = this.getTargetBlock()
-			.getZ() - this.bSize;
+		int brushSize = (this.brushSize * 2) + 1;
+		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
+		Block targetBlock = this.getTargetBlock();
+		int sx = targetBlock.getX() - this.brushSize;
+		int sy = targetBlock.getY() - this.brushSize;
+		int sz = targetBlock.getZ() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
-			sz = this.getTargetBlock()
-				.getZ() - this.bSize;
+			sz = targetBlock.getZ() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
-				sy = this.getTargetBlock()
-					.getY() - this.bSize;
+				sy = targetBlock.getY() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
 					this.snap[x][y][z] = new BlockWrapper(block);
-					block.setTypeId(0);
+					block.setType(Material.AIR);
 					sy++;
 				}
 				sz++;
@@ -54,72 +49,64 @@ public class Rot2DvertBrush extends AbstractBrush {
 		}
 	}
 
-	private void rotate(SnipeData v) {
-		double brushSizeSquared = Math.pow(this.bSize + 0.5, 2);
-		double cos = Math.cos(this.se);
-		double sin = Math.sin(this.se);
+	private void rotate(SnipeData snipeData) {
+		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
+		double cos = Math.cos(this.angle);
+		double sin = Math.sin(this.angle);
 		boolean[][] doNotFill = new boolean[this.snap.length][this.snap.length];
 		// I put y in the inside loop, since it doesn't have any power functions, should be much faster.
 		// Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
 		// do a targeted filling of only those columns later that were left out.
+		Block targetBlock = this.getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
-			int xx = x - this.bSize;
+			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
 			for (int z = 0; z < this.snap.length; z++) {
-				int zz = z - this.bSize;
+				int zz = z - this.brushSize;
 				if (xSquared + Math.pow(zz, 2) <= brushSizeSquared) {
 					double newX = (xx * cos) - (zz * sin);
 					double newZ = (xx * sin) + (zz * cos);
-					doNotFill[(int) newX + this.bSize][(int) newZ + this.bSize] = true;
+					doNotFill[(int) newX + this.brushSize][(int) newZ + this.brushSize] = true;
 					for (int y = 0; y < this.snap.length; y++) {
-						int yy = y - this.bSize;
+						int yy = y - this.brushSize;
 						BlockWrapper block = this.snap[y][x][z];
-						if (block.getId() == 0) {
+						Material type = block.getType();
+						if (type.isEmpty()) {
 							continue;
 						}
-						this.setBlockIdAndDataAt(this.getTargetBlock()
-							.getX() + yy, this.getTargetBlock()
-							.getY() + (int) newX, this.getTargetBlock()
-							.getZ() + (int) newZ, block.getId(), block.getBlockData());
+						setBlockData(targetBlock.getX() + yy, targetBlock.getY() + (int) newX, targetBlock.getZ() + (int) newZ, block.getBlockData());
 					}
 				}
 			}
 		}
 		for (int x = 0; x < this.snap.length; x++) {
-			double xSquared = Math.pow(x - this.bSize, 2);
-			int fx = x + this.getTargetBlock()
-				.getX() - this.bSize;
+			double xSquared = Math.pow(x - this.brushSize, 2);
+			int fx = x + targetBlock.getX() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
-				if (xSquared + Math.pow(z - this.bSize, 2) <= brushSizeSquared) {
-					int fz = z + this.getTargetBlock()
-						.getZ() - this.bSize;
+				if (xSquared + Math.pow(z - this.brushSize, 2) <= brushSizeSquared) {
+					int fz = z + targetBlock.getZ() - this.brushSize;
 					if (!doNotFill[x][z]) {
 						// smart fill stuff
 						for (int y = 0; y < this.snap.length; y++) {
-							int fy = y + this.getTargetBlock()
-								.getY() - this.bSize;
-							int a = this.getBlockIdAt(fy, fx + 1, fz);
-							byte aData = this.getBlockDataAt(fy, fx + 1, fz);
-							int d = this.getBlockIdAt(fy, fx - 1, fz);
-							byte dData = this.getBlockDataAt(fy, fx - 1, fz);
-							int c = this.getBlockIdAt(fy, fx, fz + 1);
-							int b = this.getBlockIdAt(fy, fx, fz - 1);
-							byte bData = this.getBlockDataAt(fy, fx, fz - 1);
-							int winner;
-							byte winnerData;
+							int fy = y + targetBlock.getY() - this.brushSize;
+							Material a = this.getBlockType(fy, fx + 1, fz);
+							Material b = this.getBlockType(fy, fx, fz - 1);
+							Material c = this.getBlockType(fy, fx, fz + 1);
+							Material d = this.getBlockType(fy, fx - 1, fz);
+							BlockData aData = this.getBlockData(fy, fx + 1, fz);
+							BlockData bData = this.getBlockData(fy, fx, fz - 1);
+							BlockData dData = this.getBlockData(fy, fx - 1, fz);
+							BlockData winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
 								// be fine to do all 5 checks needed to be legit about it.
-								winner = a;
-								winnerData = aData;
+								winner = aData;
 							} else if (b == d || c == d) {
-								winner = d;
-								winnerData = dData;
+								winner = dData;
 							} else {
-								winner = b; // blockPositionY making this default, it will also automatically cover situations where B = C;
-								winnerData = bData;
+								winner = bData; // blockPositionY making this default, it will also automatically cover situations where B = C;
 							}
-							this.setBlockIdAndDataAt(fy, fx, fz, winner, winnerData);
+							this.setBlockData(fy, fx, fz, winner);
 						}
 					}
 				}
@@ -129,33 +116,25 @@ public class Rot2DvertBrush extends AbstractBrush {
 
 	@Override
 	public final void arrow(SnipeData snipeData) {
-		this.bSize = snipeData.getBrushSize();
-		switch (this.mode) {
-			case 0:
-				this.getMatrix();
-				this.rotate(snipeData);
-				break;
-			default:
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.RED + "Something went wrong.");
-				break;
+		this.brushSize = snipeData.getBrushSize();
+		if (this.mode == 0) {
+			this.getMatrix();
+			this.rotate(snipeData);
+		} else {
+			Sniper owner = snipeData.getOwner();
+			owner.sendMessage(ChatColor.RED + "Something went wrong.");
 		}
 	}
 
 	@Override
 	public final void powder(SnipeData snipeData) {
-		this.bSize = snipeData.getBrushSize();
-		switch (this.mode) {
-			case 0:
-				this.getMatrix();
-				this.rotate(snipeData);
-				break;
-			default:
-				snipeData.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.RED + "Something went wrong.");
-				break;
+		this.brushSize = snipeData.getBrushSize();
+		if (this.mode == 0) {
+			this.getMatrix();
+			this.rotate(snipeData);
+		} else {
+			Sniper owner = snipeData.getOwner();
+			owner.sendMessage(ChatColor.RED + "Something went wrong.");
 		}
 	}
 
@@ -167,8 +146,8 @@ public class Rot2DvertBrush extends AbstractBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		try {
-			this.se = Math.toRadians(Double.parseDouble(parameters[1]));
-			snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.se);
+			this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
+			snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
 		} catch (NumberFormatException exception) {
 			snipeData.sendMessage("Exception while parsing parameter: " + parameters[1]);
 			Bukkit.getLogger()
