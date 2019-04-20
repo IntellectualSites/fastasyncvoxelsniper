@@ -17,22 +17,19 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	private int fx;
 	private int fz;
 
-	/**
-	 *
-	 */
 	public CanyonSelectionBrush() {
 		super("Canyon Selection");
 	}
 
-	private void execute(SnipeData v) {
+	private void execute(SnipeData snipeData) {
 		Chunk chunk = getTargetBlock().getChunk();
 		if (this.first) {
 			this.fx = chunk.getX();
 			this.fz = chunk.getZ();
-			v.sendMessage(ChatColor.YELLOW + "First point selected!");
+			snipeData.sendMessage(ChatColor.YELLOW + "First point selected!");
 		} else {
-			v.sendMessage(ChatColor.YELLOW + "Second point selected!");
-			selection(Math.min(this.fx, chunk.getX()), Math.min(this.fz, chunk.getZ()), Math.max(this.fx, chunk.getX()), Math.max(this.fz, chunk.getZ()), v);
+			snipeData.sendMessage(ChatColor.YELLOW + "Second point selected!");
+			selection(Math.min(this.fx, chunk.getX()), Math.min(this.fz, chunk.getZ()), Math.max(this.fx, chunk.getX()), Math.max(this.fz, chunk.getZ()), snipeData);
 		}
 		this.first = !this.first;
 	}
@@ -49,12 +46,12 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		execute(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		execute(snipeData);
 	}
 

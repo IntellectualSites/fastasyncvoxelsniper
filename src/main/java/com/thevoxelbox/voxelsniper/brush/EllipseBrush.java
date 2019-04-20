@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
@@ -20,6 +21,7 @@ public class EllipseBrush extends PerformBrush {
 	private static final int STEPS_MIN = 1;
 	private static final int STEPS_MAX = 2000;
 	private static final int STEPS_DEFAULT = 200;
+
 	private int xscl;
 	private int yscl;
 	private int steps;
@@ -35,21 +37,27 @@ public class EllipseBrush extends PerformBrush {
 			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
 				int y = (int) Math.round(this.yscl * Math.sin(steps));
-				switch (getTargetBlock().getFace(this.getLastBlock())) {
-					case NORTH:
-					case SOUTH:
-						this.current.perform(targetBlock.getRelative(0, x, y));
-						break;
-					case EAST:
-					case WEST:
-						this.current.perform(targetBlock.getRelative(x, y, 0));
-						break;
-					case UP:
-					case DOWN:
-						this.current.perform(targetBlock.getRelative(x, 0, y));
-						break;
-					default:
-						break;
+				Block lastBlock = getLastBlock();
+				if (lastBlock != null) {
+					BlockFace face = getTargetBlock().getFace(lastBlock);
+					if (face != null) {
+						switch (face) {
+							case NORTH:
+							case SOUTH:
+								this.current.perform(targetBlock.getRelative(0, x, y));
+								break;
+							case EAST:
+							case WEST:
+								this.current.perform(targetBlock.getRelative(x, y, 0));
+								break;
+							case UP:
+							case DOWN:
+								this.current.perform(targetBlock.getRelative(x, 0, y));
+								break;
+							default:
+								break;
+						}
+					}
 				}
 				if (steps >= TWO_PI) {
 					break;
@@ -72,21 +80,27 @@ public class EllipseBrush extends PerformBrush {
 					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
-						switch (getTargetBlock().getFace(this.getLastBlock())) {
-							case NORTH:
-							case SOUTH:
-								this.current.perform(targetBlock.getRelative(0, x, y));
-								break;
-							case EAST:
-							case WEST:
-								this.current.perform(targetBlock.getRelative(x, y, 0));
-								break;
-							case UP:
-							case DOWN:
-								this.current.perform(targetBlock.getRelative(x, 0, y));
-								break;
-							default:
-								break;
+						Block lastBlock = getLastBlock();
+						if (lastBlock != null) {
+							BlockFace face = getTargetBlock().getFace(lastBlock);
+							if (face != null) {
+								switch (face) {
+									case NORTH:
+									case SOUTH:
+										this.current.perform(targetBlock.getRelative(0, x, y));
+										break;
+									case EAST:
+									case WEST:
+										this.current.perform(targetBlock.getRelative(x, y, 0));
+										break;
+									case UP:
+									case DOWN:
+										this.current.perform(targetBlock.getRelative(x, 0, y));
+										break;
+									default:
+										break;
+								}
+							}
 						}
 						if (steps >= TWO_PI) {
 							break;
@@ -99,21 +113,27 @@ public class EllipseBrush extends PerformBrush {
 					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
-						switch (getTargetBlock().getFace(this.getLastBlock())) {
-							case NORTH:
-							case SOUTH:
-								this.current.perform(targetBlock.getRelative(0, x, y));
-								break;
-							case EAST:
-							case WEST:
-								this.current.perform(targetBlock.getRelative(x, y, 0));
-								break;
-							case UP:
-							case DOWN:
-								this.current.perform(targetBlock.getRelative(x, 0, y));
-								break;
-							default:
-								break;
+						Block lastBlock = getLastBlock();
+						if (lastBlock != null) {
+							BlockFace face = getTargetBlock().getFace(lastBlock);
+							if (face != null) {
+								switch (face) {
+									case NORTH:
+									case SOUTH:
+										this.current.perform(targetBlock.getRelative(0, x, y));
+										break;
+									case EAST:
+									case WEST:
+										this.current.perform(targetBlock.getRelative(x, y, 0));
+										break;
+									case UP:
+									case DOWN:
+										this.current.perform(targetBlock.getRelative(x, 0, y));
+										break;
+									default:
+										break;
+								}
+							}
 						}
 						if (steps >= TWO_PI) {
 							break;
@@ -139,13 +159,17 @@ public class EllipseBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.execute(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.execute(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.execute(snipeData, lastBlock);
 	}
 
 	@Override
@@ -182,7 +206,7 @@ public class EllipseBrush extends PerformBrush {
 					snipeData.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
 					snipeData.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
 					return;
-				} else if (parameter.startsWith("x")) {
+				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
 					int tempXScale = Integer.parseInt(parameters[i].replace("x", ""));
 					if (tempXScale < SCL_MIN || tempXScale > SCL_MAX) {
 						snipeData.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
@@ -190,7 +214,7 @@ public class EllipseBrush extends PerformBrush {
 					}
 					this.xscl = tempXScale;
 					snipeData.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
-				} else if (parameter.startsWith("y")) {
+				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
 					int tempYScale = Integer.parseInt(parameters[i].replace("y", ""));
 					if (tempYScale < SCL_MIN || tempYScale > SCL_MAX) {
 						snipeData.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
@@ -198,7 +222,7 @@ public class EllipseBrush extends PerformBrush {
 					}
 					this.yscl = tempYScale;
 					snipeData.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
-				} else if (parameter.startsWith("t")) {
+				} else if (!parameter.isEmpty() && parameter.charAt(0) == 't') {
 					int tempSteps = Integer.parseInt(parameters[i].replace("t", ""));
 					if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX) {
 						snipeData.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");

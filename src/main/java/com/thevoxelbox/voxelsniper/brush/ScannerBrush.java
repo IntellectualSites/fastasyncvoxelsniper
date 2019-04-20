@@ -139,14 +139,14 @@ public class ScannerBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.checkFor = Material.getMaterial(snipeData.getVoxelId());
 		this.scan(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()));
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.checkFor = Material.getMaterial(snipeData.getVoxelId());
 		this.scan(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()));

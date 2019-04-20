@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -153,18 +154,18 @@ public class HeatRayBrush extends AbstractBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
-			.storeUndo(undo);
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(undo);
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		this.heatRay(snipeData);
+	public final void arrow(SnipeData snipeData) {
+		heatRay(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.heatRay(snipeData);
+	public final void powder(SnipeData snipeData) {
+		heatRay(snipeData);
 	}
 
 	@Override

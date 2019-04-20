@@ -251,12 +251,12 @@ public class TriangleBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.triangleA(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) { // Add a point
+	public final void powder(SnipeData snipeData) { // Add a point
 		this.triangleP(snipeData);
 	}
 

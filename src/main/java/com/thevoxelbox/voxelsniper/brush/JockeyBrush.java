@@ -118,7 +118,7 @@ public class JockeyBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES || this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
 			stack(snipeData);
 		} else {
@@ -127,7 +127,7 @@ public class JockeyBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
 			snipeData.getOwner()
 				.getPlayer()

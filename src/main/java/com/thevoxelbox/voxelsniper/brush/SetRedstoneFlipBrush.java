@@ -72,7 +72,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.set(this.getTargetBlock())) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -82,7 +82,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.set(this.getLastBlock())) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {

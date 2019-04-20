@@ -5,7 +5,6 @@ import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -14,6 +13,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,7 +29,6 @@ public abstract class AbstractBrush implements Brush {
 	/**
 	 * Last Block before targeted Block.
 	 */
-	@Nullable
 	private Block lastBlock;
 	/**
 	 * Brush name.
@@ -45,25 +44,16 @@ public abstract class AbstractBrush implements Brush {
 	 */
 	public final Block clampY(int x, int y, int z) {
 		int clampedY = y;
+		World world = this.targetBlock.getWorld();
 		if (clampedY < 0) {
 			clampedY = 0;
-		} else if (clampedY > this.getWorld()
-			.getMaxHeight()) {
-			clampedY = this.getWorld()
-				.getMaxHeight();
-		}
-		return this.getWorld()
-			.getBlockAt(x, clampedY, z);
-	}
-
-	private boolean preparePerform(SnipeData snipeData, Block clickedBlock, BlockFace clickedFace) {
-		if (this.getTarget(snipeData, clickedBlock, clickedFace)) {
-			if (this instanceof PerformBrush) {
-				((PerformBrush) this).initPerformer(snipeData);
+		} else {
+			int maxHeight = world.getMaxHeight();
+			if (clampedY > maxHeight) {
+				clampedY = maxHeight;
 			}
-			return true;
 		}
-		return false;
+		return world.getBlockAt(x, clampedY, z);
 	}
 
 	@Override
@@ -72,29 +62,15 @@ public abstract class AbstractBrush implements Brush {
 		this.lastBlock = lastBlock;
 		switch (action) {
 			case ARROW:
-				this.arrow(data);
+				arrow(data);
 				return true;
 			case GUNPOWDER:
-				this.powder(data);
+				powder(data);
 				return true;
 			default:
 				return false;
 		}
 	}
-
-	/**
-	 * The arrow action. Executed when a player RightClicks with an Arrow
-	 *
-	 * @param snipeData Sniper caller
-	 */
-	protected void arrow(SnipeData snipeData) {}
-
-	/**
-	 * The powder action. Executed when a player RightClicks with Gunpowder
-	 *
-	 * @param snipeData Sniper caller
-	 */
-	protected void powder(SnipeData snipeData) {}
 
 	@Override
 	public void parameters(String[] parameters, SnipeData snipeData) {
@@ -109,30 +85,33 @@ public abstract class AbstractBrush implements Brush {
 	protected final boolean getTarget(SnipeData snipeData, Block clickedBlock, BlockFace clickedFace) {
 		Sniper owner = snipeData.getOwner();
 		String toolId = owner.getCurrentToolId();
+		if (toolId == null) {
+			return false;
+		}
+		SnipeData ownerSnipeData = owner.getSnipeData(toolId);
+		if (ownerSnipeData == null) {
+			return false;
+		}
+		World targetBlockWorld = this.targetBlock.getWorld();
 		if (clickedBlock != null) {
 			this.targetBlock = clickedBlock;
 			this.lastBlock = clickedBlock.getRelative(clickedFace);
-			if (this.lastBlock == null) {
+			if (this.lastBlock.isEmpty()) {
 				snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
-			if (owner.getSnipeData(toolId)
-				.isLightningEnabled()) {
-				this.getWorld()
-					.strikeLightning(this.targetBlock.getLocation());
+			if (ownerSnipeData.isLightningEnabled()) {
+				targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
 			}
 			return true;
 		} else {
 			RangeBlockHelper rangeBlockHelper;
-			if (owner.getSnipeData(toolId)
-				.isRanged()) {
-				rangeBlockHelper = new RangeBlockHelper(owner.getPlayer(), owner.getPlayer()
-					.getWorld(), owner.getSnipeData(toolId)
-					.getRange());
+			Player ownerPlayer = owner.getPlayer();
+			if (ownerSnipeData.isRanged()) {
+				rangeBlockHelper = new RangeBlockHelper(ownerPlayer, ownerPlayer.getWorld(), ownerSnipeData.getRange());
 				this.targetBlock = rangeBlockHelper.getRangeBlock();
 			} else {
-				rangeBlockHelper = new RangeBlockHelper(owner.getPlayer(), owner.getPlayer()
-					.getWorld());
+				rangeBlockHelper = new RangeBlockHelper(ownerPlayer, ownerPlayer.getWorld());
 				this.targetBlock = rangeBlockHelper.getTargetBlock();
 			}
 			if (this.targetBlock != null) {
@@ -141,10 +120,8 @@ public abstract class AbstractBrush implements Brush {
 					snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
 				}
-				if (owner.getSnipeData(toolId)
-					.isLightningEnabled()) {
-					this.getWorld()
-						.strikeLightning(this.targetBlock.getLocation());
+				if (ownerSnipeData.isLightningEnabled()) {
+					targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
 				}
 				return true;
 			} else {
@@ -209,7 +186,7 @@ public abstract class AbstractBrush implements Brush {
 	/**
 	 * @param lastBlock Last Block before target Block.
 	 */
-	protected final void setLastBlock(@Nullable Block lastBlock) {
+	protected final void setLastBlock(Block lastBlock) {
 		this.lastBlock = lastBlock;
 	}
 

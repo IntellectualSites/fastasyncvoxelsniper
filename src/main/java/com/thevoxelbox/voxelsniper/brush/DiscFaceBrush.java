@@ -75,7 +75,11 @@ public class DiscFaceBrush extends PerformBrush {
 	}
 
 	private void pre(SnipeData snipeData, Block targetBlock) {
-		BlockFace blockFace = getTargetBlock().getFace(this.getLastBlock());
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		BlockFace blockFace = getTargetBlock().getFace(lastBlock);
 		if (blockFace == null) {
 			return;
 		}
@@ -98,13 +102,17 @@ public class DiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.pre(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.pre(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.pre(snipeData, lastBlock);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
@@ -34,25 +35,24 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
 		BlockState currentState = blockBelow.getState();
 		undoDelegate.setBlock(blockBelow);
-		blockBelow.setType(Material.LEGACY_GRASS);
+		blockBelow.setType(Material.GRASS_BLOCK);
 		this.getWorld()
 			.generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
 		Undo undo = undoDelegate.getUndo();
-		blockBelow.setTypeIdAndData(currentState.getTypeId(), currentState.getRawData(), true);
+		blockBelow.setBlockData(currentState.getBlockData());
 		undo.put(blockBelow);
 		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
 	private int getYOffset() {
-		for (int i = 1; i < (getTargetBlock().getWorld()
-			.getMaxHeight() - 1 - getTargetBlock().getY()); i++) {
-			if (getTargetBlock().getRelative(0, i + 1, 0)
-				.getType() == Material.LEGACY_AIR) {
-				return i;
-			}
-		}
-		return 0;
+		Block targetBlock = getTargetBlock();
+		return IntStream.range(1, (targetBlock.getWorld()
+			.getMaxHeight() - 1 - targetBlock.getY()))
+			.filter(i -> targetBlock.getRelative(0, i + 1, 0)
+				.isEmpty())
+			.findFirst()
+			.orElse(0);
 	}
 
 	private void printTreeType(Message message) {
@@ -65,13 +65,13 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
 		this.single(snipeData, targetBlock);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.single(snipeData, getTargetBlock());
 	}
 

@@ -24,7 +24,7 @@ public class PaintingBrush extends AbstractBrush {
 	 * @param snipeData Sniper caller
 	 */
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		Player player = owner.getPlayer();
 		PaintingWrapper.paint(player, true, false, 0);
@@ -36,7 +36,7 @@ public class PaintingBrush extends AbstractBrush {
 	 * @param snipeData Sniper caller
 	 */
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		Player player = owner.getPlayer();
 		PaintingWrapper.paint(player, true, true, 0);

@@ -2,9 +2,12 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.LargeFireball;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
@@ -17,36 +20,30 @@ public class CometBrush extends AbstractBrush {
 
 	private boolean useBigBalls;
 
-	/**
-	 *
-	 */
 	public CometBrush() {
 		super("Comet");
 	}
 
-	private void doFireball(SnipeData v) {
-		Vector targetCoords = new Vector(this.getTargetBlock()
-			.getX() + 0.5 * this.getTargetBlock()
-			.getX() / Math.abs(this.getTargetBlock()
-			.getX()), this.getTargetBlock()
-			.getY() + 0.5, this.getTargetBlock()
-			.getZ() + 0.5 * this.getTargetBlock()
-			.getZ() / Math.abs(this.getTargetBlock()
-			.getZ()));
-		Location playerLocation = v.getOwner()
-			.getPlayer()
-			.getEyeLocation();
-		Vector slope = targetCoords.subtract(playerLocation.toVector());
+	private void doFireball(SnipeData snipeData) {
+		Block targetBlock = getTargetBlock();
+		int x = targetBlock.getX();
+		int y = targetBlock.getY();
+		int z = targetBlock.getZ();
+		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
+		Sniper owner = snipeData.getOwner();
+		Player player = owner.getPlayer();
+		if (player == null) {
+			return;
+		}
+		Location playerLocation = player.getEyeLocation();
+		Vector slope = targetCoordinates.subtract(playerLocation.toVector());
+		Vector normalizedSlope = slope.normalize();
 		if (this.useBigBalls) {
-			v.getOwner()
-				.getPlayer()
-				.launchProjectile(LargeFireball.class)
-				.setVelocity(slope.normalize());
+			LargeFireball fireball = player.launchProjectile(LargeFireball.class);
+			fireball.setVelocity(normalizedSlope);
 		} else {
-			v.getOwner()
-				.getPlayer()
-				.launchProjectile(SmallFireball.class)
-				.setVelocity(slope.normalize());
+			SmallFireball fireball = player.launchProjectile(SmallFireball.class);
+			fireball.setVelocity(normalizedSlope);
 		}
 	}
 
@@ -77,12 +74,12 @@ public class CometBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.doFireball(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.doFireball(snipeData);
 	}
 

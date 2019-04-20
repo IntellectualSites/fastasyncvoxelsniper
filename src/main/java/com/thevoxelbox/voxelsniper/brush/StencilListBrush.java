@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
@@ -28,11 +29,8 @@ public class StencilListBrush extends AbstractBrush {
 	private short zRef;
 	private short yRef;
 	private byte pasteParam;
-	private HashMap<Integer, String> stencilList = new HashMap<>();
+	private Map<Integer, String> stencilList = new HashMap<>();
 
-	/**
-	 *
-	 */
 	public StencilListBrush() {
 		super("StencilList");
 	}
@@ -889,12 +887,12 @@ public class StencilListBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.stencilPaste(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.stencilPasteRotation(snipeData);
 	}
 

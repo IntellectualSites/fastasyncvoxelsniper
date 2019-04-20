@@ -23,6 +23,7 @@ public class SplatterDiscBrush extends PerformBrush {
 	private static final int SPLATREC_PERCENT_MIN = 1;
 	private static final int SPLATREC_PERCENT_DEFAULT = 3;
 	private static final int SPLATREC_PERCENT_MAX = 10;
+
 	private int seedPercent; // Chance block on first pass is made active
 	private int growPercent; // chance block on recursion pass is made active
 	private int splatterRecursions; // How many times you grow the seeds
@@ -35,23 +36,23 @@ public class SplatterDiscBrush extends PerformBrush {
 		super("Splatter Disc");
 	}
 
-	private void splatterDisc(SnipeData v, Block targetBlock) {
+	private void splatterDisc(SnipeData snipeData, Block targetBlock) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+			snipeData.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+			snipeData.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 			this.growPercent = GROW_PERCENT_DEFAULT;
 		}
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
-			v.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+			snipeData.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		int[][] splat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
+		int[][] splat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
 		// Seed the array
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
 				if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
 					splat[x][y] = 1;
 				}
@@ -59,11 +60,11 @@ public class SplatterDiscBrush extends PerformBrush {
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][] tempSplat = new int[2 * v.getBrushSize() + 1][2 * v.getBrushSize() + 1];
+		int[][] tempSplat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
-			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
+			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+				for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
 					tempSplat[x][y] = splat[x][y]; // prime tempsplat
 					int growcheck = 0;
 					if (splat[x][y] == 0) {
@@ -73,10 +74,10 @@ public class SplatterDiscBrush extends PerformBrush {
 						if (y != 0 && splat[x][y - 1] == 1) {
 							growcheck++;
 						}
-						if (x != 2 * v.getBrushSize() && splat[x + 1][y] == 1) {
+						if (x != 2 * snipeData.getBrushSize() && splat[x + 1][y] == 1) {
 							growcheck++;
 						}
-						if (y != 2 * v.getBrushSize() && splat[x][y + 1] == 1) {
+						if (y != 2 * snipeData.getBrushSize() && splat[x][y + 1] == 1) {
 							growcheck++;
 						}
 					}
@@ -86,43 +87,47 @@ public class SplatterDiscBrush extends PerformBrush {
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
-			for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-				if (2 * v.getBrushSize() + 1 >= 0) {
-					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * v.getBrushSize() + 1);
+			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+				if (2 * snipeData.getBrushSize() + 1 >= 0) {
+					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * snipeData.getBrushSize() + 1);
 				}
 			}
 		}
 		this.growPercent = gref;
 		// Fill 1x1 holes
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-				if (splat[Math.max(x - 1, 0)][y] == 1 && splat[Math.min(x + 1, 2 * v.getBrushSize())][y] == 1 && splat[x][Math.max(0, y - 1)] == 1 && splat[x][Math.min(2 * v.getBrushSize(), y + 1)] == 1) {
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+				if (splat[Math.max(x - 1, 0)][y] == 1 && splat[Math.min(x + 1, 2 * snipeData.getBrushSize())][y] == 1 && splat[x][Math.max(0, y - 1)] == 1 && splat[x][Math.min(2 * snipeData.getBrushSize(), y + 1)] == 1) {
 					splat[x][y] = 1;
 				}
 			}
 		}
 		// Make the changes
-		double rSquared = Math.pow(v.getBrushSize() + 1, 2);
-		for (int x = 2 * v.getBrushSize(); x >= 0; x--) {
-			double xSquared = Math.pow(x - v.getBrushSize() - 1, 2);
-			for (int y = 2 * v.getBrushSize(); y >= 0; y--) {
-				if (splat[x][y] == 1 && xSquared + Math.pow(y - v.getBrushSize() - 1, 2) <= rSquared) {
-					this.current.perform(targetBlock.getRelative(x - v.getBrushSize(), 0, y - v.getBrushSize()));
+		double rSquared = Math.pow(snipeData.getBrushSize() + 1, 2);
+		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
+			double xSquared = Math.pow(x - snipeData.getBrushSize() - 1, 2);
+			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+				if (splat[x][y] == 1 && xSquared + Math.pow(y - snipeData.getBrushSize() - 1, 2) <= rSquared) {
+					this.current.perform(targetBlock.getRelative(x - snipeData.getBrushSize(), 0, y - snipeData.getBrushSize()));
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.splatterDisc(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.splatterDisc(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.splatterDisc(snipeData, lastBlock);
 	}
 
 	@Override
@@ -153,7 +158,7 @@ public class SplatterDiscBrush extends PerformBrush {
 				snipeData.sendMessage(ChatColor.AQUA + "/b sd g[int] -- set a growth percentage (1-9999).  Default is 1000");
 				snipeData.sendMessage(ChatColor.AQUA + "/b sd r[int] -- set a recursion (1-10).  Default is 3");
 				return;
-			} else if (parameter.startsWith("s")) {
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
 				double temp = Integer.parseInt(parameter.replace("s", ""));
 				if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
 					snipeData.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
@@ -161,7 +166,7 @@ public class SplatterDiscBrush extends PerformBrush {
 				} else {
 					snipeData.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
 				}
-			} else if (parameter.startsWith("g")) {
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
 				double temp = Integer.parseInt(parameter.replace("g", ""));
 				if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
 					snipeData.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
@@ -169,7 +174,7 @@ public class SplatterDiscBrush extends PerformBrush {
 				} else {
 					snipeData.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
 				}
-			} else if (parameter.startsWith("r")) {
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
 				int temp = Integer.parseInt(parameter.replace("r", ""));
 				if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX) {
 					snipeData.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);

@@ -65,23 +65,18 @@ public class EntityRemovalBrush extends AbstractBrush {
 			}
 			currentClass = currentClass.getSuperclass();
 		}
-		for (String exemptionPattern : this.exemptions) {
-			for (String typeName : entityClassHierarchy) {
-				if (typeName.matches(exemptionPattern)) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return this.exemptions.stream()
+			.anyMatch(exemptionPattern -> entityClassHierarchy.stream()
+				.anyMatch(typeName -> typeName.matches(exemptionPattern)));
 	}
 
 	@Override
-	protected void arrow(SnipeData snipeData) {
+	public void arrow(SnipeData snipeData) {
 		this.radialRemoval(snipeData);
 	}
 
 	@Override
-	protected void powder(SnipeData snipeData) {
+	public void powder(SnipeData snipeData) {
 		this.radialRemoval(snipeData);
 	}
 

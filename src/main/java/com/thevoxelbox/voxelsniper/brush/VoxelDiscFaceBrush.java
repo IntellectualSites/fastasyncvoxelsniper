@@ -13,9 +13,6 @@ import org.bukkit.block.BlockFace;
  */
 public class VoxelDiscFaceBrush extends PerformBrush {
 
-	/**
-	 *
-	 */
 	public VoxelDiscFaceBrush() {
 		super("Voxel Disc Face");
 	}
@@ -73,15 +70,31 @@ public class VoxelDiscFaceBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		this.pre(snipeData, this.getTargetBlock()
-			.getFace(this.getLastBlock()), this.getTargetBlock());
+	public final void arrow(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		Block targetBlock = this.getTargetBlock();
+		BlockFace face = targetBlock.getFace(lastBlock);
+		if (face == null) {
+			return;
+		}
+		this.pre(snipeData, face, targetBlock);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.pre(snipeData, this.getTargetBlock()
-			.getFace(this.getLastBlock()), this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		Block targetBlock = this.getTargetBlock();
+		BlockFace face = targetBlock.getFace(lastBlock);
+		if (face == null) {
+			return;
+		}
+		this.pre(snipeData, face, lastBlock);
 	}
 
 	@Override

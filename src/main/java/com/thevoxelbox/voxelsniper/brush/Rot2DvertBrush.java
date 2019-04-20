@@ -128,7 +128,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:
@@ -144,7 +144,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.bSize = snipeData.getBrushSize();
 		switch (this.mode) {
 			case 0:

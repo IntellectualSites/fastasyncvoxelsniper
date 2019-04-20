@@ -23,6 +23,10 @@ public class CanyonBrush extends AbstractBrush {
 		super("Canyon");
 	}
 
+	public CanyonBrush(String name) {
+		super(name);
+	}
+
 	protected final void canyon(Chunk chunk, Undo undo) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -34,23 +38,23 @@ public class CanyonBrush extends AbstractBrush {
 					undo.put(block);
 					undo.put(currentYLevelBlock);
 					currentYLevelBlock.setType(block.getType(), false);
-					block.setType(Material.LEGACY_AIR);
+					block.setType(Material.AIR);
 					currentYLevel++;
 				}
 				Block block = chunk.getBlock(x, 0, z);
 				undo.put(block);
-				block.setType(Material.LEGACY_BEDROCK);
+				block.setType(Material.BEDROCK);
 				for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
 					Block currentBlock = chunk.getBlock(x, y, z);
 					undo.put(currentBlock);
-					currentBlock.setType(Material.LEGACY_STONE);
+					currentBlock.setType(Material.STONE);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected void arrow(SnipeData snipeData) {
+	public void arrow(SnipeData snipeData) {
 		Undo undo = new Undo();
 		canyon(getTargetBlock().getChunk(), undo);
 		snipeData.getOwner()
@@ -58,7 +62,7 @@ public class CanyonBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected void powder(SnipeData snipeData) {
+	public void powder(SnipeData snipeData) {
 		Undo undo = new Undo();
 		Chunk targetChunk = getTargetBlock().getChunk();
 		for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++) {

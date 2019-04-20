@@ -33,7 +33,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.coordsOne == null) {
 			this.coordsOne = this.getTargetBlock()
 				.getLocation()
@@ -60,7 +60,7 @@ public class ThreePointCircleBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
 			return;
 		}

@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 /**
@@ -13,9 +14,6 @@ public class CylinderBrush extends PerformBrush {
 
 	private double trueCircle;
 
-	/**
-	 *
-	 */
 	public CylinderBrush() {
 		super("Cylinder");
 	}
@@ -27,22 +25,19 @@ public class CylinderBrush extends PerformBrush {
 		if (yEndPoint < yStartingPoint) {
 			yEndPoint = yStartingPoint;
 		}
+		World world = this.getWorld();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
 			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-		} else if (yStartingPoint > this.getWorld()
-			.getMaxHeight() - 1) {
-			yStartingPoint = this.getWorld()
-				.getMaxHeight() - 1;
+		} else if (yStartingPoint > world.getMaxHeight() - 1) {
+			yStartingPoint = world.getMaxHeight() - 1;
 			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
 			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-		} else if (yEndPoint > this.getWorld()
-			.getMaxHeight() - 1) {
-			yEndPoint = this.getWorld()
-				.getMaxHeight() - 1;
+		} else if (yEndPoint > world.getMaxHeight() - 1) {
+			yEndPoint = world.getMaxHeight() - 1;
 			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
 		double bSquared = Math.pow(brushSize + this.trueCircle, 2);
@@ -64,13 +59,17 @@ public class CylinderBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.cylinder(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.cylinder(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.cylinder(snipeData, lastBlock);
 	}
 
 	@Override
@@ -98,10 +97,10 @@ public class CylinderBrush extends PerformBrush {
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
 				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (parameter.startsWith("h")) {
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'h') {
 				snipeData.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
 				snipeData.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + snipeData.getVoxelHeight());
-			} else if (parameter.startsWith("c")) {
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'c') {
 				snipeData.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
 				snipeData.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + snipeData.getCylinderCenter());
 			} else {

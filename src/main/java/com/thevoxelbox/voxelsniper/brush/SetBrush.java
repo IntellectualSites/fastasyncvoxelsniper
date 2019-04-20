@@ -2,8 +2,10 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,39 +20,43 @@ public class SetBrush extends PerformBrush {
 	@Nullable
 	private Block block;
 
-	/**
-	 *
-	 */
 	public SetBrush() {
 		super("Set");
 	}
 
-	private boolean set(Block bl, SnipeData v) {
+	private boolean set(Block block, SnipeData snipeData) {
 		if (this.block == null) {
-			this.block = bl;
+			this.block = block;
 			return true;
 		} else {
-			if (!this.block.getWorld()
-				.getName()
-				.equals(bl.getWorld()
-					.getName())) {
-				v.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+			World thisBlockWorld = this.block.getWorld();
+			String name = thisBlockWorld.getName();
+			World parameterBlockWorld = block.getWorld();
+			String parameterBlockWorldName = parameterBlockWorld.getName();
+			if (!name.equals(parameterBlockWorldName)) {
+				snipeData.sendMessage(ChatColor.RED + "You selected points in different worlds!");
 				this.block = null;
 				return true;
 			}
-			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int x1 = this.block.getX();
+			int x2 = block.getX();
+			int y1 = this.block.getY();
+			int y2 = block.getY();
+			int z1 = this.block.getZ();
+			int z2 = block.getZ();
+			int lowX = (x1 <= x2) ? x1 : x2;
+			int lowY = (y1 <= y2) ? y1 : y2;
+			int lowZ = (z1 <= z2) ? z1 : z2;
+			int highX = (x1 >= x2) ? x1 : x2;
+			int highY = (y1 >= y2) ? y1 : y2;
+			int highZ = (z1 >= z2) ? z1 : z2;
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX) {
-				v.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+				snipeData.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
-							this.current.perform(this.clampY(x, y, z));
+							this.current.perform(clampY(x, y, z));
 						}
 					}
 				}
@@ -61,22 +67,27 @@ public class SetBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		if (this.set(this.getTargetBlock(), snipeData)) {
+	public final void arrow(SnipeData snipeData) {
+		Block targetBlock = getTargetBlock();
+		if (set(targetBlock, snipeData)) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
-				.storeUndo(this.current.getUndo());
+			Sniper owner = snipeData.getOwner();
+			owner.storeUndo(this.current.getUndo());
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		if (this.set(this.getLastBlock(), snipeData)) {
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		if (set(lastBlock, snipeData)) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
-				.storeUndo(this.current.getUndo());
+			Sniper owner = snipeData.getOwner();
+			owner.storeUndo(this.current.getUndo());
 		}
 	}
 

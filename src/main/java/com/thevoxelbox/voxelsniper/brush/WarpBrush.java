@@ -2,7 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 /**
@@ -10,9 +12,6 @@ import org.bukkit.entity.Player;
  */
 public class WarpBrush extends AbstractBrush {
 
-	/**
-	 *
-	 */
 	public WarpBrush() {
 		super("Warp");
 	}
@@ -23,11 +22,17 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		Player player = snipeData.getOwner()
-			.getPlayer();
-		Location location = this.getLastBlock()
-			.getLocation();
+	public final void arrow(SnipeData snipeData) {
+		Sniper owner = snipeData.getOwner();
+		Player player = owner.getPlayer();
+		if (player == null) {
+			return;
+		}
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		Location location = lastBlock.getLocation();
 		Location playerLocation = player.getLocation();
 		location.setPitch(playerLocation.getPitch());
 		location.setYaw(playerLocation.getYaw());
@@ -35,11 +40,17 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		Player player = snipeData.getOwner()
-			.getPlayer();
-		Location location = this.getLastBlock()
-			.getLocation();
+	public final void powder(SnipeData snipeData) {
+		Sniper owner = snipeData.getOwner();
+		Player player = owner.getPlayer();
+		if (player == null) {
+			return;
+		}
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		Location location = lastBlock.getLocation();
 		Location playerLocation = player.getLocation();
 		location.setPitch(playerLocation.getPitch());
 		location.setYaw(playerLocation.getYaw());

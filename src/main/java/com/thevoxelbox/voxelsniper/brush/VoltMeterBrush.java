@@ -13,27 +13,20 @@ import org.bukkit.block.BlockFace;
  */
 public class VoltMeterBrush extends AbstractBrush {
 
-	/**
-	 *
-	 */
 	public VoltMeterBrush() {
 		super("VoltMeter");
 	}
 
 	private void data(SnipeData snipeData) {
-		Block block = this.clampY(this.getTargetBlock()
-			.getX(), this.getTargetBlock()
-			.getY(), this.getTargetBlock()
-			.getZ());
+		Block targetBlock = this.getTargetBlock();
+		Block block = this.clampY(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 		byte data = block.getData();
 		snipeData.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + data);
 	}
 
 	private void volt(SnipeData snipeData) {
-		Block block = this.clampY(this.getTargetBlock()
-			.getX(), this.getTargetBlock()
-			.getY(), this.getTargetBlock()
-			.getZ());
+		Block targetBlock = this.getTargetBlock();
+		Block block = this.clampY(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 		boolean indirect = block.isBlockIndirectlyPowered();
 		boolean direct = block.isBlockPowered();
 		snipeData.sendMessage(ChatColor.AQUA + "Direct Power? " + direct + " Indirect Power? " + indirect);
@@ -46,12 +39,12 @@ public class VoltMeterBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.volt(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.data(snipeData);
 	}
 

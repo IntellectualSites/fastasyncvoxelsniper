@@ -8,9 +8,6 @@ import com.thevoxelbox.voxelsniper.SnipeData;
  */
 public class LightningBrush extends AbstractBrush {
 
-	/**
-	 *
-	 */
 	public LightningBrush() {
 		super("Lightning");
 	}
@@ -22,14 +19,14 @@ public class LightningBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.getWorld()
 			.strikeLightning(this.getTargetBlock()
 				.getLocation());

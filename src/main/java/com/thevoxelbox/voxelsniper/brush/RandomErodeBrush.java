@@ -261,7 +261,7 @@ public class RandomErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.bsize = snipeData.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(5) + 1;
@@ -277,7 +277,7 @@ public class RandomErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.bsize = snipeData.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(3) + 3;

@@ -17,11 +17,9 @@ public class BallBrush extends PerformBrush {
 
 	public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
 	public static final int TRUE_CIRCLE_OFF_VALUE = 0;
+
 	private double trueCircle;
 
-	/**
-	 *
-	 */
 	public BallBrush() {
 		super("Ball");
 	}
@@ -76,13 +74,17 @@ public class BallBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.ball(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.ball(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.ball(snipeData, lastBlock);
 	}
 
 	@Override

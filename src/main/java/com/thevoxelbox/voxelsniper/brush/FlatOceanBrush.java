@@ -5,6 +5,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 
 /**
  * @author GavJenks
@@ -13,30 +15,61 @@ public class FlatOceanBrush extends AbstractBrush {
 
 	private static final int DEFAULT_WATER_LEVEL = 29;
 	private static final int DEFAULT_FLOOR_LEVEL = 8;
+
 	private int waterLevel = DEFAULT_WATER_LEVEL;
 	private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
-	/**
-	 *
-	 */
 	public FlatOceanBrush() {
 		super("FlatOcean");
+	}
+
+	@Override
+	public final void arrow(SnipeData snipeData) {
+		flatOceanAtTarget();
+	}
+
+	@Override
+	public final void powder(SnipeData snipeData) {
+		flatOceanAtTarget();
+		flatOceanAtTarget(CHUNK_SIZE, 0);
+		flatOceanAtTarget(CHUNK_SIZE, CHUNK_SIZE);
+		flatOceanAtTarget(0, CHUNK_SIZE);
+		flatOceanAtTarget(-CHUNK_SIZE, CHUNK_SIZE);
+		flatOceanAtTarget(-CHUNK_SIZE, 0);
+		flatOceanAtTarget(-CHUNK_SIZE, -CHUNK_SIZE);
+		flatOceanAtTarget(0, -CHUNK_SIZE);
+		flatOceanAtTarget(CHUNK_SIZE, -CHUNK_SIZE);
+	}
+
+	private void flatOceanAtTarget(int additionalX, int additionalZ) {
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
+		int blockX = targetBlock.getX();
+		int blockZ = targetBlock.getZ();
+		Block block = clampY(blockX + additionalX, 1, blockZ + additionalZ);
+		Chunk chunk = world.getChunkAt(block);
+		flatOcean(chunk);
+	}
+
+	private void flatOceanAtTarget() {
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
+		Chunk chunk = world.getChunkAt(targetBlock);
+		flatOcean(chunk);
 	}
 
 	private void flatOcean(Chunk chunk) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				for (int y = 0; y < chunk.getWorld()
-					.getMaxHeight(); y++) {
+				World world = chunk.getWorld();
+				for (int y = 0; y < world.getMaxHeight(); y++) {
+					Block block = chunk.getBlock(x, y, z);
 					if (y <= this.floorLevel) {
-						chunk.getBlock(x, y, z)
-							.setType(Material.LEGACY_DIRT);
+						block.setType(Material.DIRT);
 					} else if (y <= this.waterLevel) {
-						chunk.getBlock(x, y, z)
-							.setTypeId(Material.LEGACY_STATIONARY_WATER.getId(), false);
+						block.setType(Material.WATER, false);
 					} else {
-						chunk.getBlock(x, y, z)
-							.setTypeId(Material.LEGACY_AIR.getId(), false);
+						block.setType(Material.AIR, false);
 					}
 				}
 			}
@@ -44,52 +77,8 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.getTargetBlock()));
-	}
-
-	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.getTargetBlock()));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() + CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ())));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() + CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ() + CHUNK_SIZE)));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX(), 1, this.getTargetBlock()
-				.getZ() + CHUNK_SIZE)));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() - CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ() + CHUNK_SIZE)));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() - CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ())));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() - CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ() - CHUNK_SIZE)));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX(), 1, this.getTargetBlock()
-				.getZ() - CHUNK_SIZE)));
-		this.flatOcean(this.getWorld()
-			.getChunkAt(this.clampY(this.getTargetBlock()
-				.getX() + CHUNK_SIZE, 1, this.getTargetBlock()
-				.getZ() - CHUNK_SIZE)));
-	}
-
-	@Override
 	public final void info(Message message) {
-		message.brushName(this.getName());
+		message.brushName(getName());
 		message.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
 		message.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
 		message.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);

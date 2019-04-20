@@ -189,7 +189,7 @@ public class RangeBlockHelper {
 	 */
 	@Nullable
 	public final Block getRangeBlock() {
-		this.fromOffWorld();
+		fromOffWorld();
 		if (this.length > this.range) {
 			return null;
 		}

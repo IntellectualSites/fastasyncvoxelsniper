@@ -2,10 +2,13 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,29 +20,32 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	private Block block;
 	private Undo undo;
 
-	/**
-	 *
-	 */
 	public SetRedstoneRotateBrush() {
 		super("Set Redstone Rotate");
 	}
 
-	private boolean set(Block bl) {
+	private boolean set(Block block) {
 		if (this.block == null) {
-			this.block = bl;
+			this.block = block;
 			return true;
 		} else {
 			this.undo = new Undo();
-			int lowX = (this.block.getX() <= bl.getX()) ? this.block.getX() : bl.getX();
-			int lowY = (this.block.getY() <= bl.getY()) ? this.block.getY() : bl.getY();
-			int lowZ = (this.block.getZ() <= bl.getZ()) ? this.block.getZ() : bl.getZ();
-			int highX = (this.block.getX() >= bl.getX()) ? this.block.getX() : bl.getX();
-			int highY = (this.block.getY() >= bl.getY()) ? this.block.getY() : bl.getY();
-			int highZ = (this.block.getZ() >= bl.getZ()) ? this.block.getZ() : bl.getZ();
+			int x1 = this.block.getX();
+			int x2 = block.getX();
+			int y1 = this.block.getY();
+			int y2 = block.getY();
+			int z1 = this.block.getZ();
+			int z2 = block.getZ();
+			int lowX = (x1 <= x2) ? x1 : x2;
+			int lowY = (y1 <= y2) ? y1 : y2;
+			int lowZ = (z1 <= z2) ? z1 : z2;
+			int highX = (x1 >= x2) ? x1 : x2;
+			int highY = (y1 >= y2) ? y1 : y2;
+			int highZ = (z1 >= z2) ? z1 : z2;
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
-						this.perform(this.clampY(x, y, z));
+						perform(clampY(x, y, z));
 					}
 				}
 			}
@@ -48,34 +54,40 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 		}
 	}
 
-	private void perform(Block bl) {
-		if (bl.getType() == Material.LEGACY_DIODE_BLOCK_ON || bl.getType() == Material.LEGACY_DIODE_BLOCK_OFF) {
-			this.undo.put(bl);
-			bl.setData((((bl.getData() % 4) + 1 < 5) ? (byte) (bl.getData() + 1) : (byte) (bl.getData() - 4)));
+	private void perform(Block block) {
+		Material type = block.getType();
+		if (type == Material.REPEATER) {
+			this.undo.put(block);
+			BlockData blockData = block.getBlockData();
+			Repeater repeater = (Repeater) blockData;
+			int delay = repeater.getDelay();
+			repeater.setDelay(delay % 4 + 1 < 5 ? (byte) (delay + 1) : (byte) (delay - 4));
+			block.setBlockData(blockData);
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
-		if (this.set(this.getTargetBlock())) {
-			snipeData.getOwner()
-				.getPlayer()
-				.sendMessage(ChatColor.GRAY + "Point one");
+	public final void arrow(SnipeData snipeData) {
+		Block targetBlock = getTargetBlock();
+		Sniper owner = snipeData.getOwner();
+		if (set(targetBlock)) {
+			owner.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
-				.storeUndo(this.undo);
+			owner.storeUndo(this.undo);
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		if (this.set(this.getLastBlock())) {
-			snipeData.getOwner()
-				.getPlayer()
-				.sendMessage(ChatColor.GRAY + "Point one");
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		Sniper owner = snipeData.getOwner();
+		if (set(lastBlock)) {
+			owner.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
-				.storeUndo(this.undo);
+			owner.storeUndo(this.undo);
 		}
 	}
 

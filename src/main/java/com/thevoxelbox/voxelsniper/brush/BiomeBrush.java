@@ -6,19 +6,15 @@ import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 
-/**
- *
- */
 public class BiomeBrush extends AbstractBrush {
 
 	private Biome selectedBiome = Biome.PLAINS;
 
-	/**
-	 *
-	 */
 	public BiomeBrush() {
 		super("Biome (/b biome [Biome Name])");
 	}
@@ -26,52 +22,38 @@ public class BiomeBrush extends AbstractBrush {
 	private void biome(SnipeData snipeData) {
 		int brushSize = snipeData.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize, 2);
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double xSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					this.getWorld()
-						.setBiome(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getZ() + z, this.selectedBiome);
+					world.setBiome(targetBlock.getX() + x, targetBlock.getZ() + z, this.selectedBiome);
 				}
 			}
 		}
-		Block block1 = this.getWorld()
-			.getBlockAt(this.getTargetBlock()
-				.getX() - brushSize, 0, this.getTargetBlock()
-				.getZ() - brushSize);
-		Block block2 = this.getWorld()
-			.getBlockAt(this.getTargetBlock()
-				.getX() + brushSize, 0, this.getTargetBlock()
-				.getZ() + brushSize);
-		int lowChunkX = (block1.getX() <= block2.getX()) ? block1.getChunk()
-			.getX() : block2.getChunk()
-			.getX();
-		int lowChunkZ = (block1.getZ() <= block2.getZ()) ? block1.getChunk()
-			.getZ() : block2.getChunk()
-			.getZ();
-		int highChunkX = (block1.getX() >= block2.getX()) ? block1.getChunk()
-			.getX() : block2.getChunk()
-			.getX();
-		int highChunkZ = (block1.getZ() >= block2.getZ()) ? block1.getChunk()
-			.getZ() : block2.getChunk()
-			.getZ();
+		Block block1 = world.getBlockAt(targetBlock.getX() - brushSize, 0, targetBlock.getZ() - brushSize);
+		Block block2 = world.getBlockAt(targetBlock.getX() + brushSize, 0, targetBlock.getZ() + brushSize);
+		Chunk chunk1 = block1.getChunk();
+		Chunk chunk2 = block2.getChunk();
+		int lowChunkX = (block1.getX() <= block2.getX()) ? chunk1.getX() : chunk2.getX();
+		int lowChunkZ = (block1.getZ() <= block2.getZ()) ? chunk1.getZ() : chunk2.getZ();
+		int highChunkX = (block1.getX() >= block2.getX()) ? chunk1.getX() : chunk2.getX();
+		int highChunkZ = (block1.getZ() >= block2.getZ()) ? chunk1.getZ() : chunk2.getZ();
 		for (int x = lowChunkX; x <= highChunkX; x++) {
 			for (int z = lowChunkZ; z <= highChunkZ; z++) {
-				this.getWorld()
-					.refreshChunk(x, z);
+				world.refreshChunk(x, z);
 			}
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.biome(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.biome(snipeData);
 	}
 

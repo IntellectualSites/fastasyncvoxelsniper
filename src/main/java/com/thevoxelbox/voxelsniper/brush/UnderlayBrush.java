@@ -18,9 +18,6 @@ public class UnderlayBrush extends PerformBrush {
 	private int depth = DEFAULT_DEPTH;
 	private boolean allBlocks;
 
-	/**
-	 *
-	 */
 	public UnderlayBrush() {
 		super("Underlay (Reverse Overlay)");
 	}

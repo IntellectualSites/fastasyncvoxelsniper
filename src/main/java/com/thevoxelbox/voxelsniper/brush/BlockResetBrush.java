@@ -5,6 +5,7 @@ import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 /**
@@ -22,28 +23,26 @@ public class BlockResetBrush extends AbstractBrush {
 		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
 			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
 				for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
-					Block block = this.getWorld()
-						.getBlockAt(this.getTargetBlock()
-							.getX() + x, this.getTargetBlock()
-							.getY() + y, this.getTargetBlock()
-							.getZ() + z);
-					if (DENIED_UPDATES.contains(block.getType())) {
+					World world = this.getWorld();
+					Block targetBlock = this.getTargetBlock();
+					Block block = world.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+					Material blockType = block.getType();
+					if (DENIED_UPDATES.contains(blockType)) {
 						continue;
 					}
-					block.setBlockData(block.getType()
-						.createBlockData(), true);
+					block.setBlockData(blockType.createBlockData(), true);
 				}
 			}
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		applyBrush(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		applyBrush(snipeData);
 	}
 

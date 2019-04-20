@@ -26,32 +26,36 @@ public class DiscBrush extends PerformBrush {
 	/**
 	 * Disc executor.
 	 */
-	private void disc(SnipeData v, Block targetBlock) {
-		double radiusSquared = (v.getBrushSize() + this.trueCircle) * (v.getBrushSize() + this.trueCircle);
+	private void disc(SnipeData snipeData, Block targetBlock) {
+		double radiusSquared = (snipeData.getBrushSize() + this.trueCircle) * (snipeData.getBrushSize() + this.trueCircle);
 		Vector centerPoint = targetBlock.getLocation()
 			.toVector();
-		Vector currentPoint = centerPoint.clone();
-		for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
+		Vector currentPoint = new Vector().copy(centerPoint);
+		for (int x = -snipeData.getBrushSize(); x <= snipeData.getBrushSize(); x++) {
 			currentPoint.setX(centerPoint.getX() + x);
-			for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
+			for (int z = -snipeData.getBrushSize(); z <= snipeData.getBrushSize(); z++) {
 				currentPoint.setZ(centerPoint.getZ() + z);
 				if (centerPoint.distanceSquared(currentPoint) <= radiusSquared) {
 					this.current.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
 				}
 			}
 		}
-		v.getOwner()
+		snipeData.getOwner()
 			.storeUndo(this.current.getUndo());
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.disc(snipeData, this.getTargetBlock());
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		this.disc(snipeData, this.getLastBlock());
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		this.disc(snipeData, lastBlock);
 	}
 
 	@Override

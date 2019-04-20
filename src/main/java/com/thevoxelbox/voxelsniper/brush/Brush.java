@@ -26,6 +26,20 @@ public interface Brush {
 	boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock);
 
 	/**
+	 * The arrow action. Executed when a player RightClicks with an Arrow
+	 *
+	 * @param snipeData Sniper caller
+	 */
+	void arrow(SnipeData snipeData);
+
+	/**
+	 * The powder action. Executed when a player RightClicks with Gunpowder
+	 *
+	 * @param snipeData Sniper caller
+	 */
+	void powder(SnipeData snipeData);
+
+	/**
 	 * @return The name of the Brush
 	 */
 	String getName();

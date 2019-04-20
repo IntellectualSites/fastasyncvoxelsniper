@@ -42,9 +42,6 @@ public class StencilBrush extends AbstractBrush {
 	private int[] pastePoint = new int[3];
 	private byte point = 1;
 
-	/**
-	 *
-	 */
 	public StencilBrush() {
 		super("Stencil");
 	}
@@ -299,7 +296,7 @@ public class StencilBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) { // will be used to copy/save later on?
+	public final void arrow(SnipeData snipeData) { // will be used to copy/save later on?
 		if (this.point == 1) {
 			this.firstPoint[0] = this.getTargetBlock()
 				.getX();
@@ -340,7 +337,7 @@ public class StencilBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) { // will be used to paste later on
+	public final void powder(SnipeData snipeData) { // will be used to paste later on
 		this.stencilPaste(snipeData);
 	}
 

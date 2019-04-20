@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Brush
@@ -17,12 +18,12 @@ public class VoxelBrush extends PerformBrush {
 	}
 
 	@Override
-	protected void arrow(SnipeData snipeData) {
+	public void arrow(SnipeData snipeData) {
 		voxel(snipeData);
 	}
 
 	@Override
-	protected void powder(SnipeData snipeData) {
+	public void powder(SnipeData snipeData) {
 		voxel(snipeData);
 	}
 
@@ -31,10 +32,8 @@ public class VoxelBrush extends PerformBrush {
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				for (int y = brushSize; y >= -brushSize; y--) {
-					this.current.perform(this.clampY(this.getTargetBlock()
-						.getX() + x, this.getTargetBlock()
-						.getY() + z, this.getTargetBlock()
-						.getZ() + y));
+					Block targetBlock = this.getTargetBlock();
+					this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + z, targetBlock.getZ() + y));
 				}
 			}
 		}

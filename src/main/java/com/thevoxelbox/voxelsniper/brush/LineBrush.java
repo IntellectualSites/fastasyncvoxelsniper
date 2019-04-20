@@ -65,7 +65,7 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
@@ -77,7 +77,7 @@ public class LineBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.originCoords == null || !this.getTargetBlock()
 			.getWorld()
 			.equals(this.targetWorld)) {

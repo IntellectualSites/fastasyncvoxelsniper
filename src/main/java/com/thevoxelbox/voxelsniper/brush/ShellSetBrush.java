@@ -7,6 +7,8 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,12 +41,18 @@ public class ShellSetBrush extends AbstractBrush {
 				this.block = null;
 				return true;
 			}
-			int lowX = (this.block.getX() <= block.getX()) ? this.block.getX() : block.getX();
-			int lowY = (this.block.getY() <= block.getY()) ? this.block.getY() : block.getY();
-			int lowZ = (this.block.getZ() <= block.getZ()) ? this.block.getZ() : block.getZ();
-			int highX = (this.block.getX() >= block.getX()) ? this.block.getX() : block.getX();
-			int highY = (this.block.getY() >= block.getY()) ? this.block.getY() : block.getY();
-			int highZ = (this.block.getZ() >= block.getZ()) ? this.block.getZ() : block.getZ();
+			int x1 = this.block.getX();
+			int x2 = block.getX();
+			int y1 = this.block.getY();
+			int y2 = block.getY();
+			int z1 = this.block.getZ();
+			int z2 = block.getZ();
+			int lowX = (x1 <= x2) ? x1 : x2;
+			int lowY = (y1 <= y2) ? y1 : y2;
+			int lowZ = (z1 <= z2) ? z1 : z2;
+			int highX = (x1 >= x2) ? x1 : x2;
+			int highY = (y1 >= y2) ? y1 : y2;
+			int highZ = (z1 >= z2) ? z1 : z2;
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE) {
 				snipeData.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
@@ -52,32 +60,19 @@ public class ShellSetBrush extends AbstractBrush {
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
-							if (this.getWorld()
-								.getBlockTypeIdAt(x, y, z) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x + 1, y, z) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x - 1, y, z) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x, y, z + 1) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x, y, z - 1) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x, y + 1, z) == snipeData.getReplaceId()) {
-							} else if (this.getWorld()
-								.getBlockTypeIdAt(x, y - 1, z) == snipeData.getReplaceId()) {
-							} else {
-								blocks.add(this.getWorld()
-									.getBlockAt(x, y, z));
+							World world = getWorld();
+							Material replaceBlockDataType = snipeData.getReplaceBlockDataType();
+							if (isBlockTypeNotEqual(world, y, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x + 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x - 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z + 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z - 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y + 1, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y - 1, x, z, replaceBlockDataType)) {
+								blocks.add(world.getBlockAt(x, y, z));
 							}
 						}
 					}
 				}
 				Undo undo = new Undo();
 				for (Block currentBlock : blocks) {
-					if (currentBlock.getTypeId() != snipeData.getVoxelId()) {
+					if (currentBlock.getType() != snipeData.getBlockDataType()) {
 						undo.put(currentBlock);
-						currentBlock.setTypeId(snipeData.getVoxelId());
+						currentBlock.setType(snipeData.getBlockDataType());
 					}
 				}
 				Sniper owner = snipeData.getOwner();
@@ -89,16 +84,25 @@ public class ShellSetBrush extends AbstractBrush {
 		}
 	}
 
+	private boolean isBlockTypeNotEqual(World world, int y, int x, int z, Material replaceBlockDataType) {
+		Block block = world.getBlockAt(x, y, z);
+		return block.getType() != replaceBlockDataType;
+	}
+
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.set(this.getTargetBlock(), snipeData)) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		}
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
-		if (this.set(this.getLastBlock(), snipeData)) {
+	public final void powder(SnipeData snipeData) {
+		Block lastBlock = this.getLastBlock();
+		if (lastBlock == null) {
+			return;
+		}
+		if (this.set(lastBlock, snipeData)) {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		}
 	}

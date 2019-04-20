@@ -11,15 +11,19 @@ import org.bukkit.Material;
 
 public abstract class BlendBrushBase extends AbstractBrush {
 
-	private static int maxBlockMaterialID;
+	@Deprecated
+	protected static final int MAX_BLOCK_MATERIAL_ID;
+
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
 
 	static {
 		// Find highest placeable block ID
+		int a = -1;
 		for (Material material : Material.values()) {
-			maxBlockMaterialID = ((material.isBlock() && (material.getId() > maxBlockMaterialID)) ? material.getId() : maxBlockMaterialID);
+			a = material.isBlock() && material.getId() > a ? material.getId() : a;
 		}
+		MAX_BLOCK_MATERIAL_ID = a;
 	}
 
 	public BlendBrushBase(String name) {
@@ -29,13 +33,13 @@ public abstract class BlendBrushBase extends AbstractBrush {
 	protected abstract void blend(SnipeData snipeData);
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.excludeAir = false;
 		this.blend(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.excludeAir = true;
 		this.blend(snipeData);
 	}
@@ -59,44 +63,18 @@ public abstract class BlendBrushBase extends AbstractBrush {
 		}
 	}
 
-	/**
-	 *
-	 */
-	protected static int getMaxBlockMaterialID() {
-		return maxBlockMaterialID;
-	}
-
-	/**
-	 *
-	 */
-	protected static void setMaxBlockMaterialID(int maxBlockMaterialID) {
-		BlendBrushBase.maxBlockMaterialID = maxBlockMaterialID;
-	}
-
-	/**
-	 *
-	 */
 	protected final boolean isExcludeAir() {
 		return this.excludeAir;
 	}
 
-	/**
-	 *
-	 */
 	protected final void setExcludeAir(boolean excludeAir) {
 		this.excludeAir = excludeAir;
 	}
 
-	/**
-	 *
-	 */
 	protected final boolean isExcludeWater() {
 		return this.excludeWater;
 	}
 
-	/**
-	 *
-	 */
 	protected final void setExcludeWater(boolean excludeWater) {
 		this.excludeWater = excludeWater;
 	}

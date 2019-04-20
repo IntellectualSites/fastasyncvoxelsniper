@@ -4,6 +4,7 @@ import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
@@ -50,26 +51,27 @@ public class SignOverwriteBrush extends AbstractBrush {
 	/**
 	 * Sets the text of the target sign if the target block is a sign.
 	 */
-	private void setSingle(SnipeData v) {
+	private void setSingle(SnipeData snipeData) {
 		if (this.getTargetBlock()
 			.getState() instanceof Sign) {
 			setSignText((Sign) this.getTargetBlock()
 				.getState());
 		} else {
-			v.sendMessage(ChatColor.RED + "Target block is not a sign.");
+			snipeData.sendMessage(ChatColor.RED + "Target block is not a sign.");
 		}
 	}
 
 	/**
 	 * Sets all signs in a range of box{x=z=brushSize*2+1 ; z=voxelHeight*2+1}.
 	 */
-	private void setRanged(SnipeData v) {
-		int minX = getTargetBlock().getX() - v.getBrushSize();
-		int maxX = getTargetBlock().getX() + v.getBrushSize();
-		int minY = getTargetBlock().getY() - v.getVoxelHeight();
-		int maxY = getTargetBlock().getY() + v.getVoxelHeight();
-		int minZ = getTargetBlock().getZ() - v.getBrushSize();
-		int maxZ = getTargetBlock().getZ() + v.getBrushSize();
+	private void setRanged(SnipeData snipeData) {
+		Block targetBlock = getTargetBlock();
+		int minX = targetBlock.getX() - snipeData.getBrushSize();
+		int maxX = targetBlock.getX() + snipeData.getBrushSize();
+		int minY = targetBlock.getY() - snipeData.getVoxelHeight();
+		int maxY = targetBlock.getY() + snipeData.getVoxelHeight();
+		int minZ = targetBlock.getZ() - snipeData.getBrushSize();
+		int maxZ = targetBlock.getZ() + snipeData.getBrushSize();
 		boolean signFound = false; // indicates whether or not a sign was set
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
@@ -85,12 +87,12 @@ public class SignOverwriteBrush extends AbstractBrush {
 			}
 		}
 		if (!signFound) {
-			v.sendMessage(ChatColor.RED + "Did not found any sign in selection box.");
+			snipeData.sendMessage(ChatColor.RED + "Did not found any sign in selection box.");
 		}
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.rangedMode) {
 			setRanged(snipeData);
 		} else {
@@ -99,7 +101,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.getTargetBlock()
 			.getState() instanceof Sign) {
 			Sign sign = (Sign) this.getTargetBlock()
@@ -179,14 +181,14 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 * Iterates though the given array until the next top level param (a parameter which starts
 	 * with a dash -) is found.
 	 */
-	private int parseSignLineFromParam(String[] params, int lineNumber, SnipeData v, int i) {
+	private int parseSignLineFromParam(String[] params, int lineNumber, SnipeData snipeData, int i) {
 		int lineIndex = lineNumber - 1;
 		String parameter = params[i];
 		boolean statusSet = false;
 		if (parameter.contains(":")) {
 			this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(':'))
 				.equalsIgnoreCase(":enabled");
-			v.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
+			snipeData.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
 			statusSet = true;
 		}
 		if ((i + 1) >= params.length) {
@@ -194,7 +196,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 			if (statusSet) {
 				return i;
 			}
-			v.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
+			snipeData.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 			this.signTextLines[lineIndex] = "";
 			return i;
 		}
@@ -219,11 +221,11 @@ public class SignOverwriteBrush extends AbstractBrush {
 			if (statusSet) {
 				return i;
 			}
-			v.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
+			snipeData.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 		}
 		// check the line length and cut the text if needed
 		if (newText.length() > MAX_SIGN_LINE_LENGTH) {
-			v.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
+			snipeData.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
 			newText = new StringBuilder(newText.substring(0, MAX_SIGN_LINE_LENGTH));
 		}
 		this.signTextLines[lineIndex] = newText.toString();

@@ -180,7 +180,7 @@ public class PunishBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (!snipeData.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
@@ -231,7 +231,7 @@ public class PunishBrush extends PerformBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (!snipeData.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {

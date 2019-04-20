@@ -35,7 +35,7 @@ public class CleanSnowBrush extends AbstractBrush {
 						int targetBlockX = targetBlock.getX();
 						int targetBlockY = targetBlock.getY();
 						int targetBlockZ = targetBlock.getZ();
-						if ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.LEGACY_SNOW) && ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.LEGACY_SNOW) || (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.LEGACY_AIR))) {
+						if ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.SNOW) && ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.SNOW) || (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.AIR))) {
 							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
 							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR.createBlockData());
 						}
@@ -48,12 +48,12 @@ public class CleanSnowBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.cleanSnow(snipeData);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.cleanSnow(snipeData);
 	}
 

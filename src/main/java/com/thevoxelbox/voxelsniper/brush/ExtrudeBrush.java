@@ -133,13 +133,13 @@ public class ExtrudeBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), false);
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
 			.getFace(this.getLastBlock()), true);
 	}

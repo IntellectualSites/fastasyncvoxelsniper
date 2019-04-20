@@ -136,7 +136,7 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void arrow(SnipeData snipeData) {
+	public final void arrow(SnipeData snipeData) {
 		if (this.selection == null) {
 			this.selection = new Selection();
 		}
@@ -155,7 +155,7 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	@Override
-	protected final void powder(SnipeData snipeData) {
+	public final void powder(SnipeData snipeData) {
 		if (this.selection == null) {
 			this.selection = new Selection();
 		}
