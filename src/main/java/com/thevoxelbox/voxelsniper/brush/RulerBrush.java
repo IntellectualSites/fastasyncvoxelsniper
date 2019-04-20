@@ -80,7 +80,7 @@ public class RulerBrush extends AbstractBrush {
 	@Override
 	public final void info(Message message) {
 		message.brushName(this.getName());
-		message.voxel();
+		message.blockDataType();
 	}
 
 	@Override

@@ -2,9 +2,11 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#Clean_Snow_Brush
@@ -15,9 +17,6 @@ public class CleanSnowBrush extends AbstractBrush {
 
 	private double trueCircle;
 
-	/**
-	 *
-	 */
 	public CleanSnowBrush() {
 		super("Clean Snow");
 	}
@@ -32,34 +31,20 @@ public class CleanSnowBrush extends AbstractBrush {
 				double xSquared = Math.pow(x - brushSize, 2);
 				for (int z = (brushSize + 1) * 2; z >= 0; z--) {
 					if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared) {
-						if ((this.clampY(this.getTargetBlock()
-							.getX() + x - brushSize, this.getTargetBlock()
-							.getY() + z - brushSize, this.getTargetBlock()
-							.getZ() + y - brushSize)
-							.getType() == Material.LEGACY_SNOW) && ((this.clampY(this.getTargetBlock()
-							.getX() + x - brushSize, this.getTargetBlock()
-							.getY() + z - brushSize - 1, this.getTargetBlock()
-							.getZ() + y - brushSize)
-							.getType() == Material.LEGACY_SNOW) || (this.clampY(this.getTargetBlock()
-							.getX() + x - brushSize, this.getTargetBlock()
-							.getY() + z - brushSize - 1, this.getTargetBlock()
-							.getZ() + y - brushSize)
-							.getType() == Material.LEGACY_AIR))) {
-							undo.put(this.clampY(this.getTargetBlock()
-								.getX() + x, this.getTargetBlock()
-								.getY() + z, this.getTargetBlock()
-								.getZ() + y));
-							this.setBlockIdAt(this.getTargetBlock()
-								.getZ() + y - brushSize, this.getTargetBlock()
-								.getX() + x - brushSize, this.getTargetBlock()
-								.getY() + z - brushSize, 0);
+						Block targetBlock = getTargetBlock();
+						int targetBlockX = targetBlock.getX();
+						int targetBlockY = targetBlock.getY();
+						int targetBlockZ = targetBlock.getZ();
+						if ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.LEGACY_SNOW) && ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.LEGACY_SNOW) || (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.LEGACY_AIR))) {
+							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
+							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR.createBlockData());
 						}
 					}
 				}
 			}
 		}
-		snipeData.getOwner()
-			.storeUndo(undo);
+		Sniper owner = snipeData.getOwner();
+		owner.storeUndo(undo);
 	}
 
 	@Override

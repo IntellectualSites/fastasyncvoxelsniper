@@ -41,7 +41,7 @@ public class VoxelInkReplaceCommand extends VoxelCommand {
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		snipeData.setReplaceData(dataValue);
 		Message message = snipeData.getMessage();
-		message.replaceData();
+		message.replaceBlockData();
 		return true;
 	}
 }

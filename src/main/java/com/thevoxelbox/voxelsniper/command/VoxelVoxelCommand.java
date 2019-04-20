@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,31 +27,33 @@ public class VoxelVoxelCommand extends VoxelCommand {
 		Sniper sniper = sniperManager.getSniperForPlayer(sender);
 		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
 		Message message = snipeData.getMessage();
+		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 		if (args.length == 0) {
 			Block targetBlock = new RangeBlockHelper(sender, sender.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
-				if (!sender.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfig()
-					.getLiteSniperRestrictedItems()
-					.contains(targetBlock.getTypeId())) {
+				if (!sender.hasPermission("voxelsniper.ignorelimitations") && config.getLiteSniperRestrictedItems()
+					.contains(targetBlock.getType()
+						.getKey()
+						.toString())) {
 					sender.sendMessage("You are not allowed to use " + targetBlock.getType()
 						.name() + ".");
 					return true;
 				}
-				snipeData.setVoxelId(targetBlock.getTypeId());
-				message.voxel();
+				snipeData.setBlockDataType(targetBlock.getType());
+				message.blockDataType();
 			}
 			return true;
 		}
 		Material material = Material.matchMaterial(args[0]);
 		if (material != null && material.isBlock()) {
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && this.plugin.getVoxelSniperConfig()
-				.getLiteSniperRestrictedItems()
-				.contains(material.getId())) {
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && config.getLiteSniperRestrictedItems()
+				.contains(material.getKey()
+					.toString())) {
 				sender.sendMessage("You are not allowed to use " + material.name() + ".");
 				return true;
 			}
-			snipeData.setVoxelId(material.getId());
-			message.voxel();
+			snipeData.setBlockDataType(material);
+			message.blockDataType();
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 		}

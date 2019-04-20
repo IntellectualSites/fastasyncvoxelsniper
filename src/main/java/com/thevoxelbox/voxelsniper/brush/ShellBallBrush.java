@@ -113,8 +113,8 @@ public class ShellBallBrush extends AbstractBrush {
 	public final void info(Message message) {
 		message.brushName(this.getName());
 		message.size();
-		message.voxel();
-		message.replace();
+		message.blockDataType();
+		message.replaceBlockDataType();
 	}
 
 	@Override

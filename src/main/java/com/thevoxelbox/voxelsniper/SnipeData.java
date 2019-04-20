@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.util.VoxelList;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -40,7 +41,7 @@ public class SnipeData {
 	/**
 	 * Voxel List of ID's -- set blockPositionY /vl # # # -#.
 	 */
-	private VoxelList voxelList = new VoxelList();
+	private List<BlockData> voxelList = new ArrayList<>();
 
 	public SnipeData(Sniper owner) {
 		this.owner = owner;
@@ -50,12 +51,20 @@ public class SnipeData {
 	 * Reset to default values.
 	 */
 	public void reset() {
-		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
-		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
+		resetBlockData();
+		resetReplaceBlockData();
 		this.brushSize = DEFAULT_BRUSH_SIZE;
 		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
 		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
-		this.voxelList = new VoxelList();
+		this.voxelList = new ArrayList<>();
+	}
+
+	public void resetBlockData() {
+		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
+	}
+
+	public void resetReplaceBlockData() {
+		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
 	}
 
 	public void sendMessage(String message) {
@@ -73,6 +82,22 @@ public class SnipeData {
 			return null;
 		}
 		return player.getWorld();
+	}
+
+	public Material getBlockDataType() {
+		return this.blockData.getMaterial();
+	}
+
+	public void setBlockDataType(Material type) {
+		this.blockData = type.createBlockData();
+	}
+
+	public Material getReplaceBlockDataType() {
+		return this.replaceBlockData.getMaterial();
+	}
+
+	public void setReplaceBlockDataType(Material type) {
+		this.replaceBlockData = type.createBlockData();
 	}
 
 	public Sniper getOwner() {
@@ -151,11 +176,11 @@ public class SnipeData {
 		this.lightningEnabled = lightningEnabled;
 	}
 
-	public VoxelList getVoxelList() {
+	public List<BlockData> getVoxelList() {
 		return this.voxelList;
 	}
 
-	public void setVoxelList(VoxelList voxelList) {
+	public void setVoxelList(List<BlockData> voxelList) {
 		this.voxelList = voxelList;
 	}
 }

@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractPerformer implements Performer {
 
 	private String name;
-	@Nullable
 	protected Undo undo;
+	@Nullable
 	protected World world;
 
 	public AbstractPerformer(String name) {
@@ -29,7 +29,6 @@ public abstract class AbstractPerformer implements Performer {
 	}
 
 	@Override
-	@Nullable
 	public Undo getUndo() {
 		Undo temp = this.undo;
 		this.undo = null;

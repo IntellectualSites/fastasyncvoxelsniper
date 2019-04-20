@@ -5,18 +5,19 @@
 
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.util.VoxelList;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class ExcludeComboPerformer extends AbstractPerformer {
 
-	private VoxelList excludeList;
-	private int id;
-	private byte data;
+	private List<BlockData> excludeList;
+	private BlockData blockData;
 
 	public ExcludeComboPerformer() {
 		super("Exclude Combo");
@@ -26,23 +27,23 @@ public class ExcludeComboPerformer extends AbstractPerformer {
 	public void info(Message message) {
 		message.performerName(this.getName());
 		message.voxelList();
-		message.voxel();
-		message.data();
+		message.blockDataType();
+		message.blockData();
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.id = snipeData.getVoxelId();
-		this.data = snipeData.getData();
+		this.blockData = snipeData.getBlockData();
 		this.excludeList = snipeData.getVoxelList();
 	}
 
 	@Override
 	public void perform(Block block) {
-		if (!this.excludeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+		BlockData blockData = block.getBlockData();
+		if (!this.excludeList.contains(blockData)) {
 			this.undo.put(block);
-			block.setTypeIdAndData(this.id, this.data, true);
+			block.setBlockData(this.blockData);
 		}
 	}
 }

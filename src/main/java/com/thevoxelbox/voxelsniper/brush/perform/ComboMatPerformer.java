@@ -32,9 +32,9 @@ public class ComboMatPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
-		message.replace();
-		message.data();
+		message.blockDataType();
+		message.replaceBlockDataType();
+		message.blockData();
 	}
 
 	@Override

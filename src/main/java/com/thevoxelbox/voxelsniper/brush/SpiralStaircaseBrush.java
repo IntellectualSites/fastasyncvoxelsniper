@@ -545,9 +545,9 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	public final void info(Message message) {
 		message.brushName("Spiral Staircase");
 		message.size();
-		message.voxel();
+		message.blockDataType();
 		message.height();
-		message.data();
+		message.blockData();
 		message.custom(ChatColor.BLUE + "Staircase type: " + this.stairtype);
 		message.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
 		message.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);

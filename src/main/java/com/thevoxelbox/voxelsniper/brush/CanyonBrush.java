@@ -19,16 +19,9 @@ public class CanyonBrush extends AbstractBrush {
 	private static final int SHIFT_LEVEL_MAX = 60;
 	private int yLevel = 10;
 
-	/**
-	 *
-	 */
 	public CanyonBrush() {
 		super("Canyon");
 	}
-
-	/**
-	 *
-	 */
 
 	protected final void canyon(Chunk chunk, Undo undo) {
 		for (int x = 0; x < CHUNK_SIZE; x++) {
@@ -40,13 +33,13 @@ public class CanyonBrush extends AbstractBrush {
 					Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
 					undo.put(block);
 					undo.put(currentYLevelBlock);
-					currentYLevelBlock.setTypeId(block.getTypeId(), false);
+					currentYLevelBlock.setType(block.getType(), false);
 					block.setType(Material.LEGACY_AIR);
 					currentYLevel++;
 				}
 				Block block = chunk.getBlock(x, 0, z);
 				undo.put(block);
-				block.setTypeId(Material.LEGACY_BEDROCK.getId());
+				block.setType(Material.LEGACY_BEDROCK);
 				for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
 					Block currentBlock = chunk.getBlock(x, y, z);
 					undo.put(currentBlock);
@@ -85,17 +78,18 @@ public class CanyonBrush extends AbstractBrush {
 
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
-		if (parameters[1].equalsIgnoreCase("info")) {
+		String secondParameter = parameters[1];
+		if (secondParameter.equalsIgnoreCase("info")) {
 			snipeData.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
 		}
-		if (parameters[1].startsWith("y")) {
-			int _i = Integer.parseInt(parameters[1].replace("y", ""));
-			if (_i < SHIFT_LEVEL_MIN) {
-				_i = SHIFT_LEVEL_MIN;
-			} else if (_i > SHIFT_LEVEL_MAX) {
-				_i = SHIFT_LEVEL_MAX;
+		if (!secondParameter.isEmpty() && secondParameter.charAt(0) == 'y') {
+			int y = Integer.parseInt(secondParameter.replace("y", ""));
+			if (y < SHIFT_LEVEL_MIN) {
+				y = SHIFT_LEVEL_MIN;
+			} else if (y > SHIFT_LEVEL_MAX) {
+				y = SHIFT_LEVEL_MAX;
 			}
-			this.yLevel = _i;
+			this.yLevel = y;
 			snipeData.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 		}
 	}

@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 
 public class Message {
 
@@ -44,8 +45,9 @@ public class Message {
 	/**
 	 * Display data value.
 	 */
-	public void data() {
-		this.snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + this.snipeData.getData());
+	public void blockData() {
+		BlockData blockData = this.snipeData.getBlockData();
+		this.snipeData.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString(true));
 	}
 
 	/**
@@ -65,16 +67,17 @@ public class Message {
 	/**
 	 * Displaye replace material.
 	 */
-
-	public void replace() {
-		this.snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + this.snipeData.getReplaceId() + ChatColor.GRAY + " (" + Material.getMaterial(this.snipeData.getReplaceId()) + ")");
+	public void replaceBlockDataType() {
+		Material replaceBlockDataType = this.snipeData.getReplaceBlockDataType();
+		this.snipeData.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockDataType.getKey());
 	}
 
 	/**
 	 * Display replace data value.
 	 */
-	public void replaceData() {
-		this.snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + this.snipeData.getReplaceData());
+	public void replaceBlockData() {
+		BlockData replaceBlockData = this.snipeData.getReplaceBlockData();
+		this.snipeData.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString(true));
 	}
 
 	/**
@@ -93,8 +96,14 @@ public class Message {
 	public void toggleLightning() {
 		Sniper owner = this.snipeData.getOwner();
 		String currentToolId = owner.getCurrentToolId();
-		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
-			.isLightningEnabled()) ? "on" : "off"));
+		if (currentToolId == null) {
+			return;
+		}
+		SnipeData snipeData = owner.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return;
+		}
+		this.snipeData.sendMessage(ChatColor.GOLD + "Lightning mode has been toggled " + ChatColor.DARK_RED + (snipeData.isLightningEnabled() ? "on" : "off"));
 	}
 
 	/**
@@ -103,8 +112,14 @@ public class Message {
 	public final void togglePrintout() {
 		Sniper owner = this.snipeData.getOwner();
 		String currentToolId = owner.getCurrentToolId();
-		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
-			.isLightningEnabled()) ? "on" : "off"));
+		if (currentToolId == null) {
+			return;
+		}
+		SnipeData snipeData = owner.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return;
+		}
+		this.snipeData.sendMessage(ChatColor.GOLD + "Brush info printout mode has been toggled " + ChatColor.DARK_RED + (snipeData.isLightningEnabled() ? "on" : "off"));
 	}
 
 	/**
@@ -113,17 +128,22 @@ public class Message {
 	public void toggleRange() {
 		Sniper owner = this.snipeData.getOwner();
 		String currentToolId = owner.getCurrentToolId();
-		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + ((owner.getSnipeData(currentToolId)
-			.isRanged()) ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + (double) owner.getSnipeData(currentToolId)
-			.getRange());
+		if (currentToolId == null) {
+			return;
+		}
+		SnipeData snipeData = owner.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return;
+		}
+		this.snipeData.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + (snipeData.isRanged() ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + snipeData.getRange());
 	}
 
 	/**
 	 * Display voxel type.
 	 */
-
-	public void voxel() {
-		this.snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + this.snipeData.getVoxelId() + ChatColor.GRAY + " (" + Material.getMaterial(this.snipeData.getVoxelId()) + ")");
+	public void blockDataType() {
+		Material blockDataType = this.snipeData.getBlockDataType();
+		this.snipeData.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockDataType.getKey());
 	}
 
 	/**
@@ -138,13 +158,9 @@ public class Message {
 			returnValueBuilder.append(ChatColor.DARK_GREEN);
 			returnValueBuilder.append("Block Types Selected: ");
 			returnValueBuilder.append(ChatColor.AQUA);
-			for (int[] valuePair : this.snipeData.getVoxelList()
-				.getList()) {
-				returnValueBuilder.append(valuePair[0]);
-				if (valuePair[1] != -1) {
-					returnValueBuilder.append(":");
-					returnValueBuilder.append(valuePair[1]);
-				}
+			for (BlockData blockData : this.snipeData.getVoxelList()) {
+				String dataAsString = blockData.getAsString(true);
+				returnValueBuilder.append(dataAsString);
 				returnValueBuilder.append(" ");
 			}
 			this.snipeData.sendMessage(returnValueBuilder.toString());

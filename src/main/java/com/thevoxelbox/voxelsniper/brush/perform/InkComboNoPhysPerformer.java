@@ -27,9 +27,9 @@ public class InkComboNoPhysPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.replace();
-		message.data();
-		message.replaceData();
+		message.replaceBlockDataType();
+		message.blockData();
+		message.replaceBlockData();
 	}
 
 	@Override

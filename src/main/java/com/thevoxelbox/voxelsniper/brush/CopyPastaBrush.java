@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
@@ -35,7 +36,7 @@ public class CopyPastaBrush extends AbstractBrush {
 		super("CopyPasta");
 	}
 
-	private void doCopy(SnipeData v) {
+	private void doCopy(SnipeData snipeData) {
 		for (int i = 0; i < 3; i++) {
 			this.arraySize[i] = Math.abs(this.firstPoint[i] - this.secondPoint[i]) + 1;
 			this.minPoint[i] = Math.min(this.firstPoint[i], this.secondPoint[i]);
@@ -56,13 +57,13 @@ public class CopyPastaBrush extends AbstractBrush {
 					}
 				}
 			}
-			v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks copied.");
+			snipeData.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks copied.");
 		} else {
-			v.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
+			snipeData.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
 		}
 	}
 
-	private void doPasta(SnipeData v) {
+	private void doPasta(SnipeData snipeData) {
 		Undo undo = new Undo();
 		for (int i = 0; i < this.arraySize[0]; i++) {
 			for (int j = 0; j < this.arraySize[1]; j++) {
@@ -92,8 +93,8 @@ public class CopyPastaBrush extends AbstractBrush {
 				}
 			}
 		}
-		v.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
-		v.getOwner()
+		snipeData.sendMessage(ChatColor.AQUA + "" + this.numBlocks + " blocks pasted.");
+		snipeData.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -174,7 +175,8 @@ public class CopyPastaBrush extends AbstractBrush {
 			snipeData.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
 			return;
 		}
-		if (parameter.equalsIgnoreCase("90") || parameter.equalsIgnoreCase("180") || parameter.equalsIgnoreCase("270") || parameter.equalsIgnoreCase("0")) {
+		if (Stream.of("90", "180", "270", "0")
+			.anyMatch(parameter::equalsIgnoreCase)) {
 			this.pivot = Integer.parseInt(parameter);
 			snipeData.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
 		}

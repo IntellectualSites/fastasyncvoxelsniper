@@ -8,6 +8,8 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -167,6 +169,14 @@ public abstract class AbstractBrush implements Brush {
 		return "General";
 	}
 
+	protected Vector3i getTargetBlockPosition() {
+		Location location = this.targetBlock.getLocation();
+		int blockX = location.getBlockX();
+		int blockY = location.getBlockY();
+		int blockZ = location.getBlockZ();
+		return new Vector3i(blockX, blockY, blockZ);
+	}
+
 	/**
 	 * @return the targetBlock
 	 */
@@ -203,6 +213,19 @@ public abstract class AbstractBrush implements Brush {
 		this.lastBlock = lastBlock;
 	}
 
+	protected Material getBlockType(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return getBlockType(x, y, z);
+	}
+
+	protected Material getBlockType(int x, int y, int z) {
+		World world = this.targetBlock.getWorld();
+		Block block = world.getBlockAt(x, y, z);
+		return block.getType();
+	}
+
 	protected BlockData getBlockData(Vector3i position) {
 		int x = position.getX();
 		int y = position.getY();
@@ -214,6 +237,19 @@ public abstract class AbstractBrush implements Brush {
 		World world = this.targetBlock.getWorld();
 		Block block = world.getBlockAt(x, y, z);
 		return block.getBlockData();
+	}
+
+	protected void setBlockType(Vector3i position, Material type) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		setBlockType(x, y, z, type);
+	}
+
+	protected void setBlockType(int x, int y, int z, Material type) {
+		World world = this.targetBlock.getWorld();
+		Block block = world.getBlockAt(x, y, z);
+		block.setType(type);
 	}
 
 	/**

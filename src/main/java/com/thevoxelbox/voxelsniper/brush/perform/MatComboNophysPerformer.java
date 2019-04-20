@@ -32,9 +32,9 @@ public class MatComboNophysPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
-		message.replace();
-		message.replaceData();
+		message.blockDataType();
+		message.replaceBlockDataType();
+		message.replaceBlockData();
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class MaterialPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
+		message.blockDataType();
 	}
 
 	@Override

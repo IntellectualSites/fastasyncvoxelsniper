@@ -78,7 +78,8 @@ public class FillDownBrush extends PerformBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].equalsIgnoreCase("info")) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
 				snipeData.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
@@ -86,20 +87,20 @@ public class FillDownBrush extends PerformBrush {
 				snipeData.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
 				snipeData.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
 				return;
-			} else if (parameters[i].equalsIgnoreCase("true")) {
+			} else if (parameter.equalsIgnoreCase("true")) {
 				this.trueCircle = 0.5;
 				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (parameters[i].equalsIgnoreCase("false")) {
+			} else if (parameter.equalsIgnoreCase("false")) {
 				this.trueCircle = 0;
 				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (parameters[i].equalsIgnoreCase("all")) {
+			} else if (parameter.equalsIgnoreCase("all")) {
 				this.fillLiquid = true;
 				snipeData.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
-			} else if (parameters[i].equalsIgnoreCase("some")) {
+			} else if (parameter.equalsIgnoreCase("some")) {
 				this.fillLiquid = false;
-				snipeData.setReplaceId(0);
+				snipeData.resetReplaceBlockData();
 				snipeData.sendMessage(ChatColor.AQUA + "Now only filling air.");
-			} else if (parameters[i].equalsIgnoreCase("-e")) {
+			} else if (parameter.equalsIgnoreCase("-e")) {
 				this.fromExisting = !this.fromExisting;
 				snipeData.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
 			} else {

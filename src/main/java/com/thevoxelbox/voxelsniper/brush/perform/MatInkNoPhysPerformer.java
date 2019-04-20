@@ -30,8 +30,8 @@ public class MatInkNoPhysPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
-		message.replaceData();
+		message.blockDataType();
+		message.replaceBlockData();
 	}
 
 	@Override

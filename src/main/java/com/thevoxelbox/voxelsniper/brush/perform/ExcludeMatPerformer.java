@@ -5,17 +5,20 @@
 
 package com.thevoxelbox.voxelsniper.brush.perform;
 
+import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.util.VoxelList;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class ExcludeMatPerformer extends AbstractPerformer {
 
-	private VoxelList excludeList;
-	private int id;
+	private List<BlockData> excludeList;
+	private Material type;
 
 	public ExcludeMatPerformer() {
 		super("Exclude Material");
@@ -25,21 +28,22 @@ public class ExcludeMatPerformer extends AbstractPerformer {
 	public void info(Message message) {
 		message.performerName(this.getName());
 		message.voxelList();
-		message.voxel();
+		message.blockDataType();
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.id = snipeData.getVoxelId();
+		this.type = snipeData.getBlockDataType();
 		this.excludeList = snipeData.getVoxelList();
 	}
 
 	@Override
 	public void perform(Block block) {
-		if (!this.excludeList.contains(new int[] {block.getTypeId(), block.getData()})) {
+		BlockData blockData = block.getBlockData();
+		if (!this.excludeList.contains(blockData)) {
 			this.undo.put(block);
-			block.setTypeId(this.id);
+			block.setType(this.type);
 		}
 	}
 }

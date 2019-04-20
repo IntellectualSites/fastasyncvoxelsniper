@@ -44,7 +44,7 @@ public abstract class BlendBrushBase extends AbstractBrush {
 	public final void info(Message message) {
 		message.brushName(this.getName());
 		message.size();
-		message.voxel();
+		message.blockDataType();
 		message.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 	}
 

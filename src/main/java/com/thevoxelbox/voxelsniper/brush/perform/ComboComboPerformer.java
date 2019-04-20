@@ -34,10 +34,10 @@ public class ComboComboPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
-		message.replace();
-		message.data();
-		message.replaceData();
+		message.blockDataType();
+		message.replaceBlockDataType();
+		message.blockData();
+		message.replaceBlockData();
 	}
 
 	@Override

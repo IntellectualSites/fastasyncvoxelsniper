@@ -23,8 +23,8 @@ public class ComboNoPhysPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
-		message.data();
+		message.blockDataType();
+		message.blockData();
 	}
 
 	@Override

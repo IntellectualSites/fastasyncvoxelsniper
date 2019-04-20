@@ -1,9 +1,11 @@
 package com.thevoxelbox.voxelsniper;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Voxel
@@ -72,19 +74,13 @@ public class RangeBlockHelper {
 		// values
 	}
 
-	/**
-	 *
-	 */
 	public RangeBlockHelper(Player player, World world, double range) {
 		this.world = world;
 		this.init(player.getLocation(), range, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
-		this.fromOffworld();
+		this.fromOffWorld();
 	}
 
-	/**
-	 *
-	 */
-	public final void fromOffworld() {
+	public final void fromOffWorld() {
 		if (this.targetY > MAXIMUM_WORLD_HEIGHT) {
 			while (this.targetY > MAXIMUM_WORLD_HEIGHT && this.length <= this.range) {
 				this.lastX = this.targetX;
@@ -125,12 +121,12 @@ public class RangeBlockHelper {
 	 *
 	 * @return Block
 	 */
-	public final Block getCurBlock() {
+	@Nullable
+	public final Block getCurrentBlock() {
 		if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
 			return null;
-		} else {
-			return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
 		}
+		return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
 	}
 
 	/**
@@ -139,15 +135,14 @@ public class RangeBlockHelper {
 	 * @return Block
 	 */
 
+	@Nullable
 	public final Block getFaceBlock() {
-		while ((this.getNextBlock() != null) && (this.getCurBlock()
-			.getTypeId() == 0)) {
+		while (this.getNextBlock() != null && getCurrentBlock() != null && getCurrentBlock().getType() == Material.AIR) {
 		}
-		if (this.getCurBlock() != null) {
-			return this.getLastBlock();
-		} else {
+		if (getCurrentBlock() == null) {
 			return null;
 		}
+		return getLastBlock();
 	}
 
 	/**
@@ -155,6 +150,7 @@ public class RangeBlockHelper {
 	 *
 	 * @return Block
 	 */
+	@Nullable
 	public final Block getLastBlock() {
 		if (this.lastY > MAXIMUM_WORLD_HEIGHT || this.lastY < 0) {
 			return null;
@@ -167,6 +163,7 @@ public class RangeBlockHelper {
 	 *
 	 * @return Block
 	 */
+	@Nullable
 	public final Block getNextBlock() {
 		this.lastX = this.targetX;
 		this.lastY = this.targetY;
@@ -190,13 +187,13 @@ public class RangeBlockHelper {
 	/**
 	 * @return Block
 	 */
+	@Nullable
 	public final Block getRangeBlock() {
-		this.fromOffworld();
+		this.fromOffWorld();
 		if (this.length > this.range) {
 			return null;
-		} else {
-			return this.getRange();
 		}
+		return getRange();
 	}
 
 	/**
@@ -205,61 +202,56 @@ public class RangeBlockHelper {
 	 * @return Block
 	 */
 
+	@Nullable
 	public final Block getTargetBlock() {
-		this.fromOffworld();
-		while ((this.getNextBlock() != null) && (this.getCurBlock()
-			.getTypeId() == 0)) {
+		fromOffWorld();
+		while (getNextBlock() != null && getCurrentBlock() != null && getCurrentBlock().getType() == Material.AIR) {
 		}
-		return this.getCurBlock();
+		return getCurrentBlock();
 	}
 
 	/**
 	 * Sets current block type id.
 	 */
 
-	public final void setCurBlock(int type) {
-		if (this.getCurBlock() != null) {
-			this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
-				.setTypeId(type);
+	public final void setCurrentBlock(Material type) {
+		if (this.getCurrentBlock() != null) {
+			Block block = this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
+			block.setType(type);
 		}
 	}
 
 	/**
 	 * Sets the type of the block attached to the face at the cursor.
 	 */
-
-	public final void setFaceBlock(int type) {
-		while ((this.getNextBlock() != null) && (this.getCurBlock()
-			.getTypeId() == 0)) {
+	public final void setFaceBlock(Material type) {
+		while (getNextBlock() != null && getCurrentBlock() != null && getCurrentBlock().getType() == Material.AIR) {
 		}
-		if (this.getCurBlock() != null) {
-			this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
-				.setTypeId(type);
+		if (this.getCurrentBlock() != null) {
+			Block block = this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
+			block.setType(type);
 		}
 	}
 
 	/**
 	 * Sets previous block type id.
 	 */
-
-	public final void setLastBlock(int type) {
+	public final void setLastBlock(Material type) {
 		if (this.getLastBlock() != null) {
-			this.world.getBlockAt(this.lastX, this.lastY, this.lastZ)
-				.setTypeId(type);
+			Block block = this.world.getBlockAt(this.lastX, this.lastY, this.lastZ);
+			block.setType(type);
 		}
 	}
 
 	/**
 	 * Sets the type of the block at the cursor.
 	 */
-
-	public final void setTargetBlock(int type) {
-		while ((this.getNextBlock() != null) && (this.getCurBlock()
-			.getTypeId() == 0)) {
+	public final void setTargetBlock(Material type) {
+		while (getNextBlock() != null && getCurrentBlock() != null && getCurrentBlock().getType() == Material.AIR) {
 		}
-		if (this.getCurBlock() != null) {
-			this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
-				.setTypeId(type);
+		if (getCurrentBlock() != null) {
+			Block block = this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
+			block.setType(type);
 		}
 	}
 
@@ -278,7 +270,8 @@ public class RangeBlockHelper {
 				this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 				this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
 			} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
-			if (this.world.getBlockTypeIdAt(this.targetX, this.targetY, this.targetZ) != 0) {
+			if (!this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
+				.isEmpty()) {
 				return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
 			}
 			if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {

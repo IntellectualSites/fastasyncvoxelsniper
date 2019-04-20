@@ -28,7 +28,7 @@ public class NoUndoPerformer extends AbstractPerformer {
 	@Override
 	public void info(Message message) {
 		message.performerName(this.getName());
-		message.voxel();
+		message.blockDataType();
 	}
 
 	@Override

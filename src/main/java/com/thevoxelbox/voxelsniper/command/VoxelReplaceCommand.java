@@ -28,18 +28,18 @@ public class VoxelReplaceCommand extends VoxelCommand {
 		if (args.length == 0) {
 			Block targetBlock = new RangeBlockHelper(sender, sender.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
-				snipeData.setReplaceId(targetBlock.getTypeId());
+				snipeData.setReplaceBlockDataType(targetBlock.getType());
 				Message message = snipeData.getMessage();
-				message.replace();
+				message.replaceBlockDataType();
 			}
 			return true;
 		}
 		Material material = Material.matchMaterial(args[0]);
 		if (material != null) {
 			if (material.isBlock()) {
-				snipeData.setReplaceId(material.getId());
+				snipeData.setReplaceBlockDataType(material);
 				Message message = snipeData.getMessage();
-				message.replace();
+				message.replaceBlockDataType();
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 			}
