@@ -6,6 +6,8 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -13,16 +15,16 @@ import org.bukkit.block.Block;
  */
 public class MaterialNoPhysPerformer extends AbstractPerformer {
 
-	private int i;
+	private Material material;
 
 	public MaterialNoPhysPerformer() {
 		super("Set, No-Physics");
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.i = snipeData.getVoxelId();
+		this.material = snipeData.getBlockDataType();
 	}
 
 	@Override
@@ -33,9 +35,9 @@ public class MaterialNoPhysPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getTypeId() != this.i) {
+		if (block.getType() != this.material) {
 			this.undo.put(block);
-			block.setTypeId(this.i, false);
+			block.setType(this.material, false);
 		}
 	}
 }

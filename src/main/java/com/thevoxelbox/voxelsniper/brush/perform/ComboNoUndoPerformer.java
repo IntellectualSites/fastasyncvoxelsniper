@@ -6,25 +6,25 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class ComboNoUndoPerformer extends AbstractPerformer {
 
-	private int i;
-	private byte d;
+	private BlockData blockData;
 
 	public ComboNoUndoPerformer() {
 		super("Combo, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.i = snipeData.getVoxelId();
-		this.d = snipeData.getData();
+		this.blockData = snipeData.getBlockData();
 	}
 
 	@Override
@@ -36,8 +36,9 @@ public class ComboNoUndoPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getTypeId() != this.i || block.getData() != this.d) {
-			block.setTypeIdAndData(this.i, this.d, true);
+		BlockData blockData = block.getBlockData();
+		if (blockData.equals(this.blockData)) {
+			block.setBlockData(this.blockData);
 		}
 	}
 }

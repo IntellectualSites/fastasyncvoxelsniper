@@ -93,16 +93,16 @@ public enum Performers {
 
 	private static Map<String, Performer> performers;
 	private static Map<String, String> longNames;
-	private Class<? extends Performer> pclass;
+	private Class<? extends Performer> performerClass;
 	private String shortName;
 	private String longName;
 	private static String performerListShort = "";
 	private static String performerListLong = "";
 
-	Performers(Class<? extends Performer> clazz, String s, String l) {
-		this.pclass = clazz;
-		this.shortName = s;
-		this.longName = l;
+	Performers(Class<? extends Performer> performerClass, String shortName, String longName) {
+		this.performerClass = performerClass;
+		this.shortName = shortName;
+		this.longName = longName;
 	}
 
 	public static String getPerformerListShort() {
@@ -124,7 +124,7 @@ public enum Performers {
 	@Nullable
 	private Performer getPerformer() {
 		try {
-			Constructor<? extends Performer> constructor = this.pclass.getConstructor();
+			Constructor<? extends Performer> constructor = this.performerClass.getConstructor();
 			return constructor.newInstance();
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
 			Logger.getLogger(Performers.class.getName())

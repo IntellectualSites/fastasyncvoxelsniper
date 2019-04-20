@@ -6,18 +6,25 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class ComboNoPhysPerformer extends AbstractPerformer {
 
-	private int i;
-	private byte d;
+	private BlockData blockData;
 
 	public ComboNoPhysPerformer() {
 		super("Combo NoPhysics");
+	}
+
+	@Override
+	public void init(SnipeData snipeData) {
+		this.world = snipeData.getWorld();
+		this.blockData = snipeData.getBlockData();
 	}
 
 	@Override
@@ -28,15 +35,8 @@ public class ComboNoPhysPerformer extends AbstractPerformer {
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
-		this.world = snipeData.getWorld();
-		this.i = snipeData.getVoxelId();
-		this.d = snipeData.getData();
-	}
-
-	@Override
 	public void perform(Block block) {
 		this.undo.put(block);
-		block.setTypeIdAndData(this.i, this.d, false);
+		block.setBlockData(this.blockData, false);
 	}
 }

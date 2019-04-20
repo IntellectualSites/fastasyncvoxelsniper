@@ -6,23 +6,25 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class InkNoUndoPerformer extends AbstractPerformer {
 
-	private byte d;
+	private BlockData blockData;
 
 	public InkNoUndoPerformer() {
 		super("Ink, No-Undo"); // made name more descriptive - Giltwist
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.d = snipeData.getData();
+		this.blockData = snipeData.getBlockData();
 	}
 
 	@Override
@@ -33,8 +35,9 @@ public class InkNoUndoPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getData() != this.d) {
-			block.setData(this.d);
+		BlockData blockData = block.getBlockData();
+		if (!blockData.equals(this.blockData)) {
+			block.setBlockData(this.blockData);
 		}
 	}
 }

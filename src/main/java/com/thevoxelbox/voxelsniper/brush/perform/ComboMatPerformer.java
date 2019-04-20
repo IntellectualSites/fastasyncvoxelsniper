@@ -6,27 +6,27 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class ComboMatPerformer extends AbstractPerformer {
 
-	private byte d;
-	private int i;
-	private int ir;
+	private BlockData blockData;
+	private BlockData replaceBlockData;
 
 	public ComboMatPerformer() {
 		super("Combo-Mat");
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.d = snipeData.getData();
-		this.i = snipeData.getVoxelId();
-		this.ir = snipeData.getReplaceId();
+		this.blockData = snipeData.getBlockData();
+		this.replaceBlockData = snipeData.getReplaceBlockData();
 	}
 
 	@Override
@@ -39,9 +39,9 @@ public class ComboMatPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getTypeId() == this.ir) {
+		if (block.getType() == this.replaceBlockData.getMaterial()) {
 			this.undo.put(block);
-			block.setTypeIdAndData(this.i, this.d, true);
+			block.setBlockData(this.blockData);
 		}
 	}
 

@@ -6,6 +6,8 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
@@ -13,16 +15,16 @@ import org.bukkit.block.Block;
  */
 public class NoUndoPerformer extends AbstractPerformer {
 
-	private int i;
+	private Material material;
 
 	public NoUndoPerformer() {
 		super("BOMB SQUAD");
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.i = snipeData.getVoxelId();
+		this.material = snipeData.getBlockDataType();
 	}
 
 	@Override
@@ -33,8 +35,8 @@ public class NoUndoPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getTypeId() != this.i) {
-			block.setTypeId(this.i);
+		if (block.getType() != this.material) {
+			block.setType(this.material);
 		}
 	}
 }

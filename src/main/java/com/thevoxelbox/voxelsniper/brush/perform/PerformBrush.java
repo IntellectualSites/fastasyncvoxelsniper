@@ -8,9 +8,11 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.AbstractBrush;
 import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 
 /**
  * @author Voxel
@@ -34,10 +36,14 @@ public abstract class PerformBrush extends AbstractBrush implements BrushPerform
 			Performer performer = Performers.getPerformer(handle);
 			if (performer != null) {
 				this.current = performer;
-				SniperBrushChangedEvent event = new SniperBrushChangedEvent(snipeData.getOwner(), snipeData.getOwner()
-					.getCurrentToolId(), this, this);
-				Bukkit.getPluginManager()
-					.callEvent(event);
+				Sniper owner = snipeData.getOwner();
+				String currentToolId = owner.getCurrentToolId();
+				if (currentToolId == null) {
+					return;
+				}
+				SniperBrushChangedEvent event = new SniperBrushChangedEvent(owner, this, this, currentToolId);
+				PluginManager pluginManager = Bukkit.getPluginManager();
+				pluginManager.callEvent(event);
 				info(snipeData.getMessage());
 				this.current.info(snipeData.getMessage());
 				if (args.length > 1) {

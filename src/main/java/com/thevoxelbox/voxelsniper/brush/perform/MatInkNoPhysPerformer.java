@@ -6,25 +6,27 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 
 /**
  * @author Voxel
  */
 public class MatInkNoPhysPerformer extends AbstractPerformer {
 
-	private int i;
-	private byte dr;
+	private BlockData blockData;
+	private BlockData replaceBlockData;
 
 	public MatInkNoPhysPerformer() {
 		super("Mat-Ink, No Physics");
 	}
 
 	@Override
-	public void init(com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public void init(SnipeData snipeData) {
 		this.world = snipeData.getWorld();
-		this.i = snipeData.getVoxelId();
-		this.dr = snipeData.getReplaceData();
+		this.blockData = snipeData.getBlockData();
+		this.replaceBlockData = snipeData.getReplaceBlockData();
 	}
 
 	@Override
@@ -36,9 +38,10 @@ public class MatInkNoPhysPerformer extends AbstractPerformer {
 
 	@Override
 	public void perform(Block block) {
-		if (block.getData() == this.dr) {
+		BlockData blockData = block.getBlockData();
+		if (blockData.equals(this.replaceBlockData)) {
 			this.undo.put(block);
-			block.setTypeId(this.i, false);
+			block.setType(this.blockData.getMaterial(), false);
 		}
 	}
 
