@@ -23,17 +23,24 @@ public class VoxelPerformerCommand extends VoxelCommand {
 	public boolean onCommand(Player sender, String[] args) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
 		Sniper sniper = sniperManager.getSniperForPlayer(sender);
-		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+		String currentToolId = sniper.getCurrentToolId();
+		if (currentToolId == null) {
+			return true;
+		}
+		SnipeData snipeData = sniper.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return true;
+		}
 		try {
 			if (args == null || args.length == 0) {
-				Brush brush = sniper.getBrush(sniper.getCurrentToolId());
+				Brush brush = sniper.getBrush(currentToolId);
 				if (brush instanceof BrushPerformer) {
 					((BrushPerformer) brush).parse(new String[] {"m"}, snipeData);
 				} else {
 					sender.sendMessage("This brush is not a performer brush.");
 				}
 			} else {
-				Brush brush = sniper.getBrush(sniper.getCurrentToolId());
+				Brush brush = sniper.getBrush(currentToolId);
 				if (brush instanceof BrushPerformer) {
 					((BrushPerformer) brush).parse(args, snipeData);
 				} else {

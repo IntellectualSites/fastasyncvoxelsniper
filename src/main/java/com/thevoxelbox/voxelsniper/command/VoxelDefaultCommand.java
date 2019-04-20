@@ -19,7 +19,11 @@ public class VoxelDefaultCommand extends VoxelCommand {
 	public boolean onCommand(Player sender, String[] args) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
 		Sniper sniper = sniperManager.getSniperForPlayer(sender);
-		sniper.reset(sniper.getCurrentToolId());
+		String currentToolId = sniper.getCurrentToolId();
+		if (currentToolId == null) {
+			return true;
+		}
+		sniper.reset(currentToolId);
 		sender.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
 		return true;
 	}

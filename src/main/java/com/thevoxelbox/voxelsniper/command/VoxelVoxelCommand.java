@@ -25,7 +25,14 @@ public class VoxelVoxelCommand extends VoxelCommand {
 	public boolean onCommand(Player sender, String[] args) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
 		Sniper sniper = sniperManager.getSniperForPlayer(sender);
-		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+		String currentToolId = sniper.getCurrentToolId();
+		if (currentToolId == null) {
+			return true;
+		}
+		SnipeData snipeData = sniper.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return true;
+		}
 		Message message = snipeData.getMessage();
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 		if (args.length == 0) {

@@ -24,7 +24,14 @@ public class VoxelReplaceCommand extends VoxelCommand {
 	public boolean onCommand(Player sender, String[] args) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
 		Sniper sniper = sniperManager.getSniperForPlayer(sender);
-		SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+		String currentToolId = sniper.getCurrentToolId();
+		if (currentToolId == null) {
+			return true;
+		}
+		SnipeData snipeData = sniper.getSnipeData(currentToolId);
+		if (snipeData == null) {
+			return true;
+		}
 		if (args.length == 0) {
 			Block targetBlock = new RangeBlockHelper(sender, sender.getWorld()).getTargetBlock();
 			if (targetBlock != null) {

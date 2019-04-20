@@ -100,6 +100,22 @@ public class SnipeData {
 		this.replaceBlockData = type.createBlockData();
 	}
 
+	public void addToVoxelList(BlockData blockData) {
+		this.voxelList.add(blockData);
+	}
+
+	public void removeFromVoxelList(BlockData blockData) {
+		this.voxelList.remove(blockData);
+	}
+
+	public void clearVoxelList() {
+		this.voxelList.clear();
+	}
+
+	public boolean isVoxelListContains(BlockData blockData) {
+		return this.voxelList.contains(blockData);
+	}
+
 	public Sniper getOwner() {
 		return this.owner;
 	}
@@ -177,10 +193,6 @@ public class SnipeData {
 	}
 
 	public List<BlockData> getVoxelList() {
-		return this.voxelList;
-	}
-
-	public void setVoxelList(List<BlockData> voxelList) {
-		this.voxelList = voxelList;
+		return List.copyOf(this.voxelList);
 	}
 }

@@ -39,7 +39,14 @@ public class VoxelSniperCommand extends VoxelCommand {
 				sender.sendMessage(join);
 				return true;
 			} else if (args[0].equalsIgnoreCase("range")) {
-				SnipeData snipeData = sniper.getSnipeData(sniper.getCurrentToolId());
+				String currentToolId = sniper.getCurrentToolId();
+				if (currentToolId == null) {
+					return true;
+				}
+				SnipeData snipeData = sniper.getSnipeData(currentToolId);
+				if (snipeData == null) {
+					return true;
+				}
 				Message message = snipeData.getMessage();
 				if (args.length == 2) {
 					try {

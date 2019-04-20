@@ -102,14 +102,13 @@ public class ExtrudeBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	private Undo perform(Block b1, Block b2, SnipeData v, Undo undo) {
-		if (v.getVoxelList()
-			.contains(new int[] {this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()), this.getBlockDataAt(b1.getX(), b1.getY(), b1.getZ())})) {
-			undo.put(b2);
-			this.setBlockIdAt(b2.getZ(), b2.getX(), b2.getY(), this.getBlockIdAt(b1.getX(), b1.getY(), b1.getZ()));
-			this.clampY(b2.getX(), b2.getY(), b2.getZ())
-				.setData(this.clampY(b1.getX(), b1.getY(), b1.getZ())
-					.getData());
+	private Undo perform(Block block1, Block block2, SnipeData snipeData, Undo undo) {
+		if (snipeData.isVoxelListContains(this.getBlockData(block1.getX(), block1.getY(), block1.getZ()))) {
+			undo.put(block2);
+			this.setBlockType(block2.getZ(), block2.getX(), block2.getY(), this.getBlockType(block1.getX(), block1.getY(), block1.getZ()));
+			this.clampY(block2.getX(), block2.getY(), block2.getZ())
+				.setBlockData(this.clampY(block1.getX(), block1.getY(), block1.getZ())
+					.getBlockData());
 		}
 		return undo;
 	}

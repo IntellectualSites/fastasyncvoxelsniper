@@ -6,6 +6,8 @@ import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class VoxelBrushToolCommand extends VoxelCommand {
 
@@ -32,14 +34,15 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 					return true;
 				}
 				if (args.length == 3 && args[2] != null && !args[2].isEmpty()) {
-					Material itemInHand = (sender.getItemInHand() != null) ? sender.getItemInHand()
-						.getType() : null;
-					if (itemInHand == null) {
+					PlayerInventory inventory = sender.getInventory();
+					ItemStack itemInHand = inventory.getItemInMainHand();
+					Material material = itemInHand.getType();
+					if (material.isEmpty()) {
 						sender.sendMessage("/btool assign <arrow|powder> <toolid>");
 						return true;
 					}
-					if (sniper.setTool(args[2], action, itemInHand)) {
-						sender.sendMessage(itemInHand.name() + " has been assigned to '" + args[2] + "' as action " + action.name() + ".");
+					if (sniper.setTool(args[2], action, material)) {
+						sender.sendMessage(material.name() + " has been assigned to '" + args[2] + "' as action " + action.name() + ".");
 					} else {
 						sender.sendMessage("Couldn't assign tool.");
 					}
@@ -49,9 +52,10 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 				if (args.length == 2 && args[1] != null && !args[1].isEmpty()) {
 					sniper.removeTool(args[1]);
 				} else {
-					Material itemInHand = (sender.getItemInHand() != null) ? sender.getItemInHand()
-						.getType() : null;
-					if (itemInHand == null) {
+					PlayerInventory inventory = sender.getInventory();
+					ItemStack itemInHand = inventory.getItemInMainHand();
+					Material material = itemInHand.getType();
+					if (material.isEmpty()) {
 						sender.sendMessage("Can't unassign empty hands.");
 						return true;
 					}
@@ -59,7 +63,7 @@ public class VoxelBrushToolCommand extends VoxelCommand {
 						sender.sendMessage("Can't unassign default tool.");
 						return true;
 					}
-					sniper.removeTool(sniper.getCurrentToolId(), itemInHand);
+					sniper.removeTool(sniper.getCurrentToolId(), material);
 				}
 				return true;
 			}
