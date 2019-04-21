@@ -6,13 +6,17 @@ import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.util.UndoDelegate;
+import org.bukkit.BlockChangeDelegate;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
@@ -22,7 +26,6 @@ import org.bukkit.block.BlockState;
 public class TreeSnipeBrush extends AbstractBrush {
 
 	private TreeType treeType = TreeType.TREE;
-
 
 	public TreeSnipeBrush() {
 		super("Tree Snipe");
@@ -34,8 +37,8 @@ public class TreeSnipeBrush extends AbstractBrush {
 		BlockState currentState = blockBelow.getState();
 		undoDelegate.setBlock(blockBelow);
 		blockBelow.setType(Material.GRASS_BLOCK);
-		this.getWorld()
-			.generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
+		World world = getWorld();
+		world.generateTree(targetBlock.getLocation(), this.treeType, undoDelegate);
 		Undo undo = undoDelegate.getUndo();
 		blockBelow.setBlockData(currentState.getBlockData());
 		undo.put(blockBelow);
@@ -45,8 +48,8 @@ public class TreeSnipeBrush extends AbstractBrush {
 
 	private int getYOffset() {
 		Block targetBlock = getTargetBlock();
-		return IntStream.range(1, (targetBlock.getWorld()
-			.getMaxHeight() - 1 - targetBlock.getY()))
+		World world = targetBlock.getWorld();
+		return IntStream.range(1, (world.getMaxHeight() - 1 - targetBlock.getY()))
 			.filter(i -> targetBlock.getRelative(0, i + 1, 0)
 				.isEmpty())
 			.findFirst()
@@ -82,18 +85,19 @@ public class TreeSnipeBrush extends AbstractBrush {
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
-			if (parameters[i].equalsIgnoreCase("info")) {
+			String parameter = parameters[i];
+			Message message = snipeData.getMessage();
+			if (parameter.equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b t treetype");
-				this.printTreeType(snipeData.getMessage());
+				this.printTreeType(message);
 				return;
 			}
 			try {
-				this.treeType = TreeType.valueOf(parameters[i].toUpperCase());
-				this.printTreeType(snipeData.getMessage());
+				this.treeType = TreeType.valueOf(parameter.toUpperCase());
+				this.printTreeType(message);
 			} catch (IllegalArgumentException exception) {
-				snipeData.getMessage()
-					.brushMessage("No such tree type.");
+				message.brushMessage("No such tree type.");
 			}
 		}
 	}
@@ -101,5 +105,56 @@ public class TreeSnipeBrush extends AbstractBrush {
 	@Override
 	public String getPermissionNode() {
 		return "voxelsniper.brush.treesnipe";
+	}
+
+	private static final class UndoDelegate implements BlockChangeDelegate {
+
+		private World targetWorld;
+		private Undo currentUndo;
+
+		private UndoDelegate(World targetWorld) {
+			this.targetWorld = targetWorld;
+			this.currentUndo = new Undo();
+		}
+
+		public Undo getUndo() {
+			Undo pastUndo = this.currentUndo;
+			this.currentUndo = new Undo();
+			return pastUndo;
+		}
+
+		public void setBlock(Block block) {
+			Location location = block.getLocation();
+			Block blockAtLocation = this.targetWorld.getBlockAt(location);
+			this.currentUndo.put(blockAtLocation);
+			BlockData blockData = block.getBlockData();
+			blockAtLocation.setBlockData(blockData);
+		}
+
+		@Override
+		public boolean setBlockData(int x, int y, int z, @NotNull BlockData blockData) {
+			Block block = this.targetWorld.getBlockAt(x, y, z);
+			this.currentUndo.put(block);
+			block.setBlockData(blockData);
+			return true;
+		}
+
+		@NotNull
+		@Override
+		public BlockData getBlockData(int x, int y, int z) {
+			Block block = this.targetWorld.getBlockAt(x, y, z);
+			return block.getBlockData();
+		}
+
+		@Override
+		public int getHeight() {
+			return this.targetWorld.getMaxHeight();
+		}
+
+		@Override
+		public boolean isEmpty(int x, int y, int z) {
+			Block block = this.targetWorld.getBlockAt(x, y, z);
+			return block.isEmpty();
+		}
 	}
 }

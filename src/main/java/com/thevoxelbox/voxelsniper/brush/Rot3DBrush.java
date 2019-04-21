@@ -4,7 +4,6 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.Undo;
-import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +12,7 @@ import org.bukkit.block.data.BlockData;
 public class Rot3DBrush extends AbstractBrush {
 
 	private int brushSize;
-	private BlockWrapper[][][] snap;
+	private BlockData[][][] snap;
 	private double seYaw;
 	private double sePitch;
 	private double seRoll;
@@ -67,7 +66,7 @@ public class Rot3DBrush extends AbstractBrush {
 	private void getMatrix() { // only need to do once. But y needs to change + sphere
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
+		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		//int sy = this.getTargetBlock().getY() - this.brushSize; Not used
@@ -81,7 +80,7 @@ public class Rot3DBrush extends AbstractBrush {
 				for (int y = 0; y < this.snap.length; y++) {
 					if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
 						Block block = this.clampY(sx, sz, sz);
-						this.snap[x][y][z] = new BlockWrapper(block);
+						this.snap[x][y][z] = block.getBlockData();
 						block.setType(Material.AIR);
 						sz++;
 					}
@@ -131,12 +130,12 @@ public class Rot3DBrush extends AbstractBrush {
 						doNotFill[(int) newxyX + this.brushSize][(int) newyzY + this.brushSize][(int) newyzZ + this.brushSize] = true; // only rounds off to nearest
 						// block
 						// after all three, though.
-						BlockWrapper block = this.snap[x][y][z];
-						Material type = block.getType();
+						BlockData blockData = this.snap[x][y][z];
+						Material type = blockData.getMaterial();
 						if (type.isEmpty()) {
 							continue;
 						}
-						this.setBlockData(targetBlock.getX() + (int) newxyX, targetBlock.getY() + (int) newyzY, targetBlock.getZ() + (int) newyzZ, block.getBlockData());
+						this.setBlockData(targetBlock.getX() + (int) newxyX, targetBlock.getY() + (int) newyzY, targetBlock.getZ() + (int) newyzZ, blockData);
 					}
 				}
 			}

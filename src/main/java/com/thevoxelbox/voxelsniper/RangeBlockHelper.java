@@ -17,14 +17,11 @@ public class RangeBlockHelper {
 	private static final double DEFAULT_LOCATION_VIEW_HEIGHT = 0;
 	private static final double DEFAULT_STEP = 0.2;
 	private static final int DEFAULT_RANGE = 250;
-	private Location playerLocation;
-	private double rotationX;
-	private double rotationY;
-	private double viewHeight;
-	private double rotXSin;
-	private double rotXCos;
-	private double rotYSin;
-	private double rotYCos;
+
+	private double rotationXSin;
+	private double rotationXCos;
+	private double rotationYSin;
+	private double rotationYCos;
 	private double length;
 	private double hLength;
 	private double step;
@@ -47,7 +44,7 @@ public class RangeBlockHelper {
 	 * Constructor requiring location, uses default values.
 	 */
 	public RangeBlockHelper(Location location) {
-		this.init(location, DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_LOCATION_VIEW_HEIGHT);
+		init(location, DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_LOCATION_VIEW_HEIGHT);
 	}
 
 	/**
@@ -55,14 +52,14 @@ public class RangeBlockHelper {
 	 */
 	public RangeBlockHelper(Location location, int range, double step) {
 		this.world = location.getWorld();
-		this.init(location, range, step, DEFAULT_LOCATION_VIEW_HEIGHT);
+		init(location, range, step, DEFAULT_LOCATION_VIEW_HEIGHT);
 	}
 
 	/**
 	 * Constructor requiring player, max range, and a stepping value.
 	 */
 	public RangeBlockHelper(Player player, int range, double step) {
-		this.init(player.getLocation(), range, step, DEFAULT_PLAYER_VIEW_HEIGHT);
+		init(player.getLocation(), range, step, DEFAULT_PLAYER_VIEW_HEIGHT);
 	}
 
 	/**
@@ -70,14 +67,14 @@ public class RangeBlockHelper {
 	 */
 	public RangeBlockHelper(Player player, World world) {
 		this.world = world;
-		this.init(player.getLocation(), DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
+		init(player.getLocation(), DEFAULT_RANGE, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
 		// values
 	}
 
 	public RangeBlockHelper(Player player, World world, double range) {
 		this.world = world;
-		this.init(player.getLocation(), range, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
-		this.fromOffWorld();
+		init(player.getLocation(), range, DEFAULT_STEP, DEFAULT_PLAYER_VIEW_HEIGHT);
+		fromOffWorld();
 	}
 
 	public final void fromOffWorld() {
@@ -88,14 +85,14 @@ public class RangeBlockHelper {
 				this.lastZ = this.targetZ;
 				do {
 					this.length += this.step;
-					this.hLength = (this.length * this.rotYCos);
-					this.yOffset = (this.length * this.rotYSin);
-					this.xOffset = (this.hLength * this.rotXCos);
-					this.zOffset = (this.hLength * this.rotXSin);
+					this.hLength = this.length * this.rotationYCos;
+					this.yOffset = this.length * this.rotationYSin;
+					this.xOffset = this.hLength * this.rotationXCos;
+					this.zOffset = this.hLength * this.rotationXSin;
 					this.targetX = (int) Math.floor(this.xOffset + this.playerX);
 					this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 					this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
-				} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
+				} while (this.length <= this.range && this.targetX == this.lastX && this.targetY == this.lastY && this.targetZ == this.lastZ);
 			}
 		} else if (this.targetY < 0) {
 			while (this.targetY < 0 && this.length <= this.range) {
@@ -104,14 +101,14 @@ public class RangeBlockHelper {
 				this.lastZ = this.targetZ;
 				do {
 					this.length += this.step;
-					this.hLength = (this.length * this.rotYCos);
-					this.yOffset = (this.length * this.rotYSin);
-					this.xOffset = (this.hLength * this.rotXCos);
-					this.zOffset = (this.hLength * this.rotXSin);
+					this.hLength = this.length * this.rotationYCos;
+					this.yOffset = this.length * this.rotationYSin;
+					this.xOffset = this.hLength * this.rotationXCos;
+					this.zOffset = this.hLength * this.rotationXSin;
 					this.targetX = (int) Math.floor(this.xOffset + this.playerX);
 					this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 					this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
-				} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
+				} while (this.length <= this.range && this.targetX == this.lastX && this.targetY == this.lastY && this.targetZ == this.lastZ);
 			}
 		}
 	}
@@ -170,14 +167,14 @@ public class RangeBlockHelper {
 		this.lastZ = this.targetZ;
 		do {
 			this.length += this.step;
-			this.hLength = (this.length * this.rotYCos);
-			this.yOffset = (this.length * this.rotYSin);
-			this.xOffset = (this.hLength * this.rotXCos);
-			this.zOffset = (this.hLength * this.rotXSin);
+			this.hLength = this.length * this.rotationYCos;
+			this.yOffset = this.length * this.rotationYSin;
+			this.xOffset = this.hLength * this.rotationXCos;
+			this.zOffset = this.hLength * this.rotationXSin;
 			this.targetX = (int) Math.floor(this.xOffset + this.playerX);
 			this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 			this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
-		} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
+		} while (this.length <= this.range && this.targetX == this.lastX && this.targetY == this.lastY && this.targetZ == this.lastZ);
 		if (this.length > this.range || this.targetY > MAXIMUM_WORLD_HEIGHT || this.targetY < 0) {
 			return null;
 		}
@@ -262,14 +259,14 @@ public class RangeBlockHelper {
 			this.lastZ = this.targetZ;
 			do {
 				this.length += this.step;
-				this.hLength = (this.length * this.rotYCos);
-				this.yOffset = (this.length * this.rotYSin);
-				this.xOffset = (this.hLength * this.rotXCos);
-				this.zOffset = (this.hLength * this.rotXSin);
+				this.hLength = this.length * this.rotationYCos;
+				this.yOffset = this.length * this.rotationYSin;
+				this.xOffset = this.hLength * this.rotationXCos;
+				this.zOffset = this.hLength * this.rotationXSin;
 				this.targetX = (int) Math.floor(this.xOffset + this.playerX);
 				this.targetY = (int) Math.floor(this.yOffset + this.playerY);
 				this.targetZ = (int) Math.floor(this.zOffset + this.playerZ);
-			} while ((this.length <= this.range) && ((this.targetX == this.lastX) && (this.targetY == this.lastY) && (this.targetZ == this.lastZ)));
+			} while (this.length <= this.range && this.targetX == this.lastX && this.targetY == this.lastY && this.targetZ == this.lastZ);
 			if (!this.world.getBlockAt(this.targetX, this.targetY, this.targetZ)
 				.isEmpty()) {
 				return this.world.getBlockAt(this.targetX, this.targetY, this.targetZ);
@@ -281,23 +278,21 @@ public class RangeBlockHelper {
 	}
 
 	private void init(Location location, double range, double step, double viewHeight) {
-		this.playerLocation = location;
-		this.viewHeight = viewHeight;
-		this.playerX = this.playerLocation.getX();
-		this.playerY = this.playerLocation.getY() + this.viewHeight;
-		this.playerZ = this.playerLocation.getZ();
+		this.playerX = location.getX();
+		this.playerY = location.getY() + viewHeight;
+		this.playerZ = location.getZ();
 		this.range = range;
 		this.step = step;
 		this.length = 0;
-		this.rotationX = (this.playerLocation.getYaw() + 90) % 360;
-		this.rotationY = this.playerLocation.getPitch() * -1;
-		this.rotYCos = Math.cos(Math.toRadians(this.rotationY));
-		this.rotYSin = Math.sin(Math.toRadians(this.rotationY));
-		this.rotXCos = Math.cos(Math.toRadians(this.rotationX));
-		this.rotXSin = Math.sin(Math.toRadians(this.rotationX));
-		this.targetX = (int) Math.floor(this.playerLocation.getX());
-		this.targetY = (int) Math.floor(this.playerLocation.getY() + this.viewHeight);
-		this.targetZ = (int) Math.floor(this.playerLocation.getZ());
+		double rotationX = (location.getYaw() + 90) % 360;
+		double rotationY = location.getPitch() * -1;
+		this.rotationYCos = Math.cos(Math.toRadians(rotationY));
+		this.rotationYSin = Math.sin(Math.toRadians(rotationY));
+		this.rotationXCos = Math.cos(Math.toRadians(rotationX));
+		this.rotationXSin = Math.sin(Math.toRadians(rotationX));
+		this.targetX = (int) Math.floor(location.getX());
+		this.targetY = (int) Math.floor(location.getY() + viewHeight);
+		this.targetZ = (int) Math.floor(location.getZ());
 		this.lastX = this.targetX;
 		this.lastY = this.targetY;
 		this.lastZ = this.targetZ;

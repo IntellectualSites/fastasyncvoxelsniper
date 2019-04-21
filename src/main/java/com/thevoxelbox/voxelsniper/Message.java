@@ -65,7 +65,7 @@ public class Message {
 	}
 
 	/**
-	 * Displaye replace material.
+	 * Display replace material.
 	 */
 	public void replaceBlockDataType() {
 		Material replaceBlockDataType = this.snipeData.getReplaceBlockDataType();

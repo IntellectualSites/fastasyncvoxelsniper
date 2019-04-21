@@ -2,9 +2,10 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,15 +19,15 @@ public class UndoExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		if (arguments.length == 1) {
-			try {
-				int amount = Integer.parseInt(arguments[0]);
-				sniper.undo(amount);
-			} catch (NumberFormatException exception) {
+			Integer amount = NumericParser.parseInteger(arguments[0]);
+			if (amount == null) {
 				sender.sendMessage("Error while parsing amount of undo. Number format exception.");
+			} else {
+				sniper.undo(amount);
 			}
 		} else {
 			sniper.undo();

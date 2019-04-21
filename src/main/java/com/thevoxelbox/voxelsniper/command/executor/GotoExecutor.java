@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,15 +12,15 @@ public class GotoExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		try {
-			Player player = (Player) sender;
-			World world = player.getWorld();
-			int x = Integer.parseInt(arguments[0]);
-			int z = Integer.parseInt(arguments[1]);
-			player.teleport(new Location(world, x, world.getHighestBlockYAt(x, z), z));
-			sender.sendMessage(ChatColor.GREEN + "Woosh!");
-		} catch (NumberFormatException exception) {
+		Player player = (Player) sender;
+		World world = player.getWorld();
+		Integer x = NumericParser.parseInteger(arguments[0]);
+		Integer z = NumericParser.parseInteger(arguments[1]);
+		if (x == null || z == null) {
 			sender.sendMessage(ChatColor.RED + "Invalid syntax.");
+			return;
 		}
+		player.teleport(new Location(world, x, world.getHighestBlockYAt(x, z), z));
+		sender.sendMessage(ChatColor.GREEN + "Woosh!");
 	}
 }

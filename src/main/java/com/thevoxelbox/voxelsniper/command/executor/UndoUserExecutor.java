@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Bukkit;
@@ -19,13 +19,13 @@ public class UndoUserExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = Bukkit.getPlayer(arguments[0]);
 		if (player == null) {
 			sender.sendMessage(ChatColor.GREEN + "Player not found.");
 			return;
 		}
-		Sniper sniperForPlayer = sniperManager.getSniperForPlayer(player);
+		Sniper sniperForPlayer = sniperRegistry.getSniper(player);
 		sniperForPlayer.undo();
 	}
 }

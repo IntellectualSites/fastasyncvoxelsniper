@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Bukkit;
@@ -23,9 +23,9 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		BlockData dataValue;
 		if (arguments.length == 0) {
 			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
@@ -38,7 +38,7 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
 		} else {
 			try {
 				dataValue = Bukkit.createBlockData(arguments[0]);
-			} catch (NumberFormatException exception) {
+			} catch (IllegalArgumentException exception) {
 				sender.sendMessage("Couldn't parse input.");
 				return;
 			}

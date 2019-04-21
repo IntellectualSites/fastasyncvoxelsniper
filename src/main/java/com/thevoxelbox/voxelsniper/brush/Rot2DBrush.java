@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,7 +14,7 @@ public class Rot2DBrush extends AbstractBrush {
 
 	private int mode;
 	private int brushSize;
-	private BlockWrapper[][][] snap;
+	private BlockData[][][] snap;
 	private double angle;
 
 	public Rot2DBrush() {
@@ -24,7 +23,7 @@ public class Rot2DBrush extends AbstractBrush {
 
 	private void getMatrix() {
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
+		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
@@ -38,7 +37,7 @@ public class Rot2DBrush extends AbstractBrush {
 				if (xSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
 					for (int z = 0; z < this.snap.length; z++) {
 						Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-						this.snap[x][z][y] = new BlockWrapper(block);
+						this.snap[x][z][y] = block.getBlockData();
 						block.setType(Material.AIR);
 						sy++;
 					}
@@ -49,7 +48,7 @@ public class Rot2DBrush extends AbstractBrush {
 		}
 	}
 
-	private void rotate(SnipeData snipeData) {
+	private void rotate() {
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		double cos = Math.cos(this.angle);
 		double sin = Math.sin(this.angle);
@@ -69,12 +68,12 @@ public class Rot2DBrush extends AbstractBrush {
 					doNotFill[(int) newX + this.brushSize][(int) newZ + this.brushSize] = true;
 					for (int currentY = 0; currentY < this.snap.length; currentY++) {
 						int yy = currentY - this.brushSize;
-						BlockWrapper block = this.snap[x][currentY][y];
-						Material type = block.getType();
+						BlockData blockData = this.snap[x][currentY][y];
+						Material type = blockData.getMaterial();
 						if (type.isEmpty()) {
 							continue;
 						}
-						setBlockData(targetBlock.getX() + (int) newX, targetBlock.getY() + yy, targetBlock.getZ() + (int) newZ, block.getBlockData());
+						setBlockData(targetBlock.getX() + (int) newX, targetBlock.getY() + yy, targetBlock.getZ() + (int) newZ, blockData);
 					}
 				}
 			}
@@ -118,8 +117,8 @@ public class Rot2DBrush extends AbstractBrush {
 	public final void arrow(SnipeData snipeData) {
 		this.brushSize = snipeData.getBrushSize();
 		if (this.mode == 0) {
-			this.getMatrix();
-			this.rotate(snipeData);
+			getMatrix();
+			rotate();
 		} else {
 			snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 		}
@@ -129,8 +128,8 @@ public class Rot2DBrush extends AbstractBrush {
 	public final void powder(SnipeData snipeData) {
 		this.brushSize = snipeData.getBrushSize();
 		if (this.mode == 0) {
-			this.getMatrix();
-			this.rotate(snipeData);
+			getMatrix();
+			rotate();
 		} else {
 			snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
 		}

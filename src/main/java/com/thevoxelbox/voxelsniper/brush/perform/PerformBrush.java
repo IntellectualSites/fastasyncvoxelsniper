@@ -38,8 +38,9 @@ public abstract class PerformBrush extends AbstractBrush implements BrushPerform
 				if (currentToolId == null) {
 					return;
 				}
-				info(snipeData.getMessage());
-				this.current.info(snipeData.getMessage());
+				Message message = snipeData.getMessage();
+				info(message);
+				this.current.info(message);
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
 					parameters(hackTheArray(additionalArguments), snipeData);

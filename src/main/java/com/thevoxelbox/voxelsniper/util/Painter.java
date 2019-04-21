@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper;
+package com.thevoxelbox.voxelsniper.util;
 
 import org.bukkit.Art;
 import org.bukkit.ChatColor;
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
  *
  * @author Piotr
  */
-public final class PaintingWrapper {
+public final class Painter {
 
-	private PaintingWrapper() {
+	private Painter() {
 	}
 
 	/**
@@ -27,7 +27,6 @@ public final class PaintingWrapper {
 	 * @param back Scroll in reverse?
 	 * @param choice Chosen index to set the painting to
 	 */
-
 	public static void paint(Player player, boolean auto, boolean back, int choice) {
 		Location targetLocation = player.getTargetBlock(null, 4)
 			.getLocation();
@@ -61,13 +60,13 @@ public final class PaintingWrapper {
 					player.sendMessage(ChatColor.RED + "Oops. Something went wrong.");
 				}
 			} else {
-				try {
-					Art art = Art.getById(choice);
-					bestMatch.setArt(art);
-					player.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
-				} catch (RuntimeException exception) {
+				Art art = Art.getById(choice);
+				if (art == null) {
 					player.sendMessage(ChatColor.RED + "Your input was invalid somewhere.");
+					return;
 				}
+				bestMatch.setArt(art);
+				player.sendMessage(ChatColor.GREEN + "Painting set to ID: " + choice);
 			}
 		}
 	}

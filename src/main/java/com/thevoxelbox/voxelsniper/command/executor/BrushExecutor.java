@@ -4,11 +4,13 @@ import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,9 +24,9 @@ public class BrushExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
 			return;
@@ -38,21 +40,17 @@ public class BrushExecutor implements CommandExecutor {
 			sniper.displayInfo();
 			return;
 		}
-		try {
-			int newBrushSize = Integer.parseInt(arguments[0]);
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfig()
-				.getLiteSniperMaxBrushSize()) {
-				sender.sendMessage("Size is restricted to " + this.plugin.getVoxelSniperConfig()
-					.getLiteSniperMaxBrushSize() + " for you.");
-				newBrushSize = this.plugin.getVoxelSniperConfig()
-					.getLiteSniperMaxBrushSize();
+		Integer newBrushSize = NumericParser.parseInteger(arguments[0]);
+		if (newBrushSize != null) {
+			VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > config.getLiteSniperMaxBrushSize()) {
+				sender.sendMessage("Size is restricted to " + config.getLiteSniperMaxBrushSize() + " for you.");
+				newBrushSize = config.getLiteSniperMaxBrushSize();
 			}
 			snipeData.setBrushSize(newBrushSize);
 			Message message = snipeData.getMessage();
 			message.size();
 			return;
-		} catch (NumberFormatException exception) {
-			exception.printStackTrace();
 		}
 		Class<? extends Brush> brush = this.plugin.getBrushRegistry()
 			.getBrush(arguments[0]);

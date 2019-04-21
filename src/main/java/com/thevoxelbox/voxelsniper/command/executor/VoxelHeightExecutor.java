@@ -3,9 +3,10 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,9 +21,9 @@ public class VoxelHeightExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
 			return;
@@ -31,13 +32,13 @@ public class VoxelHeightExecutor implements CommandExecutor {
 		if (snipeData == null) {
 			return;
 		}
-		try {
-			int height = Integer.parseInt(arguments[0]);
-			snipeData.setVoxelHeight(height);
-			Message message = snipeData.getMessage();
-			message.height();
-		} catch (NumberFormatException exception) {
+		Integer height = NumericParser.parseInteger(arguments[0]);
+		if (height == null) {
 			sender.sendMessage(ChatColor.RED + "Invalid input.");
+			return;
 		}
+		snipeData.setVoxelHeight(height);
+		Message message = snipeData.getMessage();
+		message.height();
 	}
 }

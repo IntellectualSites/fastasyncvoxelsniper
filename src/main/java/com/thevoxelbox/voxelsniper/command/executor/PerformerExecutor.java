@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
@@ -22,9 +22,9 @@ public class PerformerExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
 			return;
@@ -35,18 +35,11 @@ public class PerformerExecutor implements CommandExecutor {
 		}
 		try {
 			Brush brush = sniper.getBrush(currentToolId);
-			if (arguments == null || arguments.length == 0) {
-				if (brush instanceof BrushPerformer) {
-					((BrushPerformer) brush).parse(new String[] {"m"}, snipeData);
-				} else {
-					sender.sendMessage("This brush is not a performer brush.");
-				}
+			if (brush instanceof BrushPerformer) {
+				BrushPerformer performer = (BrushPerformer) brush;
+				performer.parse(arguments.length == 0 ? new String[] {"m"} : arguments, snipeData);
 			} else {
-				if (brush instanceof BrushPerformer) {
-					((BrushPerformer) brush).parse(arguments, snipeData);
-				} else {
-					sender.sendMessage("This brush is not a performer brush.");
-				}
+				sender.sendMessage("This brush is not a performer brush.");
 			}
 		} catch (NumberFormatException exception) {
 			Logger logger = this.plugin.getLogger();

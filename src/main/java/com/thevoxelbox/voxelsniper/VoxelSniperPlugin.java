@@ -16,13 +16,13 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
 	private VoxelSniperConfig voxelSniperConfig;
 	private BrushRegistry brushRegistry;
-	private SniperManager sniperManager;
+	private SniperRegistry sniperRegistry;
 
 	@Override
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
 		this.brushRegistry = loadBrushRegistry();
-		this.sniperManager = new SniperManager(this);
+		this.sniperRegistry = new SniperRegistry(this);
 		loadCommands();
 		loadListeners();
 	}
@@ -75,11 +75,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	}
 
 	/**
-	 * Returns {@link com.thevoxelbox.voxelsniper.SniperManager} for current instance.
+	 * Returns {@link SniperRegistry} for current instance.
 	 *
-	 * @return SniperManager
+	 * @return SniperRegistry
 	 */
-	public SniperManager getSniperManager() {
-		return this.sniperManager;
+	public SniperRegistry getSniperRegistry() {
+		return this.sniperRegistry;
 	}
 }

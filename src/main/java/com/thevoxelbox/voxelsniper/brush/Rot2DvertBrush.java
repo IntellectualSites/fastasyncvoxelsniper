@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.util.BlockWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,7 +18,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 
 	private int mode;
 	private int brushSize;
-	private BlockWrapper[][][] snap;
+	private BlockData[][][] snap;
 	private double angle;
 
 	public Rot2DvertBrush() {
@@ -28,7 +27,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 
 	private void getMatrix() {
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
+		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		int sy = targetBlock.getY() - this.brushSize;
@@ -39,7 +38,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 				sy = targetBlock.getY() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-					this.snap[x][y][z] = new BlockWrapper(block);
+					this.snap[x][y][z] = block.getBlockData();
 					block.setType(Material.AIR);
 					sy++;
 				}
@@ -49,7 +48,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 		}
 	}
 
-	private void rotate(SnipeData snipeData) {
+	private void rotate() {
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		double cos = Math.cos(this.angle);
 		double sin = Math.sin(this.angle);
@@ -69,12 +68,12 @@ public class Rot2DvertBrush extends AbstractBrush {
 					doNotFill[(int) newX + this.brushSize][(int) newZ + this.brushSize] = true;
 					for (int y = 0; y < this.snap.length; y++) {
 						int yy = y - this.brushSize;
-						BlockWrapper block = this.snap[y][x][z];
-						Material type = block.getType();
+						BlockData blockData = this.snap[y][x][z];
+						Material type = blockData.getMaterial();
 						if (type.isEmpty()) {
 							continue;
 						}
-						setBlockData(targetBlock.getX() + yy, targetBlock.getY() + (int) newX, targetBlock.getZ() + (int) newZ, block.getBlockData());
+						setBlockData(targetBlock.getX() + yy, targetBlock.getY() + (int) newX, targetBlock.getZ() + (int) newZ, blockData);
 					}
 				}
 			}
@@ -89,13 +88,13 @@ public class Rot2DvertBrush extends AbstractBrush {
 						// smart fill stuff
 						for (int y = 0; y < this.snap.length; y++) {
 							int fy = y + targetBlock.getY() - this.brushSize;
-							Material a = this.getBlockType(fy, fx + 1, fz);
-							Material b = this.getBlockType(fy, fx, fz - 1);
-							Material c = this.getBlockType(fy, fx, fz + 1);
-							Material d = this.getBlockType(fy, fx - 1, fz);
-							BlockData aData = this.getBlockData(fy, fx + 1, fz);
-							BlockData bData = this.getBlockData(fy, fx, fz - 1);
-							BlockData dData = this.getBlockData(fy, fx - 1, fz);
+							Material a = getBlockType(fy, fx + 1, fz);
+							Material b = getBlockType(fy, fx, fz - 1);
+							Material c = getBlockType(fy, fx, fz + 1);
+							Material d = getBlockType(fy, fx - 1, fz);
+							BlockData aData = getBlockData(fy, fx + 1, fz);
+							BlockData bData = getBlockData(fy, fx, fz - 1);
+							BlockData dData = getBlockData(fy, fx - 1, fz);
 							BlockData winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
@@ -119,7 +118,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 		this.brushSize = snipeData.getBrushSize();
 		if (this.mode == 0) {
 			this.getMatrix();
-			this.rotate(snipeData);
+			this.rotate();
 		} else {
 			Sniper owner = snipeData.getOwner();
 			owner.sendMessage(ChatColor.RED + "Something went wrong.");
@@ -131,7 +130,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 		this.brushSize = snipeData.getBrushSize();
 		if (this.mode == 0) {
 			this.getMatrix();
-			this.rotate(snipeData);
+			this.rotate();
 		} else {
 			Sniper owner = snipeData.getOwner();
 			owner.sendMessage(ChatColor.RED + "Something went wrong.");

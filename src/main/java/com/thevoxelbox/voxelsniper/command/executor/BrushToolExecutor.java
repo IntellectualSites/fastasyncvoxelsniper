@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Material;
@@ -21,10 +21,10 @@ public class BrushToolExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
-		if (arguments != null && arguments.length > 0) {
+		Sniper sniper = sniperRegistry.getSniper(player);
+		if (arguments.length > 0) {
 			if (arguments[0].equalsIgnoreCase("assign")) {
 				SnipeAction action;
 				if (arguments[1].equalsIgnoreCase("arrow")) {

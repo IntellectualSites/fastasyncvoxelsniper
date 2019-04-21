@@ -66,15 +66,6 @@ public class BrushRegistry {
 	}
 
 	/**
-	 * @param brushType Brush class
-	 * @return All Sniper registered handles for the brush in immutable list.
-	 */
-	public List<String> getHandles(Class<? extends Brush> brushType) {
-		List<String> handles = this.brushes.get(brushType);
-		return List.copyOf(handles);
-	}
-
-	/**
 	 * @return Immutable copy of all the registered brushes
 	 */
 	public Map<Class<? extends Brush>, List<String>> getBrushes() {

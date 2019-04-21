@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.listener;
 
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,8 +22,8 @@ public class PlayerInteractListener implements Listener<PlayerInteractEvent> {
 		if (!player.hasPermission("voxelsniper.sniper")) {
 			return;
 		}
-		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
+		Sniper sniper = sniperRegistry.getSniper(player);
 		if (sniper.isEnabled() && sniper.snipe(event.getAction(), event.getMaterial(), event.getClickedBlock(), event.getBlockFace())) {
 			event.setCancelled(true);
 		}

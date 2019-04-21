@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.PaintingWrapper;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
+import com.thevoxelbox.voxelsniper.util.Painter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,16 +14,17 @@ public class PaintExecutor implements CommandExecutor {
 		Player player = (Player) sender;
 		if (arguments.length == 1) {
 			if (arguments[0].equalsIgnoreCase("back")) {
-				PaintingWrapper.paint(player, true, true, 0);
+				Painter.paint(player, true, true, 0);
 			} else {
-				try {
-					PaintingWrapper.paint(player, false, false, Integer.parseInt(arguments[0]));
-				} catch (NumberFormatException exception) {
+				Integer choice = NumericParser.parseInteger(arguments[0]);
+				if (choice == null) {
 					sender.sendMessage(ChatColor.RED + "Invalid input.");
+					return;
 				}
+				Painter.paint(player, false, false, choice);
 			}
 		} else {
-			PaintingWrapper.paint(player, true, false, 0);
+			Painter.paint(player, true, false, 0);
 		}
 	}
 }

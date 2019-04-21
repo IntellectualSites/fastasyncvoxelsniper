@@ -7,11 +7,12 @@ import com.thevoxelbox.voxelsniper.BrushRegistry;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperManager;
+import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.Performers;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,9 +27,9 @@ public class VoxelSniperExecutor implements CommandExecutor {
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
-		SniperManager sniperManager = this.plugin.getSniperManager();
+		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperManager.getSniperForPlayer(player);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		if (arguments.length >= 1) {
 			String firstArgument = arguments[0];
 			if (firstArgument.equalsIgnoreCase("brushes")) {
@@ -52,21 +53,20 @@ public class VoxelSniperExecutor implements CommandExecutor {
 				}
 				Message message = snipeData.getMessage();
 				if (arguments.length == 2) {
-					try {
-						int range = Integer.parseInt(arguments[1]);
-						if (range < 0) {
-							sender.sendMessage("Negative values are not allowed.");
-						}
-						snipeData.setRange(range);
-						snipeData.setRanged(true);
-						message.toggleRange();
-					} catch (NumberFormatException exception) {
+					Integer range = NumericParser.parseInteger(arguments[1]);
+					if (range == null) {
 						sender.sendMessage("Can't parse number.");
+						return;
 					}
+					if (range < 0) {
+						sender.sendMessage("Negative values are not allowed.");
+					}
+					snipeData.setRange(range);
+					snipeData.setRanged(true);
 				} else {
 					snipeData.setRanged(!snipeData.isRanged());
-					message.toggleRange();
 				}
+				message.toggleRange();
 				return;
 			} else if (firstArgument.equalsIgnoreCase("perf")) {
 				sender.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");

@@ -91,8 +91,8 @@ public enum Performers {
 	//COMBO_COMBO_UPDATE(       pComboComboUpdate.class,        "ccu",          "combo-combo-update"),      //              place combo, replace combo, graphical update
 	//COMBO_COMBO_NOPHYS_UPDATE(pComboComboNoPhysUpdate.class,  "ccup",         "combo-combo-update-nophys"),//             place combo, replace combo, graphical update, no physics
 
-	private static Map<String, Performer> performers;
-	private static Map<String, String> longNames;
+	private static final Map<String, Performer> PERFORMERS;
+	private static final Map<String, String> LONG_NAMES;
 	private Class<? extends Performer> performerClass;
 	private String shortName;
 	private String longName;
@@ -134,21 +134,21 @@ public enum Performers {
 	}
 
 	public static Performer getPerformer(String s) {
-		return performers.containsKey(s) ? performers.get(s) : performers.get(longNames.get(s));
+		return PERFORMERS.containsKey(s) ? PERFORMERS.get(s) : PERFORMERS.get(LONG_NAMES.get(s));
 	}
 
 	public static boolean has(String s) {
-		return performers.containsKey(s);
+		return PERFORMERS.containsKey(s);
 	}
 
 	static {
-		performers = new TreeMap<>();
-		longNames = new TreeMap<>();
-		for (Performers pe : values()) {
-			performers.put(pe.shortName, pe.getPerformer());
-			longNames.put(pe.longName, pe.shortName);
-			performerListShort = performerListShort + ChatColor.GREEN + pe.shortName + ChatColor.RED + ", ";
-			performerListLong = performerListLong + ChatColor.GREEN + pe.longName + ChatColor.RED + ", ";
+		PERFORMERS = new TreeMap<>();
+		LONG_NAMES = new TreeMap<>();
+		for (Performers performer : values()) {
+			PERFORMERS.put(performer.shortName, performer.getPerformer());
+			LONG_NAMES.put(performer.longName, performer.shortName);
+			performerListShort = performerListShort + ChatColor.GREEN + performer.shortName + ChatColor.RED + ", ";
+			performerListLong = performerListLong + ChatColor.GREEN + performer.longName + ChatColor.RED + ", ";
 		}
 		performerListShort = performerListShort.substring(0, performerListShort.length() - 2);
 		performerListLong = performerListLong.substring(0, performerListLong.length() - 2);

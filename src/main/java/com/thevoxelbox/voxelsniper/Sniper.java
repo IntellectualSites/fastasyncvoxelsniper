@@ -132,71 +132,58 @@ public class Sniper {
 				Block targetBlock;
 				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
 				Message message = snipeData.getMessage();
-				switch (action) {
-					case LEFT_CLICK_BLOCK:
-					case LEFT_CLICK_AIR:
-						if (clickedBlock != null) {
-							targetBlock = clickedBlock;
+				if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+					if (clickedBlock != null) {
+						targetBlock = clickedBlock;
+					} else {
+						RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
+						targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+					}
+					if (snipeAction == SnipeAction.ARROW) {
+						if (targetBlock != null) {
+							Material type = targetBlock.getType();
+							snipeData.setBlockDataType(type);
 						} else {
-							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
-							targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+							snipeData.resetBlockData();
 						}
-						switch (snipeAction) {
-							case ARROW:
-								if (targetBlock != null) {
-									Material type = targetBlock.getType();
-									snipeData.setBlockDataType(type);
-								} else {
-									snipeData.resetBlockData();
-								}
-								message.blockDataType();
-								return true;
-							case GUNPOWDER:
-								if (targetBlock != null) {
-									BlockData blockData = targetBlock.getBlockData();
-									snipeData.setBlockData(blockData);
-								} else {
-									snipeData.resetBlockData();
-								}
-								message.blockData();
-								return true;
-							default:
-								break;
-						}
-						break;
-					case RIGHT_CLICK_AIR:
-					case RIGHT_CLICK_BLOCK:
-						if (clickedBlock != null) {
-							targetBlock = clickedBlock;
+						message.blockDataType();
+						return true;
+					} else if (snipeAction == SnipeAction.GUNPOWDER) {
+						if (targetBlock != null) {
+							BlockData blockData = targetBlock.getBlockData();
+							snipeData.setBlockData(blockData);
 						} else {
-							RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
-							targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+							snipeData.resetBlockData();
 						}
-						switch (snipeAction) {
-							case ARROW:
-								if (targetBlock != null) {
-									Material type = targetBlock.getType();
-									snipeData.setReplaceBlockDataType(type);
-								} else {
-									snipeData.resetReplaceBlockData();
-								}
-								message.replaceBlockDataType();
-								return true;
-							case GUNPOWDER:
-								if (targetBlock != null) {
-									BlockData blockData = targetBlock.getBlockData();
-									snipeData.setReplaceBlockData(blockData);
-								} else {
-									snipeData.resetReplaceBlockData();
-								}
-								message.replaceBlockData();
-								return true;
-							default:
-								break;
+						message.blockData();
+						return true;
+					}
+				} else {
+					if (clickedBlock != null) {
+						targetBlock = clickedBlock;
+					} else {
+						RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
+						targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+					}
+					if (snipeAction == SnipeAction.ARROW) {
+						if (targetBlock != null) {
+							Material type = targetBlock.getType();
+							snipeData.setReplaceBlockDataType(type);
+						} else {
+							snipeData.resetReplaceBlockData();
 						}
-						break;
-					default:
-						return false;
+						message.replaceBlockDataType();
+						return true;
+					} else if (snipeAction == SnipeAction.GUNPOWDER) {
+						if (targetBlock != null) {
+							BlockData blockData = targetBlock.getBlockData();
+							snipeData.setReplaceBlockData(blockData);
+						} else {
+							snipeData.resetReplaceBlockData();
+						}
+						message.replaceBlockData();
+						return true;
+					}
 				}
 			} else {
 				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
@@ -374,7 +361,7 @@ public class Sniper {
 		return this.tools.get(toolId);
 	}
 
-	public static class SniperTool {
+	public static final class SniperTool {
 
 		private Map<Material, SnipeAction> actionTools = new HashMap<>();
 		private Map<Class<? extends Brush>, Brush> brushes = new HashMap<>();

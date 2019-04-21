@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.PaintingWrapper;
+import com.thevoxelbox.voxelsniper.util.Painter;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import org.bukkit.entity.Player;
@@ -27,7 +27,10 @@ public class PaintingBrush extends AbstractBrush {
 	public final void arrow(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		Player player = owner.getPlayer();
-		PaintingWrapper.paint(player, true, false, 0);
+		if (player == null) {
+			return;
+		}
+		Painter.paint(player, true, false, 0);
 	}
 
 	/**
@@ -39,7 +42,10 @@ public class PaintingBrush extends AbstractBrush {
 	public final void powder(SnipeData snipeData) {
 		Sniper owner = snipeData.getOwner();
 		Player player = owner.getPlayer();
-		PaintingWrapper.paint(player, true, true, 0);
+		if (player == null) {
+			return;
+		}
+		Painter.paint(player, true, true, 0);
 	}
 
 	@Override
