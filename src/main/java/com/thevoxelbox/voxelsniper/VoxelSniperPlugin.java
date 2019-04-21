@@ -131,7 +131,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		BrushRegistry brushRegistry = new BrushRegistry();
 		registerBrushes(brushRegistry);
 		Logger logger = getLogger();
-		logger.info("Registered " + this.brushRegistry.getBrushesCount() + " brushes with " + this.brushRegistry.getHandlesCount() + " handles.");
+		logger.info("Registered " + brushRegistry.getBrushesCount() + " brushes with " + brushRegistry.getHandlesCount() + " handles.");
 		return brushRegistry;
 	}
 
