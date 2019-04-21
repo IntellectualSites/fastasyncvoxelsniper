@@ -90,16 +90,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	private VoxelSniperConfig voxelSniperConfig;
 	private BrushRegistry brushRegistry;
 	private SniperManager sniperManager;
-	private CommandRegistry commandRegistry;
-	private VoxelSniperListener voxelSniperListener;
 
 	@Override
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
 		this.brushRegistry = loadBrushRegistry();
 		this.sniperManager = new SniperManager(this);
-		this.commandRegistry = loadCommandRegistry();
-		this.voxelSniperListener = loadListener();
+		loadCommands();
+		loadListeners();
 	}
 
 	private VoxelSniperConfig loadConfig() {
@@ -195,20 +193,18 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		brushRegistry.registerBrush(WarpBrush.class, "world", "warp");
 	}
 
-	private CommandRegistry loadCommandRegistry() {
+	private void loadCommands() {
 		CommandRegistry commandRegistry = new CommandRegistry(this);
 		CommandRegistrar commandRegistrar = new CommandRegistrar(this, commandRegistry);
 		commandRegistrar.registerCommands();
-		return commandRegistry;
 	}
 
-	private VoxelSniperListener loadListener() {
+	private void loadListeners() {
 		VoxelSniperListener listener = new VoxelSniperListener(this);
 		PluginManager pluginManager = Bukkit.getPluginManager();
 		pluginManager.registerEvents(listener, this);
 		Logger logger = getLogger();
 		logger.info("Registered Sniper Listener.");
-		return listener;
 	}
 
 	/**
@@ -236,13 +232,5 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	 */
 	public SniperManager getSniperManager() {
 		return this.sniperManager;
-	}
-
-	public CommandRegistry getCommandRegistry() {
-		return this.commandRegistry;
-	}
-
-	public VoxelSniperListener getVoxelSniperListener() {
-		return this.voxelSniperListener;
 	}
 }
