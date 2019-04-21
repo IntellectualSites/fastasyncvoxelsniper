@@ -177,8 +177,8 @@ public class PunishBrush extends PerformBrush {
 		}
 	}
 
-	private void addEffect(LivingEntity entity, PotionEffectType blindness) {
-		PotionEffect effect = new PotionEffect(blindness, TICKS_PER_SECOND * this.punishDuration, this.punishLevel);
+	private void addEffect(LivingEntity entity, PotionEffectType type) {
+		PotionEffect effect = new PotionEffect(type, TICKS_PER_SECOND * this.punishDuration, this.punishLevel);
 		entity.addPotionEffect(effect, true);
 	}
 
