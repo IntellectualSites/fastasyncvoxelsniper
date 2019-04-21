@@ -12,9 +12,7 @@ import org.bukkit.Chunk;
  */
 public class RegenerateChunkBrush extends AbstractBrush {
 
-	/**
-	 *
-	 */
+
 	public RegenerateChunkBrush() {
 		super("Chunk Generator 40k");
 	}

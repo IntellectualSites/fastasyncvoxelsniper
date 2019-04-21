@@ -25,9 +25,7 @@ public class JockeyBrush extends AbstractBrush {
 	@Nullable
 	private Entity jockeyedEntity;
 
-	/**
-	 *
-	 */
+
 	public JockeyBrush() {
 		super("Jockey");
 	}

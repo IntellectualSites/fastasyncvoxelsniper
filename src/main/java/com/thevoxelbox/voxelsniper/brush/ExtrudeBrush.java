@@ -17,9 +17,7 @@ public class ExtrudeBrush extends AbstractBrush {
 
 	private double trueCircle;
 
-	/**
-	 *
-	 */
+
 	public ExtrudeBrush() {
 		super("Extrude");
 	}

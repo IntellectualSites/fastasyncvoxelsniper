@@ -16,9 +16,7 @@ public class RingBrush extends PerformBrush {
 	private double trueCircle;
 	private double innerSize;
 
-	/**
-	 *
-	 */
+
 	public RingBrush() {
 		super("Ring");
 	}

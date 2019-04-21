@@ -20,9 +20,7 @@ public class CheckerVoxelDiscBrush extends PerformBrush {
 		super("Checker Voxel Disc");
 	}
 
-	/**
-	 *
-	 */
+
 	private void applyBrush(SnipeData v, Block target) {
 		for (int x = v.getBrushSize(); x >= -v.getBrushSize(); x--) {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {

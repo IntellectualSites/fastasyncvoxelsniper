@@ -33,9 +33,7 @@ public class CopyPastaBrush extends AbstractBrush {
 	private int[] arraySize = new int[3];
 	private int pivot; // ccw degrees
 
-	/**
-	 *
-	 */
+
 	public CopyPastaBrush() {
 		super("CopyPasta");
 	}

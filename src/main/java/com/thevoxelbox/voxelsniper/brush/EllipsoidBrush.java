@@ -17,9 +17,7 @@ public class EllipsoidBrush extends PerformBrush {
 	private double zRad;
 	private boolean istrue;
 
-	/**
-	 *
-	 */
+
 	public EllipsoidBrush() {
 		super("Ellipsoid");
 	}

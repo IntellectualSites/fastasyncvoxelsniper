@@ -23,9 +23,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 
 	private TreeType treeType = TreeType.TREE;
 
-	/**
-	 *
-	 */
+
 	public TreeSnipeBrush() {
 		super("Tree Snipe");
 	}

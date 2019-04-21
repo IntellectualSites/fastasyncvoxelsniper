@@ -32,9 +32,7 @@ public class JaggedLineBrush extends PerformBrush {
 	private int recursion = RECURSION_DEFAULT;
 	private int spread = SPREAD_DEFAULT;
 
-	/**
-	 *
-	 */
+
 	public JaggedLineBrush() {
 		super("Jagged Line");
 	}

@@ -24,9 +24,7 @@ public class LineBrush extends PerformBrush {
 	private Vector targetCoords = new Vector();
 	private World targetWorld;
 
-	/**
-	 *
-	 */
+
 	public LineBrush() {
 		super("Line");
 	}

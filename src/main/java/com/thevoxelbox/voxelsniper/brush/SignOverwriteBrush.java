@@ -27,9 +27,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
 	private boolean rangedMode;
 
-	/**
-	 *
-	 */
+
 	public SignOverwriteBrush() {
 		super("Sign Overwrite Brush");
 		clearBuffer();

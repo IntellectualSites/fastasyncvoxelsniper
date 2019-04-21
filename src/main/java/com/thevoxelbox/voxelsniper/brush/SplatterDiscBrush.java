@@ -29,9 +29,7 @@ public class SplatterDiscBrush extends PerformBrush {
 	private int splatterRecursions; // How many times you grow the seeds
 	private Random generator = new Random();
 
-	/**
-	 *
-	 */
+
 	public SplatterDiscBrush() {
 		super("Splatter Disc");
 	}
