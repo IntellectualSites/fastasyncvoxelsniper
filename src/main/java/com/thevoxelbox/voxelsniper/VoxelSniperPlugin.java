@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
@@ -37,8 +36,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		BrushRegistry brushRegistry = new BrushRegistry();
 		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
 		brushRegistrar.registerBrushes();
-		Logger logger = getLogger();
-		logger.info("Registered " + brushRegistry.getBrushesCount() + " brushes with " + brushRegistry.getHandlesCount() + " handles.");
 		return brushRegistry;
 	}
 
@@ -52,8 +49,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		PluginManager pluginManager = Bukkit.getPluginManager();
 		pluginManager.registerEvents(new PlayerJoinListener(this), this);
 		pluginManager.registerEvents(new PlayerInteractListener(this), this);
-		Logger logger = getLogger();
-		logger.info("Registered Sniper Listener.");
 	}
 
 	/**

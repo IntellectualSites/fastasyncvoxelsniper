@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -149,8 +148,7 @@ public class Rot2DvertBrush extends AbstractBrush {
 			snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
 		} catch (NumberFormatException exception) {
 			snipeData.sendMessage("Exception while parsing parameter: " + parameters[1]);
-			Bukkit.getLogger()
-				.severe(exception.getMessage());
+			exception.printStackTrace();
 		}
 	}
 

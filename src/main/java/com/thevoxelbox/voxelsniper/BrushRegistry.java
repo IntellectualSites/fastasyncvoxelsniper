@@ -49,23 +49,6 @@ public class BrushRegistry {
 	}
 
 	/**
-	 * @return Amount of Brush classes registered with the system under Sniper visibility.
-	 */
-	public int getBrushesCount() {
-		return this.brushes.size();
-	}
-
-	/**
-	 * @return Amount of handles registered with the system under Sniper visibility.
-	 */
-	public int getHandlesCount() {
-		return this.brushes.values()
-			.stream()
-			.mapToInt(List::size)
-			.sum();
-	}
-
-	/**
 	 * @return Immutable copy of all the registered brushes
 	 */
 	public Map<Class<? extends Brush>, List<String>> getBrushes() {

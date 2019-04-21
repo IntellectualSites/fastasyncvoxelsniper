@@ -9,8 +9,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,8 +125,7 @@ public enum Performers {
 			Constructor<? extends Performer> constructor = this.performerClass.getConstructor();
 			return constructor.newInstance();
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
-			Logger.getLogger(Performers.class.getName())
-				.log(Level.SEVERE, null, exception);
+			exception.printStackTrace();
 		}
 		return null;
 	}

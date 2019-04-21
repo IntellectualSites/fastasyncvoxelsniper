@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
@@ -26,13 +25,11 @@ public class UndoExecutor implements CommandExecutor {
 			Integer amount = NumericParser.parseInteger(arguments[0]);
 			if (amount == null) {
 				sender.sendMessage("Error while parsing amount of undo. Number format exception.");
-			} else {
-				sniper.undo(amount);
+				return;
 			}
+			sniper.undo(amount);
 		} else {
 			sniper.undo();
 		}
-		Logger logger = this.plugin.getLogger();
-		logger.info("Player \"" + sender.getName() + "\" used /u");
 	}
 }

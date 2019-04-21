@@ -55,70 +55,70 @@ public class PunishBrush extends PerformBrush {
 					.strikeLightning(entity.getLocation());
 				break;
 			case BLINDNESS:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.BLINDNESS);
 				break;
 			case DRUNK:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.CONFUSION);
 				break;
 			case SLOW:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.SLOW);
 				break;
 			case JUMP:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.JUMP);
 				break;
 			case ABSORPTION:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.ABSORPTION);
 				break;
 			case DAMAGE_RESISTANCE:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.DAMAGE_RESISTANCE);
 				break;
 			case FAST_DIGGING:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.FAST_DIGGING);
 				break;
 			case FIRE_RESISTANCE:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.FIRE_RESISTANCE);
 				break;
 			case HEAL:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.HEAL);
 				break;
 			case HEALTH_BOOST:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.HEALTH_BOOST);
 				break;
 			case HUNGER:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.HUNGER);
 				break;
 			case INCREASE_DAMAGE:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.INCREASE_DAMAGE);
 				break;
 			case INVISIBILITY:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.INVISIBILITY);
 				break;
 			case NIGHT_VISION:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.NIGHT_VISION);
 				break;
 			case POISON:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.POISON, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.POISON);
 				break;
 			case REGENERATION:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.REGENERATION);
 				break;
 			case SATURATION:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.SATURATION);
 				break;
 			case SLOW_DIGGING:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.SLOW_DIGGING);
 				break;
 			case SPEED:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.SPEED);
 				break;
 			case WATER_BREATHING:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.WATER_BREATHING);
 				break;
 			case WEAKNESS:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.WEAKNESS);
 				break;
 			case WITHER:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.WITHER);
 				break;
 			case KILL:
 				entity.setHealth(0.0d);
@@ -131,10 +131,10 @@ public class PunishBrush extends PerformBrush {
 				entity.teleport(targetLocation);
 				break;
 			case ALL_POTION:
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, TICKS_PER_SECOND * this.punishDuration, this.punishLevel), true);
+				addEffect(entity, PotionEffectType.BLINDNESS);
+				addEffect(entity, PotionEffectType.CONFUSION);
+				addEffect(entity, PotionEffectType.SLOW);
+				addEffect(entity, PotionEffectType.JUMP);
 				break;
 			case FORCE:
 				Vector playerVector = this.getTargetBlock()
@@ -173,10 +173,13 @@ public class PunishBrush extends PerformBrush {
 				}
 				break;
 			default:
-				Bukkit.getLogger()
-					.warning("Could not determine the punishment of punish brush!");
-				break;
+				throw new IllegalStateException("Unexpected value: " + this.punishment);
 		}
+	}
+
+	private void addEffect(LivingEntity entity, PotionEffectType blindness) {
+		PotionEffect effect = new PotionEffect(blindness, TICKS_PER_SECOND * this.punishDuration, this.punishLevel);
+		entity.addPotionEffect(effect, true);
 	}
 
 	@Override

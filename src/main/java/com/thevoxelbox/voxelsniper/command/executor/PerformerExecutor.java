@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
@@ -41,9 +39,8 @@ public class PerformerExecutor implements CommandExecutor {
 			} else {
 				sender.sendMessage("This brush is not a performer brush.");
 			}
-		} catch (NumberFormatException exception) {
-			Logger logger = this.plugin.getLogger();
-			logger.log(Level.WARNING, "Command error from " + sender.getName(), exception);
+		} catch (RuntimeException exception) {
+			exception.printStackTrace();
 		}
 	}
 }
