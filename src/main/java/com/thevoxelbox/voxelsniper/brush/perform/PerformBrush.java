@@ -10,9 +10,6 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.AbstractBrush;
-import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 
 /**
  * @author Voxel
@@ -41,9 +38,6 @@ public abstract class PerformBrush extends AbstractBrush implements BrushPerform
 				if (currentToolId == null) {
 					return;
 				}
-				SniperBrushChangedEvent event = new SniperBrushChangedEvent(owner, this, this, currentToolId);
-				PluginManager pluginManager = Bukkit.getPluginManager();
-				pluginManager.callEvent(event);
 				info(snipeData.getMessage());
 				this.current.info(snipeData.getMessage());
 				if (args.length > 1) {

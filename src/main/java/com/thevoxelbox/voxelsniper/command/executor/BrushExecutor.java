@@ -9,12 +9,8 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
-import com.thevoxelbox.voxelsniper.event.SniperBrushSizeChangedEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
 
 public class BrushExecutor implements CommandExecutor {
 
@@ -42,7 +38,6 @@ public class BrushExecutor implements CommandExecutor {
 			sniper.displayInfo();
 			return;
 		}
-		PluginManager pluginManager = Bukkit.getPluginManager();
 		try {
 			int newBrushSize = Integer.parseInt(arguments[0]);
 			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfig()
@@ -52,10 +47,7 @@ public class BrushExecutor implements CommandExecutor {
 				newBrushSize = this.plugin.getVoxelSniperConfig()
 					.getLiteSniperMaxBrushSize();
 			}
-			int originalSize = snipeData.getBrushSize();
 			snipeData.setBrushSize(newBrushSize);
-			SniperBrushSizeChangedEvent event = new SniperBrushSizeChangedEvent(sniper, originalSize, snipeData.getBrushSize(), currentToolId);
-			pluginManager.callEvent(event);
 			Message message = snipeData.getMessage();
 			message.size();
 			return;
@@ -89,8 +81,6 @@ public class BrushExecutor implements CommandExecutor {
 			if (newBrush == null) {
 				return;
 			}
-			SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, originalBrush, newBrush, currentToolId);
-			pluginManager.callEvent(event);
 			sniper.displayInfo();
 		} else {
 			sender.sendMessage("Couldn't find Brush for brush handle \"" + arguments[0] + "\"");

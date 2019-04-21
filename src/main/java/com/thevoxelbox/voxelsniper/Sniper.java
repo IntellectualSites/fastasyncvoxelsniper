@@ -11,8 +11,6 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.event.SniperMaterialChangedEvent;
-import com.thevoxelbox.voxelsniper.event.SniperReplaceMaterialChangedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
 
 public class Sniper {
@@ -134,7 +131,6 @@ public class Sniper {
 			if (player.isSneaking()) {
 				Block targetBlock;
 				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
-				PluginManager pluginManager = Bukkit.getPluginManager();
 				Message message = snipeData.getMessage();
 				switch (action) {
 					case LEFT_CLICK_BLOCK:
@@ -148,36 +144,22 @@ public class Sniper {
 						switch (snipeAction) {
 							case ARROW:
 								if (targetBlock != null) {
-									Material originalType = snipeData.getBlockDataType();
 									Material type = targetBlock.getType();
 									snipeData.setBlockDataType(type);
-									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, originalType.createBlockData(), type.createBlockData(), toolId);
-									pluginManager.callEvent(event);
 								} else {
-									Material originalType = snipeData.getBlockDataType();
 									snipeData.resetBlockData();
-									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, originalType.createBlockData(), snipeData.getBlockData(), toolId);
-									pluginManager.callEvent(event);
 								}
 								message.blockDataType();
 								return true;
 							case GUNPOWDER:
 								if (targetBlock != null) {
-									BlockData originalData = snipeData.getBlockData();
 									BlockData blockData = targetBlock.getBlockData();
 									snipeData.setBlockData(blockData);
-									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, originalData, blockData, toolId);
-									pluginManager.callEvent(event);
-									message.blockData();
-									return true;
 								} else {
-									BlockData originalData = snipeData.getBlockData();
 									snipeData.resetBlockData();
-									SniperMaterialChangedEvent event = new SniperMaterialChangedEvent(this, originalData, snipeData.getBlockData(), toolId);
-									pluginManager.callEvent(event);
-									message.blockData();
-									return true;
 								}
+								message.blockData();
+								return true;
 							default:
 								break;
 						}
@@ -193,38 +175,22 @@ public class Sniper {
 						switch (snipeAction) {
 							case ARROW:
 								if (targetBlock != null) {
-									Material originalType = snipeData.getReplaceBlockDataType();
 									Material type = targetBlock.getType();
 									snipeData.setReplaceBlockDataType(type);
-									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, originalType.createBlockData(), type.createBlockData(), toolId);
-									pluginManager.callEvent(event);
-									message.replaceBlockDataType();
-									return true;
 								} else {
-									Material originalType = snipeData.getReplaceBlockDataType();
 									snipeData.resetReplaceBlockData();
-									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, originalType.createBlockData(), snipeData.getReplaceBlockData(), toolId);
-									pluginManager.callEvent(event);
-									message.replaceBlockDataType();
-									return true;
 								}
+								message.replaceBlockDataType();
+								return true;
 							case GUNPOWDER:
 								if (targetBlock != null) {
-									BlockData originalData = snipeData.getReplaceBlockData();
 									BlockData blockData = targetBlock.getBlockData();
 									snipeData.setReplaceBlockData(blockData);
-									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, originalData, blockData, toolId);
-									pluginManager.callEvent(event);
-									message.replaceBlockData();
-									return true;
 								} else {
-									BlockData originalData = snipeData.getReplaceBlockData();
 									snipeData.resetReplaceBlockData();
-									SniperReplaceMaterialChangedEvent event = new SniperReplaceMaterialChangedEvent(this, originalData, snipeData.getReplaceBlockData(), toolId);
-									pluginManager.callEvent(event);
-									message.replaceBlockData();
-									return true;
 								}
+								message.replaceBlockData();
+								return true;
 							default:
 								break;
 						}
