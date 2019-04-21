@@ -136,8 +136,7 @@ public class Sniper {
 					if (clickedBlock != null) {
 						targetBlock = clickedBlock;
 					} else {
-						RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
-						targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+						targetBlock = snipeData.isRanged() ? player.getTargetBlock(snipeData.getRange()) : player.getTargetBlock(250);
 					}
 					if (snipeAction == SnipeAction.ARROW) {
 						if (targetBlock != null) {
@@ -162,8 +161,7 @@ public class Sniper {
 					if (clickedBlock != null) {
 						targetBlock = clickedBlock;
 					} else {
-						RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
-						targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
+						targetBlock = snipeData.isRanged() ? player.getTargetBlock(snipeData.getRange()) : player.getTargetBlock(250);
 					}
 					if (snipeAction == SnipeAction.ARROW) {
 						if (targetBlock != null) {
@@ -204,9 +202,8 @@ public class Sniper {
 						return true;
 					}
 				} else {
-					RangeBlockHelper rangeBlockHelper = snipeData.isRanged() ? new RangeBlockHelper(player, player.getWorld(), snipeData.getRange()) : new RangeBlockHelper(player, player.getWorld());
-					targetBlock = snipeData.isRanged() ? rangeBlockHelper.getRangeBlock() : rangeBlockHelper.getTargetBlock();
-					lastBlock = rangeBlockHelper.getLastBlock();
+					targetBlock = snipeData.isRanged() ? player.getTargetBlock(snipeData.getRange()) : player.getTargetBlock(250);
+					lastBlock = player.getTargetBlock(250);
 					if (targetBlock == null || targetBlock.isEmpty() || lastBlock == null || lastBlock.isEmpty()) {
 						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 						return true;

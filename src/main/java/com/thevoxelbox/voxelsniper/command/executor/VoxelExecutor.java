@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
@@ -41,7 +40,7 @@ public class VoxelExecutor implements CommandExecutor {
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 		List<String> liteSniperRestrictedItems = config.getLiteSniperRestrictedItems();
 		if (arguments.length == 0) {
-			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
+			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock != null) {
 				Material targetBlockType = targetBlock.getType();
 				NamespacedKey targetBlockTypeKey = targetBlockType.getKey();

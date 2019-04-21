@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
@@ -35,7 +34,7 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 			return;
 		}
 		if (arguments.length == 0) {
-			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
+			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock != null) {
 				snipeData.setReplaceBlockDataType(targetBlock.getType());
 				Message message = snipeData.getMessage();

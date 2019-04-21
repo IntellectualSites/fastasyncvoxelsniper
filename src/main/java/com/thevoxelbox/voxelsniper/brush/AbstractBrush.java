@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.RangeBlockHelper;
 import com.thevoxelbox.voxelsniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
@@ -102,17 +101,10 @@ public abstract class AbstractBrush implements Brush {
 			}
 			return true;
 		} else {
-			RangeBlockHelper rangeBlockHelper;
 			Player ownerPlayer = owner.getPlayer();
-			if (ownerSnipeData.isRanged()) {
-				rangeBlockHelper = new RangeBlockHelper(ownerPlayer, ownerPlayer.getWorld(), ownerSnipeData.getRange());
-				this.targetBlock = rangeBlockHelper.getRangeBlock();
-			} else {
-				rangeBlockHelper = new RangeBlockHelper(ownerPlayer, ownerPlayer.getWorld());
-				this.targetBlock = rangeBlockHelper.getTargetBlock();
-			}
+			this.targetBlock = ownerSnipeData.isRanged() ? ownerPlayer.getTargetBlock(ownerSnipeData.getRange()) : ownerPlayer.getTargetBlock(250);
 			if (this.targetBlock != null) {
-				this.lastBlock = rangeBlockHelper.getLastBlock();
+				this.lastBlock = ownerPlayer.getTargetBlock(250);
 				if (this.lastBlock == null) {
 					snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
