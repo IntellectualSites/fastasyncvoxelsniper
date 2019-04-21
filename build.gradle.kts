@@ -1,6 +1,5 @@
 plugins {
 	java
-	id("com.github.johnrengelman.shadow") version "5.0.0"
 	id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
 }
 
