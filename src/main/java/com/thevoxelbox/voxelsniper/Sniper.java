@@ -11,6 +11,7 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -290,11 +291,12 @@ public class Sniper {
 
 	public void storeUndo(@Nullable Undo undo) {
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		if (config.getUndoCacheSize() <= 0) {
+		int undoCacheSize = config.getUndoCacheSize();
+		if (undoCacheSize <= 0) {
 			return;
 		}
 		if (undo != null && undo.getSize() > 0) {
-			while (this.undoList.size() >= config.getUndoCacheSize()) {
+			while (this.undoList.size() >= undoCacheSize) {
 				this.undoList.pollLast();
 			}
 			this.undoList.push(undo);

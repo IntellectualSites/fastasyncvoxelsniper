@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper;
+package com.thevoxelbox.voxelsniper.config;
 
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -6,12 +6,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * Configuration storage defining global configurations for VoxelSniper.
  */
-public class VoxelSniperConfig {
+public class VoxelSniperConfigLoader {
 
 	private static final String UNDO_CACHE_SIZE = "undo-cache-size";
 	private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
 	private static final String LITESNIPER_MAX_BRUSH_SIZE = "litesniper-max-brush-size";
-	private static final String LITESNIPER_RESTRICTED_ITEMS = "litesniper-restricted-items";
+	private static final String LITESNIPER_RESTRICTED_MATERIALS = "litesniper-restricted-materials";
 	private static final int DEFAULT_UNDO_CACHE_SIZE = 20;
 	private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
 	private static final int DEFAULT_LITESNIPER_MAX_BRUSH_SIZE = 5;
@@ -21,7 +21,7 @@ public class VoxelSniperConfig {
 	/**
 	 * @param config Configuration that is going to be used.
 	 */
-	public VoxelSniperConfig(FileConfiguration config) {
+	public VoxelSniperConfigLoader(FileConfiguration config) {
 		this.config = config;
 	}
 
@@ -66,7 +66,7 @@ public class VoxelSniperConfig {
 	 *
 	 * @return maximum size
 	 */
-	public int getLiteSniperMaxBrushSize() {
+	public int getLitesniperMaxBrushSize() {
 		return this.config.getInt(LITESNIPER_MAX_BRUSH_SIZE, DEFAULT_LITESNIPER_MAX_BRUSH_SIZE);
 	}
 
@@ -75,25 +75,25 @@ public class VoxelSniperConfig {
 	 *
 	 * @param size maximum size
 	 */
-	public void setLiteSniperMaxBrushSize(int size) {
+	public void setLitesniperMaxBrushSize(int size) {
 		this.config.set(LITESNIPER_MAX_BRUSH_SIZE, size);
 	}
 
 	/**
-	 * Returns List of restricted Litesniper Items.
+	 * Returns List of restricted Litesniper Materials.
 	 *
-	 * @return List of restricted Litesniper Items
+	 * @return List of restricted Litesniper Materials
 	 */
-	public List<String> getLiteSniperRestrictedItems() {
-		return this.config.getStringList(LITESNIPER_RESTRICTED_ITEMS);
+	public List<String> getLitesniperRestrictedMaterials() {
+		return this.config.getStringList(LITESNIPER_RESTRICTED_MATERIALS);
 	}
 
 	/**
-	 * Set new list of restricted Litesniper Items.
+	 * Set new list of restricted Litesniper Materials.
 	 *
-	 * @param restrictedItems List of restricted Litesniper Items
+	 * @param restrictedMaterials List of restricted Litesniper Materials
 	 */
-	public void setLitesniperRestrictedItems(List<String> restrictedItems) {
-		this.config.set(LITESNIPER_RESTRICTED_ITEMS, restrictedItems);
+	public void setLitesniperRestrictedMaterials(List<String> restrictedMaterials) {
+		this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials);
 	}
 }

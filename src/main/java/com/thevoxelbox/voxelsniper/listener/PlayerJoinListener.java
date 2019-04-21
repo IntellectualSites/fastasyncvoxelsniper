@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.listener;
 
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -22,8 +22,8 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 		Player player = event.getPlayer();
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Sniper sniper = sniperRegistry.getSniper(player);
-		VoxelSniperConfig voxelSniperConfig = this.plugin.getVoxelSniperConfig();
-		if (player.hasPermission("voxelsniper.sniper") && voxelSniperConfig.isMessageOnLoginEnabled()) {
+		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+		if (player.hasPermission("voxelsniper.sniper") && config.isMessageOnLoginEnabled()) {
 			sniper.displayInfo();
 		}
 	}

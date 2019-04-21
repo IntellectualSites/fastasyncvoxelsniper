@@ -1,9 +1,15 @@
 package com.thevoxelbox.voxelsniper;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,7 +35,16 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	private VoxelSniperConfig loadConfig() {
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
-		return new VoxelSniperConfig(config);
+		VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(config);
+		int undoCacheSize = voxelSniperConfigLoader.getUndoCacheSize();
+		boolean messageOnLoginEnabled = voxelSniperConfigLoader.isMessageOnLoginEnabled();
+		int litesniperMaxBrushSize = voxelSniperConfigLoader.getLitesniperMaxBrushSize();
+		List<Material> litesniperRestrictedMaterials = voxelSniperConfigLoader.getLitesniperRestrictedMaterials()
+			.stream()
+			.map(Material::matchMaterial)
+			.filter(Objects::nonNull)
+			.collect(Collectors.toList());
+		return new VoxelSniperConfig(undoCacheSize, messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
 	}
 
 	private BrushRegistry loadBrushRegistry() {

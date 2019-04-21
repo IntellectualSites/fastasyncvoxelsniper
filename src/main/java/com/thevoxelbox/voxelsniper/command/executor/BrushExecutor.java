@@ -5,11 +5,11 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,9 +43,9 @@ public class BrushExecutor implements CommandExecutor {
 		Integer newBrushSize = NumericParser.parseInteger(arguments[0]);
 		if (newBrushSize != null) {
 			VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > config.getLiteSniperMaxBrushSize()) {
-				sender.sendMessage("Size is restricted to " + config.getLiteSniperMaxBrushSize() + " for you.");
-				newBrushSize = config.getLiteSniperMaxBrushSize();
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > config.getLitesniperMaxBrushSize()) {
+				sender.sendMessage("Size is restricted to " + config.getLitesniperMaxBrushSize() + " for you.");
+				newBrushSize = config.getLitesniperMaxBrushSize();
 			}
 			snipeData.setBrushSize(newBrushSize);
 			Message message = snipeData.getMessage();

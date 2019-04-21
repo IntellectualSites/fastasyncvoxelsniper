@@ -5,12 +5,11 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -38,13 +37,12 @@ public class VoxelExecutor implements CommandExecutor {
 		}
 		Message message = snipeData.getMessage();
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		List<String> liteSniperRestrictedItems = config.getLiteSniperRestrictedItems();
+		List<Material> liteSniperRestrictedMaterials = config.getLitesniperRestrictedMaterials();
 		if (arguments.length == 0) {
 			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock != null) {
 				Material targetBlockType = targetBlock.getType();
-				NamespacedKey targetBlockTypeKey = targetBlockType.getKey();
-				if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedItems.contains(targetBlockTypeKey.toString())) {
+				if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(targetBlockType)) {
 					sender.sendMessage("You are not allowed to use " + targetBlockType.name() + ".");
 					return;
 				}
@@ -55,8 +53,7 @@ public class VoxelExecutor implements CommandExecutor {
 		}
 		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null && material.isBlock()) {
-			NamespacedKey key = material.getKey();
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedItems.contains(key.toString())) {
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(material)) {
 				sender.sendMessage("You are not allowed to use " + material.name() + ".");
 				return;
 			}
