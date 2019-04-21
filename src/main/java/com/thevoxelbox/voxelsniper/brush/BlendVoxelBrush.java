@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.EnumMap;
+import java.util.Map;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Undo;
 import org.bukkit.ChatColor;
@@ -42,35 +44,37 @@ public class BlendVoxelBrush extends BlendBrushBase {
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
 				for (int z = 0; z <= brushSizeDoubled; z++) {
-					int[] materialFrequency = new int[MAX_BLOCK_MATERIAL_ID + 1]; // Array that tracks frequency of materials neighboring given block
+					Map<Material, Integer> materialFrequency = new EnumMap<>(Material.class); //Map that tracks frequency of materials neighboring given block
 					for (int m = -1; m <= 1; m++) {
 						for (int n = -1; n <= 1; n++) {
 							for (int o = -1; o <= 1; o++) {
 								if (!(m == 0 && n == 0 && o == 0)) {
-									materialFrequency[oldMaterials[x + 1 + m][y + 1 + n][z + 1 + o]]++;
+									Material oldMaterial = oldMaterials[x + 1 + m][y + 1 + n][z + 1 + o];
+									materialFrequency.computeIfPresent(oldMaterial, (key, value) -> value + 1);
 								}
 							}
 						}
 					}
 					// Find most common neighboring material.
-					int modeMatId = 0;
-					int modeMatCount = 0;
-					for (int i = 0; i <= MAX_BLOCK_MATERIAL_ID; i++) {
-						if (materialFrequency[i] > modeMatCount && !(this.excludeAir && i == Material.LEGACY_AIR.getId()) && !(this.excludeWater && (i == Material.LEGACY_WATER.getId() || i == Material.LEGACY_STATIONARY_WATER.getId()))) {
-							modeMatCount = materialFrequency[i];
-							modeMatId = i;
+					Material mostCommonMaterial = null;
+					int mostCommonFrequency = 0;
+					for (Material material : BLOCKS) {
+						int frequency = materialFrequency.getOrDefault(material, 0);
+						if (frequency > mostCommonFrequency && !(this.excludeAir && material.isEmpty()) && !(this.excludeWater && material == Material.WATER)) {
+							mostCommonFrequency = frequency;
+							mostCommonMaterial = material;
 						}
 					}
 					// Make sure there'world not a tie for most common
 					boolean tieCheck = true;
-					for (int i = 0; i < modeMatId; i++) {
-						if (materialFrequency[i] == modeMatCount && !(this.excludeAir && i == Material.LEGACY_AIR.getId()) && !(this.excludeWater && (i == Material.LEGACY_WATER.getId() || i == Material.LEGACY_STATIONARY_WATER.getId()))) {
+					for (Material material : BLOCKS) {
+						if (materialFrequency.getOrDefault(material, 0) == mostCommonFrequency && !(this.excludeAir && material.isEmpty()) && !(this.excludeWater && material == Material.WATER)) {
 							tieCheck = false;
 						}
 					}
 					// Record most common neighbor material for this block
-					if (tieCheck) {
-						newMaterials[x][y][z] = modeMatId;
+					if (tieCheck && mostCommonMaterial != null) {
+						newMaterials[x][y][z] = mostCommonMaterial;
 					}
 				}
 			}

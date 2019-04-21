@@ -1,5 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import org.bukkit.ChatColor;
@@ -11,20 +15,12 @@ import org.bukkit.Material;
 
 public abstract class BlendBrushBase extends AbstractBrush {
 
-	@Deprecated
-	protected static final int MAX_BLOCK_MATERIAL_ID;
+	protected static final Set<Material> BLOCKS = Arrays.stream(Material.values())
+		.filter(Material::isBlock)
+		.collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
 
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
-
-	static {
-		// Find highest placeable block ID
-		int a = -1;
-		for (Material material : Material.values()) {
-			a = material.isBlock() && material.getId() > a ? material.getId() : a;
-		}
-		MAX_BLOCK_MATERIAL_ID = a;
-	}
 
 	public BlendBrushBase(String name) {
 		super(name);
