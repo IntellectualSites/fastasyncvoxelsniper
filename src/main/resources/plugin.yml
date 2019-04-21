@@ -1,5 +1,5 @@
 name: VoxelSniper
-main: com.thevoxelbox.voxelsniper.VoxelSniper
+main: com.thevoxelbox.voxelsniper.VoxelSniperPlugin
 version: 5.171.0-SNAPSHOT
 website: http://www.voxelwiki.com/minecraft/VoxelSniper
 authors: [przerwap, MikeMatrix, Gavjenks, giltwist, psanker, Deamon5550, DivineRage]
