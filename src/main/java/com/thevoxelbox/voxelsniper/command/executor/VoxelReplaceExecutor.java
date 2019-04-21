@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
@@ -6,42 +6,44 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VoxelReplaceCommand extends VoxelCommand {
+public class VoxelReplaceExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelReplaceCommand(VoxelSniperPlugin plugin) {
-		super("VoxelReplace", "vr", "voxelsniper.sniper");
+	public VoxelReplaceExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
-		if (args.length == 0) {
-			Block targetBlock = new RangeBlockHelper(sender, sender.getWorld()).getTargetBlock();
+		if (arguments.length == 0) {
+			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
 				snipeData.setReplaceBlockDataType(targetBlock.getType());
 				Message message = snipeData.getMessage();
 				message.replaceBlockDataType();
 			}
-			return true;
+			return;
 		}
-		Material material = Material.matchMaterial(args[0]);
+		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null) {
 			if (material.isBlock()) {
 				snipeData.setReplaceBlockDataType(material);
@@ -50,8 +52,6 @@ public class VoxelReplaceCommand extends VoxelCommand {
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 			}
-			return true;
 		}
-		return false;
 	}
 }

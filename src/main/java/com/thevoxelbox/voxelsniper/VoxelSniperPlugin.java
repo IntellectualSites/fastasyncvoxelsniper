@@ -76,46 +76,27 @@ import com.thevoxelbox.voxelsniper.brush.VoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.VoxelDiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.WarpBrush;
-import com.thevoxelbox.voxelsniper.command.VoxelBrushCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelBrushToolCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelCenterCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelDefaultCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelGoToCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelHeightCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelInkCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelInkReplaceCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelListCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelPaintCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelPerformerCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelReplaceCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelSniperCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelUndoCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelUndoUserCommand;
-import com.thevoxelbox.voxelsniper.command.VoxelVoxelCommand;
+import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Bukkit extension point.
  */
 public class VoxelSniperPlugin extends JavaPlugin {
 
-	private BrushRegistry brushRegistry;
-	private CommandRegistry commandRegistry;
-	private SniperManager sniperManager;
-	private VoxelSniperListener voxelSniperListener;
 	private VoxelSniperConfig voxelSniperConfig;
+	private BrushRegistry brushRegistry;
+	private SniperManager sniperManager;
+	private CommandRegistry commandRegistry;
+	private VoxelSniperListener voxelSniperListener;
 
 	@Override
 	public void onEnable() {
-		this.brushRegistry = loadBrushRegistry();
 		this.voxelSniperConfig = loadConfig();
+		this.brushRegistry = loadBrushRegistry();
 		this.sniperManager = new SniperManager(this);
 		this.commandRegistry = loadCommandRegistry();
 		this.voxelSniperListener = loadListener();
@@ -215,28 +196,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	}
 
 	private CommandRegistry loadCommandRegistry() {
-		CommandRegistry commandRegistry = new CommandRegistry();
-		registerCommands(commandRegistry);
+		CommandRegistry commandRegistry = new CommandRegistry(this);
+		CommandRegistrar commandRegistrar = new CommandRegistrar(this, commandRegistry);
+		commandRegistrar.registerCommands();
 		return commandRegistry;
-	}
-
-	private void registerCommands(CommandRegistry commandRegistry) {
-		commandRegistry.registerCommand(new VoxelBrushCommand(this));
-		commandRegistry.registerCommand(new VoxelBrushToolCommand(this));
-		commandRegistry.registerCommand(new VoxelCenterCommand(this));
-		commandRegistry.registerCommand(new VoxelDefaultCommand(this));
-		commandRegistry.registerCommand(new VoxelGoToCommand());
-		commandRegistry.registerCommand(new VoxelHeightCommand(this));
-		commandRegistry.registerCommand(new VoxelInkCommand(this));
-		commandRegistry.registerCommand(new VoxelInkReplaceCommand(this));
-		commandRegistry.registerCommand(new VoxelListCommand(this));
-		commandRegistry.registerCommand(new VoxelPaintCommand());
-		commandRegistry.registerCommand(new VoxelPerformerCommand(this));
-		commandRegistry.registerCommand(new VoxelReplaceCommand(this));
-		commandRegistry.registerCommand(new VoxelSniperCommand(this));
-		commandRegistry.registerCommand(new VoxelUndoCommand(this));
-		commandRegistry.registerCommand(new VoxelUndoUserCommand(this));
-		commandRegistry.registerCommand(new VoxelVoxelCommand(this));
 	}
 
 	private VoxelSniperListener loadListener() {
@@ -248,16 +211,13 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		return listener;
 	}
 
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-		if (!(sender instanceof Player)) {
-			Logger logger = getLogger();
-			logger.info("Only Players can execute commands.");
-			return false;
-		}
-		Player player = (Player) sender;
-		String commandName = command.getName();
-		return this.voxelSniperListener.listenCommandExecution(player, commandName, args);
+	/**
+	 * Returns object for accessing global VoxelSniper options.
+	 *
+	 * @return {@link VoxelSniperConfig} object for accessing global VoxelSniper options.
+	 */
+	public VoxelSniperConfig getVoxelSniperConfig() {
+		return this.voxelSniperConfig;
 	}
 
 	/**
@@ -278,16 +238,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		return this.sniperManager;
 	}
 
-	/**
-	 * Returns object for accessing global VoxelSniper options.
-	 *
-	 * @return {@link VoxelSniperConfig} object for accessing global VoxelSniper options.
-	 */
-	public VoxelSniperConfig getVoxelSniperConfig() {
-		return this.voxelSniperConfig;
-	}
-
 	public CommandRegistry getCommandRegistry() {
 		return this.commandRegistry;
+	}
+
+	public VoxelSniperListener getVoxelSniperListener() {
+		return this.voxelSniperListener;
 	}
 }

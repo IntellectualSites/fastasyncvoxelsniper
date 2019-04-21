@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
@@ -7,36 +7,38 @@ import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VoxelVoxelCommand extends VoxelCommand {
+public class VoxelExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelVoxelCommand(VoxelSniperPlugin plugin) {
-		super("VoxelVoxel", "v", "voxelsniper.sniper");
+	public VoxelExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
 		Message message = snipeData.getMessage();
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		if (args.length == 0) {
-			Block targetBlock = new RangeBlockHelper(sender, sender.getWorld()).getTargetBlock();
+		if (arguments.length == 0) {
+			Block targetBlock = new RangeBlockHelper(player, player.getWorld()).getTargetBlock();
 			if (targetBlock != null) {
 				if (!sender.hasPermission("voxelsniper.ignorelimitations") && config.getLiteSniperRestrictedItems()
 					.contains(targetBlock.getType()
@@ -44,26 +46,25 @@ public class VoxelVoxelCommand extends VoxelCommand {
 						.toString())) {
 					sender.sendMessage("You are not allowed to use " + targetBlock.getType()
 						.name() + ".");
-					return true;
+					return;
 				}
 				snipeData.setBlockDataType(targetBlock.getType());
 				message.blockDataType();
 			}
-			return true;
+			return;
 		}
-		Material material = Material.matchMaterial(args[0]);
+		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null && material.isBlock()) {
 			if (!sender.hasPermission("voxelsniper.ignorelimitations") && config.getLiteSniperRestrictedItems()
 				.contains(material.getKey()
 					.toString())) {
 				sender.sendMessage("You are not allowed to use " + material.name() + ".");
-				return true;
+				return;
 			}
 			snipeData.setBlockDataType(material);
 			message.blockDataType();
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 		}
-		return true;
 	}
 }

@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
@@ -6,52 +6,53 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VoxelInkReplaceCommand extends VoxelCommand {
+public class VoxelInkReplaceExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelInkReplaceCommand(VoxelSniperPlugin plugin) {
-		super("VoxelInkReplace", "vir", "voxelsniper.sniper");
+	public VoxelInkReplaceExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		BlockData dataValue;
-		if (args.length == 0) {
-			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(sender, sender.getWorld());
+		if (arguments.length == 0) {
+			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
 			Block targetBlock = rangeBlockHelper.getTargetBlock();
 			if (targetBlock != null) {
 				dataValue = targetBlock.getBlockData();
 			} else {
-				return true;
+				return;
 			}
 		} else {
 			try {
-				dataValue = Bukkit.createBlockData(args[0]);
+				dataValue = Bukkit.createBlockData(arguments[0]);
 			} catch (NumberFormatException exception) {
 				sender.sendMessage("Couldn't parse input.");
-				return true;
+				return;
 			}
 		}
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
 		snipeData.setReplaceBlockData(dataValue);
 		Message message = snipeData.getMessage();
 		message.replaceBlockData();
-		return true;
 	}
 }

@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.RangeBlockHelper;
@@ -6,52 +6,54 @@ import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VoxelListCommand extends VoxelCommand {
+public class VoxelListExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelListCommand(VoxelSniperPlugin plugin) {
-		super("VoxelList", "vl", "voxelsniper.sniper");
+	public VoxelListExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
 		Message message = snipeData.getMessage();
-		if (args.length == 0) {
-			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(sender, sender.getWorld());
+		if (arguments.length == 0) {
+			RangeBlockHelper rangeBlockHelper = new RangeBlockHelper(player, player.getWorld());
 			Block targetBlock = rangeBlockHelper.getTargetBlock();
 			if (targetBlock == null) {
-				return true;
+				return;
 			}
 			BlockData blockData = targetBlock.getBlockData();
 			snipeData.addToVoxelList(blockData);
 			message.voxelList();
-			return true;
+			return;
 		} else {
-			if (args[0].equalsIgnoreCase("clear")) {
+			if (arguments[0].equalsIgnoreCase("clear")) {
 				snipeData.clearVoxelList();
 				message.voxelList();
-				return true;
+				return;
 			}
 		}
 		boolean remove = false;
-		for (String string : args) {
+		for (String string : arguments) {
 			String materialString;
 			if (!string.isEmpty() && string.charAt(0) == '-') {
 				remove = true;
@@ -70,6 +72,5 @@ public class VoxelListCommand extends VoxelCommand {
 				message.voxelList();
 			}
 		}
-		return true;
 	}
 }

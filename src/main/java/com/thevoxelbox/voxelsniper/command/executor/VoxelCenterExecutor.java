@@ -1,43 +1,43 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.SnipeData;
 import com.thevoxelbox.voxelsniper.Sniper;
 import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class VoxelCenterCommand extends VoxelCommand {
+public class VoxelCenterExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelCenterCommand(VoxelSniperPlugin plugin) {
-		super("VoxelCenter", "vc", "voxelsniper.sniper");
+	public VoxelCenterExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
 		try {
-			int center = Integer.parseInt(args[0]);
+			int center = Integer.parseInt(arguments[0]);
 			snipeData.setCylinderCenter(center);
 			Message message = snipeData.getMessage();
 			message.center();
-			return true;
 		} catch (NumberFormatException exception) {
 			sender.sendMessage(ChatColor.RED + "Invalid input.");
-			return true;
 		}
 	}
 }

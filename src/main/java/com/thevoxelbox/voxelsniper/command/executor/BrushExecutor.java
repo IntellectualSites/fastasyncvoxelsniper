@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.command;
+package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Message;
@@ -8,41 +8,43 @@ import com.thevoxelbox.voxelsniper.SniperManager;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
+import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.event.SniperBrushChangedEvent;
 import com.thevoxelbox.voxelsniper.event.SniperBrushSizeChangedEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-public class VoxelBrushCommand extends VoxelCommand {
+public class BrushExecutor implements CommandExecutor {
 
 	private VoxelSniperPlugin plugin;
 
-	public VoxelBrushCommand(VoxelSniperPlugin plugin) {
-		super("VoxelBrush", "b", "voxelsniper.sniper");
+	public BrushExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
-	public boolean onCommand(Player sender, String[] args) {
+	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperManager sniperManager = this.plugin.getSniperManager();
-		Sniper sniper = sniperManager.getSniperForPlayer(sender);
+		Player player = (Player) sender;
+		Sniper sniper = sniperManager.getSniperForPlayer(player);
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
-			return true;
+			return;
 		}
 		SnipeData snipeData = sniper.getSnipeData(currentToolId);
 		if (snipeData == null) {
-			return true;
+			return;
 		}
-		if (args.length == 0) {
+		if (arguments.length == 0) {
 			sniper.previousBrush(currentToolId);
 			sniper.displayInfo();
-			return true;
+			return;
 		}
 		PluginManager pluginManager = Bukkit.getPluginManager();
 		try {
-			int newBrushSize = Integer.parseInt(args[0]);
+			int newBrushSize = Integer.parseInt(arguments[0]);
 			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > this.plugin.getVoxelSniperConfig()
 				.getLiteSniperMaxBrushSize()) {
 				sender.sendMessage("Size is restricted to " + this.plugin.getVoxelSniperConfig()
@@ -56,44 +58,43 @@ public class VoxelBrushCommand extends VoxelCommand {
 			pluginManager.callEvent(event);
 			Message message = snipeData.getMessage();
 			message.size();
-			return true;
+			return;
 		} catch (NumberFormatException exception) {
 			exception.printStackTrace();
 		}
 		Class<? extends Brush> brush = this.plugin.getBrushRegistry()
-			.getBrush(args[0]);
+			.getBrush(arguments[0]);
 		if (brush != null) {
 			Brush originalBrush = sniper.getBrush(currentToolId);
 			if (originalBrush == null) {
-				return true;
+				return;
 			}
 			sniper.setBrush(currentToolId, brush);
-			if (args.length > 1) {
+			if (arguments.length > 1) {
 				Brush currentBrush = sniper.getBrush(currentToolId);
 				if (currentBrush == null) {
-					return true;
+					return;
 				}
 				if (currentBrush instanceof BrushPerformer) {
-					String[] parameters = Arrays.copyOfRange(args, 1, args.length);
+					String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
 					((BrushPerformer) currentBrush).parse(parameters, snipeData);
-					return true;
+					return;
 				} else {
-					String[] parameters = hackTheArray(Arrays.copyOfRange(args, 1, args.length));
+					String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
 					currentBrush.parameters(parameters, snipeData);
-					return true;
+					return;
 				}
 			}
 			Brush newBrush = sniper.getBrush(currentToolId);
 			if (newBrush == null) {
-				return true;
+				return;
 			}
 			SniperBrushChangedEvent event = new SniperBrushChangedEvent(sniper, originalBrush, newBrush, currentToolId);
 			pluginManager.callEvent(event);
 			sniper.displayInfo();
 		} else {
-			sender.sendMessage("Couldn't find Brush for brush handle \"" + args[0] + "\"");
+			sender.sendMessage("Couldn't find Brush for brush handle \"" + arguments[0] + "\"");
 		}
-		return true;
 	}
 
 	/**
