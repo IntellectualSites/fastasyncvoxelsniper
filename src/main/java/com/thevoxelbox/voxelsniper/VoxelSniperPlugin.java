@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper;
 
 import java.util.logging.Logger;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
+import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
+import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -47,9 +49,9 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	}
 
 	private void loadListeners() {
-		VoxelSniperListener listener = new VoxelSniperListener(this);
 		PluginManager pluginManager = Bukkit.getPluginManager();
-		pluginManager.registerEvents(listener, this);
+		pluginManager.registerEvents(new PlayerJoinListener(this), this);
+		pluginManager.registerEvents(new PlayerInteractListener(this), this);
 		Logger logger = getLogger();
 		logger.info("Registered Sniper Listener.");
 	}
