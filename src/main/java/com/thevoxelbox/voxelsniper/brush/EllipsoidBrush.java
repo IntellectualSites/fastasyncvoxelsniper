@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -74,7 +74,7 @@ public class EllipsoidBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		this.istrue = false;
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];

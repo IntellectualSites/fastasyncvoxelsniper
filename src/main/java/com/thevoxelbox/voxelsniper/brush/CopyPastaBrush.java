@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -155,7 +155,7 @@ public class CopyPastaBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		String parameter = parameters[1];
 		if (parameter.equalsIgnoreCase("info")) {
 			snipeData.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");

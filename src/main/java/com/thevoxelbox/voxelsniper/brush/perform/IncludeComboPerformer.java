@@ -7,7 +7,7 @@ package com.thevoxelbox.voxelsniper.brush.perform;
 
 import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 

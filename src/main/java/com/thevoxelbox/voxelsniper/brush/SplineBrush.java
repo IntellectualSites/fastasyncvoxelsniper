@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.ArrayList;
 import java.util.List;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -135,7 +135,7 @@ public class SplineBrush extends PerformBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
 			if (parameters[i].equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Spline brush parameters");

@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper;
+package com.thevoxelbox.voxelsniper.sniper;
 
 import java.util.EnumSet;
 import java.util.HashSet;

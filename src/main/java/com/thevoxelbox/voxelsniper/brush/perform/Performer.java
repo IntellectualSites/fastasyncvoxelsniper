@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.perform;
 
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
-import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 

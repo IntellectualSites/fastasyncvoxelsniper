@@ -8,6 +8,7 @@ import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +28,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
 		this.brushRegistry = loadBrushRegistry();
-		this.sniperRegistry = new SniperRegistry(this);
+		this.sniperRegistry = loadSniperRegistry();
 		loadCommands();
 		loadListeners();
 	}
@@ -52,6 +53,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
 		brushRegistrar.registerBrushes();
 		return brushRegistry;
+	}
+
+	private SniperRegistry loadSniperRegistry() {
+		int undoCacheSize = this.voxelSniperConfig.getUndoCacheSize();
+		return new SniperRegistry(undoCacheSize);
 	}
 
 	private void loadCommands() {

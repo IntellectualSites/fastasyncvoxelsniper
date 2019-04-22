@@ -5,7 +5,7 @@
 
 package com.thevoxelbox.voxelsniper.brush.perform;
 
-import com.thevoxelbox.voxelsniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 

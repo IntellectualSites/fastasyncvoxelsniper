@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.EnumSet;
 import java.util.Set;
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;

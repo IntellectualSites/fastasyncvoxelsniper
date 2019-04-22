@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
 import com.thevoxelbox.voxelsniper.Message;
-import com.thevoxelbox.voxelsniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -102,7 +102,7 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, com.thevoxelbox.voxelsniper.SnipeData snipeData) {
+	public final void parameters(String[] parameters, SnipeData snipeData) {
 		String parameter = parameters[1];
 		if (parameter.equalsIgnoreCase("info")) {
 			snipeData.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");

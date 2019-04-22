@@ -1,7 +1,8 @@
-package com.thevoxelbox.voxelsniper;
+package com.thevoxelbox.voxelsniper.sniper;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.thevoxelbox.voxelsniper.Message;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -82,6 +83,11 @@ public class SnipeData {
 			return null;
 		}
 		return player.getWorld();
+	}
+
+	@Override
+	public String toString() {
+		return "SnipeData{" + "owner=" + this.owner + ", message=" + this.message + ", blockData=" + this.blockData + ", replaceBlockData=" + this.replaceBlockData + ", brushSize=" + this.brushSize + ", voxelHeight=" + this.voxelHeight + ", cylinderCenter=" + this.cylinderCenter + ", range=" + this.range + ", ranged=" + this.ranged + ", lightningEnabled=" + this.lightningEnabled + ", voxelList=" + this.voxelList + "}";
 	}
 
 	public Material getBlockDataType() {

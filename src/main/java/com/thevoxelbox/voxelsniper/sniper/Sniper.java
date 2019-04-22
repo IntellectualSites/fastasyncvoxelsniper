@@ -1,17 +1,18 @@
-package com.thevoxelbox.voxelsniper;
+package com.thevoxelbox.voxelsniper.sniper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
 import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
-import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,15 +27,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class Sniper {
 
-	private VoxelSniperPlugin plugin;
-	private UUID player;
+	private UUID uuid;
 	private boolean enabled = true;
-	private LinkedList<Undo> undoList = new LinkedList<>();
+	private int undoCacheSize;
+	private Deque<Undo> undoList = new LinkedList<>();
 	private Map<String, SniperTool> tools = new HashMap<>();
 
-	public Sniper(VoxelSniperPlugin plugin, Player player) {
-		this.plugin = plugin;
-		this.player = player.getUniqueId();
+	public Sniper(Player player, int undoCacheSize) {
+		this.uuid = player.getUniqueId();
+		this.undoCacheSize = undoCacheSize;
 		SniperTool sniperTool = new SniperTool(this);
 		sniperTool.assignAction(Material.ARROW, SnipeAction.ARROW);
 		sniperTool.assignAction(Material.GUNPOWDER, SnipeAction.GUNPOWDER);
@@ -86,7 +87,7 @@ public class Sniper {
 
 	@Nullable
 	public Player getPlayer() {
-		return Bukkit.getPlayer(this.player);
+		return Bukkit.getPlayer(this.uuid);
 	}
 
 	/**
@@ -290,13 +291,11 @@ public class Sniper {
 	}
 
 	public void storeUndo(@Nullable Undo undo) {
-		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		int undoCacheSize = config.getUndoCacheSize();
-		if (undoCacheSize <= 0) {
+		if (this.undoCacheSize <= 0) {
 			return;
 		}
 		if (undo != null && undo.getSize() > 0) {
-			while (this.undoList.size() >= undoCacheSize) {
+			while (this.undoList.size() >= this.undoCacheSize) {
 				this.undoList.pollLast();
 			}
 			this.undoList.push(undo);
@@ -352,12 +351,18 @@ public class Sniper {
 		}
 		brush.info(sniperTool.getMessageHelper());
 		if (brush instanceof BrushPerformer) {
-			((BrushPerformer) brush).showInfo(sniperTool.getMessageHelper());
+			BrushPerformer performer = (BrushPerformer) brush;
+			performer.showInfo(sniperTool.getMessageHelper());
 		}
 	}
 
 	public SniperTool getSniperTool(String toolId) {
 		return this.tools.get(toolId);
+	}
+
+	@Override
+	public String toString() {
+		return "Sniper{" + "uuid=" + this.uuid + ", enabled=" + this.enabled + ", undoCacheSize=" + this.undoCacheSize + ", undoList=" + this.undoList + ", tools=" + this.tools + "}";
 	}
 
 	public static final class SniperTool {
@@ -412,6 +417,11 @@ public class Sniper {
 
 		public Message getMessageHelper() {
 			return this.messageHelper;
+		}
+
+		@Override
+		public String toString() {
+			return "SniperTool{" + "actionTools=" + this.actionTools + ", brushes=" + this.brushes + ", currentBrush=" + this.currentBrush + ", previousBrush=" + this.previousBrush + ", snipeData=" + this.snipeData + ", messageHelper=" + this.messageHelper + "}";
 		}
 
 		@Nullable

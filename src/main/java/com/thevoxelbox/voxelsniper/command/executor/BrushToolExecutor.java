@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.SnipeAction;
-import com.thevoxelbox.voxelsniper.Sniper;
-import com.thevoxelbox.voxelsniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.SnipeAction;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.Material;
