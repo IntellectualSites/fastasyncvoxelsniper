@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
@@ -35,7 +35,7 @@ public class VoxelExecutor implements CommandExecutor {
 		if (snipeData == null) {
 			return;
 		}
-		Message message = snipeData.getMessage();
+		Messages messages = snipeData.getMessages();
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 		List<Material> liteSniperRestrictedMaterials = config.getLitesniperRestrictedMaterials();
 		if (arguments.length == 0) {
@@ -47,7 +47,7 @@ public class VoxelExecutor implements CommandExecutor {
 					return;
 				}
 				snipeData.setBlockDataType(targetBlockType);
-				message.blockDataType();
+				messages.blockDataType();
 			}
 			return;
 		}
@@ -58,7 +58,7 @@ public class VoxelExecutor implements CommandExecutor {
 				return;
 			}
 			snipeData.setBlockDataType(material);
-			message.blockDataType();
+			messages.blockDataType();
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 		}

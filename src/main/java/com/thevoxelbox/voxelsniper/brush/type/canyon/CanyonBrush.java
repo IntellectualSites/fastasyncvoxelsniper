@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -76,9 +76,9 @@ public class CanyonBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+	public void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 	}
 
 	@Override

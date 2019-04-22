@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.stream.Stream;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -107,9 +107,9 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
+	public final void info(Messages messages) {
 		this.block = null;
-		message.brushName(this.getName());
+		messages.brushName(this.getName());
 	}
 
 	@Override

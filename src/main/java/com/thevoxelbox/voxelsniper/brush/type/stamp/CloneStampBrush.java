@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -80,23 +80,23 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.height();
-		message.center();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.height();
+		messages.center();
 		switch (this.stamp) {
 			case DEFAULT:
-				message.brushMessage("Default Stamp");
+				messages.brushMessage("Default Stamp");
 				break;
 			case NO_AIR:
-				message.brushMessage("No-Air Stamp");
+				messages.brushMessage("No-Air Stamp");
 				break;
 			case FILL:
-				message.brushMessage("Fill Stamp");
+				messages.brushMessage("Fill Stamp");
 				break;
 			default:
-				message.custom(ChatColor.DARK_RED + "Error while stamping! Report");
+				messages.custom(ChatColor.DARK_RED + "Error while stamping! Report");
 				break;
 		}
 	}

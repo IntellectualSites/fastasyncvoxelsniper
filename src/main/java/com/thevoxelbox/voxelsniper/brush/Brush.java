@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeAction;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.block.Block;
@@ -11,9 +11,9 @@ import org.bukkit.block.Block;
 public interface Brush {
 
 	/**
-	 * @param message Message object
+	 * @param messages Messages object
 	 */
-	void info(Message message);
+	void info(Messages messages);
 
 	/**
 	 * Handles parameters passed to brushes.

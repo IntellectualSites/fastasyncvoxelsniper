@@ -55,7 +55,7 @@ public class VoxelSniperConfigLoader {
 	/**
 	 * Set the message on login to be enabled or disabled.
 	 *
-	 * @param enabled Message on Login enabled
+	 * @param enabled Messages on Login enabled
 	 */
 	public void setMessageOnLoginEnabled(boolean enabled) {
 		this.config.set(MESSAGE_ON_LOGIN_ENABLED, enabled);

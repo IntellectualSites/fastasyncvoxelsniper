@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 
 /**
@@ -13,9 +13,9 @@ public class LightningBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.brushMessage("Lightning Brush!  Please use in moderation.");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.brushMessage("Lightning Brush!  Please use in moderation.");
 	}
 
 	@Override

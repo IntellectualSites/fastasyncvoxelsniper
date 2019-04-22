@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -149,28 +149,28 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
-		message.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
-		message.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
-		message.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.custom(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
+		messages.custom(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
+		messages.custom(ChatColor.DARK_BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
+		messages.custom(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
 	}
 
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
-		Message message = snipeData.getMessage();
+		Messages messages = snipeData.getMessages();
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			Preset preset = Preset.getPreset(parameter);
 			if (preset != null) {
 				try {
 					this.currentPreset = preset.getPreset();
-					message.brushMessage("Brush preset set to " + preset.getName());
+					messages.brushMessage("Brush preset set to " + preset.getName());
 					return;
 				} catch (IllegalArgumentException exception) {
-					message.brushMessage("No such preset.");
+					messages.brushMessage("No such preset.");
 					return;
 				}
 			}

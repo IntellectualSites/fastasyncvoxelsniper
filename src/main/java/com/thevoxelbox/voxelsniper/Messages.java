@@ -6,13 +6,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
-public class Message {
+public class Messages {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
 	private SnipeData snipeData;
 
-	public Message(SnipeData snipeData) {
+	public Messages(SnipeData snipeData) {
 		this.snipeData = snipeData;
 	}
 

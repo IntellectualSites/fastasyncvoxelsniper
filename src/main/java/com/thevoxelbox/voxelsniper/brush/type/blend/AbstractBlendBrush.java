@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
@@ -42,11 +42,11 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.blockDataType();
-		message.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.blockDataType();
+		messages.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 	}
 
 	@Override

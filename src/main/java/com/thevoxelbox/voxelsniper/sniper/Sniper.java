@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
@@ -133,7 +133,7 @@ public class Sniper {
 			if (player.isSneaking()) {
 				Block targetBlock;
 				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
-				Message message = snipeData.getMessage();
+				Messages messages = snipeData.getMessages();
 				if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 					if (clickedBlock != null) {
 						targetBlock = clickedBlock;
@@ -147,7 +147,7 @@ public class Sniper {
 						} else {
 							snipeData.resetBlockData();
 						}
-						message.blockDataType();
+						messages.blockDataType();
 						return true;
 					} else if (snipeAction == SnipeAction.GUNPOWDER) {
 						if (targetBlock != null) {
@@ -156,7 +156,7 @@ public class Sniper {
 						} else {
 							snipeData.resetBlockData();
 						}
-						message.blockData();
+						messages.blockData();
 						return true;
 					}
 				} else {
@@ -172,7 +172,7 @@ public class Sniper {
 						} else {
 							snipeData.resetReplaceBlockData();
 						}
-						message.replaceBlockDataType();
+						messages.replaceBlockDataType();
 						return true;
 					} else if (snipeAction == SnipeAction.GUNPOWDER) {
 						if (targetBlock != null) {
@@ -181,7 +181,7 @@ public class Sniper {
 						} else {
 							snipeData.resetReplaceBlockData();
 						}
-						message.replaceBlockData();
+						messages.replaceBlockData();
 						return true;
 					}
 				}
@@ -349,10 +349,10 @@ public class Sniper {
 			sendMessage("No brush selected.");
 			return;
 		}
-		brush.info(sniperTool.getMessageHelper());
+		brush.info(sniperTool.getMessagesHelper());
 		if (brush instanceof PerformerBrush) {
 			PerformerBrush performer = (PerformerBrush) brush;
-			performer.showInfo(sniperTool.getMessageHelper());
+			performer.showInfo(sniperTool.getMessagesHelper());
 		}
 	}
 
@@ -372,7 +372,7 @@ public class Sniper {
 		private Class<? extends Brush> currentBrush;
 		private Class<? extends Brush> previousBrush;
 		private SnipeData snipeData;
-		private Message messageHelper;
+		private Messages messagesHelper;
 
 		private SniperTool(Sniper owner) {
 			this(SnipeBrush.class, new SnipeData(owner));
@@ -380,8 +380,8 @@ public class Sniper {
 
 		private SniperTool(Class<? extends Brush> currentBrush, SnipeData snipeData) {
 			this.snipeData = snipeData;
-			this.messageHelper = new Message(snipeData);
-			snipeData.setMessage(this.messageHelper);
+			this.messagesHelper = new Messages(snipeData);
+			snipeData.setMessages(this.messagesHelper);
 			Brush newBrushInstance = createBrushInstance(currentBrush);
 			Sniper owner = snipeData.getOwner();
 			Player player = owner.getPlayer();
@@ -415,13 +415,13 @@ public class Sniper {
 			return this.snipeData;
 		}
 
-		public Message getMessageHelper() {
-			return this.messageHelper;
+		public Messages getMessagesHelper() {
+			return this.messagesHelper;
 		}
 
 		@Override
 		public String toString() {
-			return "SniperTool{" + "actionTools=" + this.actionTools + ", brushes=" + this.brushes + ", currentBrush=" + this.currentBrush + ", previousBrush=" + this.previousBrush + ", snipeData=" + this.snipeData + ", messageHelper=" + this.messageHelper + "}";
+			return "SniperTool{" + "actionTools=" + this.actionTools + ", brushes=" + this.brushes + ", currentBrush=" + this.currentBrush + ", previousBrush=" + this.previousBrush + ", snipeData=" + this.snipeData + ", messagesHelper=" + this.messagesHelper + "}";
 		}
 
 		@Nullable

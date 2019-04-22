@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.ChatColor;
@@ -258,8 +258,8 @@ public class TriangleBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) { // Make the triangle
-		message.brushName(this.getName());
+	public final void info(Messages messages) { // Make the triangle
+		messages.brushName(this.getName());
 	}
 
 	@Override

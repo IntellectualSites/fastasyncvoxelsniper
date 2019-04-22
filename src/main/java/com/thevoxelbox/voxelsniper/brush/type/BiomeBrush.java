@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -58,10 +58,10 @@ public class BiomeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.custom(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 	}
 
 	@Override

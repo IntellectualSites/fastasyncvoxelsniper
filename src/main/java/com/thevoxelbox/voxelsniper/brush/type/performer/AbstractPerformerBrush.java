@@ -6,7 +6,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Arrays;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialPerformer;
@@ -42,9 +42,9 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 				if (currentToolId == null) {
 					return;
 				}
-				Message message = snipeData.getMessage();
-				info(message);
-				this.current.info(message);
+				Messages messages = snipeData.getMessages();
+				info(messages);
+				this.current.info(messages);
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
 					parameters(hackTheArray(additionalArguments), snipeData);
@@ -78,7 +78,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 	}
 
 	@Override
-	public void showInfo(Message message) {
-		this.current.info(message);
+	public void showInfo(Messages messages) {
+		this.current.info(messages);
 	}
 }

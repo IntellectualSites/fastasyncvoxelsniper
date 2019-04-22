@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -122,14 +122,14 @@ public class SplineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
 		if (this.set) {
-			message.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+			messages.custom(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
 		} else if (this.ctrl) {
-			message.custom(ChatColor.GRAY + "Control point selection mode ENABLED.");
+			messages.custom(ChatColor.GRAY + "Control point selection mode ENABLED.");
 		} else {
-			message.custom(ChatColor.AQUA + "No selection mode enabled.");
+			messages.custom(ChatColor.AQUA + "No selection mode enabled.");
 		}
 	}
 

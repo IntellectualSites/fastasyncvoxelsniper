@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -49,9 +49,9 @@ public class VoltMeterBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.brushMessage("Right click with arrow to see if blocks/faces are powered. Powder measures wire current.");
 	}
 
 	@Override

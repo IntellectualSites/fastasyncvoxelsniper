@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -38,7 +38,7 @@ public class VoxelCenterExecutor implements CommandExecutor {
 			return;
 		}
 		snipeData.setCylinderCenter(center);
-		Message message = snipeData.getMessage();
-		message.center();
+		Messages messages = snipeData.getMessages();
+		messages.center();
 	}
 }

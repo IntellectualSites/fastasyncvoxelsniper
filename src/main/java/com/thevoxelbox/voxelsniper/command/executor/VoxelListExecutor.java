@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -33,7 +33,7 @@ public class VoxelListExecutor implements CommandExecutor {
 		if (snipeData == null) {
 			return;
 		}
-		Message message = snipeData.getMessage();
+		Messages messages = snipeData.getMessages();
 		if (arguments.length == 0) {
 			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock == null) {
@@ -41,12 +41,12 @@ public class VoxelListExecutor implements CommandExecutor {
 			}
 			BlockData blockData = targetBlock.getBlockData();
 			snipeData.addToVoxelList(blockData);
-			message.voxelList();
+			messages.voxelList();
 			return;
 		} else {
 			if (arguments[0].equalsIgnoreCase("clear")) {
 				snipeData.clearVoxelList();
-				message.voxelList();
+				messages.voxelList();
 				return;
 			}
 		}
@@ -67,7 +67,7 @@ public class VoxelListExecutor implements CommandExecutor {
 				} else {
 					snipeData.addToVoxelList(blockData);
 				}
-				message.voxelList();
+				messages.voxelList();
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.ChatColor;
@@ -56,9 +56,9 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GREEN + "Shift Level set to " + this.getYLevel());
 	}
 
 	@Override

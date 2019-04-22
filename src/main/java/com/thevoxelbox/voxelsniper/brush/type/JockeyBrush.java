@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -145,10 +145,10 @@ public class JockeyBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
-		message.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+		messages.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
 	}
 
 	@Override

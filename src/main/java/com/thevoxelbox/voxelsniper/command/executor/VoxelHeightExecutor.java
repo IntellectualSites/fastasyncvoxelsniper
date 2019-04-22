@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -38,7 +38,7 @@ public class VoxelHeightExecutor implements CommandExecutor {
 			return;
 		}
 		snipeData.setVoxelHeight(height);
-		Message message = snipeData.getMessage();
-		message.height();
+		Messages messages = snipeData.getMessages();
+		messages.height();
 	}
 }

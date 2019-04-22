@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.block.Block;
 
@@ -40,9 +40,9 @@ public class VoxelDiscBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
 	}
 
 	@Override

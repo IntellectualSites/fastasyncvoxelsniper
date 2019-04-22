@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -50,7 +50,7 @@ public class VoxelInkExecutor implements CommandExecutor {
 			return;
 		}
 		snipeData.setBlockData(dataValue);
-		Message message = snipeData.getMessage();
-		message.blockData();
+		Messages messages = snipeData.getMessages();
+		messages.blockData();
 	}
 }

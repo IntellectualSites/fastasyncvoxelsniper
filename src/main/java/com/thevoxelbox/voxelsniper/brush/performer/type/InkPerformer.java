@@ -5,7 +5,7 @@
 
 package com.thevoxelbox.voxelsniper.brush.performer.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -28,9 +28,9 @@ public class InkPerformer extends AbstractPerformer {
 	}
 
 	@Override
-	public void info(Message message) {
-		message.performerName(this.getName());
-		message.blockData();
+	public void info(Messages messages) {
+		messages.performerName(this.getName());
+		messages.blockData();
 	}
 
 	@Override

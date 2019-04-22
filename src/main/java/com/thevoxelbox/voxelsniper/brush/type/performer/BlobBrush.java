@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.ChatColor;
@@ -191,11 +191,11 @@ public class BlobBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
+	public final void info(Messages messages) {
 		this.checkValidGrowPercent(null);
-		message.brushName(this.getName());
-		message.size();
-		message.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+		messages.brushName(this.getName());
+		messages.size();
+		messages.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
 	}
 
 	@Override

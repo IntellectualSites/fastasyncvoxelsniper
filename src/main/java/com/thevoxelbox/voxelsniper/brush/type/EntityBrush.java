@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
@@ -43,9 +43,9 @@ public class EntityBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
-		message.size();
+	public final void info(Messages messages) {
+		messages.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
+		messages.size();
 	}
 
 	@Override

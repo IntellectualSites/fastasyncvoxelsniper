@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -29,8 +29,8 @@ public class LineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
 	}
 
 	@Override

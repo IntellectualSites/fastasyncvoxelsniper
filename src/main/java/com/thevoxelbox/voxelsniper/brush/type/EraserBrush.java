@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.EnumSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.Material;
@@ -59,9 +59,9 @@ public class EraserBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
 	}
 
 	@Override

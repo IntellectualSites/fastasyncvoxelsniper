@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -77,11 +77,11 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(getName());
-		message.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
-		message.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-		message.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+	public final void info(Messages messages) {
+		messages.brushName(getName());
+		messages.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
+		messages.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+		messages.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
 	}
 
 	@Override

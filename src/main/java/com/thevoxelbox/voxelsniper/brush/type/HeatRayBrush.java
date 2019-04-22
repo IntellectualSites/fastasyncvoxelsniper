@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -169,12 +169,12 @@ public class HeatRayBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
-		message.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-		message.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
-		message.size();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
+		messages.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+		messages.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
+		messages.size();
 	}
 
 	@Override
@@ -189,15 +189,15 @@ public class HeatRayBrush extends AbstractBrush {
 			}
 			if (parameter.startsWith("oct")) {
 				this.octaves = Integer.valueOf(parameter.replace("oct", ""));
-				snipeData.getMessage()
+				snipeData.getMessages()
 					.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
 			} else if (parameter.startsWith("amp")) {
 				this.amplitude = Double.valueOf(parameter.replace("amp", ""));
-				snipeData.getMessage()
+				snipeData.getMessages()
 					.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
 			} else if (parameter.startsWith("freq")) {
 				this.frequency = Double.valueOf(parameter.replace("freq", ""));
-				snipeData.getMessage()
+				snipeData.getMessages()
 					.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
 			}
 		}

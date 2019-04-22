@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.List;
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -260,11 +260,11 @@ public class PunishBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GREEN + "Punishment: " + this.punishment);
-		message.size();
-		message.center();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GREEN + "Punishment: " + this.punishment);
+		messages.size();
+		messages.center();
 	}
 
 	@Override

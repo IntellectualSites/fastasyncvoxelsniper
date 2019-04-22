@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -37,8 +37,8 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock != null) {
 				snipeData.setReplaceBlockDataType(targetBlock.getType());
-				Message message = snipeData.getMessage();
-				message.replaceBlockDataType();
+				Messages messages = snipeData.getMessages();
+				messages.replaceBlockDataType();
 			}
 			return;
 		}
@@ -46,8 +46,8 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 		if (material != null) {
 			if (material.isBlock()) {
 				snipeData.setReplaceBlockDataType(material);
-				Message message = snipeData.getMessage();
-				message.replaceBlockDataType();
+				Messages messages = snipeData.getMessages();
+				messages.replaceBlockDataType();
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 			}

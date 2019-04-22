@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.BlockChangeDelegate;
@@ -56,13 +56,13 @@ public class TreeSnipeBrush extends AbstractBrush {
 			.orElse(0);
 	}
 
-	private void printTreeType(Message message) {
+	private void printTreeType(Messages messages) {
 		String printout = Arrays.stream(TreeType.values())
 			.map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY + treeType.name()
 				.toLowerCase() : ChatColor.DARK_GRAY + treeType.name()
 				.toLowerCase()) + ChatColor.WHITE)
 			.collect(Collectors.joining(", "));
-		message.custom(printout);
+		messages.custom(printout);
 	}
 
 	@Override
@@ -77,27 +77,27 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		this.printTreeType(message);
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		this.printTreeType(messages);
 	}
 
 	@Override
 	public final void parameters(String[] parameters, SnipeData snipeData) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
-			Message message = snipeData.getMessage();
+			Messages messages = snipeData.getMessages();
 			if (parameter.equalsIgnoreCase("info")) {
 				snipeData.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
 				snipeData.sendMessage(ChatColor.AQUA + "/b t treetype");
-				this.printTreeType(message);
+				this.printTreeType(messages);
 				return;
 			}
 			try {
 				this.treeType = TreeType.valueOf(parameter.toUpperCase());
-				this.printTreeType(message);
+				this.printTreeType(messages);
 			} catch (IllegalArgumentException exception) {
-				message.brushMessage("No such tree type.");
+				messages.brushMessage("No such tree type.");
 			}
 		}
 	}

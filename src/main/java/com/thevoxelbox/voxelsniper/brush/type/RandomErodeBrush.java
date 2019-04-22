@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -283,9 +283,9 @@ public class RandomErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
 	}
 
 	/**

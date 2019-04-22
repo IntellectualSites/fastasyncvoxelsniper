@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -83,10 +83,10 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
-		message.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GRAY + String.format("Recursion set to: %d", this.recursion));
+		messages.custom(ChatColor.GRAY + String.format("Spread set to: %d", this.spread));
 	}
 
 	@Override

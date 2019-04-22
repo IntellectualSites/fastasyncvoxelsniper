@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -172,7 +172,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
+	public final void info(Messages messages) {
 		if (this.xscl < SCL_MIN || this.xscl > SCL_MAX) {
 			this.xscl = SCL_DEFAULT;
 		}
@@ -182,14 +182,14 @@ public class EllipseBrush extends AbstractPerformerBrush {
 		if (this.steps < STEPS_MIN || this.steps > STEPS_MAX) {
 			this.steps = STEPS_DEFAULT;
 		}
-		message.brushName(this.getName());
-		message.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl);
-		message.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl);
-		message.custom(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps);
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl);
+		messages.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl);
+		messages.custom(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps);
 		if (this.fill) {
-			message.custom(ChatColor.AQUA + "Fill mode is enabled");
+			messages.custom(ChatColor.AQUA + "Fill mode is enabled");
 		} else {
-			message.custom(ChatColor.AQUA + "Fill mode is disabled");
+			messages.custom(ChatColor.AQUA + "Fill mode is disabled");
 		}
 	}
 

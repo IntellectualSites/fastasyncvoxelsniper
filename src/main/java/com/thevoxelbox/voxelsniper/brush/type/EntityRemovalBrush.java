@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -81,8 +81,8 @@ public class EntityRemovalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void info(Message message) {
-		message.brushName(getName());
+	public void info(Messages messages) {
+		messages.brushName(getName());
 		StringBuilder exemptionsList = new StringBuilder(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE);
 		for (Iterator<String> it = this.exemptions.iterator(); it.hasNext(); ) {
 			exemptionsList.append(it.next());
@@ -90,8 +90,8 @@ public class EntityRemovalBrush extends AbstractBrush {
 				exemptionsList.append(", ");
 			}
 		}
-		message.custom(exemptionsList.toString());
-		message.size();
+		messages.custom(exemptionsList.toString());
+		messages.size();
 	}
 
 	@Override

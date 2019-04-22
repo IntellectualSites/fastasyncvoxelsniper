@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
-import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -51,7 +51,7 @@ public class VoxelSniperExecutor implements CommandExecutor {
 				if (snipeData == null) {
 					return;
 				}
-				Message message = snipeData.getMessage();
+				Messages messages = snipeData.getMessages();
 				if (arguments.length == 2) {
 					Integer range = NumericParser.parseInteger(arguments[1]);
 					if (range == null) {
@@ -66,7 +66,7 @@ public class VoxelSniperExecutor implements CommandExecutor {
 				} else {
 					snipeData.setRanged(!snipeData.isRanged());
 				}
-				message.toggleRange();
+				messages.toggleRange();
 				return;
 			} else if (firstArgument.equalsIgnoreCase("perf")) {
 				sender.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");

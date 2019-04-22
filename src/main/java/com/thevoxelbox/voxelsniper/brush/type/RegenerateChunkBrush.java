@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.Chunk;
@@ -49,10 +49,10 @@ public class RegenerateChunkBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.brushMessage("Tread lightly.");
-		message.brushMessage("This brush will melt your spleen and sell your kidneys.");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.brushMessage("Tread lightly.");
+		messages.brushMessage("This brush will melt your spleen and sell your kidneys.");
 	}
 
 	@Override

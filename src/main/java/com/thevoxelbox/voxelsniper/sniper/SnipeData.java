@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.sniper;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -21,7 +21,7 @@ public class SnipeData {
 	private static final int DEFAULT_CYLINDER_CENTER = 0;
 
 	private Sniper owner;
-	private Message message;
+	private Messages messages;
 	private BlockData blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
 	private BlockData replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
 	/**
@@ -87,7 +87,7 @@ public class SnipeData {
 
 	@Override
 	public String toString() {
-		return "SnipeData{" + "owner=" + this.owner + ", message=" + this.message + ", blockData=" + this.blockData + ", replaceBlockData=" + this.replaceBlockData + ", brushSize=" + this.brushSize + ", voxelHeight=" + this.voxelHeight + ", cylinderCenter=" + this.cylinderCenter + ", range=" + this.range + ", ranged=" + this.ranged + ", lightningEnabled=" + this.lightningEnabled + ", voxelList=" + this.voxelList + "}";
+		return "SnipeData{" + "owner=" + this.owner + ", messages=" + this.messages + ", blockData=" + this.blockData + ", replaceBlockData=" + this.replaceBlockData + ", brushSize=" + this.brushSize + ", voxelHeight=" + this.voxelHeight + ", cylinderCenter=" + this.cylinderCenter + ", range=" + this.range + ", ranged=" + this.ranged + ", lightningEnabled=" + this.lightningEnabled + ", voxelList=" + this.voxelList + "}";
 	}
 
 	public Material getBlockDataType() {
@@ -126,12 +126,12 @@ public class SnipeData {
 		return this.owner;
 	}
 
-	public Message getMessage() {
-		return this.message;
+	public Messages getMessages() {
+		return this.messages;
 	}
 
-	public void setMessage(Message message) {
-		this.message = message;
+	public void setMessages(Messages messages) {
+		this.messages = messages;
 	}
 
 	public void setBlockData(BlockData blockData) {

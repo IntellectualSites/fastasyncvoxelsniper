@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -22,9 +22,9 @@ public class Rotation3DBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.brushMessage("Rotates Yaw (XZ), then Pitch(XY), then Roll(ZY), in order.");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.brushMessage("Rotates Yaw (XZ), then Pitch(XY), then Roll(ZY), in order.");
 	}
 	// after all rotations, compare snapshot to new state of world, and store changed blocks to undo?
 	// --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that

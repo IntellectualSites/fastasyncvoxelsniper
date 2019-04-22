@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.util.NumberConversions;
@@ -132,20 +132,20 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
 		switch (this.tolerance) {
 			case ACCURATE:
-				message.custom(ChatColor.GOLD + "Mode: Accurate");
+				messages.custom(ChatColor.GOLD + "Mode: Accurate");
 				break;
 			case DEFAULT:
-				message.custom(ChatColor.GOLD + "Mode: Default");
+				messages.custom(ChatColor.GOLD + "Mode: Default");
 				break;
 			case SMOOTH:
-				message.custom(ChatColor.GOLD + "Mode: Smooth");
+				messages.custom(ChatColor.GOLD + "Mode: Smooth");
 				break;
 			default:
-				message.custom(ChatColor.GOLD + "Mode: Unknown");
+				messages.custom(ChatColor.GOLD + "Mode: Unknown");
 				break;
 		}
 	}
@@ -169,7 +169,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 					.toLowerCase() + " tolerance.");
 				return;
 			} catch (IllegalArgumentException exception) {
-				snipeData.getMessage()
+				snipeData.getMessages()
 					.brushMessage("No such tolerance.");
 			}
 		}

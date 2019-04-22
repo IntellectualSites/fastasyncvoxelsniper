@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -126,7 +126,7 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
+	public final void info(Messages messages) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
@@ -136,11 +136,11 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		message.brushName("Splatter Voxel Disc");
-		message.size();
-		message.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
-		message.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
-		message.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
+		messages.brushName("Splatter Voxel Disc");
+		messages.size();
+		messages.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
+		messages.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
+		messages.custom(ChatColor.BLUE + "Recursions set to: " + this.splatterRecursions);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.performer;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.block.Block;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Performer {
 
-	void info(Message message);
+	void info(Messages messages);
 
 	void init(SnipeData snipeData);
 

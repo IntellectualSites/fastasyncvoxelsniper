@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.stream.Stream;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -148,10 +148,10 @@ public class CopyPastaBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-		message.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
+		messages.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -26,11 +26,11 @@ public class DomeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.blockDataType();
-		message.height();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.blockDataType();
+		messages.height();
 	}
 
 	private void generateDome(SnipeData snipeData, Block targetBlock) {

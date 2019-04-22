@@ -5,7 +5,7 @@
 
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 
 /**
@@ -15,5 +15,5 @@ public interface PerformerBrush {
 
 	void parse(String[] args, SnipeData snipeData);
 
-	void showInfo(Message message);
+	void showInfo(Messages messages);
 }

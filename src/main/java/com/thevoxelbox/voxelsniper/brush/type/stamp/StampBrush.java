@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -295,7 +295,7 @@ public class StampBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void info(Message message) {
+	public void info(Messages messages) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

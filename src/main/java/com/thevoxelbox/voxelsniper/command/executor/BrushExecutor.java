@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -48,8 +48,8 @@ public class BrushExecutor implements CommandExecutor {
 				newBrushSize = config.getLitesniperMaxBrushSize();
 			}
 			snipeData.setBrushSize(newBrushSize);
-			Message message = snipeData.getMessage();
-			message.size();
+			Messages messages = snipeData.getMessages();
+			messages.size();
 			return;
 		}
 		Class<? extends Brush> brush = this.plugin.getBrushRegistry()

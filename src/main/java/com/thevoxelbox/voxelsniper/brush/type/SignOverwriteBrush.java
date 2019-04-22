@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Arrays;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -254,16 +254,16 @@ public class SignOverwriteBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName("Sign Overwrite Brush");
-		message.custom(ChatColor.BLUE + "Buffer text: ");
+	public final void info(Messages messages) {
+		messages.brushName("Sign Overwrite Brush");
+		messages.custom(ChatColor.BLUE + "Buffer text: ");
 		for (int i = 0; i < this.signTextLines.length; i++) {
-			message.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
+			messages.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
 		}
-		message.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+		messages.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
 		if (this.rangedMode) {
-			message.size();
-			message.height();
+			messages.size();
+			messages.height();
 		}
 	}
 

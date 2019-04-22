@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.stream.Stream;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -537,15 +537,15 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName("Spiral Staircase");
-		message.size();
-		message.blockDataType();
-		message.height();
-		message.blockData();
-		message.custom(ChatColor.BLUE + "Staircase type: " + this.stairType);
-		message.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-		message.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+	public final void info(Messages messages) {
+		messages.brushName("Spiral Staircase");
+		messages.size();
+		messages.blockDataType();
+		messages.height();
+		messages.blockData();
+		messages.custom(ChatColor.BLUE + "Staircase type: " + this.stairType);
+		messages.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+		messages.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
 	}
 
 	@Override

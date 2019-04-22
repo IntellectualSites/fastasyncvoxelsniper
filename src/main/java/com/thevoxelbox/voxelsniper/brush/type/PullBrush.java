@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,12 +28,12 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.height();
-		message.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-		message.custom(ChatColor.AQUA + "Bubble " + this.c2);
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.height();
+		messages.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
+		messages.custom(ChatColor.AQUA + "Bubble " + this.c2);
 	}
 
 	@Override

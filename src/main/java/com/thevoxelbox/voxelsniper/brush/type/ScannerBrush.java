@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -152,10 +152,10 @@ public class ScannerBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
-		message.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.custom(ChatColor.GREEN + "Scanner depth set to " + this.depth);
+		messages.custom(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
 	}
 
 	@Override

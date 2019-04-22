@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Message;
+import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -112,11 +112,11 @@ public class ShellBallBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Message message) {
-		message.brushName(this.getName());
-		message.size();
-		message.blockDataType();
-		message.replaceBlockDataType();
+	public final void info(Messages messages) {
+		messages.brushName(this.getName());
+		messages.size();
+		messages.blockDataType();
+		messages.replaceBlockDataType();
 	}
 
 	@Override
