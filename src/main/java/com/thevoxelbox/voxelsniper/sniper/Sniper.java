@@ -10,9 +10,8 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeAction;
 import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import org.bukkit.Bukkit;
@@ -121,13 +120,14 @@ public class Sniper {
 			if (player == null) {
 				return false;
 			}
-			if (sniperTool.getCurrentBrush() == null) {
+			Brush currentBrush = sniperTool.getCurrentBrush();
+			if (currentBrush == null) {
 				player.sendMessage("No Brush selected.");
 				return true;
 			}
-			if (!player.hasPermission(sniperTool.getCurrentBrush()
+			if (!player.hasPermission(currentBrush
 				.getPermissionNode())) {
-				player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + sniperTool.getCurrentBrush()
+				player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + currentBrush
 					.getPermissionNode() + "'");
 				return true;
 			}
@@ -213,11 +213,11 @@ public class Sniper {
 						return true;
 					}
 				}
-				if (sniperTool.getCurrentBrush() instanceof AbstractPerformerBrush) {
-					AbstractPerformerBrush performerBrush = (AbstractPerformerBrush) sniperTool.getCurrentBrush();
+				if (currentBrush instanceof PerformerBrush) {
+					PerformerBrush performerBrush = (PerformerBrush) currentBrush;
 					performerBrush.initPerformer(snipeData);
 				}
-				return sniperTool.getCurrentBrush()
+				return currentBrush
 					.perform(snipeAction, snipeData, targetBlock, lastBlock);
 			}
 		}

@@ -16,4 +16,6 @@ public interface PerformerBrush {
 	void parse(String[] args, SnipeData snipeData);
 
 	void showInfo(Messages messages);
+
+	void initPerformer(SnipeData snipeData);
 }

@@ -72,6 +72,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 		return returnValue;
 	}
 
+	@Override
 	public void initPerformer(SnipeData snipeData) {
 		this.current.init(snipeData);
 		this.current.setUndo();
