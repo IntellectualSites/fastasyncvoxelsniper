@@ -10,9 +10,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.SnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
-import com.thevoxelbox.voxelsniper.brush.perform.PerformBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
+import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -211,8 +211,8 @@ public class Sniper {
 						return true;
 					}
 				}
-				if (sniperTool.getCurrentBrush() instanceof PerformBrush) {
-					PerformBrush performerBrush = (PerformBrush) sniperTool.getCurrentBrush();
+				if (sniperTool.getCurrentBrush() instanceof AbstractPerformerBrush) {
+					AbstractPerformerBrush performerBrush = (AbstractPerformerBrush) sniperTool.getCurrentBrush();
 					performerBrush.initPerformer(snipeData);
 				}
 				return sniperTool.getCurrentBrush()
@@ -350,8 +350,8 @@ public class Sniper {
 			return;
 		}
 		brush.info(sniperTool.getMessageHelper());
-		if (brush instanceof BrushPerformer) {
-			BrushPerformer performer = (BrushPerformer) brush;
+		if (brush instanceof PerformerBrush) {
+			PerformerBrush performer = (PerformerBrush) brush;
 			performer.showInfo(sniperTool.getMessageHelper());
 		}
 	}

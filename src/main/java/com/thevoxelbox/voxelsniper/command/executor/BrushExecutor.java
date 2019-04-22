@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.Message;
 import com.thevoxelbox.voxelsniper.sniper.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
+import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -65,9 +65,9 @@ public class BrushExecutor implements CommandExecutor {
 				if (currentBrush == null) {
 					return;
 				}
-				if (currentBrush instanceof BrushPerformer) {
+				if (currentBrush instanceof PerformerBrush) {
 					String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
-					((BrushPerformer) currentBrush).parse(parameters, snipeData);
+					((PerformerBrush) currentBrush).parse(parameters, snipeData);
 					return;
 				} else {
 					String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));

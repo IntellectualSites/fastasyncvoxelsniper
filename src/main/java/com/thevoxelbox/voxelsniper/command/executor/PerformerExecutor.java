@@ -5,7 +5,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.perform.BrushPerformer;
+import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,8 +33,8 @@ public class PerformerExecutor implements CommandExecutor {
 		}
 		try {
 			Brush brush = sniper.getBrush(currentToolId);
-			if (brush instanceof BrushPerformer) {
-				BrushPerformer performer = (BrushPerformer) brush;
+			if (brush instanceof PerformerBrush) {
+				PerformerBrush performer = (PerformerBrush) brush;
 				performer.parse(arguments.length == 0 ? new String[] {"m"} : arguments, snipeData);
 			} else {
 				sender.sendMessage("This brush is not a performer brush.");
