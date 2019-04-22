@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -18,8 +18,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 		super("Fill Down");
 	}
 
-	private void fillDown(SnipeData snipeData, Block block) {
-		int brushSize = snipeData.getBrushSize();
+	private void fillDown(ToolkitProperties toolkitProperties, Block block) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Block targetBlock = this.getTargetBlock();
 		for (int x = -brushSize; x <= brushSize; x++) {
@@ -29,7 +29,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					int y = 0;
 					if (this.fromExisting) {
 						boolean found = false;
-						for (y = -snipeData.getVoxelHeight(); y < snipeData.getVoxelHeight(); y++) {
+						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
 							Block currentBlock = this.getWorld()
 								.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
 							if (!currentBlock.isEmpty()) {
@@ -54,22 +54,22 @@ public class FillDownBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.fillDown(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.fillDown(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.fillDown(snipeData, lastBlock);
+		this.fillDown(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -79,35 +79,35 @@ public class FillDownBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
-				snipeData.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
-				snipeData.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
-				snipeData.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
-				snipeData.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Fill Down Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b fd true -- will use a true circle algorithm.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b fd false -- will switch back. (Default)");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b fd -e -- Fills into only existing blocks. (Toggle)");
 				return;
 			} else if (parameter.equalsIgnoreCase("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.equalsIgnoreCase("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (parameter.equalsIgnoreCase("all")) {
 				this.fillLiquid = true;
-				snipeData.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
 			} else if (parameter.equalsIgnoreCase("some")) {
 				this.fillLiquid = false;
-				snipeData.resetReplaceBlockData();
-				snipeData.sendMessage(ChatColor.AQUA + "Now only filling air.");
+				toolkitProperties.resetReplaceBlockData();
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Now only filling air.");
 			} else if (parameter.equalsIgnoreCase("-e")) {
 				this.fromExisting = !this.fromExisting;
-				snipeData.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting) ? "existing" : "all") + " blocks.");
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

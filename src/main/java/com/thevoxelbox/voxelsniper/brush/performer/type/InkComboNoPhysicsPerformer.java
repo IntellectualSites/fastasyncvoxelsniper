@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.performer.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
@@ -18,10 +18,10 @@ public class InkComboNoPhysicsPerformer extends AbstractPerformer {
 	}
 
 	@Override
-	public void init(SnipeData snipeData) {
-		this.world = snipeData.getWorld();
-		this.blockData = snipeData.getBlockData();
-		this.replaceBlockData = snipeData.getReplaceBlockData();
+	public void init(ToolkitProperties toolkitProperties) {
+		this.world = toolkitProperties.getWorld();
+		this.blockData = toolkitProperties.getBlockData();
+		this.replaceBlockData = toolkitProperties.getReplaceBlockData();
 	}
 
 	@Override

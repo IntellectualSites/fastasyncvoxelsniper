@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -24,14 +24,14 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 		super("Underlay (Reverse Overlay)");
 	}
 
-	private void underlay(SnipeData snipeData) {
-		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
-		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
-		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+	private void underlay(ToolkitProperties toolkitProperties) {
+		int[][] memory = new int[toolkitProperties.getBrushSize() * 2 + 1][toolkitProperties.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(toolkitProperties.getBrushSize() + 0.5, 2);
+		for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
+			for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
 				Block targetBlock = this.getTargetBlock();
 				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
-					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
+					if (memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							if (this.allBlocks) {
 								for (int i = 0; i < this.depth; i++) {
@@ -39,7 +39,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 										.isEmpty()) {
 										this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 										// parameters
-										memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+										memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 									}
 								}
 							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
@@ -59,7 +59,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 												.isEmpty()) {
 												this.performer.perform(this.clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 												// parameters
-												memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+												memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}
 										}
 										break;
@@ -72,24 +72,24 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
-	private void underlay2(SnipeData snipeData) {
-		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
-		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
-		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+	private void underlay2(ToolkitProperties toolkitProperties) {
+		int[][] memory = new int[toolkitProperties.getBrushSize() * 2 + 1][toolkitProperties.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(toolkitProperties.getBrushSize() + 0.5, 2);
+		for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
+			for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
 				Block targetBlock = this.getTargetBlock();
 				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
-					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
+					if (memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							if (this.allBlocks) {
 								for (int i = -1; i < this.depth - 1; i++) {
 									this.performer.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 									// parameters
-									memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+									memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 								}
 							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 								switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
@@ -110,7 +110,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 										for (int i = -1; i < this.depth - 1; i++) {
 											this.performer.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 											// parameters
-											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+											memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 										break;
 									default:
@@ -122,18 +122,18 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.underlay(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.underlay(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.underlay2(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.underlay2(toolkitProperties);
 	}
 
 	@Override
@@ -143,10 +143,10 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int index = 1; index < parameters.length; index++) {
 			String parameter = parameters[index];
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			if (parameter.equalsIgnoreCase("info")) {
 				owner.sendMessages(ChatColor.GOLD + "Reverse Overlay brush parameters:", ChatColor.AQUA + "d[number] (ex: d3) The number of blocks thick to change.", ChatColor.BLUE + "all (ex: /b reover all) Sets the brush to affect ALL materials");
 				if (this.depth < 1) {

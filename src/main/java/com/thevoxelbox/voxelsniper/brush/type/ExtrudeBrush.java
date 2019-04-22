@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,13 +17,12 @@ public class ExtrudeBrush extends AbstractBrush {
 
 	private double trueCircle;
 
-
 	public ExtrudeBrush() {
 		super("Extrude");
 	}
 
-	private void extrudeUpOrDown(SnipeData snipeData, boolean isUp) {
-		int brushSize = snipeData.getBrushSize();
+	private void extrudeUpOrDown(ToolkitProperties toolkitProperties, boolean isUp) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
@@ -31,7 +30,7 @@ public class ExtrudeBrush extends AbstractBrush {
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
 					int direction = (isUp ? 1 : -1);
-					for (int y = 0; y < Math.abs(snipeData.getVoxelHeight()); y++) {
+					for (int y = 0; y < Math.abs(toolkitProperties.getVoxelHeight()); y++) {
 						int tempY = y * direction;
 						undo = this.perform(this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
@@ -39,16 +38,16 @@ public class ExtrudeBrush extends AbstractBrush {
 							.getZ() + z), this.clampY(this.getTargetBlock()
 							.getX() + x, this.getTargetBlock()
 							.getY() + tempY + direction, this.getTargetBlock()
-							.getZ() + z), snipeData, undo);
+							.getZ() + z), toolkitProperties, undo);
 					}
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
-	private void extrudeNorthOrSouth(SnipeData v, boolean isSouth) {
+	private void extrudeNorthOrSouth(ToolkitProperties v, boolean isSouth) {
 		int brushSize = v.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
@@ -74,7 +73,7 @@ public class ExtrudeBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	private void extrudeEastOrWest(SnipeData v, boolean isEast) {
+	private void extrudeEastOrWest(ToolkitProperties v, boolean isEast) {
 		int brushSize = v.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
@@ -100,8 +99,8 @@ public class ExtrudeBrush extends AbstractBrush {
 			.storeUndo(undo);
 	}
 
-	private Undo perform(Block block1, Block block2, SnipeData snipeData, Undo undo) {
-		if (snipeData.isVoxelListContains(this.getBlockData(block1.getX(), block1.getY(), block1.getZ()))) {
+	private Undo perform(Block block1, Block block2, ToolkitProperties toolkitProperties, Undo undo) {
+		if (toolkitProperties.isVoxelListContains(this.getBlockData(block1.getX(), block1.getY(), block1.getZ()))) {
 			undo.put(block2);
 			this.setBlockType(block2.getZ(), block2.getX(), block2.getY(), this.getBlockType(block1.getX(), block1.getY(), block1.getZ()));
 			this.clampY(block2.getX(), block2.getY(), block2.getZ())
@@ -111,7 +110,7 @@ public class ExtrudeBrush extends AbstractBrush {
 		return undo;
 	}
 
-	private void selectExtrudeMethod(SnipeData v, BlockFace blockFace, boolean towardsUser) {
+	private void selectExtrudeMethod(ToolkitProperties v, BlockFace blockFace, boolean towardsUser) {
 		if (blockFace == null || v.getVoxelHeight() == 0) {
 			return;
 		}
@@ -131,14 +130,14 @@ public class ExtrudeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.selectExtrudeMethod(toolkitProperties, this.getTargetBlock()
 			.getFace(this.getLastBlock()), false);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.selectExtrudeMethod(snipeData, this.getTargetBlock()
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.selectExtrudeMethod(toolkitProperties, this.getTargetBlock()
 			.getFace(this.getLastBlock()), true);
 	}
 
@@ -152,26 +151,26 @@ public class ExtrudeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
-					snipeData.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
+					toolkitProperties.sendMessage(ChatColor.GOLD + "Extrude brush Parameters:");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b ex true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ex false will switch back. (false is default)");
 					return;
 				} else if (parameter.startsWith("true")) {
 					this.trueCircle = 0.5;
-					snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 				} else if (parameter.startsWith("false")) {
 					this.trueCircle = 0;
-					snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 				} else {
-					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 					return;
 				}
 			} catch (RuntimeException exception) {
-				snipeData.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}
 	}

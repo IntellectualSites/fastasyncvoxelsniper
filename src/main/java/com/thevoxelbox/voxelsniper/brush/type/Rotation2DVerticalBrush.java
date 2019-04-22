@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -113,25 +113,25 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.brushSize = snipeData.getBrushSize();
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.brushSize = toolkitProperties.getBrushSize();
 		if (this.mode == 0) {
 			this.getMatrix();
 			this.rotate();
 		} else {
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.sendMessage(ChatColor.RED + "Something went wrong.");
 		}
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.brushSize = snipeData.getBrushSize();
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.brushSize = toolkitProperties.getBrushSize();
 		if (this.mode == 0) {
 			this.getMatrix();
 			this.rotate();
 		} else {
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.sendMessage(ChatColor.RED + "Something went wrong.");
 		}
 	}
@@ -142,12 +142,12 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		try {
 			this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
-			snipeData.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+			toolkitProperties.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
 		} catch (NumberFormatException exception) {
-			snipeData.sendMessage("Exception while parsing parameter: " + parameters[1]);
+			toolkitProperties.sendMessage("Exception while parsing parameter: " + parameters[1]);
 			exception.printStackTrace();
 		}
 	}

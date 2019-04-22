@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,8 +21,8 @@ public class ShellBallBrush extends AbstractBrush {
 	}
 
 	// parameters isn't an abstract method, gilt. You can just leave it out if there are none.
-	private void bShell(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
+	private void bShell(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
 		Material[][][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
 		int blockPositionX = targetBlock.getX();
@@ -49,26 +49,26 @@ public class ShellBallBrush extends AbstractBrush {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
 				for (int z = 0; z <= brushSizeDoubled; z++) {
 					int temp = 0;
-					if (oldMaterials[x + 1 + 1][y + 1][z + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 + 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1 - 1][y + 1][z + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 - 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1 + 1][z + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1 + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1 - 1][z + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1 - 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1][z + 1 + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1][z + 1 + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1][z + 1 - 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1][z + 1 - 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
 					if (temp == 0) {
-						newMaterials[x][y][z] = snipeData.getBlockDataType();
+						newMaterials[x][y][z] = toolkitProperties.getBlockDataType();
 					}
 				}
 			}
@@ -90,25 +90,25 @@ public class ShellBallBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 		// This is needed because most uses of this brush will not be sible to the sniper.
 		owner.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock();
-		bShell(snipeData, targetBlock);
+		bShell(toolkitProperties, targetBlock);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		bShell(snipeData, lastBlock);
+		bShell(toolkitProperties, lastBlock);
 	}
 
 	@Override

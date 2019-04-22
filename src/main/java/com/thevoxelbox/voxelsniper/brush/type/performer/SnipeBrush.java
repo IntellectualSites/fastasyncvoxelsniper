@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
 /**
@@ -16,20 +16,20 @@ public class SnipeBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		this.performer.perform(this.getTargetBlock());
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
 		this.performer.perform(lastBlock);
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 

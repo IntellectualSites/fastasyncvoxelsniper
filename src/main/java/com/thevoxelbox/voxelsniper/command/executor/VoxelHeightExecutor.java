@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -24,12 +25,15 @@ public class VoxelHeightExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
-		String currentToolId = sniper.getCurrentToolId();
-		if (currentToolId == null) {
+		if (sniper == null) {
 			return;
 		}
-		SnipeData snipeData = sniper.getSnipeData(currentToolId);
-		if (snipeData == null) {
+		Toolkit toolkit = sniper.getCurrentToolkit();
+		if (toolkit == null) {
+			return;
+		}
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		if (toolkitProperties == null) {
 			return;
 		}
 		Integer height = NumericParser.parseInteger(arguments[0]);
@@ -37,8 +41,8 @@ public class VoxelHeightExecutor implements CommandExecutor {
 			sender.sendMessage(ChatColor.RED + "Invalid input.");
 			return;
 		}
-		snipeData.setVoxelHeight(height);
-		Messages messages = snipeData.getMessages();
+		toolkitProperties.setVoxelHeight(height);
+		Messages messages = toolkitProperties.getMessages();
 		messages.height();
 	}
 }

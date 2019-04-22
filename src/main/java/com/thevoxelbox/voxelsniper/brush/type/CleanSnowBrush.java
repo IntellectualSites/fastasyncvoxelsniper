@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,8 +21,8 @@ public class CleanSnowBrush extends AbstractBrush {
 		super("Clean Snow");
 	}
 
-	private void cleanSnow(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void cleanSnow(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int y = (brushSize + 1) * 2; y >= 0; y--) {
@@ -43,18 +43,18 @@ public class CleanSnowBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.cleanSnow(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.cleanSnow(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.cleanSnow(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.cleanSnow(toolkitProperties);
 	}
 
 	@Override
@@ -64,21 +64,21 @@ public class CleanSnowBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Clean Snow Brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Clean Snow Brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b cls true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b cls false will switch back. (false is default)");
 				return;
 			} else if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

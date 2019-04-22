@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,8 +19,8 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 		super("Disc Face");
 	}
 
-	private void discUpDown(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
+	private void discUpDown(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -33,12 +33,12 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
+	private void discNorthSouth(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -51,12 +51,12 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void discEastWest(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
+	private void discEastWest(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
@@ -69,11 +69,11 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void pre(SnipeData snipeData, Block targetBlock) {
+	private void pre(ToolkitProperties toolkitProperties, Block targetBlock) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
@@ -85,15 +85,15 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
-				this.discNorthSouth(snipeData, targetBlock);
+				this.discNorthSouth(toolkitProperties, targetBlock);
 				break;
 			case EAST:
 			case WEST:
-				this.discEastWest(snipeData, targetBlock);
+				this.discEastWest(toolkitProperties, targetBlock);
 				break;
 			case UP:
 			case DOWN:
-				this.discUpDown(snipeData, targetBlock);
+				this.discUpDown(toolkitProperties, targetBlock);
 				break;
 			default:
 				break;
@@ -101,17 +101,17 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.pre(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.pre(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.pre(snipeData, lastBlock);
+		this.pre(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -121,22 +121,22 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
 				return;
 			}
 			if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

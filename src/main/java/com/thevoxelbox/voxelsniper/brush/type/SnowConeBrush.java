@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,7 +22,7 @@ public class SnowConeBrush extends AbstractBrush {
 		super("Snow Cone");
 	}
 
-	private void addSnow(SnipeData snipeData, Block targetBlock) {
+	private void addSnow(ToolkitProperties toolkitProperties, Block targetBlock) {
 		int brushSize;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -101,7 +101,7 @@ public class SnowConeBrush extends AbstractBrush {
 				clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z).setBlockData(snowConeData[x][z]);
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
@@ -122,21 +122,21 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock();
 		if (targetBlock.getType() == Material.SNOW) {
-			this.addSnow(snipeData, targetBlock);
+			this.addSnow(toolkitProperties, targetBlock);
 		} else {
 			Block blockAbove = targetBlock.getRelative(BlockFace.UP);
 			Material type = blockAbove.getType();
 			if (type.isEmpty()) {
-				addSnow(snipeData, blockAbove);
+				addSnow(toolkitProperties, blockAbove);
 			} else {
-				Sniper owner = snipeData.getOwner();
+				Sniper owner = toolkitProperties.getOwner();
 				owner.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
 			}
 		}
@@ -148,10 +148,10 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		String firstParameter = parameters[1];
 		if (firstParameter.equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
 		}
 	}
 

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
 /**
@@ -15,28 +15,28 @@ public class VoxelDiscBrush extends AbstractPerformerBrush {
 		super("Voxel Disc");
 	}
 
-	private void disc(SnipeData snipeData, Block targetBlock) {
-		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-			for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
+	private void disc(ToolkitProperties toolkitProperties, Block targetBlock) {
+		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+			for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
 				this.performer.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.disc(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.disc(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.disc(snipeData, lastBlock);
+		this.disc(toolkitProperties, lastBlock);
 	}
 
 	@Override

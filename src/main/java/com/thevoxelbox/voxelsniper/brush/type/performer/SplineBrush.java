@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -26,23 +26,23 @@ public class SplineBrush extends AbstractPerformerBrush {
 		super("Spline");
 	}
 
-	public final void addToSet(SnipeData snipeData, boolean ep, Block targetBlock) {
+	public final void addToSet(ToolkitProperties toolkitProperties, boolean ep, Block targetBlock) {
 		if (ep) {
 			if (this.endPts.contains(targetBlock) || this.endPts.size() == 2) {
 				return;
 			}
 			this.endPts.add(targetBlock);
-			snipeData.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to endpoint selection");
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to endpoint selection");
 			return;
 		}
 		if (this.ctrlPts.contains(targetBlock) || this.ctrlPts.size() == 2) {
 			return;
 		}
 		this.ctrlPts.add(targetBlock);
-		snipeData.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
+		toolkitProperties.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
 	}
 
-	public final void removeFromSet(SnipeData v, boolean ep, Block targetBlock) {
+	public final void removeFromSet(ToolkitProperties v, boolean ep, Block targetBlock) {
 		if (ep) {
 			if (!this.endPts.contains(targetBlock)) {
 				v.sendMessage(ChatColor.RED + "That block is not in the endpoint selection set.");
@@ -60,7 +60,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 		v.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "from control point selection");
 	}
 
-	public final boolean spline(Point start, Point end, Point c1, Point c2, SnipeData v) {
+	public final boolean spline(Point start, Point end, Point c1, Point c2, ToolkitProperties v) {
 		this.spline.clear();
 		try {
 			Point c = (c1.subtract(start)).multiply(3);
@@ -84,7 +84,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	protected final void render(SnipeData v) {
+	protected final void render(ToolkitProperties v) {
 		if (this.spline.isEmpty()) {
 			return;
 		}
@@ -96,15 +96,15 @@ public class SplineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		if (this.set) {
-			this.removeFromSet(snipeData, true, this.getTargetBlock());
+			this.removeFromSet(toolkitProperties, true, this.getTargetBlock());
 		} else if (this.ctrl) {
-			this.removeFromSet(snipeData, false, this.getTargetBlock());
+			this.removeFromSet(toolkitProperties, false, this.getTargetBlock());
 		}
 	}
 
-	protected final void clear(SnipeData v) {
+	protected final void clear(ToolkitProperties v) {
 		this.spline.clear();
 		this.ctrlPts.clear();
 		this.endPts.clear();
@@ -112,12 +112,12 @@ public class SplineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		if (this.set) {
-			this.addToSet(snipeData, true, this.getTargetBlock());
+			this.addToSet(toolkitProperties, true, this.getTargetBlock());
 		}
 		if (this.ctrl) {
-			this.addToSet(snipeData, false, this.getTargetBlock());
+			this.addToSet(toolkitProperties, false, this.getTargetBlock());
 		}
 	}
 
@@ -134,42 +134,42 @@ public class SplineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			if (parameters[i].equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Spline brush parameters");
-				snipeData.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
-				snipeData.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
-				snipeData.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
-				snipeData.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Spline brush parameters");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "clear: Clear out the curve selection");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "ren: Render curve from control points");
 				return;
 			}
 			if (parameters[i].equalsIgnoreCase("sc")) {
 				if (!this.ctrl) {
 					this.set = false;
 					this.ctrl = true;
-					snipeData.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
+					toolkitProperties.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
 				} else {
 					this.ctrl = false;
-					snipeData.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
 				}
 			} else if (parameters[i].equalsIgnoreCase("ss")) {
 				if (!this.set) {
 					this.set = true;
 					this.ctrl = false;
-					snipeData.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+					toolkitProperties.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
 				} else {
 					this.set = false;
-					snipeData.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
 				}
 			} else if (parameters[i].equalsIgnoreCase("clear")) {
-				this.clear(snipeData);
+				this.clear(toolkitProperties);
 			} else if (parameters[i].equalsIgnoreCase("ren")) {
-				if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), snipeData)) {
-					this.render(snipeData);
+				if (this.spline(new Point(this.endPts.get(0)), new Point(this.endPts.get(1)), new Point(this.ctrlPts.get(0)), new Point(this.ctrlPts.get(1)), toolkitProperties)) {
+					this.render(toolkitProperties);
 				}
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

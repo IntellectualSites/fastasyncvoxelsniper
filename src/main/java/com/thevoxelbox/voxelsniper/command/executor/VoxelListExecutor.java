@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -25,27 +26,30 @@ public class VoxelListExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
-		String currentToolId = sniper.getCurrentToolId();
-		if (currentToolId == null) {
+		if (sniper == null) {
 			return;
 		}
-		SnipeData snipeData = sniper.getSnipeData(currentToolId);
-		if (snipeData == null) {
+		Toolkit toolkit = sniper.getCurrentToolkit();
+		if (toolkit == null) {
 			return;
 		}
-		Messages messages = snipeData.getMessages();
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		if (toolkitProperties == null) {
+			return;
+		}
+		Messages messages = toolkitProperties.getMessages();
 		if (arguments.length == 0) {
 			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock == null) {
 				return;
 			}
 			BlockData blockData = targetBlock.getBlockData();
-			snipeData.addToVoxelList(blockData);
+			toolkitProperties.addToVoxelList(blockData);
 			messages.voxelList();
 			return;
 		} else {
 			if (arguments[0].equalsIgnoreCase("clear")) {
-				snipeData.clearVoxelList();
+				toolkitProperties.clearVoxelList();
 				messages.voxelList();
 				return;
 			}
@@ -63,9 +67,9 @@ public class VoxelListExecutor implements CommandExecutor {
 			if (material != null && material.isBlock()) {
 				BlockData blockData = material.createBlockData();
 				if (remove) {
-					snipeData.removeFromVoxelList(blockData);
+					toolkitProperties.removeFromVoxelList(blockData);
 				} else {
-					snipeData.addToVoxelList(blockData);
+					toolkitProperties.addToVoxelList(blockData);
 				}
 				messages.voxelList();
 			}

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,7 +23,7 @@ public class SetBrush extends AbstractPerformerBrush {
 		super("Set");
 	}
 
-	private boolean set(Block block, SnipeData snipeData) {
+	private boolean set(Block block, ToolkitProperties toolkitProperties) {
 		if (this.block == null) {
 			this.block = block;
 			return true;
@@ -33,7 +33,7 @@ public class SetBrush extends AbstractPerformerBrush {
 			World parameterBlockWorld = block.getWorld();
 			String parameterBlockWorldName = parameterBlockWorld.getName();
 			if (!name.equals(parameterBlockWorldName)) {
-				snipeData.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+				toolkitProperties.sendMessage(ChatColor.RED + "You selected points in different worlds!");
 				this.block = null;
 				return true;
 			}
@@ -50,7 +50,7 @@ public class SetBrush extends AbstractPerformerBrush {
 			int highY = (y1 >= y2) ? y1 : y2;
 			int highZ = (z1 >= z2) ? z1 : z2;
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > SELECTION_SIZE_MAX) {
-				snipeData.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
@@ -66,26 +66,26 @@ public class SetBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock();
-		if (set(targetBlock, snipeData)) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+		if (set(targetBlock, toolkitProperties)) {
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.storeUndo(this.performer.getUndo());
 		}
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		if (set(lastBlock, snipeData)) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+		if (set(lastBlock, toolkitProperties)) {
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.storeUndo(this.performer.getUndo());
 		}
 	}
@@ -97,8 +97,8 @@ public class SetBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
-		super.parameters(parameters, snipeData);
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+		super.parameters(parameters, toolkitProperties);
 	}
 
 	@Override

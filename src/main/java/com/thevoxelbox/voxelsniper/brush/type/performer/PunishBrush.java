@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.List;
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 		super("Punish");
 	}
 
-	private void applyPunishment(LivingEntity entity, SnipeData snipeData) {
+	private void applyPunishment(LivingEntity entity, ToolkitProperties toolkitProperties) {
 		switch (this.punishment) {
 			case FIRE:
 				entity.setFireTicks(TICKS_PER_SECOND * this.punishDuration);
@@ -144,7 +144,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 					.clone();
 				direction.subtract(playerVector);
 				double length = direction.length();
-				double stregth = (1 - (length / snipeData.getBrushSize())) * this.punishLevel;
+				double stregth = (1 - (length / toolkitProperties.getBrushSize())) * this.punishLevel;
 				direction.normalize();
 				direction.multiply(stregth);
 				entity.setVelocity(direction);
@@ -165,7 +165,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 								}
 								target = location.clone();
 								target.add(x, y, z);
-								((Player) entity).sendBlockChange(target, snipeData.getBlockData());
+								((Player) entity).sendBlockChange(target, toolkitProperties.getBlockData());
 							}
 						}
 					}
@@ -182,70 +182,70 @@ public class PunishBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		if (!snipeData.getOwner()
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		if (!toolkitProperties.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
-			snipeData.sendMessage("The server says no!");
+			toolkitProperties.sendMessage("The server says no!");
 			return;
 		}
-		this.punishDuration = snipeData.getVoxelHeight();
-		this.punishLevel = snipeData.getCylinderCenter();
+		this.punishDuration = toolkitProperties.getVoxelHeight();
+		this.punishLevel = toolkitProperties.getCylinderCenter();
 		if (this.specificPlayer) {
 			Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
 			if (punishedPlayer == null) {
-				snipeData.sendMessage("No player " + this.punishPlayerName + " found.");
+				toolkitProperties.sendMessage("No player " + this.punishPlayerName + " found.");
 				return;
 			}
-			this.applyPunishment(punishedPlayer, snipeData);
+			this.applyPunishment(punishedPlayer, toolkitProperties);
 			return;
 		}
-		int brushSizeSquare = snipeData.getBrushSize() * snipeData.getBrushSize();
-		Location targetLocation = new Location(snipeData.getWorld(), this.getTargetBlock()
+		int brushSizeSquare = toolkitProperties.getBrushSize() * toolkitProperties.getBrushSize();
+		Location targetLocation = new Location(toolkitProperties.getWorld(), this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		List<LivingEntity> entities = snipeData.getWorld()
+		List<LivingEntity> entities = toolkitProperties.getWorld()
 			.getLivingEntities();
 		int numPunishApps = 0;
 		for (LivingEntity entity : entities) {
-			if (snipeData.getOwner()
+			if (toolkitProperties.getOwner()
 				.getPlayer() != entity || this.hitsSelf) {
-				if (snipeData.getBrushSize() >= 0) {
+				if (toolkitProperties.getBrushSize() >= 0) {
 					try {
 						if (entity.getLocation()
 							.distanceSquared(targetLocation) <= brushSizeSquare) {
 							numPunishApps++;
-							this.applyPunishment(entity, snipeData);
+							this.applyPunishment(entity, toolkitProperties);
 						}
 					} catch (RuntimeException exception) {
 						exception.printStackTrace();
-						snipeData.sendMessage("An error occured.");
+						toolkitProperties.sendMessage("An error occured.");
 						return;
 					}
-				} else if (snipeData.getBrushSize() == INFINIPUNISH_SIZE) {
+				} else if (toolkitProperties.getBrushSize() == INFINIPUNISH_SIZE) {
 					numPunishApps++;
-					this.applyPunishment(entity, snipeData);
+					this.applyPunishment(entity, toolkitProperties);
 				}
 			}
 		}
-		snipeData.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+		toolkitProperties.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		if (!snipeData.getOwner()
+	public final void powder(ToolkitProperties toolkitProperties) {
+		if (!toolkitProperties.getOwner()
 			.getPlayer()
 			.hasPermission("voxelsniper.punish")) {
-			snipeData.sendMessage("The server says no!");
+			toolkitProperties.sendMessage("The server says no!");
 			return;
 		}
-		int brushSizeSquare = snipeData.getBrushSize() * snipeData.getBrushSize();
-		Location targetLocation = new Location(snipeData.getWorld(), this.getTargetBlock()
+		int brushSizeSquare = toolkitProperties.getBrushSize() * toolkitProperties.getBrushSize();
+		Location targetLocation = new Location(toolkitProperties.getWorld(), this.getTargetBlock()
 			.getX(), this.getTargetBlock()
 			.getY(), this.getTargetBlock()
 			.getZ());
-		List<LivingEntity> entities = snipeData.getWorld()
+		List<LivingEntity> entities = toolkitProperties.getWorld()
 			.getLivingEntities();
 		for (LivingEntity entity : entities) {
 			if (entity.getLocation()
@@ -268,18 +268,18 @@ public class PunishBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
-				snipeData.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
-				snipeData.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
-				snipeData.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
-				snipeData.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
-				snipeData.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
-				snipeData.sendMessage(ChatColor.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.");
-				snipeData.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Punishments can be set via /b p [punishment]");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Punishment level can be set with /vc [level]");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Available Punishment Options:");
 				StringBuilder punishmentOptions = new StringBuilder();
 				for (Punishment punishment : Punishment.values()) {
 					if (punishmentOptions.length() != 0) {
@@ -287,7 +287,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 					}
 					punishmentOptions.append(punishment.name());
 				}
-				snipeData.sendMessage(ChatColor.GOLD + punishmentOptions.toString());
+				toolkitProperties.sendMessage(ChatColor.GOLD + punishmentOptions.toString());
 				return;
 			} else if (parameter.equalsIgnoreCase("-toggleSM")) {
 				this.specificPlayer = !this.specificPlayer;
@@ -295,25 +295,25 @@ public class PunishBrush extends AbstractPerformerBrush {
 					try {
 						this.punishPlayerName = parameters[++i];
 					} catch (IndexOutOfBoundsException exception) {
-						snipeData.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
 					}
 				}
 			} else if (parameter.equalsIgnoreCase("-toggleSelf")) {
 				this.hitsSelf = !this.hitsSelf;
 				if (this.hitsSelf) {
-					snipeData.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
 				} else {
-					snipeData.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
 				}
 			} else if (parameter.equalsIgnoreCase("-toggleHypnoLandscape")) {
 				this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
 			} else {
 				try {
 					this.punishment = Punishment.valueOf(parameter.toUpperCase());
-					snipeData.sendMessage(ChatColor.AQUA + this.punishment.name()
+					toolkitProperties.sendMessage(ChatColor.AQUA + this.punishment.name()
 						.toLowerCase() + " punishment selected.");
 				} catch (IllegalArgumentException exception) {
-					snipeData.sendMessage(ChatColor.AQUA + "No such Punishment.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "No such Punishment.");
 				}
 			}
 		}

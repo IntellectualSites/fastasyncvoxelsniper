@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.command.executor.BrushExecutor;
-import com.thevoxelbox.voxelsniper.command.executor.BrushToolExecutor;
+import com.thevoxelbox.voxelsniper.command.executor.BrushToolkitExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.DebugExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.DefaultExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.GotoExecutor;
@@ -68,14 +68,14 @@ public class CommandRegistrar {
 
 	private void registerBrushToolCommand() {
 		CommandProperties properties = CommandProperties.builder()
-			.name("brush_tool")
-			.description("Brush Tool command.")
+			.name("brush_toolkit")
+			.description("Brush Toolkit command.")
 			.permission("voxelsniper.sniper")
 			.alias("btool")
 			.usage("/btool -- Prints out command usage information.")
 			.sender(Player.class)
 			.build();
-		BrushToolExecutor executor = new BrushToolExecutor(this.plugin);
+		BrushToolkitExecutor executor = new BrushToolkitExecutor(this.plugin);
 		this.registry.register(properties, executor);
 	}
 

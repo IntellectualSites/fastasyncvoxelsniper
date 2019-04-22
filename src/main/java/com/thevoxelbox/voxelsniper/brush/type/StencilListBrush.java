@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -38,13 +38,13 @@ public class StencilListBrush extends AbstractBrush {
 		super("StencilList");
 	}
 
-	private String readRandomStencil(SnipeData snipeData) {
+	private String readRandomStencil(ToolkitProperties toolkitProperties) {
 		double rand = Math.random() * (this.stencilList.size());
 		int choice = (int) rand;
 		return this.stencilList.get(choice);
 	}
 
-	private void readStencilList(String listName, SnipeData snipeData) {
+	private void readStencilList(String listName, ToolkitProperties toolkitProperties) {
 		File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 		if (file.exists()) {
 			try {
@@ -61,16 +61,16 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	private void stencilPaste(SnipeData snipeData) {
+	private void stencilPaste(ToolkitProperties toolkitProperties) {
 		if (this.filename.matches("NoFileLoaded")) {
-			snipeData.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+			toolkitProperties.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		String stencilName = this.readRandomStencil(snipeData);
-		snipeData.sendMessage(stencilName);
+		String stencilName = this.readRandomStencil(toolkitProperties);
+		toolkitProperties.sendMessage(stencilName);
 		Undo undo = new Undo();
 		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		if (file.exists()) {
 			try {
 				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -220,13 +220,13 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	private void stencilPaste180(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	private void stencilPaste180(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		if (this.filename.matches("NoFileLoaded")) {
 			owner.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		String stencilName = this.readRandomStencil(snipeData);
+		String stencilName = this.readRandomStencil(toolkitProperties);
 		Undo undo = new Undo();
 		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
@@ -380,13 +380,13 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	private void stencilPaste270(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	private void stencilPaste270(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		if (this.filename.matches("NoFileLoaded")) {
 			owner.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		String stencilName = this.readRandomStencil(snipeData);
+		String stencilName = this.readRandomStencil(toolkitProperties);
 		Undo undo = new Undo();
 		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
 		if (file.exists()) {
@@ -548,15 +548,15 @@ public class StencilListBrush extends AbstractBrush {
 		}
 	}
 
-	private void stencilPaste90(SnipeData snipeData) {
+	private void stencilPaste90(ToolkitProperties toolkitProperties) {
 		if (this.filename.matches("NoFileLoaded")) {
-			snipeData.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
+			toolkitProperties.sendMessage(ChatColor.RED + "You did not specify a filename for the list.  This is required.");
 			return;
 		}
-		String stencilName = this.readRandomStencil(snipeData);
+		String stencilName = this.readRandomStencil(toolkitProperties);
 		Undo undo = new Undo();
 		File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		if (file.exists()) {
 			try {
 				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -569,7 +569,7 @@ public class StencilListBrush extends AbstractBrush {
 				int numRuns = in.readInt();
 				// Something here that checks ranks using sanker'world thingie he added to Sniper and boots you out with error message if too big.
 				int volume = this.x * this.y * this.z;
-				snipeData.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + this.filename + " pasted.  Volume is " + volume + " blocks.");
 				int currX = -this.zRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
 				// corner, for example.
 				int currZ = this.xRef;
@@ -700,7 +700,7 @@ public class StencilListBrush extends AbstractBrush {
 				in.close();
 				owner.storeUndo(undo);
 			} catch (IOException exception) {
-				snipeData.sendMessage(ChatColor.RED + "Something went wrong.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
@@ -713,29 +713,29 @@ public class StencilListBrush extends AbstractBrush {
 		return Bukkit.createBlockData(blockDataString);
 	}
 
-	private void stencilPasteRotation(SnipeData snipeData) {
+	private void stencilPasteRotation(ToolkitProperties toolkitProperties) {
 		// just randomly chooses a rotation and then calls stencilPaste.
-		this.readStencilList(this.filename, snipeData);
+		this.readStencilList(this.filename, toolkitProperties);
 		double random = Math.random();
 		if (random < 0.26) {
-			this.stencilPaste(snipeData);
+			this.stencilPaste(toolkitProperties);
 		} else if (random < 0.51) {
-			this.stencilPaste90(snipeData);
+			this.stencilPaste90(toolkitProperties);
 		} else if (random < 0.76) {
-			this.stencilPaste180(snipeData);
+			this.stencilPaste180(toolkitProperties);
 		} else {
-			this.stencilPaste270(snipeData);
+			this.stencilPaste270(toolkitProperties);
 		}
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.stencilPaste(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.stencilPaste(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.stencilPasteRotation(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.stencilPasteRotation(toolkitProperties);
 	}
 
 	@Override
@@ -745,11 +745,11 @@ public class StencilListBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		String secondParameter = parameters[1];
 		if (secondParameter.equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
-			snipeData.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
 			return;
 		} else if (secondParameter.equalsIgnoreCase("full")) {
 			this.pasteOption = (byte) 0;
@@ -765,14 +765,14 @@ public class StencilListBrush extends AbstractBrush {
 			this.filename = parameters[1 + this.pasteParam];
 			File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 			if (file.exists()) {
-				snipeData.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
-				this.readStencilList(this.filename, snipeData);
+				toolkitProperties.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
+				this.readStencilList(this.filename, toolkitProperties);
 			} else {
-				snipeData.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
 				this.filename = "NoFileLoaded";
 			}
 		} catch (RuntimeException exception) {
-			snipeData.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+			toolkitProperties.sendMessage(ChatColor.RED + "You need to type a stencil name.");
 		}
 	}
 

@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import java.util.EnumMap;
 import java.util.Map;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,8 +18,8 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 	}
 
 	@Override
-	protected final void blend(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	protected final void blend(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		Material[][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
 		// Log current materials into oldmats
 		Block targetBlock = this.getTargetBlock();
@@ -87,18 +87,18 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Blend Disc Parameters:");
-			snipeData.sendMessage(ChatColor.AQUA + "/b bd water -- toggle include or exclude (default) water");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Blend Disc Parameters:");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "/b bd water -- toggle include or exclude (default) water");
 			return;
 		}
-		super.parameters(parameters, snipeData);
+		super.parameters(parameters, toolkitProperties);
 	}
 
 	@Override

@@ -14,7 +14,6 @@ public class SniperRegistry {
 		this.snipers.put(uuid, sniper);
 	}
 
-	@Deprecated
 	@Nullable
 	public Sniper getSniper(Player player) {
 		UUID uuid = player.getUniqueId();

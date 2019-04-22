@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,7 +31,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		super("Tree Snipe");
 	}
 
-	private void single(SnipeData snipeData, Block targetBlock) {
+	private void single(ToolkitProperties toolkitProperties, Block targetBlock) {
 		UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
 		BlockState currentState = blockBelow.getState();
@@ -42,7 +42,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Undo undo = undoDelegate.getUndo();
 		blockBelow.setBlockData(currentState.getBlockData());
 		undo.put(blockBelow);
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -66,14 +66,14 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
-		this.single(snipeData, targetBlock);
+		this.single(toolkitProperties, targetBlock);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.single(snipeData, getTargetBlock());
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.single(toolkitProperties, getTargetBlock());
 	}
 
 	@Override
@@ -83,13 +83,13 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
-			Messages messages = snipeData.getMessages();
+			Messages messages = toolkitProperties.getMessages();
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b t treetype");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b t treetype");
 				this.printTreeType(messages);
 				return;
 			}

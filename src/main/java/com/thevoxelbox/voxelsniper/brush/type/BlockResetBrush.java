@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.EnumSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -19,7 +19,7 @@ public class BlockResetBrush extends AbstractBrush {
 		super("Block Reset Brush");
 	}
 
-	private void applyBrush(SnipeData v) {
+	private void applyBrush(ToolkitProperties v) {
 		for (int z = -v.getBrushSize(); z <= v.getBrushSize(); z++) {
 			for (int x = -v.getBrushSize(); x <= v.getBrushSize(); x++) {
 				for (int y = -v.getBrushSize(); y <= v.getBrushSize(); y++) {
@@ -37,13 +37,13 @@ public class BlockResetBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		applyBrush(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		applyBrush(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		applyBrush(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		applyBrush(toolkitProperties);
 	}
 
 	@Override

@@ -5,10 +5,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +48,7 @@ public class MoveBrush extends AbstractBrush {
 	 * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
 	 */
 
-	private void moveSelection(SnipeData snipeData, Selection selection, int[] direction) {
+	private void moveSelection(ToolkitProperties toolkitProperties, Selection selection, int[] direction) {
 		List<BlockState> blockStates = selection.getBlockStates();
 		if (!blockStates.isEmpty()) {
 			BlockState firstState = blockStates.get(0);
@@ -64,7 +64,7 @@ public class MoveBrush extends AbstractBrush {
 			try {
 				newSelection.calculateRegion();
 			} catch (RuntimeException exception) {
-				Messages messages = snipeData.getMessages();
+				Messages messages = toolkitProperties.getMessages();
 				messages.brushMessage("The new Selection has more blocks than the original selection. This should never happen!");
 			}
 			Set<Block> undoSet = blockStates.stream()
@@ -75,7 +75,7 @@ public class MoveBrush extends AbstractBrush {
 				.map(BlockState::getBlock)
 				.forEach(undoSet::add);
 			undoSet.forEach(undo::put);
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.storeUndo(undo);
 			blockStates.stream()
 				.map(BlockState::getBlock)
@@ -88,40 +88,40 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		if (this.selection == null) {
 			this.selection = new Selection();
 		}
 		this.selection.setLocation1(this.getTargetBlock()
 			.getLocation());
-		snipeData.getMessages()
+		toolkitProperties.getMessages()
 			.brushMessage("Point 1 set.");
 		try {
 			if (this.selection.calculateRegion()) {
-				this.moveSelection(snipeData, this.selection, this.moveDirections);
+				this.moveSelection(toolkitProperties, this.selection, this.moveDirections);
 				this.selection = null;
 			}
 		} catch (RuntimeException exception) {
-			snipeData.sendMessage(exception.getMessage());
+			toolkitProperties.sendMessage(exception.getMessage());
 		}
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		if (this.selection == null) {
 			this.selection = new Selection();
 		}
 		this.selection.setLocation2(this.getTargetBlock()
 			.getLocation());
-		snipeData.getMessages()
+		toolkitProperties.getMessages()
 			.brushMessage("Point 2 set.");
 		try {
 			if (this.selection.calculateRegion()) {
-				this.moveSelection(snipeData, this.selection, this.moveDirections);
+				this.moveSelection(toolkitProperties, this.selection, this.moveDirections);
 				this.selection = null;
 			}
 		} catch (RuntimeException exception) {
-			snipeData.sendMessage(exception.getMessage());
+			toolkitProperties.sendMessage(exception.getMessage());
 		}
 	}
 
@@ -132,10 +132,10 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
-			Messages messages = snipeData.getMessages();
+			Messages messages = toolkitProperties.getMessages();
 			if (parameter.equalsIgnoreCase("info")) {
 				messages.custom(ChatColor.GOLD + this.getName() + " Parameters:");
 				messages.custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");

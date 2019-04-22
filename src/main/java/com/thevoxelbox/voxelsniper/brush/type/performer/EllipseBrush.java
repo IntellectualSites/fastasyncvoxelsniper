@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,7 +31,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 		super("Ellipse");
 	}
 
-	private void ellipse(SnipeData snipeData, Block targetBlock) {
+	private void ellipse(ToolkitProperties toolkitProperties, Block targetBlock) {
 		try {
 			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
@@ -63,13 +63,13 @@ public class EllipseBrush extends AbstractPerformerBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
+			toolkitProperties.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void ellipseFill(SnipeData snipeData, Block targetBlock) {
+	private void ellipseFill(ToolkitProperties toolkitProperties, Block targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
 		this.performer.perform(targetBlock);
@@ -142,33 +142,33 @@ public class EllipseBrush extends AbstractPerformerBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
+			toolkitProperties.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void execute(SnipeData snipeData, Block targetBlock) {
+	private void execute(ToolkitProperties toolkitProperties, Block targetBlock) {
 		this.stepSize = (TWO_PI / this.steps);
 		if (this.fill) {
-			this.ellipseFill(snipeData, targetBlock);
+			this.ellipseFill(toolkitProperties, targetBlock);
 		} else {
-			this.ellipse(snipeData, targetBlock);
+			this.ellipse(toolkitProperties, targetBlock);
 		}
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.execute(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.execute(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.execute(snipeData, lastBlock);
+		this.execute(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -194,54 +194,54 @@ public class EllipseBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-					snipeData.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
-					snipeData.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
-					snipeData.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
-					snipeData.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
+					toolkitProperties.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
 					return;
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
 					int tempXScale = Integer.parseInt(parameters[i].replace("x", ""));
 					if (tempXScale < SCL_MIN || tempXScale > SCL_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
 						continue;
 					}
 					this.xscl = tempXScale;
-					snipeData.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
 					int tempYScale = Integer.parseInt(parameters[i].replace("y", ""));
 					if (tempYScale < SCL_MIN || tempYScale > SCL_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
 						continue;
 					}
 					this.yscl = tempYScale;
-					snipeData.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 't') {
 					int tempSteps = Integer.parseInt(parameters[i].replace("t", ""));
 					if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
 						continue;
 					}
 					this.steps = tempSteps;
-					snipeData.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
 				} else if (parameter.equalsIgnoreCase("fill")) {
 					if (this.fill) {
 						this.fill = false;
-						snipeData.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
 					} else {
 						this.fill = true;
-						snipeData.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
 					}
 				} else {
-					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				snipeData.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}
 	}

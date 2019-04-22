@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,21 +37,21 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.erosion(snipeData, this.currentPreset);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.erosion(toolkitProperties, this.currentPreset);
 	}
 
-	private void erosion(SnipeData snipeData, ErosionPreset erosionPreset) {
+	private void erosion(ToolkitProperties toolkitProperties, ErosionPreset erosionPreset) {
 		Block targetBlock = getTargetBlock();
 		World targetBlockWorld = targetBlock.getWorld();
 		BlockChangeTracker blockChangeTracker = new BlockChangeTracker(targetBlockWorld);
 		Location targetBlockLocation = targetBlock.getLocation();
 		Vector targetBlockVector = targetBlockLocation.toVector();
 		for (int i = 0; i < erosionPreset.getErosionRecursion(); ++i) {
-			erosionIteration(snipeData, erosionPreset, blockChangeTracker, targetBlockVector);
+			erosionIteration(toolkitProperties, erosionPreset, blockChangeTracker, targetBlockVector);
 		}
 		for (int i = 0; i < erosionPreset.getFillRecursion(); ++i) {
-			fillIteration(snipeData, erosionPreset, blockChangeTracker, targetBlockVector);
+			fillIteration(toolkitProperties, erosionPreset, blockChangeTracker, targetBlockVector);
 		}
 		Undo undo = new Undo();
 		for (BlockWrapper blockWrapper : blockChangeTracker.getAll()) {
@@ -62,14 +62,14 @@ public class ErodeBrush extends AbstractBrush {
 				block.setBlockData(blockData);
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
-	private void fillIteration(SnipeData snipeData, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
+	private void fillIteration(ToolkitProperties toolkitProperties, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
 		int currentIteration = blockChangeTracker.nextIteration();
 		Block targetBlock = getTargetBlock();
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		for (int x = targetBlock.getX() - brushSize; x <= targetBlock.getX() + brushSize; ++x) {
 			for (int z = targetBlock.getZ() - brushSize; z <= targetBlock.getZ() + brushSize; ++z) {
 				for (int y = targetBlock.getY() - brushSize; y <= targetBlock.getY() + brushSize; ++y) {
@@ -114,10 +114,10 @@ public class ErodeBrush extends AbstractBrush {
 		}
 	}
 
-	private void erosionIteration(SnipeData snipeData, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
+	private void erosionIteration(ToolkitProperties toolkitProperties, ErosionPreset erosionPreset, BlockChangeTracker blockChangeTracker, Vector targetBlockVector) {
 		int currentIteration = blockChangeTracker.nextIteration();
 		Block targetBlock = this.getTargetBlock();
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		for (int x = targetBlock.getX() - brushSize; x <= targetBlock.getX() + brushSize; ++x) {
 			for (int z = targetBlock.getZ() - brushSize; z <= targetBlock.getZ() + brushSize; ++z) {
 				for (int y = targetBlock.getY() - brushSize; y <= targetBlock.getY() + brushSize; ++y) {
@@ -144,8 +144,8 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.erosion(snipeData, this.currentPreset.getInverted());
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.erosion(toolkitProperties, this.currentPreset.getInverted());
 	}
 
 	@Override
@@ -159,8 +159,8 @@ public class ErodeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
-		Messages messages = snipeData.getMessages();
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+		Messages messages = toolkitProperties.getMessages();
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			Preset preset = Preset.getPreset(parameter);
@@ -205,16 +205,16 @@ public class ErodeBrush extends AbstractBrush {
 			}
 			if (!this.currentPreset.equals(currentPresetBackup)) {
 				if (this.currentPreset.getErosionFaces() != currentPresetBackup.getErosionFaces()) {
-					snipeData.sendMessage(ChatColor.AQUA + "Erosion faces set to: " + ChatColor.WHITE + this.currentPreset.getErosionFaces());
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Erosion faces set to: " + ChatColor.WHITE + this.currentPreset.getErosionFaces());
 				}
 				if (this.currentPreset.getFillFaces() != currentPresetBackup.getFillFaces()) {
-					snipeData.sendMessage(ChatColor.AQUA + "Fill faces set to: " + ChatColor.WHITE + this.currentPreset.getFillFaces());
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Fill faces set to: " + ChatColor.WHITE + this.currentPreset.getFillFaces());
 				}
 				if (this.currentPreset.getErosionRecursion() != currentPresetBackup.getErosionRecursion()) {
-					snipeData.sendMessage(ChatColor.AQUA + "Erosion recursions set to: " + ChatColor.WHITE + this.currentPreset.getErosionRecursion());
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Erosion recursions set to: " + ChatColor.WHITE + this.currentPreset.getErosionRecursion());
 				}
 				if (this.currentPreset.getFillRecursion() != currentPresetBackup.getFillRecursion()) {
-					snipeData.sendMessage(ChatColor.AQUA + "Fill recursions set to: " + ChatColor.WHITE + this.currentPreset.getFillRecursion());
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Fill recursions set to: " + ChatColor.WHITE + this.currentPreset.getFillRecursion());
 				}
 			}
 		}

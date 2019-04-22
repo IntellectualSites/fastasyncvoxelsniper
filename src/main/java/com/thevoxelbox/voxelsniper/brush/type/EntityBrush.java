@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.EntityType;
 
@@ -20,26 +20,26 @@ public class EntityBrush extends AbstractBrush {
 		super("Entity");
 	}
 
-	private void spawn(SnipeData snipeData) {
-		for (int x = 0; x < snipeData.getBrushSize(); x++) {
+	private void spawn(ToolkitProperties toolkitProperties) {
+		for (int x = 0; x < toolkitProperties.getBrushSize(); x++) {
 			try {
 				this.getWorld()
 					.spawn(this.getLastBlock()
 						.getLocation(), this.entityType.getEntityClass());
 			} catch (IllegalArgumentException exception) {
-				snipeData.sendMessage(ChatColor.RED + "Cannot spawn entity!");
+				toolkitProperties.sendMessage(ChatColor.RED + "Cannot spawn entity!");
 			}
 		}
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.spawn(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.spawn(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.spawn(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.spawn(toolkitProperties);
 	}
 
 	@Override
@@ -49,20 +49,20 @@ public class EntityBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
+			toolkitProperties.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
 			String names = Arrays.stream(EntityType.values())
 				.map(currentEntity -> ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName())
 				.collect(Collectors.joining("", "", ChatColor.AQUA + " |"));
-			snipeData.sendMessage(names);
+			toolkitProperties.sendMessage(names);
 		} else {
 			EntityType currentEntity = EntityType.fromName(parameters[1]);
 			if (currentEntity != null) {
 				this.entityType = currentEntity;
-				snipeData.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
+				toolkitProperties.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "This is not a valid entity!");
+				toolkitProperties.sendMessage(ChatColor.RED + "This is not a valid entity!");
 			}
 		}
 	}

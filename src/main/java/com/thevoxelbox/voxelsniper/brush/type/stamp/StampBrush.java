@@ -2,17 +2,16 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-
 
 public class StampBrush extends AbstractBrush {
 
@@ -151,7 +150,7 @@ public class StampBrush extends AbstractBrush {
 		this.stamp = type;
 	}
 
-	protected final void stamp(SnipeData snipeData) {
+	protected final void stamp(ToolkitProperties toolkitProperties) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
@@ -187,11 +186,11 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.undo);
 	}
 
-	protected final void stampFill(SnipeData snipeData) {
+	protected final void stampFill(ToolkitProperties toolkitProperties) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
@@ -227,11 +226,11 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.undo);
 	}
 
-	protected final void stampNoAir(SnipeData snipeData) {
+	protected final void stampNoAir(ToolkitProperties toolkitProperties) {
 		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
@@ -267,30 +266,30 @@ public class StampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		switch (this.stamp) {
 			case DEFAULT:
-				this.stamp(snipeData);
+				this.stamp(toolkitProperties);
 				break;
 			case NO_AIR:
-				this.stampNoAir(snipeData);
+				this.stampNoAir(toolkitProperties);
 				break;
 			case FILL:
-				this.stampFill(snipeData);
+				this.stampFill(toolkitProperties);
 				break;
 			default:
-				snipeData.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+				toolkitProperties.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
 				break;
 		}
 	}
 
 	@Override
-	public void powder(SnipeData snipeData) {
+	public void powder(ToolkitProperties toolkitProperties) {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 

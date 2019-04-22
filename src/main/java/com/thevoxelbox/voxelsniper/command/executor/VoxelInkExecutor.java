@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -25,6 +26,17 @@ public class VoxelInkExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
+		if (sniper == null) {
+			return;
+		}
+		Toolkit toolkit = sniper.getCurrentToolkit();
+		if (toolkit == null) {
+			return;
+		}
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		if (toolkitProperties == null) {
+			return;
+		}
 		BlockData dataValue;
 		if (arguments.length == 0) {
 			Block targetBlock = player.getTargetBlock(250);
@@ -41,16 +53,8 @@ public class VoxelInkExecutor implements CommandExecutor {
 				return;
 			}
 		}
-		String currentToolId = sniper.getCurrentToolId();
-		if (currentToolId == null) {
-			return;
-		}
-		SnipeData snipeData = sniper.getSnipeData(currentToolId);
-		if (snipeData == null) {
-			return;
-		}
-		snipeData.setBlockData(dataValue);
-		Messages messages = snipeData.getMessages();
+		toolkitProperties.setBlockData(dataValue);
+		Messages messages = toolkitProperties.getMessages();
 		messages.blockData();
 	}
 }

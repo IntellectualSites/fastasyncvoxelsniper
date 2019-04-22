@@ -2,10 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.EnumSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -42,12 +42,12 @@ public class OceanBrush extends AbstractBrush {
 		return 0;
 	}
 
-	protected final void oceanator(SnipeData snipeData, Undo undo) {
+	protected final void oceanator(ToolkitProperties toolkitProperties, Undo undo) {
 		World world = getWorld();
 		Block targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockZ = targetBlock.getZ();
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		int minX = (int) Math.floor(targetBlockX - brushSize);
 		int minZ = (int) Math.floor(targetBlockZ - brushSize);
 		int maxX = (int) Math.floor(targetBlockX + brushSize);
@@ -80,9 +80,9 @@ public class OceanBrush extends AbstractBrush {
 				// cover the sea floor of required
 				if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
 					Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-					if (block.getType() != snipeData.getBlockDataType()) {
+					if (block.getType() != toolkitProperties.getBlockDataType()) {
 						undo.put(block);
-						block.setType(snipeData.getBlockDataType());
+						block.setType(toolkitProperties.getBlockDataType());
 					}
 				}
 			}
@@ -90,49 +90,49 @@ public class OceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Undo undo = new Undo();
-		this.oceanator(snipeData, undo);
-		Sniper owner = snipeData.getOwner();
+		this.oceanator(toolkitProperties, undo);
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		arrow(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		arrow(toolkitProperties);
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 0; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.BLUE + "Parameters:");
-					snipeData.sendMessage(ChatColor.GREEN + "-wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. -wlevel 64)");
-					snipeData.sendMessage(ChatColor.GREEN + "-cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
+					toolkitProperties.sendMessage(ChatColor.BLUE + "Parameters:");
+					toolkitProperties.sendMessage(ChatColor.GREEN + "-wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. -wlevel 64)");
+					toolkitProperties.sendMessage(ChatColor.GREEN + "-cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
 				} else if (parameter.equalsIgnoreCase("-wlevel")) {
 					if ((i + 1) >= parameters.length) {
-						snipeData.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
+						toolkitProperties.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
 						continue;
 					}
 					int temp = Integer.parseInt(parameters[++i]);
 					if (temp <= WATER_LEVEL_MIN) {
-						snipeData.sendMessage(ChatColor.RED + "Error: Your specified water level was below 12.");
+						toolkitProperties.sendMessage(ChatColor.RED + "Error: Your specified water level was below 12.");
 						continue;
 					}
 					this.waterLevel = temp - 1;
-					snipeData.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
+					toolkitProperties.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
 				} else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor")) {
 					if ((i + 1) >= parameters.length) {
-						snipeData.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
+						toolkitProperties.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
 						continue;
 					}
 					this.coverFloor = parameters[++i].equalsIgnoreCase("y");
-					snipeData.sendMessage(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
+					toolkitProperties.sendMessage(ChatColor.BLUE + String.format("Floor cover %s.", ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")));
 				}
 			} catch (NumberFormatException exception) {
-				snipeData.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", parameter));
+				toolkitProperties.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", parameter));
 				exception.printStackTrace();
 			}
 		}

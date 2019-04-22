@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,7 +23,6 @@ public class LineBrush extends AbstractPerformerBrush {
 	private Vector targetCoords = new Vector();
 	private World targetWorld;
 
-
 	public LineBrush() {
 		super("Line");
 	}
@@ -34,13 +33,13 @@ public class LineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
 		}
 	}
 
-	private void linePowder(SnipeData v) {
+	private void linePowder(ToolkitProperties v) {
 		Vector originClone = this.originCoords.clone()
 			.add(HALF_BLOCK_OFFSET);
 		Vector targetClone = this.targetCoords.clone()
@@ -62,30 +61,30 @@ public class LineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
 		this.targetWorld = this.getTargetBlock()
 			.getWorld();
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.getPlayer()
 			.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		if (this.originCoords == null || !this.getTargetBlock()
 			.getWorld()
 			.equals(this.targetWorld)) {
-			snipeData.getOwner()
+			toolkitProperties.getOwner()
 				.getPlayer()
 				.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
 			this.targetCoords = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			this.linePowder(snipeData);
+			this.linePowder(toolkitProperties);
 		}
 	}
 

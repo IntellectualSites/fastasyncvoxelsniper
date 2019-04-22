@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -55,15 +55,15 @@ public class CanyonBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void arrow(SnipeData snipeData) {
+	public void arrow(ToolkitProperties toolkitProperties) {
 		Undo undo = new Undo();
 		canyon(getTargetBlock().getChunk(), undo);
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	public void powder(SnipeData snipeData) {
+	public void powder(ToolkitProperties toolkitProperties) {
 		Undo undo = new Undo();
 		Chunk targetChunk = getTargetBlock().getChunk();
 		for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++) {
@@ -71,7 +71,7 @@ public class CanyonBrush extends AbstractBrush {
 				canyon(getWorld().getChunkAt(x, z), undo);
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
@@ -82,10 +82,10 @@ public class CanyonBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		String secondParameter = parameters[1];
 		if (secondParameter.equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
+			toolkitProperties.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
 		}
 		if (!secondParameter.isEmpty() && secondParameter.charAt(0) == 'y') {
 			int y = Integer.parseInt(secondParameter.replace("y", ""));
@@ -95,7 +95,7 @@ public class CanyonBrush extends AbstractBrush {
 				y = SHIFT_LEVEL_MAX;
 			}
 			this.yLevel = y;
-			snipeData.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
+			toolkitProperties.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
 		}
 	}
 

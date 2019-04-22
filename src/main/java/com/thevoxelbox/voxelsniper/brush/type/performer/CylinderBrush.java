@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,27 +17,27 @@ public class CylinderBrush extends AbstractPerformerBrush {
 		super("Cylinder");
 	}
 
-	private void cylinder(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
-		int yStartingPoint = targetBlock.getY() + snipeData.getCylinderCenter();
-		int yEndPoint = targetBlock.getY() + snipeData.getVoxelHeight() + snipeData.getCylinderCenter();
+	private void cylinder(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
+		int yStartingPoint = targetBlock.getY() + toolkitProperties.getCylinderCenter();
+		int yEndPoint = targetBlock.getY() + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
 		if (yEndPoint < yStartingPoint) {
 			yEndPoint = yStartingPoint;
 		}
 		World world = this.getWorld();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		} else if (yStartingPoint > world.getMaxHeight() - 1) {
 			yStartingPoint = world.getMaxHeight() - 1;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		} else if (yEndPoint > world.getMaxHeight() - 1) {
 			yEndPoint = world.getMaxHeight() - 1;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
 		double bSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int y = yEndPoint; y >= yStartingPoint; y--) {
@@ -53,22 +53,22 @@ public class CylinderBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.cylinder(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.cylinder(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.cylinder(snipeData, lastBlock);
+		this.cylinder(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -80,30 +80,30 @@ public class CylinderBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-				snipeData.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-				snipeData.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
+				toolkitProperties.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+				toolkitProperties.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
 				return;
 			}
 			if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'h') {
-				snipeData.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
-				snipeData.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + snipeData.getVoxelHeight());
+				toolkitProperties.setVoxelHeight((int) Double.parseDouble(parameter.replace("h", "")));
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
 			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'c') {
-				snipeData.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
-				snipeData.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + snipeData.getCylinderCenter());
+				toolkitProperties.setCylinderCenter((int) Double.parseDouble(parameter.replace("c", "")));
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + toolkitProperties.getCylinderCenter());
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

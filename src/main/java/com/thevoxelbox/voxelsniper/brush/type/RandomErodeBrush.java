@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -138,7 +138,7 @@ public class RandomErodeBrush extends AbstractBrush {
 		}
 	}
 
-	private void randomErosion(SnipeData snipeData) {
+	private void randomErosion(ToolkitProperties toolkitProperties) {
 		Undo undo = new Undo();
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
 			for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
@@ -190,11 +190,11 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
-	private void randomFilling(SnipeData snipeData) {
+	private void randomFilling(ToolkitProperties toolkitProperties) {
 		Undo undo = new Undo();
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
 			double bSquared = Math.pow(this.brushSize + 0.5, 2);
@@ -246,13 +246,13 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.brushSize = snipeData.getBrushSize();
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.brushSize = toolkitProperties.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(5) + 1;
 		this.fillFace = this.generator.nextInt(3) + 3;
@@ -263,12 +263,12 @@ public class RandomErodeBrush extends AbstractBrush {
 			this.erodeRecursion = this.generator.nextInt(2) + 1;
 			this.fillRecursion = this.generator.nextInt(2) + 1;
 		}
-		this.randomErosion(snipeData);
+		this.randomErosion(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.brushSize = snipeData.getBrushSize();
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.brushSize = toolkitProperties.getBrushSize();
 		this.snap = new BlockWrapper[0][0][0];
 		this.erodeFace = this.generator.nextInt(3) + 3;
 		this.fillFace = this.generator.nextInt(5) + 1;
@@ -279,7 +279,7 @@ public class RandomErodeBrush extends AbstractBrush {
 			this.erodeRecursion = this.generator.nextInt(2) + 1;
 			this.fillRecursion = this.generator.nextInt(2) + 1;
 		}
-		this.randomFilling(snipeData);
+		this.randomFilling(toolkitProperties);
 	}
 
 	@Override

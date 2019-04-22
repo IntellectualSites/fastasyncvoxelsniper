@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.stream.Stream;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -83,25 +83,25 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		if (this.set(this.getTargetBlock())) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			snipeData.getOwner()
+			toolkitProperties.getOwner()
 				.storeUndo(this.undo);
 		}
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
 		if (this.set(lastBlock)) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.storeUndo(this.undo);
 		}
 	}
@@ -113,24 +113,24 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
 				return;
 			}
 			if (Stream.of("n", "s", "ns")
 				.anyMatch(parameter::startsWith)) {
 				this.northSouth = true;
-				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
 			} else if (Stream.of("e", "world", "ew")
 				.anyMatch(parameter::startsWith)) {
 				this.northSouth = false;
-				snipeData.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

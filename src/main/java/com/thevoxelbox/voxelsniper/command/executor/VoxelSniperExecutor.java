@@ -2,15 +2,15 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Map;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
 import com.thevoxelbox.voxelsniper.brush.performer.Performers;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -29,25 +29,27 @@ public class VoxelSniperExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
+		if (sniper == null) {
+			return;
+		}
 		if (arguments.length >= 1) {
 			String firstArgument = arguments[0];
 			if (firstArgument.equalsIgnoreCase("brushes")) {
-				BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
-				Map<String, Class<? extends Brush>> brushes = brushRegistry.getBrushes();
+				BrushTypeRegistry brushTypeRegistry = this.plugin.getBrushTypeRegistry();
+				Map<String, Class<? extends Brush>> brushes = brushTypeRegistry.getBrushTypes();
 				Set<String> handles = brushes.keySet();
 				String handlesString = String.join(", ", handles);
 				sender.sendMessage(handlesString);
 				return;
 			} else if (firstArgument.equalsIgnoreCase("range")) {
-				String currentToolId = sniper.getCurrentToolId();
-				if (currentToolId == null) {
+				Toolkit toolkit = sniper.getCurrentToolkit();
+				if (toolkit == null) {
 					return;
 				}
-				SnipeData snipeData = sniper.getSnipeData(currentToolId);
-				if (snipeData == null) {
+				ToolkitProperties toolkitProperties = toolkit.getProperties();
+				if (toolkitProperties == null) {
 					return;
 				}
-				Messages messages = snipeData.getMessages();
 				if (arguments.length == 2) {
 					Integer range = NumericParser.parseInteger(arguments[1]);
 					if (range == null) {
@@ -57,12 +59,12 @@ public class VoxelSniperExecutor implements CommandExecutor {
 					if (range < 0) {
 						sender.sendMessage("Negative values are not allowed.");
 					}
-					snipeData.setRange(range);
-					snipeData.setRanged(true);
+					toolkitProperties.setRange(range);
+					toolkitProperties.setRanged(true);
 				} else {
-					snipeData.setRanged(!snipeData.isRanged());
+					toolkitProperties.setRanged(!toolkitProperties.isRanged());
 				}
-				messages.toggleRange();
+				sender.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + (toolkitProperties.isRanged() ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + toolkitProperties.getRange());
 				return;
 			} else if (firstArgument.equalsIgnoreCase("perf")) {
 				sender.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");

@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,8 +23,8 @@ public class DrainBrush extends AbstractBrush {
 		super("Drain");
 	}
 
-	private void drain(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void drain(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		Block targetBlock = getTargetBlock();
@@ -76,18 +76,18 @@ public class DrainBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		drain(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		drain(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		drain(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		drain(toolkitProperties);
 	}
 
 	@Override
@@ -99,30 +99,30 @@ public class DrainBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-				snipeData.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
 				return;
 			} else if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (parameter.equalsIgnoreCase("d")) {
 				if (this.disc) {
 					this.disc = false;
-					snipeData.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
 				} else {
 					this.disc = true;
-					snipeData.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
 				}
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

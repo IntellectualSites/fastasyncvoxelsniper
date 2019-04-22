@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -39,12 +39,12 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 		super("Splatter Overlay");
 	}
 
-	private void splatterOverlay(SnipeData snipeData) {
+	private void splatterOverlay(ToolkitProperties toolkitProperties) {
 		// Splatter Time
-		int[][] splat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
+		int[][] splat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
 		// Seed the array
-		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+		for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
 				if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
 					splat[x][y] = 1;
 				}
@@ -52,11 +52,11 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][] tempSplat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
+		int[][] tempSplat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
-			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+				for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
 					tempSplat[x][y] = splat[x][y]; // prime tempsplat
 					int growcheck = 0;
 					if (splat[x][y] == 0) {
@@ -66,10 +66,10 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 						if (y != 0 && splat[x][y - 1] == 1) {
 							growcheck++;
 						}
-						if (x != 2 * snipeData.getBrushSize() && splat[x + 1][y] == 1) {
+						if (x != 2 * toolkitProperties.getBrushSize() && splat[x + 1][y] == 1) {
 							growcheck++;
 						}
-						if (y != 2 * snipeData.getBrushSize() && splat[x][y + 1] == 1) {
+						if (y != 2 * toolkitProperties.getBrushSize() && splat[x][y + 1] == 1) {
 							growcheck++;
 						}
 					}
@@ -79,23 +79,23 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
-			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-				if (2 * snipeData.getBrushSize() + 1 >= 0) {
-					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * snipeData.getBrushSize() + 1);
+			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+				if (2 * toolkitProperties.getBrushSize() + 1 >= 0) {
+					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * toolkitProperties.getBrushSize() + 1);
 				}
 			}
 		}
 		this.growPercent = gref;
-		int[][] memory = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
-		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
-		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+		int[][] memory = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
+		double brushSizeSquared = Math.pow(toolkitProperties.getBrushSize() + 0.5, 2);
+		for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
+			for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
 				Block targetBlock = this.getTargetBlock();
 				for (int y = targetBlock.getY(); y > 0; y--) {
 					// start scanning from the height you clicked at
-					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) {
+					if (memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] != 1) {
 						// if haven't already found the surface in this column
-						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] == 1) {
+						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] == 1) {
 							// if inside of the column && if to be splattered
 							Material check = this.getBlockType(targetBlock.getX() + x, y + 1, targetBlock.getZ() + z);
 							if (check.isEmpty() || check == Material.WATER) {
@@ -110,7 +110,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 											// fills down as many layers as you specify in parameters
 											this.performer.perform(this.clampY(targetBlock.getX() + x, y - i + this.yOffset, targetBlock.getZ() + z));
 											// stop it from checking any other blocks in this vertical 1x1 column.
-											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1;
+											memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1;
 										}
 									}
 								} else {
@@ -134,7 +134,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 													// fills down as many layers as you specify in parameters
 													this.performer.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
 													// stop it from checking any other blocks in this vertical 1x1 column.
-													memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1;
+													memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1;
 												}
 											}
 											break;
@@ -148,16 +148,16 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void splatterOverlayTwo(SnipeData snipeData) {
+	private void splatterOverlayTwo(ToolkitProperties toolkitProperties) {
 		// Splatter Time
-		int[][] splat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
+		int[][] splat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
 		// Seed the array
-		for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+		for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+			for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
 				if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
 					splat[x][y] = 1;
 				}
@@ -165,11 +165,11 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][] tempsplat = new int[2 * snipeData.getBrushSize() + 1][2 * snipeData.getBrushSize() + 1];
+		int[][] tempsplat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
-			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
+			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+				for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
 					tempsplat[x][y] = splat[x][y]; // prime tempsplat
 					int growcheck = 0;
 					if (splat[x][y] == 0) {
@@ -179,10 +179,10 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 						if (y != 0 && splat[x][y - 1] == 1) {
 							growcheck++;
 						}
-						if (x != 2 * snipeData.getBrushSize() && splat[x + 1][y] == 1) {
+						if (x != 2 * toolkitProperties.getBrushSize() && splat[x + 1][y] == 1) {
 							growcheck++;
 						}
-						if (y != 2 * snipeData.getBrushSize() && splat[x][y + 1] == 1) {
+						if (y != 2 * toolkitProperties.getBrushSize() && splat[x][y + 1] == 1) {
 							growcheck++;
 						}
 					}
@@ -192,21 +192,21 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
-			for (int x = 2 * snipeData.getBrushSize(); x >= 0; x--) {
-				if (2 * snipeData.getBrushSize() + 1 >= 0) {
-					System.arraycopy(tempsplat[x], 0, splat[x], 0, 2 * snipeData.getBrushSize() + 1);
+			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
+				if (2 * toolkitProperties.getBrushSize() + 1 >= 0) {
+					System.arraycopy(tempsplat[x], 0, splat[x], 0, 2 * toolkitProperties.getBrushSize() + 1);
 				}
 			}
 		}
 		this.growPercent = gref;
-		int[][] memory = new int[snipeData.getBrushSize() * 2 + 1][snipeData.getBrushSize() * 2 + 1];
-		double brushSizeSquared = Math.pow(snipeData.getBrushSize() + 0.5, 2);
-		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
+		int[][] memory = new int[toolkitProperties.getBrushSize() * 2 + 1][toolkitProperties.getBrushSize() * 2 + 1];
+		double brushSizeSquared = Math.pow(toolkitProperties.getBrushSize() + 0.5, 2);
+		for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
+			for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
 				Block targetBlock = this.getTargetBlock();
 				for (int y = targetBlock.getY(); y > 0; y--) { // start scanning from the height you clicked at
-					if (memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] != 1) { // if haven't already found the surface in this column
-						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] == 1) { // if inside of the column...&& if to be splattered
+					if (memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] != 1) { // if haven't already found the surface in this column
+						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] == 1) { // if inside of the column...&& if to be splattered
 							if (!getBlockType(targetBlock.getX() + x, y - 1, targetBlock.getZ() + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
 								if (getBlockType(targetBlock.getX() + x, y + 1, targetBlock.getZ() + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
@@ -215,7 +215,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 										for (int i = 1; (i < depth + 1); i++) {
 											this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 											// parameters
-											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+											memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
 										switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
@@ -237,7 +237,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 												for (int i = 1; (i < depth + 1); i++) {
 													this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
 													// in parameters
-													memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+													memory[x + toolkitProperties.getBrushSize()][z + toolkitProperties.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 												}
 												break;
 											default:
@@ -251,18 +251,18 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.splatterOverlay(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.splatterOverlay(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.splatterOverlayTwo(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.splatterOverlayTwo(toolkitProperties);
 	}
 
 	@Override
@@ -285,70 +285,70 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.GOLD + "Splatter Overlay brush parameters:");
-					snipeData.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-					snipeData.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
-					snipeData.sendMessage(ChatColor.AQUA + "/b sover s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-					snipeData.sendMessage(ChatColor.AQUA + "/b sover g[int] -- set a growth percentage (1-9999).  Default is 1000");
-					snipeData.sendMessage(ChatColor.AQUA + "/b sover r[int] -- set a recursion (1-10).  Default is 3");
+					toolkitProperties.sendMessage(ChatColor.GOLD + "Splatter Overlay brush parameters:");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+					toolkitProperties.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b sover s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b sover g[int] -- set a growth percentage (1-9999).  Default is 1000");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b sover r[int] -- set a recursion (1-10).  Default is 3");
 					return;
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
 					this.depth = Integer.parseInt(parameter.replace("d", ""));
-					snipeData.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
 					if (this.depth < 1) {
 						this.depth = 1;
 					}
 				} else if (parameter.startsWith("all")) {
 					this.allBlocks = true;
-					snipeData.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
+					toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
 				} else if (parameter.startsWith("some")) {
 					this.allBlocks = false;
-					snipeData.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+					toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
 					double temp = Integer.parseInt(parameter.replace("s", ""));
 					if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
 						this.seedPercent = (int) temp;
 					} else {
-						snipeData.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+						toolkitProperties.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
 					}
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
 					double temp = Integer.parseInt(parameter.replace("g", ""));
 					if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
 						this.growPercent = (int) temp;
 					} else {
-						snipeData.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+						toolkitProperties.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
 					}
 				} else if (parameter.startsWith("randh")) {
 					this.randomizeHeight = !this.randomizeHeight;
-					snipeData.sendMessage(ChatColor.RED + "RandomizeHeight set to: " + this.randomizeHeight);
+					toolkitProperties.sendMessage(ChatColor.RED + "RandomizeHeight set to: " + this.randomizeHeight);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
 					int temp = Integer.parseInt(parameter.replace("r", ""));
 					if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
 						this.splatterRecursions = temp;
 					} else {
-						snipeData.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+						toolkitProperties.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
 					}
 				} else if (parameter.startsWith("yoff")) {
 					int temp = Integer.parseInt(parameter.replace("yoff", ""));
 					if (temp >= SPLATREC_PERCENT_MIN && temp <= SPLATREC_PERCENT_MAX) {
-						snipeData.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + temp);
+						toolkitProperties.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + temp);
 						this.yOffset = temp;
 					} else {
-						snipeData.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+						toolkitProperties.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
 					}
 				} else {
-					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				snipeData.sendMessage(String.format("An error occured while processing parameter %s.", parameter));
+				toolkitProperties.sendMessage(String.format("An error occured while processing parameter %s.", parameter));
 			}
 		}
 	}

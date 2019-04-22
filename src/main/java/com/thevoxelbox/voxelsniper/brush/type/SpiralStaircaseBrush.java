@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.stream.Stream;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,13 +25,13 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 		super("Spiral Staircase");
 	}
 
-	private void buildStairWell(SnipeData snipeData, Block targetBlock) {
-		int voxelHeight = snipeData.getVoxelHeight();
+	private void buildStairWell(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int voxelHeight = toolkitProperties.getVoxelHeight();
 		if (voxelHeight < 1) {
-			snipeData.setVoxelHeight(1);
-			snipeData.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+			toolkitProperties.setVoxelHeight(1);
+			toolkitProperties.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		// locate first block in staircase
 		// Note to self, fix these
 		int startX;
@@ -215,21 +215,21 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 						}
 					} else if (spiral[x][i][z] == 1) {
 						if (this.stairType.equalsIgnoreCase("block")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
-							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, snipeData.getBlockDataType());
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, toolkitProperties.getBlockDataType());
 						} else if (this.stairType.equalsIgnoreCase("step")) {
 							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 44) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_STEP);
-							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 						} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i - 1, blockPositionZ - brushSize + z));
 							}
-							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i - 1, snipeData.getBlockDataType());
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i - 1, toolkitProperties.getBlockDataType());
 						}
 					} else if (spiral[x][i][z] == 2) {
 						if (this.stairType.equalsIgnoreCase("step")) {
@@ -237,7 +237,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_DOUBLE_STEP);
-							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 						} else if (this.stairType.equalsIgnoreCase("woodstair")) {
 							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 53) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
@@ -271,18 +271,18 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
-	private void digStairWell(SnipeData snipeData, Block targetBlock) {
-		int voxelHeight = snipeData.getVoxelHeight();
+	private void digStairWell(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int voxelHeight = toolkitProperties.getVoxelHeight();
 		if (voxelHeight < 1) {
-			snipeData.setVoxelHeight(1);
-			snipeData.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+			toolkitProperties.setVoxelHeight(1);
+			toolkitProperties.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
 		// initialize array
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		// locate first block in staircase
 		// Note to self, fix these
 		int startX;
@@ -459,21 +459,21 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 							break;
 						case 1:
 							if (this.stairType.equalsIgnoreCase("block")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getBlockDataType());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
 							} else if (this.stairType.equalsIgnoreCase("step")) {
 								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 44) {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
 								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 							} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != snipeData.getBlockDataType()) {
+								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, snipeData.getBlockDataType());
+								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
 							}
 							break;
 						case 2:
@@ -482,7 +482,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 								}
 								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_DOUBLE_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(snipeData.getBlockData());
+								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 							} else if (this.stairType.equalsIgnoreCase("woodstair")) {
 								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
 									undo.put(clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
@@ -518,22 +518,22 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.digStairWell(snipeData, this.getTargetBlock()); // make stairwell below target
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.digStairWell(toolkitProperties, this.getTargetBlock()); // make stairwell below target
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.buildStairWell(snipeData, lastBlock); // make stairwell above target
+		this.buildStairWell(toolkitProperties, lastBlock); // make stairwell above target
 	}
 
 	@Override
@@ -549,12 +549,12 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-			snipeData.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
 			return;
 		}
 		for (int i = 1; i < parameters.length; i++) {
@@ -562,16 +562,16 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 			if (Stream.of("block", "step", "woodstair", "cobblestair")
 				.anyMatch(parameter::equalsIgnoreCase)) {
 				this.stairType = parameter;
-				snipeData.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
+				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
 			} else if (parameter.equalsIgnoreCase("c") || parameter.equalsIgnoreCase("cc")) {
 				this.sdirect = parameter;
-				snipeData.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
 			} else if (Stream.of("n", "e", "s", "world")
 				.anyMatch(parameter::equalsIgnoreCase)) {
 				this.sopen = parameter;
-				snipeData.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
@@ -21,20 +21,20 @@ public class CanyonSelectionBrush extends CanyonBrush {
 		super("Canyon Selection");
 	}
 
-	private void execute(SnipeData snipeData) {
+	private void execute(ToolkitProperties toolkitProperties) {
 		Chunk chunk = getTargetBlock().getChunk();
 		if (this.first) {
 			this.fx = chunk.getX();
 			this.fz = chunk.getZ();
-			snipeData.sendMessage(ChatColor.YELLOW + "First point selected!");
+			toolkitProperties.sendMessage(ChatColor.YELLOW + "First point selected!");
 		} else {
-			snipeData.sendMessage(ChatColor.YELLOW + "Second point selected!");
-			selection(Math.min(this.fx, chunk.getX()), Math.min(this.fz, chunk.getZ()), Math.max(this.fx, chunk.getX()), Math.max(this.fz, chunk.getZ()), snipeData);
+			toolkitProperties.sendMessage(ChatColor.YELLOW + "Second point selected!");
+			selection(Math.min(this.fx, chunk.getX()), Math.min(this.fz, chunk.getZ()), Math.max(this.fx, chunk.getX()), Math.max(this.fz, chunk.getZ()), toolkitProperties);
 		}
 		this.first = !this.first;
 	}
 
-	private void selection(int lowX, int lowZ, int highX, int highZ, SnipeData v) {
+	private void selection(int lowX, int lowZ, int highX, int highZ, ToolkitProperties v) {
 		Undo undo = new Undo();
 		for (int x = lowX; x <= highX; x++) {
 			for (int z = lowZ; z <= highZ; z++) {
@@ -46,13 +46,13 @@ public class CanyonSelectionBrush extends CanyonBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		execute(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		execute(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		execute(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		execute(toolkitProperties);
 	}
 
 	@Override

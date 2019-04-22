@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -67,9 +67,9 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock();
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		if (set(targetBlock)) {
 			owner.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -78,12 +78,12 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		if (set(lastBlock)) {
 			owner.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
@@ -98,8 +98,8 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
-		super.parameters(parameters, snipeData);
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+		super.parameters(parameters, toolkitProperties);
 	}
 
 	@Override

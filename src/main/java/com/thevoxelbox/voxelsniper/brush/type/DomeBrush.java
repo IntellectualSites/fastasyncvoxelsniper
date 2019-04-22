@@ -2,10 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -33,23 +33,23 @@ public class DomeBrush extends AbstractBrush {
 		messages.height();
 	}
 
-	private void generateDome(SnipeData snipeData, Block targetBlock) {
-		if (snipeData.getVoxelHeight() == 0) {
-			snipeData.sendMessage("VoxelHeight must not be 0.");
+	private void generateDome(ToolkitProperties toolkitProperties, Block targetBlock) {
+		if (toolkitProperties.getVoxelHeight() == 0) {
+			toolkitProperties.sendMessage("VoxelHeight must not be 0.");
 			return;
 		}
-		int absoluteHeight = Math.abs(snipeData.getVoxelHeight());
-		boolean negative = snipeData.getVoxelHeight() < 0;
+		int absoluteHeight = Math.abs(toolkitProperties.getVoxelHeight());
+		boolean negative = toolkitProperties.getVoxelHeight() < 0;
 		Set<Vector> changeablePositions = new HashSet<>();
 		Undo undo = new Undo();
-		int brushSizeTimesVoxelHeight = snipeData.getBrushSize() * absoluteHeight;
-		double stepScale = (snipeData.getBrushSize() * snipeData.getBrushSize() + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5.0;
+		int brushSizeTimesVoxelHeight = toolkitProperties.getBrushSize() * absoluteHeight;
+		double stepScale = (toolkitProperties.getBrushSize() * toolkitProperties.getBrushSize() + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5.0;
 		double stepSize = 1.0 / stepScale;
 		for (double u = 0; u <= Math.PI / 2; u += stepSize) {
 			double y = absoluteHeight * Math.sin(u);
 			for (double stepV = -Math.PI; stepV <= -(Math.PI / 2); stepV += stepSize) {
-				double x = snipeData.getBrushSize() * Math.cos(u) * Math.cos(stepV);
-				double z = snipeData.getBrushSize() * Math.cos(u) * Math.sin(stepV);
+				double x = toolkitProperties.getBrushSize() * Math.cos(u) * Math.cos(stepV);
+				double z = toolkitProperties.getBrushSize() * Math.cos(u) * Math.sin(stepV);
 				double targetBlockX = targetBlock.getX() + 0.5;
 				double targetBlockZ = targetBlock.getZ() + 0.5;
 				int targetY = NumberConversions.floor(targetBlock.getY() + (negative ? -y : y));
@@ -68,28 +68,28 @@ public class DomeBrush extends AbstractBrush {
 			Location location = vector.toLocation(world);
 			Block currentTargetBlock = location.getBlock();
 			BlockData currentTargetBlockBlockData = currentTargetBlock.getBlockData();
-			BlockData snipeBlockData = snipeData.getBlockData();
+			BlockData snipeBlockData = toolkitProperties.getBlockData();
 			if (!currentTargetBlockBlockData.equals(snipeBlockData)) {
 				undo.put(currentTargetBlock);
 				currentTargetBlock.setBlockData(snipeBlockData);
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.generateDome(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.generateDome(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.generateDome(snipeData, lastBlock);
+		this.generateDome(toolkitProperties, lastBlock);
 	}
 
 	@Override

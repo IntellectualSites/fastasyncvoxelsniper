@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,8 +23,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		super("Overlay (Topsoil Filling)");
 	}
 
-	private void overlay(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void overlay(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
@@ -51,7 +51,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
@@ -81,8 +81,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	private void overlayTwo(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void overlayTwo(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
 		for (int z = brushSize; z >= -brushSize; z--) {
@@ -138,18 +138,18 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.overlay(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.overlay(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.overlayTwo(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.overlayTwo(toolkitProperties);
 	}
 
 	@Override
@@ -159,13 +159,13 @@ public class OverlayBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-				snipeData.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+				toolkitProperties.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
 				return;
 			}
 			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
@@ -174,18 +174,18 @@ public class OverlayBrush extends AbstractPerformerBrush {
 					if (this.depth < 1) {
 						this.depth = 1;
 					}
-					snipeData.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
 				} catch (NumberFormatException e) {
-					snipeData.sendMessage(ChatColor.RED + "Depth isn't a number.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Depth isn't a number.");
 				}
 			} else if (parameter.startsWith("all")) {
 				this.allBlocks = true;
-				snipeData.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
+				toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
 			} else if (parameter.startsWith("some")) {
 				this.allBlocks = false;
-				snipeData.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+				toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

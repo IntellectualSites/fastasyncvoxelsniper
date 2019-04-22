@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,8 +22,8 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		Player player = owner.getPlayer();
 		if (player == null) {
 			return;
@@ -40,8 +40,8 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	public final void powder(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		Player player = owner.getPlayer();
 		if (player == null) {
 			return;

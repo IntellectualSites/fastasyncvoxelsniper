@@ -1,8 +1,7 @@
-package com.thevoxelbox.voxelsniper.sniper.snipe;
+package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Piotr
  */
-public class SnipeData {
+public class ToolkitProperties {
 
 	private static final Material DEFAULT_BLOCK_MATERIAL = Material.AIR;
 	private static final Material DEFAULT_REPLACE_BLOCK_MATERIAL = Material.AIR;
@@ -21,54 +20,22 @@ public class SnipeData {
 	private static final int DEFAULT_VOXEL_HEIGHT = 1;
 	private static final int DEFAULT_CYLINDER_CENTER = 0;
 
-	private Sniper owner;
-	private Messages messages;
-	private BlockData blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
-	private BlockData replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
-	/**
-	 * Brush size -- set blockPositionY /b #.
-	 */
-	private int brushSize = DEFAULT_BRUSH_SIZE;
-	/**
-	 * Voxel 'heigth' -- set blockPositionY /vh #.
-	 */
-	private int voxelHeight = DEFAULT_VOXEL_HEIGHT;
-	/**
-	 * Voxel centroid -- set Cylynder center /vc #.
-	 */
-	private int cylinderCenter = DEFAULT_CYLINDER_CENTER;
+	private BlockData blockData;
+	private BlockData replaceBlockData;
+	private int brushSize;
+	private int voxelHeight;
+	private int cylinderCenter;
 	private int range;
 	private boolean ranged;
 	private boolean lightningEnabled;
-	/**
-	 * Voxel List of ID's -- set blockPositionY /vl # # # -#.
-	 */
 	private List<BlockData> voxelList = new ArrayList<>();
 
-	public SnipeData(Sniper owner) {
-		this.owner = owner;
-	}
+	@Deprecated
+	private Sniper owner;
+	@Deprecated
+	private Messages messages = new Messages(this);
 
-	/**
-	 * Reset to default values.
-	 */
-	public void reset() {
-		resetBlockData();
-		resetReplaceBlockData();
-		this.brushSize = DEFAULT_BRUSH_SIZE;
-		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
-		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
-		this.voxelList = new ArrayList<>();
-	}
-
-	public void resetBlockData() {
-		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
-	}
-
-	public void resetReplaceBlockData() {
-		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
-	}
-
+	@Deprecated
 	public void sendMessage(String message) {
 		Player player = this.owner.getPlayer();
 		if (player == null) {
@@ -77,6 +44,7 @@ public class SnipeData {
 		player.sendMessage(message);
 	}
 
+	@Deprecated
 	@Nullable
 	public World getWorld() {
 		Player player = this.owner.getPlayer();
@@ -86,9 +54,43 @@ public class SnipeData {
 		return player.getWorld();
 	}
 
-	@Override
-	public String toString() {
-		return "SnipeData{" + "owner=" + this.owner + ", messages=" + this.messages + ", blockData=" + this.blockData + ", replaceBlockData=" + this.replaceBlockData + ", brushSize=" + this.brushSize + ", voxelHeight=" + this.voxelHeight + ", cylinderCenter=" + this.cylinderCenter + ", range=" + this.range + ", ranged=" + this.ranged + ", lightningEnabled=" + this.lightningEnabled + ", voxelList=" + this.voxelList + "}";
+	@Deprecated
+	public Sniper getOwner() {
+		return this.owner;
+	}
+
+	@Deprecated
+	public void setOwner(Sniper owner) {
+		this.owner = owner;
+	}
+
+	@Deprecated
+	public Messages getMessages() {
+		return this.messages;
+	}
+
+	public ToolkitProperties() {
+		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
+		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
+		this.brushSize = DEFAULT_BRUSH_SIZE;
+		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
+	}
+
+	public void reset() {
+		resetBlockData();
+		resetReplaceBlockData();
+		this.brushSize = DEFAULT_BRUSH_SIZE;
+		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
+		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
+		this.voxelList.clear();
+	}
+
+	public void resetBlockData() {
+		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
+	}
+
+	public void resetReplaceBlockData() {
+		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
 	}
 
 	public Material getBlockDataType() {
@@ -123,24 +125,12 @@ public class SnipeData {
 		return this.voxelList.contains(blockData);
 	}
 
-	public Sniper getOwner() {
-		return this.owner;
-	}
-
-	public Messages getMessages() {
-		return this.messages;
-	}
-
-	public void setMessages(Messages messages) {
-		this.messages = messages;
+	public BlockData getBlockData() {
+		return this.blockData;
 	}
 
 	public void setBlockData(BlockData blockData) {
 		this.blockData = blockData;
-	}
-
-	public BlockData getBlockData() {
-		return this.blockData;
 	}
 
 	public BlockData getReplaceBlockData() {

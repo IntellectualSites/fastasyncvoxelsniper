@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -19,8 +19,8 @@ public class BiomeBrush extends AbstractBrush {
 		super("Biome (/b biome [Biome Name])");
 	}
 
-	private void biome(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void biome(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize, 2);
 		World world = getWorld();
 		Block targetBlock = getTargetBlock();
@@ -48,13 +48,13 @@ public class BiomeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.biome(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.biome(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.biome(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.biome(toolkitProperties);
 	}
 
 	@Override
@@ -65,9 +65,9 @@ public class BiomeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
 			StringBuilder availableBiomes = new StringBuilder();
 			for (Biome biome : Biome.values()) {
 				if (availableBiomes.length() == 0) {
@@ -77,7 +77,7 @@ public class BiomeBrush extends AbstractBrush {
 				availableBiomes.append(ChatColor.RED + ", " + ChatColor.DARK_GREEN)
 					.append(biome.name());
 			}
-			snipeData.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
+			toolkitProperties.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
 		} else {
 			// allows biome names with spaces in their name
 			String biomeName = IntStream.range(2, parameters.length)
@@ -88,7 +88,7 @@ public class BiomeBrush extends AbstractBrush {
 					.equalsIgnoreCase(biomeName))
 				.findFirst()
 				.orElse(this.selectedBiome);
-			snipeData.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
 		}
 	}
 

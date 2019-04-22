@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -27,18 +27,18 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 		super(name);
 	}
 
-	protected abstract void blend(SnipeData snipeData);
+	protected abstract void blend(ToolkitProperties toolkitProperties);
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		this.excludeAir = false;
-		this.blend(snipeData);
+		this.blend(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		this.excludeAir = true;
-		this.blend(snipeData);
+		this.blend(toolkitProperties);
 	}
 
 	@Override
@@ -50,12 +50,12 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void parameters(String[] parameters, SnipeData snipeData) {
+	public void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; ++i) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("water")) {
 				this.excludeWater = !this.excludeWater;
-				snipeData.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 			}
 		}
 	}

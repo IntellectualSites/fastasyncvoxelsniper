@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -24,13 +24,13 @@ public class CometBrush extends AbstractBrush {
 		super("Comet");
 	}
 
-	private void doFireball(SnipeData snipeData) {
+	private void doFireball(ToolkitProperties toolkitProperties) {
 		Block targetBlock = getTargetBlock();
 		int x = targetBlock.getX();
 		int y = targetBlock.getY();
 		int z = targetBlock.getZ();
 		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		Player player = owner.getPlayer();
 		if (player == null) {
 			return;
@@ -48,39 +48,39 @@ public class CometBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 0; i < parameters.length; ++i) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage("Parameters:");
-				snipeData.sendMessage("balls [big|small]  -- Sets your ball size.");
+				toolkitProperties.sendMessage("Parameters:");
+				toolkitProperties.sendMessage("balls [big|small]  -- Sets your ball size.");
 			}
 			if (parameter.equalsIgnoreCase("balls")) {
 				if (i + 1 >= parameters.length) {
-					snipeData.sendMessage("The balls parameter expects a ball size after it.");
+					toolkitProperties.sendMessage("The balls parameter expects a ball size after it.");
 				}
 				String newBallSize = parameters[++i];
 				if (newBallSize.equalsIgnoreCase("big")) {
 					this.useBigBalls = true;
-					snipeData.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
+					toolkitProperties.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
 				} else if (newBallSize.equalsIgnoreCase("small")) {
 					this.useBigBalls = false;
-					snipeData.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
+					toolkitProperties.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
 				} else {
-					snipeData.sendMessage("Unknown ball size.");
+					toolkitProperties.sendMessage("Unknown ball size.");
 				}
 			}
 		}
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.doFireball(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.doFireball(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.doFireball(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.doFireball(toolkitProperties);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -26,19 +26,19 @@ public class BlobBrush extends AbstractPerformerBrush {
 		super("Blob");
 	}
 
-	private void checkValidGrowPercent(@Nullable SnipeData snipeData) {
+	private void checkValidGrowPercent(@Nullable ToolkitProperties toolkitProperties) {
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
 			this.growPercent = GROW_PERCENT_DEFAULT;
-			if (snipeData == null) {
+			if (toolkitProperties == null) {
 				return;
 			}
-			snipeData.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+			toolkitProperties.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 		}
 	}
 
-	private void digBlob(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
-		this.checkValidGrowPercent(snipeData);
+	private void digBlob(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
+		this.checkValidGrowPercent(toolkitProperties);
 		// Seed the array
 		int brushSizeDoubled = 2 * brushSize;
 		int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
@@ -109,13 +109,13 @@ public class BlobBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void growBlob(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
-		this.checkValidGrowPercent(snipeData);
+	private void growBlob(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
+		this.checkValidGrowPercent(toolkitProperties);
 		// Seed the array
 		int brushSizeDoubled = 2 * brushSize;
 		int[][][] splat = new int[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
@@ -176,18 +176,18 @@ public class BlobBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.growBlob(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.growBlob(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.digBlob(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.digBlob(toolkitProperties);
 	}
 
 	@Override
@@ -199,24 +199,24 @@ public class BlobBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
 				return;
 			}
 			if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
 				int temp = Integer.parseInt(parameter.replace("g", ""));
 				if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-					snipeData.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
 					this.growPercent = temp;
 				} else {
-					snipeData.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+					toolkitProperties.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
 				}
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

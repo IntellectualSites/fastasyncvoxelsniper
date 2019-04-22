@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
@@ -31,12 +31,11 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	private int recursion = RECURSION_DEFAULT;
 	private int spread = SPREAD_DEFAULT;
 
-
 	public JaggedLineBrush() {
 		super("Jagged Line");
 	}
 
-	private void jaggedP(SnipeData v) {
+	private void jaggedP(ToolkitProperties v) {
 		Vector originClone = this.originCoords.clone()
 			.add(HALF_BLOCK_OFFSET);
 		Vector targetClone = this.targetCoords.clone()
@@ -60,25 +59,25 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		if (this.originCoords == null) {
 			this.originCoords = new Vector();
 		}
 		this.originCoords = this.getTargetBlock()
 			.getLocation()
 			.toVector();
-		snipeData.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+		toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		if (this.originCoords == null) {
-			snipeData.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+			toolkitProperties.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
 			this.targetCoords = this.getTargetBlock()
 				.getLocation()
 				.toVector();
-			this.jaggedP(snipeData);
+			this.jaggedP(toolkitProperties);
 		}
 	}
 
@@ -90,30 +89,30 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (String parameter : parameters) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
-					snipeData.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
-					snipeData.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
+					toolkitProperties.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
 					return;
 				}
 				if (parameter.startsWith("r")) {
 					int temp = Integer.parseInt(parameter.substring(1));
 					if (temp >= RECURSION_MIN && temp <= RECURSION_MAX) {
 						this.recursion = temp;
-						snipeData.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+						toolkitProperties.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
 					} else {
-						snipeData.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
+						toolkitProperties.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
 					}
 					return;
 				} else if (parameter.startsWith("s")) {
 					this.spread = Integer.parseInt(parameter.substring(1));
-					snipeData.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+					toolkitProperties.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
 				}
 			} catch (NumberFormatException exception) {
-				snipeData.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
+				toolkitProperties.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
 				exception.printStackTrace();
 			}
 		}

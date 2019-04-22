@@ -2,9 +2,9 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.EnumSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,8 +23,8 @@ public class EraserBrush extends AbstractBrush {
 		super("Eraser");
 	}
 
-	private void doErase(SnipeData snipeData, boolean keepWater) {
-		int brushSize = snipeData.getBrushSize();
+	private void doErase(ToolkitProperties toolkitProperties, boolean keepWater) {
+		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
 		Block targetBlock = this.getTargetBlock();
 		World world = targetBlock.getWorld();
@@ -44,18 +44,18 @@ public class EraserBrush extends AbstractBrush {
 				}
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.doErase(snipeData, false);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.doErase(toolkitProperties, false);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.doErase(snipeData, true);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.doErase(toolkitProperties, true);
 	}
 
 	@Override

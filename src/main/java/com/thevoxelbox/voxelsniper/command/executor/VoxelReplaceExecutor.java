@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,19 +26,22 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
-		String currentToolId = sniper.getCurrentToolId();
-		if (currentToolId == null) {
+		if (sniper == null) {
 			return;
 		}
-		SnipeData snipeData = sniper.getSnipeData(currentToolId);
-		if (snipeData == null) {
+		Toolkit toolkit = sniper.getCurrentToolkit();
+		if (toolkit == null) {
+			return;
+		}
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		if (toolkitProperties == null) {
 			return;
 		}
 		if (arguments.length == 0) {
 			Block targetBlock = player.getTargetBlock(250);
 			if (targetBlock != null) {
-				snipeData.setReplaceBlockDataType(targetBlock.getType());
-				Messages messages = snipeData.getMessages();
+				toolkitProperties.setReplaceBlockDataType(targetBlock.getType());
+				Messages messages = toolkitProperties.getMessages();
 				messages.replaceBlockDataType();
 			}
 			return;
@@ -45,8 +49,8 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null) {
 			if (material.isBlock()) {
-				snipeData.setReplaceBlockDataType(material);
-				Messages messages = snipeData.getMessages();
+				toolkitProperties.setReplaceBlockDataType(material);
+				Messages messages = toolkitProperties.getMessages();
 				messages.replaceBlockDataType();
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");

@@ -2,10 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -28,7 +28,7 @@ public class ShellSetBrush extends AbstractBrush {
 		super("Shell Set");
 	}
 
-	private boolean set(Block block, SnipeData snipeData) {
+	private boolean set(Block block, ToolkitProperties toolkitProperties) {
 		if (this.block == null) {
 			this.block = block;
 			return true;
@@ -37,7 +37,7 @@ public class ShellSetBrush extends AbstractBrush {
 				.getName()
 				.equals(block.getWorld()
 					.getName())) {
-				snipeData.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+				toolkitProperties.sendMessage(ChatColor.RED + "You selected points in different worlds!");
 				this.block = null;
 				return true;
 			}
@@ -54,14 +54,14 @@ public class ShellSetBrush extends AbstractBrush {
 			int highY = (y1 >= y2) ? y1 : y2;
 			int highZ = (z1 >= z2) ? z1 : z2;
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE) {
-				snipeData.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
 				List<Block> blocks = new ArrayList<>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
 							World world = getWorld();
-							Material replaceBlockDataType = snipeData.getReplaceBlockDataType();
+							Material replaceBlockDataType = toolkitProperties.getReplaceBlockDataType();
 							if (isBlockTypeNotEqual(world, y, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x + 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x - 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z + 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z - 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y + 1, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y - 1, x, z, replaceBlockDataType)) {
 								blocks.add(world.getBlockAt(x, y, z));
 							}
@@ -70,14 +70,14 @@ public class ShellSetBrush extends AbstractBrush {
 				}
 				Undo undo = new Undo();
 				for (Block currentBlock : blocks) {
-					if (currentBlock.getType() != snipeData.getBlockDataType()) {
+					if (currentBlock.getType() != toolkitProperties.getBlockDataType()) {
 						undo.put(currentBlock);
-						currentBlock.setType(snipeData.getBlockDataType());
+						currentBlock.setType(toolkitProperties.getBlockDataType());
 					}
 				}
-				Sniper owner = snipeData.getOwner();
+				Sniper owner = toolkitProperties.getOwner();
 				owner.storeUndo(undo);
-				snipeData.sendMessage(ChatColor.AQUA + "Shell complete.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "Shell complete.");
 			}
 			this.block = null;
 			return false;
@@ -90,20 +90,20 @@ public class ShellSetBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		if (this.set(this.getTargetBlock(), snipeData)) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		if (this.set(this.getTargetBlock(), toolkitProperties)) {
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		}
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		if (this.set(lastBlock, snipeData)) {
-			snipeData.sendMessage(ChatColor.GRAY + "Point one");
+		if (this.set(lastBlock, toolkitProperties)) {
+			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
 		}
 	}
 

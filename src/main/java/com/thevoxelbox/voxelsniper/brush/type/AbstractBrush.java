@@ -1,9 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeAction;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -54,7 +55,7 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	@Override
-	public boolean perform(SnipeAction action, SnipeData data, Block targetBlock, Block lastBlock) {
+	public boolean perform(ToolAction action, ToolkitProperties data, Block targetBlock, Block lastBlock) {
 		this.targetBlock = targetBlock;
 		this.lastBlock = lastBlock;
 		switch (action) {
@@ -70,8 +71,8 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	@Override
-	public void parameters(String[] parameters, SnipeData snipeData) {
-		snipeData.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
+	public void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+		toolkitProperties.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
 	}
 
 	/**
@@ -79,14 +80,14 @@ public abstract class AbstractBrush implements Brush {
 	 *
 	 * @return boolean
 	 */
-	protected final boolean getTarget(SnipeData snipeData, Block clickedBlock, BlockFace clickedFace) {
-		Sniper owner = snipeData.getOwner();
-		String toolId = owner.getCurrentToolId();
-		if (toolId == null) {
+	protected final boolean getTarget(ToolkitProperties toolkitProperties, Block clickedBlock, BlockFace clickedFace) {
+		Sniper owner = toolkitProperties.getOwner();
+		Toolkit toolkit = owner.getCurrentToolkit();
+		if (toolkit == null) {
 			return false;
 		}
-		SnipeData ownerSnipeData = owner.getSnipeData(toolId);
-		if (ownerSnipeData == null) {
+		ToolkitProperties ownerToolkitProperties = toolkit.getProperties();
+		if (ownerToolkitProperties == null) {
 			return false;
 		}
 		World targetBlockWorld = this.targetBlock.getWorld();
@@ -94,28 +95,28 @@ public abstract class AbstractBrush implements Brush {
 			this.targetBlock = clickedBlock;
 			this.lastBlock = clickedBlock.getRelative(clickedFace);
 			if (this.lastBlock.isEmpty()) {
-				snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
-			if (ownerSnipeData.isLightningEnabled()) {
+			if (ownerToolkitProperties.isLightningEnabled()) {
 				targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
 			}
 			return true;
 		} else {
 			Player ownerPlayer = owner.getPlayer();
-			this.targetBlock = ownerSnipeData.isRanged() ? ownerPlayer.getTargetBlock(ownerSnipeData.getRange()) : ownerPlayer.getTargetBlock(250);
+			this.targetBlock = ownerToolkitProperties.isRanged() ? ownerPlayer.getTargetBlock(ownerToolkitProperties.getRange()) : ownerPlayer.getTargetBlock(250);
 			if (this.targetBlock != null) {
 				this.lastBlock = ownerPlayer.getTargetBlock(250);
 				if (this.lastBlock == null) {
-					snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return false;
 				}
-				if (ownerSnipeData.isLightningEnabled()) {
+				if (ownerToolkitProperties.isLightningEnabled()) {
 					targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
 				}
 				return true;
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
 		}

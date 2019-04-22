@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -37,14 +37,14 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		try {
 			double pinch = Double.parseDouble(parameters[1]);
 			double bubble = Double.parseDouble(parameters[2]);
 			this.c1 = 1 - pinch;
 			this.c2 = bubble;
 		} catch (NumberFormatException exception) {
-			snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+			toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters!");
 		}
 	}
 
@@ -53,9 +53,9 @@ public class PullBrush extends AbstractBrush {
 		return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
 	}
 
-	private void getSurface(SnipeData snipeData) {
+	private void getSurface(ToolkitProperties toolkitProperties) {
 		this.surface.clear();
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		double bSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = -brushSize; z <= brushSize; z++) {
 			double zSquared = Math.pow(z, 2);
@@ -110,9 +110,9 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.voxelHeight = snipeData.getVoxelHeight();
-		getSurface(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.voxelHeight = toolkitProperties.getVoxelHeight();
+		getSurface(toolkitProperties);
 		if (this.voxelHeight > 0) {
 			for (PullBrushBlockWrapper block : this.surface) {
 				setBlock(block);
@@ -125,11 +125,11 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.voxelHeight = snipeData.getVoxelHeight();
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.voxelHeight = toolkitProperties.getVoxelHeight();
 		this.surface.clear();
 		int lastY;
-		int brushSize = snipeData.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		// Are we pulling up ?
 		Block targetBlock = this.getTargetBlock();

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,32 +23,32 @@ public class CloneStampBrush extends StampBrush {
 	 * x y z -- initial center of the selection v.brushSize -- the radius of the cylinder v.voxelHeight -- the height of the cylinder c.cCen -- the offset on
 	 * the Y axis of the selection ( bottom of the cylinder ) as blockPositionY: Bottom_Y = targetBlock.y + v.cCen;
 	 *
-	 * @param snipeData the caller
+	 * @param toolkitProperties the caller
 	 */
-	private void clone(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void clone(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		this.clone.clear();
 		this.fall.clear();
 		this.drop.clear();
 		this.solid.clear();
 		this.sorted = false;
 		Block targetBlock = getTargetBlock();
-		int yStartingPoint = targetBlock.getY() + snipeData.getCylinderCenter();
-		int yEndPoint = targetBlock.getY() + snipeData.getVoxelHeight() + snipeData.getCylinderCenter();
+		int yStartingPoint = targetBlock.getY() + toolkitProperties.getCylinderCenter();
+		int yEndPoint = targetBlock.getY() + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
 		World world = this.getWorld();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		} else if (yStartingPoint > world.getMaxHeight() - 1) {
 			yStartingPoint = world.getMaxHeight() - 1;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		} else if (yEndPoint > world.getMaxHeight() - 1) {
 			yEndPoint = world.getMaxHeight() - 1;
-			snipeData.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+			toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
 		double bSquared = Math.pow(brushSize, 2);
 		for (int z = yStartingPoint; z < yEndPoint; z++) {
@@ -71,12 +71,12 @@ public class CloneStampBrush extends StampBrush {
 				}
 			}
 		}
-		snipeData.sendMessage(ChatColor.GREEN + String.valueOf(this.clone.size()) + ChatColor.AQUA + " blocks copied successfully.");
+		toolkitProperties.sendMessage(ChatColor.GREEN + String.valueOf(this.clone.size()) + ChatColor.AQUA + " blocks copied successfully.");
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.clone(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.clone(toolkitProperties);
 	}
 
 	@Override
@@ -102,29 +102,29 @@ public class CloneStampBrush extends StampBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		String parameter = parameters[1];
 		if (parameter.equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
-			snipeData.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
-			snipeData.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
-			snipeData.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
+			toolkitProperties.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");
+			toolkitProperties.sendMessage(ChatColor.GREEN + "cs a -- Activates No-Air mode");
+			toolkitProperties.sendMessage(ChatColor.GREEN + "cs d -- Activates Default mode");
 		}
 		if (parameter.equalsIgnoreCase("a")) {
 			this.setStamp(StampType.NO_AIR);
 			this.reSort();
-			snipeData.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
 		} else if (parameter.equalsIgnoreCase("f")) {
 			this.setStamp(StampType.FILL);
 			this.reSort();
-			snipeData.sendMessage(ChatColor.AQUA + "Fill stamp brush");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "Fill stamp brush");
 		} else if (parameter.equalsIgnoreCase("d")) {
 			this.setStamp(StampType.DEFAULT);
 			this.reSort();
-			snipeData.sendMessage(ChatColor.AQUA + "Default stamp brush");
+			toolkitProperties.sendMessage(ChatColor.AQUA + "Default stamp brush");
 		} else if (!parameter.isEmpty() && parameter.charAt(0) == 'c') {
-			snipeData.setCylinderCenter(Integer.parseInt(parameter.replace("c", "")));
-			snipeData.sendMessage(ChatColor.BLUE + "Center set to " + snipeData.getCylinderCenter());
+			toolkitProperties.setCylinderCenter(Integer.parseInt(parameter.replace("c", "")));
+			toolkitProperties.sendMessage(ChatColor.BLUE + "Center set to " + toolkitProperties.getCylinderCenter());
 		}
 	}
 

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Chunk;
 
 /**
@@ -12,12 +12,11 @@ import org.bukkit.Chunk;
  */
 public class RegenerateChunkBrush extends AbstractBrush {
 
-
 	public RegenerateChunkBrush() {
 		super("Chunk Generator 40k");
 	}
 
-	private void generateChunk(SnipeData v) {
+	private void generateChunk(ToolkitProperties v) {
 		Chunk chunk = this.getTargetBlock()
 			.getChunk();
 		Undo undo = new Undo();
@@ -39,13 +38,13 @@ public class RegenerateChunkBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.generateChunk(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.generateChunk(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.generateChunk(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.generateChunk(toolkitProperties);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,8 +20,8 @@ public class ShellVoxelBrush extends AbstractBrush {
 		super("Shell Voxel");
 	}
 
-	private void vShell(SnipeData snipeData, Block targetBlock) {
-		int brushSize = snipeData.getBrushSize();
+	private void vShell(ToolkitProperties toolkitProperties, Block targetBlock) {
+		int brushSize = toolkitProperties.getBrushSize();
 		Material[][][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -48,26 +48,26 @@ public class ShellVoxelBrush extends AbstractBrush {
 			for (int z = 0; z <= brushSizeSquared; z++) {
 				for (int y = 0; y <= brushSizeSquared; y++) {
 					int temp = 0;
-					if (oldMaterials[x + 1 + 1][z + 1][y + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 + 1][z + 1][y + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1 - 1][z + 1][y + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 - 1][z + 1][y + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1 + 1][y + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][z + 1 + 1][y + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1 - 1][y + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][z + 1 - 1][y + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1][y + 1 + 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][z + 1][y + 1 + 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][z + 1][y + 1 - 1] == snipeData.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][z + 1][y + 1 - 1] == toolkitProperties.getReplaceBlockDataType()) {
 						temp++;
 					}
 					if (temp == 0) {
-						newMaterials[x][z][y] = snipeData.getBlockDataType();
+						newMaterials[x][z][y] = toolkitProperties.getBlockDataType();
 					}
 				}
 			}
@@ -84,23 +84,23 @@ public class ShellVoxelBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 		owner.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.vShell(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.vShell(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.vShell(snipeData, lastBlock);
+		this.vShell(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -112,11 +112,11 @@ public class ShellVoxelBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
 		} else {
-			snipeData.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
+			toolkitProperties.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
 		}
 	}
 

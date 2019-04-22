@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.util.Painter;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.Painter;
 import org.bukkit.entity.Player;
 
 /**
@@ -21,11 +21,11 @@ public class PaintingBrush extends AbstractBrush {
 	/**
 	 * Scroll painting forward.
 	 *
-	 * @param snipeData Sniper caller
+	 * @param toolkitProperties Sniper caller
 	 */
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		Player player = owner.getPlayer();
 		if (player == null) {
 			return;
@@ -36,11 +36,11 @@ public class PaintingBrush extends AbstractBrush {
 	/**
 	 * Scroll painting backwards.
 	 *
-	 * @param snipeData Sniper caller
+	 * @param toolkitProperties Sniper caller
 	 */
 	@Override
-	public final void powder(SnipeData snipeData) {
-		Sniper owner = snipeData.getOwner();
+	public final void powder(ToolkitProperties toolkitProperties) {
+		Sniper owner = toolkitProperties.getOwner();
 		Player player = owner.getPlayer();
 		if (player == null) {
 			return;

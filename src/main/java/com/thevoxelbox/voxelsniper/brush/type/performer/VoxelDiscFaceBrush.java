@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -16,52 +16,52 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 		super("Voxel Disc Face");
 	}
 
-	private void disc(SnipeData snipeData, Block targetBlock) {
-		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
+	private void disc(ToolkitProperties toolkitProperties, Block targetBlock) {
+		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
 				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
-		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
+	private void discNorthSouth(ToolkitProperties toolkitProperties, Block targetBlock) {
+		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
 				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void discEastWest(SnipeData snipeData, Block targetBlock) {
-		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
+	private void discEastWest(ToolkitProperties toolkitProperties, Block targetBlock) {
+		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
 				this.performer.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
 			}
 		}
-		snipeData.getOwner()
+		toolkitProperties.getOwner()
 			.storeUndo(this.performer.getUndo());
 	}
 
-	private void pre(SnipeData snipeData, BlockFace blockFace, Block targetBlock) {
+	private void pre(ToolkitProperties toolkitProperties, BlockFace blockFace, Block targetBlock) {
 		if (blockFace == null) {
 			return;
 		}
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
-				this.discNorthSouth(snipeData, targetBlock);
+				this.discNorthSouth(toolkitProperties, targetBlock);
 				break;
 			case EAST:
 			case WEST:
-				this.discEastWest(snipeData, targetBlock);
+				this.discEastWest(toolkitProperties, targetBlock);
 				break;
 			case UP:
 			case DOWN:
-				this.disc(snipeData, targetBlock);
+				this.disc(toolkitProperties, targetBlock);
 				break;
 			default:
 				break;
@@ -69,7 +69,7 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
+	public final void arrow(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
@@ -79,11 +79,11 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 		if (face == null) {
 			return;
 		}
-		this.pre(snipeData, face, targetBlock);
+		this.pre(toolkitProperties, face, targetBlock);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
@@ -93,7 +93,7 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 		if (face == null) {
 			return;
 		}
-		this.pre(snipeData, face, lastBlock);
+		this.pre(toolkitProperties, face, lastBlock);
 	}
 
 	@Override

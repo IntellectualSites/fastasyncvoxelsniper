@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -15,12 +15,11 @@ public class RingBrush extends AbstractPerformerBrush {
 	private double trueCircle;
 	private double innerSize;
 
-
 	public RingBrush() {
 		super("Ring");
 	}
 
-	private void ring(SnipeData v, Block targetBlock) {
+	private void ring(ToolkitProperties v, Block targetBlock) {
 		int brushSize = v.getBrushSize();
 		double outerSquared = Math.pow(brushSize + this.trueCircle, 2);
 		double innerSquared = Math.pow(this.innerSize, 2);
@@ -41,13 +40,13 @@ public class RingBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.ring(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.ring(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		this.ring(snipeData, this.getLastBlock());
+	public final void powder(ToolkitProperties toolkitProperties) {
+		this.ring(toolkitProperties, this.getLastBlock());
 	}
 
 	@Override
@@ -58,28 +57,28 @@ public class RingBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			if (parameters[i].equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
-				snipeData.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
 				return;
 			} else if (parameters[i].startsWith("true")) {
 				this.trueCircle = 0.5;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameters[i].startsWith("false")) {
 				this.trueCircle = 0;
-				snipeData.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else if (parameters[i].startsWith("ir")) {
 				try {
 					this.innerSize = Double.parseDouble(parameters[i].replace("ir", ""));
-					snipeData.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
 				} catch (NumberFormatException exception) {
-					snipeData.sendMessage(ChatColor.RED + "The parameters included are invalid.");
+					toolkitProperties.sendMessage(ChatColor.RED + "The parameters included are invalid.");
 				}
 			} else {
-				snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
@@ -21,13 +21,13 @@ public class EntityRemovalBrush extends AbstractBrush {
 		this.exemptions.add("org.bukkit.entity.NPC");
 	}
 
-	private void radialRemoval(SnipeData snipeData) {
+	private void radialRemoval(ToolkitProperties toolkitProperties) {
 		Chunk targetChunk = getTargetBlock().getChunk();
 		int entityCount = 0;
 		int chunkCount = 0;
 		try {
 			entityCount += removeEntities(targetChunk);
-			int radius = Math.round(snipeData.getBrushSize() / 16);
+			int radius = Math.round(toolkitProperties.getBrushSize() / 16);
 			for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++) {
 				for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++) {
 					entityCount += removeEntities(getWorld().getChunkAt(x, z));
@@ -36,10 +36,10 @@ public class EntityRemovalBrush extends AbstractBrush {
 			}
 		} catch (PatternSyntaxException exception) {
 			exception.printStackTrace();
-			snipeData.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + exception.getPattern());
-			snipeData.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", exception.getDescription(), exception.getIndex()));
+			toolkitProperties.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + exception.getPattern());
+			toolkitProperties.sendMessage(ChatColor.RED + String.format("%s (Index: %d)", exception.getDescription(), exception.getIndex()));
 		}
-		snipeData.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
+		toolkitProperties.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
 	}
 
 	private int removeEntities(Chunk chunk) throws PatternSyntaxException {
@@ -71,13 +71,13 @@ public class EntityRemovalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void arrow(SnipeData snipeData) {
-		this.radialRemoval(snipeData);
+	public void arrow(ToolkitProperties toolkitProperties) {
+		this.radialRemoval(toolkitProperties);
 	}
 
 	@Override
-	public void powder(SnipeData snipeData) {
-		this.radialRemoval(snipeData);
+	public void powder(ToolkitProperties toolkitProperties) {
+		this.radialRemoval(toolkitProperties);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class EntityRemovalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void parameters(String[] parameters, SnipeData snipeData) {
+	public void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (String currentParam : parameters) {
 			if (currentParam.startsWith("+") || currentParam.startsWith("-")) {
 				boolean isAddOperation = currentParam.startsWith("+");
@@ -103,15 +103,15 @@ public class EntityRemovalBrush extends AbstractBrush {
 				String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(2) : (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
 				if (isAddOperation) {
 					this.exemptions.add(exemptionPattern);
-					snipeData.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
+					toolkitProperties.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
 				} else {
 					this.exemptions.remove(exemptionPattern);
-					snipeData.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
+					toolkitProperties.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
 				}
 			}
 			if (currentParam.equalsIgnoreCase("list-exemptions") || currentParam.equalsIgnoreCase("lex")) {
 				for (String exemption : this.exemptions) {
-					snipeData.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
+					toolkitProperties.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
 				}
 			}
 		}

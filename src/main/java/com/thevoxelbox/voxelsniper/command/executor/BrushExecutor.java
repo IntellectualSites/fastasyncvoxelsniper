@@ -1,18 +1,19 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
-import java.util.UUID;
-import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,67 +29,70 @@ public class BrushExecutor implements CommandExecutor {
 	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		UUID uuid = player.getUniqueId();
-		Sniper sniper = sniperRegistry.getSniper(uuid);
+		Sniper sniper = sniperRegistry.getSniper(player);
 		if (sniper == null) {
+			sender.sendMessage(ChatColor.RED + "Sniper not found.");
 			return;
 		}
-		String currentToolId = sniper.getCurrentToolId();
-		if (currentToolId == null) {
+		Toolkit toolkit = sniper.getCurrentToolkit();
+		if (toolkit == null) {
+			sender.sendMessage(ChatColor.RED + "Current toolkit not found.");
 			return;
 		}
-		SnipeData snipeData = sniper.getSnipeData(currentToolId);
-		if (snipeData == null) {
-			return;
-		}
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
 		if (arguments.length == 0) {
-			sniper.previousBrush(currentToolId);
+			Class<? extends Brush> previousBrushType = toolkit.getPreviousBrushType();
+			if (previousBrushType == null) {
+				sender.sendMessage(ChatColor.RED + "Previous brush not found.");
+				return;
+			}
+			Brush brushToCheckPermission = toolkit.createBrush(previousBrushType);
+			if (player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+				sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
+				return;
+			}
+			toolkit.useBrushType(previousBrushType);
 			sniper.displayInfo();
 			return;
 		}
-		Integer newBrushSize = NumericParser.parseInteger(arguments[0]);
-		if (newBrushSize != null) {
+		Integer brushSize = NumericParser.parseInteger(arguments[0]);
+		if (brushSize != null) {
 			VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && newBrushSize > config.getLitesniperMaxBrushSize()) {
-				sender.sendMessage("Size is restricted to " + config.getLitesniperMaxBrushSize() + " for you.");
-				newBrushSize = config.getLitesniperMaxBrushSize();
+			int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
+				brushSize = litesniperMaxBrushSize;
+				sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
 			}
-			snipeData.setBrushSize(newBrushSize);
-			Messages messages = snipeData.getMessages();
+			toolkitProperties.setBrushSize(brushSize);
+			Messages messages = toolkitProperties.getMessages();
 			messages.size();
 			return;
 		}
-		BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
-		Class<? extends Brush> brush = brushRegistry.getBrush(arguments[0]);
-		if (brush != null) {
-			Brush originalBrush = sniper.getBrush(currentToolId);
-			if (originalBrush == null) {
-				return;
-			}
-			sniper.setBrush(currentToolId, brush);
-			if (arguments.length > 1) {
-				Brush currentBrush = sniper.getBrush(currentToolId);
-				if (currentBrush == null) {
-					return;
-				}
-				if (currentBrush instanceof PerformerBrush) {
-					String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
-					((PerformerBrush) currentBrush).parse(parameters, snipeData);
-					return;
-				} else {
-					String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
-					currentBrush.parameters(parameters, snipeData);
-					return;
-				}
-			}
-			Brush newBrush = sniper.getBrush(currentToolId);
-			if (newBrush == null) {
-				return;
-			}
-			sniper.displayInfo();
-		} else {
-			sender.sendMessage("Couldn't find Brush for brush handle \"" + arguments[0] + "\"");
+		BrushTypeRegistry brushTypeRegistry = this.plugin.getBrushTypeRegistry();
+		Class<? extends Brush> brushType = brushTypeRegistry.getBrushType(arguments[0]);
+		if (brushType == null) {
+			sender.sendMessage(ChatColor.RED + "Could not find brush for handle " + arguments[0] + ".");
+			return;
 		}
+		Brush brushToCheckPermission = toolkit.createBrush(brushType);
+		if (player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+			sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
+			return;
+		}
+		Brush brush = toolkit.useBrushType(brushType);
+		if (arguments.length > 1) {
+			if (brush instanceof PerformerBrush) {
+				String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
+				PerformerBrush performerBrush = (PerformerBrush) brush;
+				performerBrush.parse(parameters, toolkitProperties);
+				return;
+			} else {
+				String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
+				brush.parameters(parameters, toolkitProperties);
+				return;
+			}
+		}
+		sniper.displayInfo();
 	}
 
 	/**

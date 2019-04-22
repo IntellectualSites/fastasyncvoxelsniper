@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -16,12 +16,11 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 	private double zRad;
 	private boolean istrue;
 
-
 	public EllipsoidBrush() {
 		super("Ellipsoid");
 	}
 
-	private void execute(SnipeData snipeData, Block targetBlock) {
+	private void execute(ToolkitProperties toolkitProperties, Block targetBlock) {
 		this.performer.perform(targetBlock);
 		double trueOffset = this.istrue ? 0.5 : 0;
 		int blockPositionX = targetBlock.getX();
@@ -46,22 +45,22 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.execute(snipeData, this.getTargetBlock());
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.execute(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
+	public final void powder(ToolkitProperties toolkitProperties) {
 		Block lastBlock = getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		this.execute(snipeData, lastBlock);
+		this.execute(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -73,33 +72,33 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		this.istrue = false;
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					snipeData.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-					snipeData.sendMessage(ChatColor.AQUA + "x[n]: Set X radius to n");
-					snipeData.sendMessage(ChatColor.AQUA + "y[n]: Set Y radius to n");
-					snipeData.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
+					toolkitProperties.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "x[n]: Set X radius to n");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "y[n]: Set Y radius to n");
+					toolkitProperties.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
 					return;
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
 					this.xRad = Integer.parseInt(parameters[i].replace("x", ""));
-					snipeData.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
 					this.yRad = Integer.parseInt(parameters[i].replace("y", ""));
-					snipeData.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'z') {
 					this.zRad = Integer.parseInt(parameters[i].replace("z", ""));
-					snipeData.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
+					toolkitProperties.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
 				} else if (parameter.equalsIgnoreCase("true")) {
 					this.istrue = true;
 				} else {
-					snipeData.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+					toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				snipeData.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+				toolkitProperties.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
 			}
 		}
 	}

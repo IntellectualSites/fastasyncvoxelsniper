@@ -3,10 +3,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -89,7 +89,7 @@ public class HeatRayBrush extends AbstractBrush {
 	/**
 	 * Heat Ray executer.
 	 */
-	public final void heatRay(SnipeData snipeData) {
+	public final void heatRay(ToolkitProperties toolkitProperties) {
 		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(new Random());
 		Vector targetLocation = this.getTargetBlock()
 			.getLocation()
@@ -97,9 +97,9 @@ public class HeatRayBrush extends AbstractBrush {
 		Location currentLocation = new Location(this.getTargetBlock()
 			.getWorld(), 0, 0, 0);
 		Undo undo = new Undo();
-		for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-			for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
-				for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
+		for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
+			for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+				for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
 					currentLocation.setX(this.getTargetBlock()
 						.getX() + x);
 					currentLocation.setY(this.getTargetBlock()
@@ -107,7 +107,7 @@ public class HeatRayBrush extends AbstractBrush {
 					currentLocation.setZ(this.getTargetBlock()
 						.getZ() + z);
 					if (currentLocation.toVector()
-						.isInSphere(targetLocation, snipeData.getBrushSize())) {
+						.isInSphere(targetLocation, toolkitProperties.getBrushSize())) {
 						Block currentBlock = currentLocation.getBlock();
 						if (currentBlock == null || currentBlock.getType() == Material.LEGACY_CHEST) {
 							continue;
@@ -154,18 +154,18 @@ public class HeatRayBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		heatRay(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		heatRay(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) {
-		heatRay(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) {
+		heatRay(toolkitProperties);
 	}
 
 	@Override
@@ -178,26 +178,26 @@ public class HeatRayBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
-				snipeData.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
-				snipeData.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-				snipeData.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
-				snipeData.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
 			}
 			if (parameter.startsWith("oct")) {
 				this.octaves = Integer.valueOf(parameter.replace("oct", ""));
-				snipeData.getMessages()
+				toolkitProperties.getMessages()
 					.custom(ChatColor.GREEN + "Octaves: " + this.octaves);
 			} else if (parameter.startsWith("amp")) {
 				this.amplitude = Double.valueOf(parameter.replace("amp", ""));
-				snipeData.getMessages()
+				toolkitProperties.getMessages()
 					.custom(ChatColor.GREEN + "Amplitude: " + this.amplitude);
 			} else if (parameter.startsWith("freq")) {
 				this.frequency = Double.valueOf(parameter.replace("freq", ""));
-				snipeData.getMessages()
+				toolkitProperties.getMessages()
 					.custom(ChatColor.GREEN + "Frequency: " + this.frequency);
 			}
 		}

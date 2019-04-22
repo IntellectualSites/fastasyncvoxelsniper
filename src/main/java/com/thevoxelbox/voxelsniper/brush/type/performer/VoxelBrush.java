@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
 /**
@@ -17,17 +17,17 @@ public class VoxelBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public void arrow(SnipeData snipeData) {
-		voxel(snipeData);
+	public void arrow(ToolkitProperties toolkitProperties) {
+		voxel(toolkitProperties);
 	}
 
 	@Override
-	public void powder(SnipeData snipeData) {
-		voxel(snipeData);
+	public void powder(ToolkitProperties toolkitProperties) {
+		voxel(toolkitProperties);
 	}
 
-	private void voxel(SnipeData snipeData) {
-		int brushSize = snipeData.getBrushSize();
+	private void voxel(ToolkitProperties toolkitProperties) {
+		int brushSize = toolkitProperties.getBrushSize();
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				for (int y = brushSize; y >= -brushSize; y--) {
@@ -36,7 +36,7 @@ public class VoxelBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = snipeData.getOwner();
+		Sniper owner = toolkitProperties.getOwner();
 		owner.storeUndo(this.performer.getUndo());
 	}
 

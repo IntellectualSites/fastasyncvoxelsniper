@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 
 /**
@@ -22,12 +22,11 @@ public class TriangleBrush extends AbstractPerformerBrush {
 	private double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
 	private double[] normalVector = new double[3];
 
-
 	public TriangleBrush() {
 		super("Triangle");
 	}
 
-	private void triangleA(SnipeData snipeData) {
+	private void triangleA(ToolkitProperties toolkitProperties) {
 		switch (this.cornernumber) {
 			case 1:
 				this.coordsOne[0] = this.getTargetBlock()
@@ -42,7 +41,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 2;
-				snipeData.sendMessage(ChatColor.GRAY + "First Corner set.");
+				toolkitProperties.sendMessage(ChatColor.GRAY + "First Corner set.");
 				break;
 			case 2:
 				this.coordsTwo[0] = this.getTargetBlock()
@@ -57,7 +56,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 3;
-				snipeData.sendMessage(ChatColor.GRAY + "Second Corner set.");
+				toolkitProperties.sendMessage(ChatColor.GRAY + "Second Corner set.");
 				break;
 			case 3:
 				this.coordsThree[0] = this.getTargetBlock()
@@ -72,14 +71,14 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					.getZ() / Math.abs(this.getTargetBlock()
 					.getZ());
 				this.cornernumber = 1;
-				snipeData.sendMessage(ChatColor.GRAY + "Third Corner set.");
+				toolkitProperties.sendMessage(ChatColor.GRAY + "Third Corner set.");
 				break;
 			default:
 				break;
 		}
 	}
 
-	private void triangleP(SnipeData snipeData) {
+	private void triangleP(ToolkitProperties toolkitProperties) {
 		// Calculate slope vectors
 		for (int i = 0; i < 3; i++) {
 			this.vectorOne[i] = this.coordsTwo[i] - this.coordsOne[i];
@@ -101,7 +100,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 		// Calculate the area of the full triangle
 		double heronBig = 0.25 * Math.pow(Math.pow(Math.pow(lengthOne, 2) + Math.pow(lengthTwo, 2) + Math.pow(lengthThree, 2), 2) - 2 * (Math.pow(lengthOne, 4) + Math.pow(lengthTwo, 4) + Math.pow(lengthThree, 4)), 0.5);
 		if (lengthOne == 0 || lengthTwo == 0 || (this.coordsOne[0] == 0 && this.coordsOne[1] == 0 && this.coordsOne[2] == 0) || (this.coordsTwo[0] == 0 && this.coordsTwo[1] == 0 && this.coordsTwo[2] == 0) || (this.coordsThree[0] == 0 && this.coordsThree[1] == 0 && this.coordsThree[2] == 0)) {
-			snipeData.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
+			toolkitProperties.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
 		} else {
 			// Make the Changes
 			double[] cVectorOne = new double[3];
@@ -231,7 +230,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					}
 				}
 			} // END Z DEPENDENT
-			Sniper owner = snipeData.getOwner();
+			Sniper owner = toolkitProperties.getOwner();
 			owner.storeUndo(this.performer.getUndo());
 		}
 		// RESET BRUSH
@@ -248,13 +247,13 @@ public class TriangleBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void arrow(SnipeData snipeData) {
-		this.triangleA(snipeData);
+	public final void arrow(ToolkitProperties toolkitProperties) {
+		this.triangleA(toolkitProperties);
 	}
 
 	@Override
-	public final void powder(SnipeData snipeData) { // Add a point
-		this.triangleP(snipeData);
+	public final void powder(ToolkitProperties toolkitProperties) { // Add a point
+		this.triangleP(toolkitProperties);
 	}
 
 	@Override
@@ -263,9 +262,9 @@ public class TriangleBrush extends AbstractPerformerBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, SnipeData snipeData) {
+	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
 		if (parameters[1].equalsIgnoreCase("info")) {
-			snipeData.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
+			toolkitProperties.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
 		}
 	}
 
