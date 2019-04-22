@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
+import java.util.UUID;
 import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -27,7 +28,11 @@ public class BrushExecutor implements CommandExecutor {
 	public void executeCommand(CommandSender sender, String[] arguments) {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
-		Sniper sniper = sniperRegistry.getSniper(player);
+		UUID uuid = player.getUniqueId();
+		Sniper sniper = sniperRegistry.getSniper(uuid);
+		if (sniper == null) {
+			return;
+		}
 		String currentToolId = sniper.getCurrentToolId();
 		if (currentToolId == null) {
 			return;

@@ -29,7 +29,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
 		this.brushRegistry = loadBrushRegistry();
-		this.sniperRegistry = loadSniperRegistry();
+		this.sniperRegistry = new SniperRegistry();
 		loadCommands();
 		loadListeners();
 	}
@@ -54,11 +54,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
 		brushRegistrar.registerBrushes();
 		return brushRegistry;
-	}
-
-	private SniperRegistry loadSniperRegistry() {
-		int undoCacheSize = this.voxelSniperConfig.getUndoCacheSize();
-		return new SniperRegistry(undoCacheSize);
 	}
 
 	private void loadCommands() {

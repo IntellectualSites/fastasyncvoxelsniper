@@ -13,8 +13,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class SniperTool {
+public class SniperToolkit {
 
+	private String toolkitName;
 	private Map<Material, SnipeAction> actionTools = new HashMap<>();
 	private Map<Class<? extends Brush>, Brush> brushes = new HashMap<>();
 	private Class<? extends Brush> currentBrush;
@@ -22,11 +23,21 @@ public class SniperTool {
 	private SnipeData snipeData;
 	private Messages messagesHelper;
 
-	SniperTool(Sniper owner) {
+	public SniperToolkit(String toolkitName, Sniper owner) {
+		this(SnipeBrush.class, new SnipeData(owner));
+		this.toolkitName = toolkitName;
+	}
+
+	@Deprecated
+	public SniperToolkit(Sniper owner) {
 		this(SnipeBrush.class, new SnipeData(owner));
 	}
 
-	private SniperTool(Class<? extends Brush> currentBrush, SnipeData snipeData) {
+	public String getToolkitName() {
+		return this.toolkitName;
+	}
+
+	private SniperToolkit(Class<? extends Brush> currentBrush, SnipeData snipeData) {
 		this.snipeData = snipeData;
 		this.messagesHelper = new Messages(snipeData);
 		snipeData.setMessages(this.messagesHelper);
@@ -39,20 +50,20 @@ public class SniperTool {
 		}
 	}
 
-	public boolean hasToolAssigned(Material material) {
+	public boolean hasItemAssigned(Material material) {
 		return this.actionTools.containsKey(material);
 	}
 
-	public SnipeAction getActionAssigned(Material itemInHand) {
-		return this.actionTools.get(itemInHand);
+	public SnipeAction getAssignedAction(Material material) {
+		return this.actionTools.get(material);
 	}
 
-	public void assignAction(Material itemInHand, SnipeAction action) {
-		this.actionTools.put(itemInHand, action);
+	public void assignAction(Material material, SnipeAction action) {
+		this.actionTools.put(material, action);
 	}
 
-	public void unassignAction(Material itemInHand) {
-		this.actionTools.remove(itemInHand);
+	public void unassignAction(Material material) {
+		this.actionTools.remove(material);
 	}
 
 	public Map<Material, SnipeAction> getActionTools() {
@@ -69,7 +80,7 @@ public class SniperTool {
 
 	@Override
 	public String toString() {
-		return "SniperTool{" + "actionTools=" + this.actionTools + ", brushes=" + this.brushes + ", currentBrush=" + this.currentBrush + ", previousBrush=" + this.previousBrush + ", snipeData=" + this.snipeData + ", messagesHelper=" + this.messagesHelper + "}";
+		return "SniperToolkit{" + "actionTools=" + this.actionTools + ", brushes=" + this.brushes + ", currentBrush=" + this.currentBrush + ", previousBrush=" + this.previousBrush + ", snipeData=" + this.snipeData + ", messagesHelper=" + this.messagesHelper + "}";
 	}
 
 	@Nullable

@@ -4,24 +4,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class SniperRegistry {
 
-	private int undoCacheSize;
 	private Map<UUID, Sniper> snipers = new HashMap<>();
 
-	public SniperRegistry(int undoCacheSize) {
-		this.undoCacheSize = undoCacheSize;
+	public void registerSniper(UUID uuid, Sniper sniper) {
+		this.snipers.put(uuid, sniper);
 	}
 
+	@Deprecated
+	@Nullable
 	public Sniper getSniper(Player player) {
 		UUID uuid = player.getUniqueId();
-		Sniper sniper = this.snipers.get(uuid);
-		if (sniper == null) {
-			Sniper newSniper = new Sniper(player, this.undoCacheSize);
-			this.snipers.put(uuid, newSniper);
-			return newSniper;
-		}
-		return sniper;
+		return getSniper(uuid);
+	}
+
+	@Nullable
+	public Sniper getSniper(UUID uuid) {
+		return this.snipers.get(uuid);
+	}
+
+	public Map<UUID, Sniper> getSnipers() {
+		return Map.copyOf(this.snipers);
 	}
 }

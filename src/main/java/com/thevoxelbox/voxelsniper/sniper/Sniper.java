@@ -4,7 +4,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -29,15 +28,33 @@ public class Sniper {
 	private boolean enabled = true;
 	private int undoCacheSize;
 	private Deque<Undo> undoList = new LinkedList<>();
-	private Map<String, SniperTool> tools = new HashMap<>();
+	private Map<String, SniperToolkit> toolkits = new HashMap<>();
 
+	public Sniper(UUID uuid, int undoCacheSize) {
+		this.uuid = uuid;
+		this.undoCacheSize = undoCacheSize;
+		this.toolkits.put("default", createDefaultSniperTool(this));
+	}
+
+	private static SniperToolkit createDefaultSniperTool(Sniper sniper) {
+		SniperToolkit toolkit = new SniperToolkit("default", sniper);
+		toolkit.assignAction(Material.ARROW, SnipeAction.ARROW);
+		toolkit.assignAction(Material.GUNPOWDER, SnipeAction.GUNPOWDER);
+		return toolkit;
+	}
+
+	@Deprecated
 	public Sniper(Player player, int undoCacheSize) {
 		this.uuid = player.getUniqueId();
 		this.undoCacheSize = undoCacheSize;
-		SniperTool sniperTool = new SniperTool(this);
-		sniperTool.assignAction(Material.ARROW, SnipeAction.ARROW);
-		sniperTool.assignAction(Material.GUNPOWDER, SnipeAction.GUNPOWDER);
-		this.tools.put(null, sniperTool);
+		SniperToolkit sniperToolkit = new SniperToolkit(this);
+		sniperToolkit.assignAction(Material.ARROW, SnipeAction.ARROW);
+		sniperToolkit.assignAction(Material.GUNPOWDER, SnipeAction.GUNPOWDER);
+		this.toolkits.put("default", sniperToolkit);
+	}
+
+	public Map<String, SniperToolkit> getToolkits() {
+		return Map.copyOf(this.toolkits);
 	}
 
 	@Nullable
@@ -49,19 +66,19 @@ public class Sniper {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemInHand = inventory.getItemInMainHand();
 		Material type = itemInHand.getType();
-		return getToolId(type);
+		if (type.isEmpty()) {
+			return "default";
+		}
+		return getToolkitName(type);
 	}
 
 	@Nullable
-	public String getToolId(Material material) {
-		return this.tools.entrySet()
+	public String getToolkitName(Material material) {
+		return this.toolkits.values()
 			.stream()
-			.filter(entry -> {
-				SniperTool tool = entry.getValue();
-				return tool.hasToolAssigned(material);
-			})
+			.filter(toolkit -> toolkit.hasItemAssigned(material))
 			.findFirst()
-			.map(Entry::getKey)
+			.map(SniperToolkit::getToolkitName)
 			.orElse(null);
 	}
 
@@ -98,11 +115,11 @@ public class Sniper {
 	 * @return true if command visibly processed, false otherwise.
 	 */
 	public boolean snipe(Action action, Material itemInHand, @Nullable Block clickedBlock, BlockFace clickedFace) {
-		String toolId = getToolId(itemInHand);
+		String toolId = getToolkitName(itemInHand);
 		if (toolId == null) {
 			return false;
 		}
-		SniperTool sniperTool = this.tools.get(toolId);
+		SniperToolkit sniperToolkit = this.toolkits.get(toolId);
 		switch (action) {
 			case LEFT_CLICK_AIR:
 			case LEFT_CLICK_BLOCK:
@@ -112,12 +129,12 @@ public class Sniper {
 			default:
 				return false;
 		}
-		if (sniperTool.hasToolAssigned(itemInHand)) {
+		if (sniperToolkit.hasItemAssigned(itemInHand)) {
 			Player player = getPlayer();
 			if (player == null) {
 				return false;
 			}
-			Brush currentBrush = sniperTool.getCurrentBrush();
+			Brush currentBrush = sniperToolkit.getCurrentBrush();
 			if (currentBrush == null) {
 				player.sendMessage("No Brush selected.");
 				return true;
@@ -126,10 +143,10 @@ public class Sniper {
 				player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + currentBrush.getPermissionNode() + "'");
 				return true;
 			}
-			SnipeData snipeData = sniperTool.getSnipeData();
+			SnipeData snipeData = sniperToolkit.getSnipeData();
 			if (player.isSneaking()) {
 				Block targetBlock;
-				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
+				SnipeAction snipeAction = sniperToolkit.getAssignedAction(itemInHand);
 				Messages messages = snipeData.getMessages();
 				if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 					if (clickedBlock != null) {
@@ -183,7 +200,7 @@ public class Sniper {
 					}
 				}
 			} else {
-				SnipeAction snipeAction = sniperTool.getActionAssigned(itemInHand);
+				SnipeAction snipeAction = sniperToolkit.getAssignedAction(itemInHand);
 				switch (action) {
 					case RIGHT_CLICK_AIR:
 					case RIGHT_CLICK_BLOCK:
@@ -220,54 +237,54 @@ public class Sniper {
 
 	@Nullable
 	public Brush setBrush(String toolId, Class<? extends Brush> brush) {
-		if (!this.tools.containsKey(toolId)) {
+		if (!this.toolkits.containsKey(toolId)) {
 			return null;
 		}
-		return this.tools.get(toolId)
+		return this.toolkits.get(toolId)
 			.setCurrentBrush(brush);
 	}
 
 	@Nullable
 	public Brush getBrush(String toolId) {
-		if (!this.tools.containsKey(toolId)) {
+		if (!this.toolkits.containsKey(toolId)) {
 			return null;
 		}
-		return this.tools.get(toolId)
+		return this.toolkits.get(toolId)
 			.getCurrentBrush();
 	}
 
 	@Nullable
 	public Brush previousBrush(String toolId) {
-		if (!this.tools.containsKey(toolId)) {
+		if (!this.toolkits.containsKey(toolId)) {
 			return null;
 		}
-		return this.tools.get(toolId)
+		return this.toolkits.get(toolId)
 			.previousBrush();
 	}
 
 	public boolean setTool(String toolId, SnipeAction action, Material itemInHand) {
-		for (Map.Entry<String, SniperTool> entry : this.tools.entrySet()) {
+		for (Map.Entry<String, SniperToolkit> entry : this.toolkits.entrySet()) {
 			if (!entry.getKey()
 				.equals(toolId) && entry.getValue()
-				.hasToolAssigned(itemInHand)) {
+				.hasItemAssigned(itemInHand)) {
 				return false;
 			}
 		}
-		if (!this.tools.containsKey(toolId)) {
-			SniperTool tool = new SniperTool(this);
-			this.tools.put(toolId, tool);
+		if (!this.toolkits.containsKey(toolId)) {
+			SniperToolkit tool = new SniperToolkit(this);
+			this.toolkits.put(toolId, tool);
 		}
-		this.tools.get(toolId)
+		this.toolkits.get(toolId)
 			.assignAction(itemInHand, action);
 		return true;
 	}
 
 	public void removeTool(String toolId, Material itemInHand) {
-		if (!this.tools.containsKey(toolId)) {
-			SniperTool tool = new SniperTool(this);
-			this.tools.put(toolId, tool);
+		if (!this.toolkits.containsKey(toolId)) {
+			SniperToolkit tool = new SniperToolkit(this);
+			this.toolkits.put(toolId, tool);
 		}
-		this.tools.get(toolId)
+		this.toolkits.get(toolId)
 			.unassignAction(itemInHand);
 	}
 
@@ -275,7 +292,7 @@ public class Sniper {
 		if (toolId == null) {
 			return;
 		}
-		this.tools.remove(toolId);
+		this.toolkits.remove(toolId);
 	}
 
 	public boolean isEnabled() {
@@ -321,43 +338,43 @@ public class Sniper {
 	}
 
 	public void reset(String toolId) {
-		SniperTool backup = this.tools.remove(toolId);
-		SniperTool newTool = new SniperTool(this);
+		SniperToolkit backup = this.toolkits.remove(toolId);
+		SniperToolkit newTool = new SniperToolkit(this);
 		for (Map.Entry<Material, SnipeAction> entry : backup.getActionTools()
 			.entrySet()) {
 			newTool.assignAction(entry.getKey(), entry.getValue());
 		}
-		this.tools.put(toolId, newTool);
+		this.toolkits.put(toolId, newTool);
 	}
 
 	@Nullable
 	public SnipeData getSnipeData(String toolId) {
-		return this.tools.containsKey(toolId) ? this.tools.get(toolId)
+		return this.toolkits.containsKey(toolId) ? this.toolkits.get(toolId)
 			.getSnipeData() : null;
 	}
 
 	public void displayInfo() {
 		String currentToolId = getCurrentToolId();
-		SniperTool sniperTool = this.tools.get(currentToolId);
-		Brush brush = sniperTool.getCurrentBrush();
+		SniperToolkit sniperToolkit = this.toolkits.get(currentToolId);
+		Brush brush = sniperToolkit.getCurrentBrush();
 		sendMessage("Current Tool: " + ((currentToolId != null) ? currentToolId : "Default Tool"));
 		if (brush == null) {
 			sendMessage("No brush selected.");
 			return;
 		}
-		brush.info(sniperTool.getMessagesHelper());
+		brush.info(sniperToolkit.getMessagesHelper());
 		if (brush instanceof PerformerBrush) {
 			PerformerBrush performer = (PerformerBrush) brush;
-			performer.showInfo(sniperTool.getMessagesHelper());
+			performer.showInfo(sniperToolkit.getMessagesHelper());
 		}
 	}
 
-	public SniperTool getSniperTool(String toolId) {
-		return this.tools.get(toolId);
+	public SniperToolkit getSniperTool(String toolId) {
+		return this.toolkits.get(toolId);
 	}
 
 	@Override
 	public String toString() {
-		return "Sniper{" + "uuid=" + this.uuid + ", enabled=" + this.enabled + ", undoCacheSize=" + this.undoCacheSize + ", undoList=" + this.undoList + ", tools=" + this.tools + "}";
+		return "Sniper{" + "uuid=" + this.uuid + ", enabled=" + this.enabled + ", undoCacheSize=" + this.undoCacheSize + ", undoList=" + this.undoList + ", toolkits=" + this.toolkits + "}";
 	}
 }
