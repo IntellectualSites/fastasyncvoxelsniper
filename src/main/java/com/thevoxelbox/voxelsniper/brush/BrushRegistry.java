@@ -1,11 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BrushRegistry {
 
-	private Map<Class<? extends Brush>, List<String>> brushes = new HashMap<>();
+	private Map<String, Class<? extends Brush>> brushes = new HashMap<>();
 
 	/**
 	 * Register a brush for VoxelSniper to be able to use.
@@ -21,11 +17,15 @@ public class BrushRegistry {
 	 * @param brushType Brush implementing Brush interface.
 	 * @param handles Handles under which the brush can be accessed ingame.
 	 */
+	@Deprecated
 	public void registerBrush(Class<? extends Brush> brushType, String... handles) {
-		List<String> handlesList = Arrays.stream(handles)
-			.map(String::toLowerCase)
-			.collect(Collectors.toList());
-		this.brushes.put(brushType, handlesList);
+		for (String handle : handles) {
+			registerBrush(handle, brushType);
+		}
+	}
+
+	public void registerBrush(String handle, Class<? extends Brush> brushType) {
+		this.brushes.put(handle, brushType);
 	}
 
 	/**
@@ -36,21 +36,13 @@ public class BrushRegistry {
 	 */
 	@Nullable
 	public Class<? extends Brush> getBrush(String handle) {
-		return this.brushes.entrySet()
-			.stream()
-			.filter(entry -> {
-				List<String> handles = entry.getValue();
-				return handles.contains(handle);
-			})
-			.findFirst()
-			.map(Entry::getKey)
-			.orElse(null);
+		return this.brushes.get(handle);
 	}
 
 	/**
 	 * @return Immutable copy of all the registered brushes
 	 */
-	public Map<Class<? extends Brush>, List<String>> getBrushes() {
+	public Map<String, Class<? extends Brush>> getBrushes() {
 		return Map.copyOf(this.brushes);
 	}
 }

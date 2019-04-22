@@ -1,17 +1,16 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.performer.Performers;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -34,13 +33,10 @@ public class VoxelSniperExecutor implements CommandExecutor {
 			String firstArgument = arguments[0];
 			if (firstArgument.equalsIgnoreCase("brushes")) {
 				BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
-				List<String> allHandles = new ArrayList<>();
-				Map<Class<? extends Brush>, List<String>> brushes = brushRegistry.getBrushes();
-				for (List<String> strings : brushes.values()) {
-					allHandles.addAll(strings);
-				}
-				String join = String.join(", ", allHandles);
-				sender.sendMessage(join);
+				Map<String, Class<? extends Brush>> brushes = brushRegistry.getBrushes();
+				Set<String> handles = brushes.keySet();
+				String handlesString = String.join(", ", handles);
+				sender.sendMessage(handlesString);
 				return;
 			} else if (firstArgument.equalsIgnoreCase("range")) {
 				String currentToolId = sniper.getCurrentToolId();

@@ -2,14 +2,15 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,8 +53,8 @@ public class BrushExecutor implements CommandExecutor {
 			messages.size();
 			return;
 		}
-		Class<? extends Brush> brush = this.plugin.getBrushRegistry()
-			.getBrush(arguments[0]);
+		BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
+		Class<? extends Brush> brush = brushRegistry.getBrush(arguments[0]);
 		if (brush != null) {
 			Brush originalBrush = sniper.getBrush(currentToolId);
 			if (originalBrush == null) {
