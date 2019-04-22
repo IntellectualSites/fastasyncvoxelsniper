@@ -47,7 +47,7 @@ public class BrushExecutor implements CommandExecutor {
 				return;
 			}
 			Brush brushToCheckPermission = toolkit.createBrush(previousBrushType);
-			if (player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+			if (!player.hasPermission(brushToCheckPermission.getPermissionNode())) {
 				sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 				return;
 			}
@@ -75,7 +75,7 @@ public class BrushExecutor implements CommandExecutor {
 			return;
 		}
 		Brush brushToCheckPermission = toolkit.createBrush(brushType);
-		if (player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+		if (!player.hasPermission(brushToCheckPermission.getPermissionNode())) {
 			sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 			return;
 		}
