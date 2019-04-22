@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.sniper.SnipeAction;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeAction;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

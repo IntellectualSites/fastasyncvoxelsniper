@@ -13,6 +13,8 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeAction;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

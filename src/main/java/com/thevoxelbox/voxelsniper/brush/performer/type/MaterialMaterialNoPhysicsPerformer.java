@@ -6,7 +6,7 @@
 package com.thevoxelbox.voxelsniper.brush.performer.type;
 
 import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 

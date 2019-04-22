@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;

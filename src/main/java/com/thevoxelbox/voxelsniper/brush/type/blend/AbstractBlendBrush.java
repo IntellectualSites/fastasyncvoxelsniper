@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.Messages;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 

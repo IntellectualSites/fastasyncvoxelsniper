@@ -1,8 +1,9 @@
-package com.thevoxelbox.voxelsniper.sniper;
+package com.thevoxelbox.voxelsniper.sniper.snipe;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.thevoxelbox.voxelsniper.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;

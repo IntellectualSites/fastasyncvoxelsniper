@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
 import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;

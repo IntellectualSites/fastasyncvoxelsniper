@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 import java.util.List;
 import java.util.Random;
 import com.thevoxelbox.voxelsniper.Messages;
-import com.thevoxelbox.voxelsniper.sniper.SnipeData;
+import com.thevoxelbox.voxelsniper.sniper.snipe.SnipeData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
