@@ -37,7 +37,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 								for (int i = 0; i < this.depth; i++) {
 									if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
 										.isEmpty()) {
-										this.current.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+										this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 										// parameters
 										memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 									}
@@ -57,7 +57,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 										for (int i = 0; (i < this.depth); i++) {
 											if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
 												.isEmpty()) {
-												this.current.perform(this.clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+												this.performer.perform(this.clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 												// parameters
 												memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}
@@ -73,7 +73,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	private void underlay2(SnipeData snipeData) {
@@ -87,7 +87,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							if (this.allBlocks) {
 								for (int i = -1; i < this.depth - 1; i++) {
-									this.current.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+									this.performer.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 									// parameters
 									memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 								}
@@ -108,7 +108,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 									case 49:
 									case 78:
 										for (int i = -1; i < this.depth - 1; i++) {
-											this.current.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+											this.performer.perform(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
@@ -123,7 +123,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

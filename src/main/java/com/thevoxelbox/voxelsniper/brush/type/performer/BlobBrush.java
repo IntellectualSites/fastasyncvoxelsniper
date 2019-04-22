@@ -104,13 +104,13 @@ public class BlobBrush extends AbstractPerformerBrush {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
 						Block targetBlock = this.getTargetBlock();
-						this.current.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
+						this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
 					}
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void growBlob(SnipeData snipeData) {
@@ -171,13 +171,13 @@ public class BlobBrush extends AbstractPerformerBrush {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
 						Block targetBlock = this.getTargetBlock();
-						this.current.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
+						this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
 					}
 				}
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

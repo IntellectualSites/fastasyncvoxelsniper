@@ -18,11 +18,11 @@ public class VoxelDiscBrush extends AbstractPerformerBrush {
 	private void disc(SnipeData snipeData, Block targetBlock) {
 		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
 			for (int z = snipeData.getBrushSize(); z >= -snipeData.getBrushSize(); z--) {
-				this.current.perform(targetBlock.getRelative(x, 0, z));
+				this.performer.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

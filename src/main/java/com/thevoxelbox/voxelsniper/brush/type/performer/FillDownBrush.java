@@ -46,7 +46,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						Block currentBlock = this.getWorld()
 							.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
 						if (currentBlock.isEmpty() || (this.fillLiquid && currentBlock.isLiquid())) {
-							this.current.perform(currentBlock);
+							this.performer.perform(currentBlock);
 						} else {
 							break;
 						}
@@ -55,7 +55,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

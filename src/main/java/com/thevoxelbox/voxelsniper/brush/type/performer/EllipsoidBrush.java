@@ -22,7 +22,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 	}
 
 	private void execute(SnipeData snipeData, Block targetBlock) {
-		this.current.perform(targetBlock);
+		this.performer.perform(targetBlock);
 		double trueOffset = this.istrue ? 0.5 : 0;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -34,20 +34,20 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 				for (double y = 0; y <= this.yRad; y++) {
 					double ySquared = (y / (this.yRad + trueOffset)) * (y / (this.yRad + trueOffset));
 					if (xSquared + ySquared + zSquared <= 1) {
-						this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-						this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-						this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-						this.current.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
-						this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-						this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-						this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-						this.current.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
+						this.performer.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
+						this.performer.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
+						this.performer.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
+						this.performer.perform(this.clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
+						this.performer.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
+						this.performer.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
+						this.performer.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
+						this.performer.perform(this.clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
 					}
 				}
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

@@ -32,12 +32,12 @@ public class VoxelBrush extends AbstractPerformerBrush {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				for (int y = brushSize; y >= -brushSize; y--) {
 					Block targetBlock = this.getTargetBlock();
-					this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + z, targetBlock.getZ() + y));
+					this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + z, targetBlock.getZ() + y));
 				}
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

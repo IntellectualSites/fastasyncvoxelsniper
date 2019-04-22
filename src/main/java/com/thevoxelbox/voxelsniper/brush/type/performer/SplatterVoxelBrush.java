@@ -118,13 +118,13 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 			for (int y = 2 * brushSize; y >= 0; y--) {
 				for (int z = 2 * brushSize; z >= 0; z--) {
 					if (splat[x][y][z] == 1) {
-						this.current.perform(targetBlock.getRelative(-brushSize + x, -brushSize + z, -brushSize + y));
+						this.performer.perform(targetBlock.getRelative(-brushSize + x, -brushSize + z, -brushSize + y));
 					}
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

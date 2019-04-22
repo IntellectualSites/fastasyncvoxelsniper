@@ -122,12 +122,12 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 				double ySquared = Math.pow(y - snipeData.getBrushSize() - 1, 2);
 				for (int z = 2 * snipeData.getBrushSize(); z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - snipeData.getBrushSize() - 1, 2) <= rSquared) {
-						this.current.perform(targetBlock.getRelative(-snipeData.getBrushSize() + x, -snipeData.getBrushSize() + y, -snipeData.getBrushSize() + z));
+						this.performer.perform(targetBlock.getRelative(-snipeData.getBrushSize() + x, -snipeData.getBrushSize() + y, -snipeData.getBrushSize() + z));
 					}
 				}
 			}
 		}
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

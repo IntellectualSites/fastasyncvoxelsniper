@@ -144,7 +144,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					double heronThree = 0.25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), 0.5);
 					double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 					if (barycentric <= 1.1) {
-						this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+						this.performer.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
 					}
 				}
 			} // END X DEPENDENT
@@ -185,7 +185,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					double heronThree = 0.25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), 0.5);
 					double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 					if (barycentric <= 1.1) {
-						this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+						this.performer.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
 					}
 				}
 			} // END Y DEPENDENT
@@ -227,12 +227,12 @@ public class TriangleBrush extends AbstractPerformerBrush {
 					double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 					// VoxelSniper.log.info("Bary: "+barycentric+", hb: "+heronbig+", h1: "+heronone+", h2: "+herontwo+", h3: "+heronthree);
 					if (barycentric <= 1.1) {
-						this.current.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
+						this.performer.perform(this.clampY((int) this.currentCoords[0], (int) this.currentCoords[1], (int) this.currentCoords[2]));
 					}
 				}
 			} // END Z DEPENDENT
 			Sniper owner = snipeData.getOwner();
-			owner.storeUndo(this.current.getUndo());
+			owner.storeUndo(this.performer.getUndo());
 		}
 		// RESET BRUSH
 		this.coordsOne[0] = 0;

@@ -26,15 +26,15 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 			double xSquared = Math.pow(x, 2);
 			for (int z = brushSize; z >= 0; z--) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					this.current.perform(targetBlock.getRelative(x, 0, z));
-					this.current.perform(targetBlock.getRelative(x, 0, -z));
-					this.current.perform(targetBlock.getRelative(-x, 0, z));
-					this.current.perform(targetBlock.getRelative(-x, 0, -z));
+					this.performer.perform(targetBlock.getRelative(x, 0, z));
+					this.performer.perform(targetBlock.getRelative(x, 0, -z));
+					this.performer.perform(targetBlock.getRelative(-x, 0, z));
+					this.performer.perform(targetBlock.getRelative(-x, 0, -z));
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
@@ -44,15 +44,15 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					this.current.perform(targetBlock.getRelative(x, y, 0));
-					this.current.perform(targetBlock.getRelative(x, -y, 0));
-					this.current.perform(targetBlock.getRelative(-x, y, 0));
-					this.current.perform(targetBlock.getRelative(-x, -y, 0));
+					this.performer.perform(targetBlock.getRelative(x, y, 0));
+					this.performer.perform(targetBlock.getRelative(x, -y, 0));
+					this.performer.perform(targetBlock.getRelative(-x, y, 0));
+					this.performer.perform(targetBlock.getRelative(-x, -y, 0));
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void discEastWest(SnipeData snipeData, Block targetBlock) {
@@ -62,15 +62,15 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					this.current.perform(targetBlock.getRelative(0, x, y));
-					this.current.perform(targetBlock.getRelative(0, x, -y));
-					this.current.perform(targetBlock.getRelative(0, -x, y));
-					this.current.perform(targetBlock.getRelative(0, -x, -y));
+					this.performer.perform(targetBlock.getRelative(0, x, y));
+					this.performer.perform(targetBlock.getRelative(0, x, -y));
+					this.performer.perform(targetBlock.getRelative(0, -x, y));
+					this.performer.perform(targetBlock.getRelative(0, -x, -y));
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void pre(SnipeData snipeData, Block targetBlock) {

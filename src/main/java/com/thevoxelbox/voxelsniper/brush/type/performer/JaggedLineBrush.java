@@ -45,18 +45,18 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 			.subtract(originClone);
 		double length = this.targetCoords.distance(this.originCoords);
 		if (length == 0) {
-			this.current.perform(this.targetCoords.toLocation(this.getWorld())
+			this.performer.perform(this.targetCoords.toLocation(this.getWorld())
 				.getBlock());
 		} else {
 			for (BlockIterator iterator = new BlockIterator(this.getWorld(), originClone, direction, 0, NumberConversions.round(length)); iterator.hasNext(); ) {
 				Block block = iterator.next();
 				for (int i = 0; i < this.recursion; i++) {
-					this.current.perform(this.clampY(Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread)));
+					this.performer.perform(this.clampY(Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread)));
 				}
 			}
 		}
 		v.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

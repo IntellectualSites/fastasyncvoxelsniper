@@ -17,9 +17,9 @@ public class SnipeBrush extends AbstractPerformerBrush {
 
 	@Override
 	public final void arrow(SnipeData snipeData) {
-		this.current.perform(this.getTargetBlock());
+		this.performer.perform(this.getTargetBlock());
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
@@ -28,9 +28,9 @@ public class SnipeBrush extends AbstractPerformerBrush {
 		if (lastBlock == null) {
 			return;
 		}
-		this.current.perform(lastBlock);
+		this.performer.perform(lastBlock);
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

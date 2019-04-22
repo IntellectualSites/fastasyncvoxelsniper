@@ -108,7 +108,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 											.getType()
 											.isEmpty()) {
 											// fills down as many layers as you specify in parameters
-											this.current.perform(this.clampY(targetBlock.getX() + x, y - i + this.yOffset, targetBlock.getZ() + z));
+											this.performer.perform(this.clampY(targetBlock.getX() + x, y - i + this.yOffset, targetBlock.getZ() + z));
 											// stop it from checking any other blocks in this vertical 1x1 column.
 											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1;
 										}
@@ -132,7 +132,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 													.getType()
 													.isEmpty()) {
 													// fills down as many layers as you specify in parameters
-													this.current.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
+													this.performer.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
 													// stop it from checking any other blocks in this vertical 1x1 column.
 													memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1;
 												}
@@ -149,7 +149,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void splatterOverlayTwo(SnipeData snipeData) {
@@ -213,7 +213,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 									if (this.allBlocks) {
 										int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 										for (int i = 1; (i < depth + 1); i++) {
-											this.current.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+											this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
@@ -235,7 +235,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 											case 78:
 												int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 												for (int i = 1; (i < depth + 1); i++) {
-													this.current.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
+													this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
 													// in parameters
 													memory[x + snipeData.getBrushSize()][z + snipeData.getBrushSize()] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 												}
@@ -252,7 +252,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

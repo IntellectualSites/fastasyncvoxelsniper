@@ -25,12 +25,12 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 			for (int y = v.getBrushSize(); y >= -v.getBrushSize(); y--) {
 				int sum = this.useWorldCoordinates ? target.getX() + x + target.getZ() + y : x + y;
 				if (sum % 2 != 0) {
-					this.current.perform(this.clampY(target.getX() + x, target.getY(), target.getZ() + y));
+					this.performer.perform(this.clampY(target.getX() + x, target.getY(), target.getZ() + y));
 				}
 			}
 		}
 		v.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

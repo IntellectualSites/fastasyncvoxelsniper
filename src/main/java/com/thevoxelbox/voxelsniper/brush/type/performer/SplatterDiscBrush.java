@@ -105,12 +105,12 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
 			double xSquared = Math.pow(x - snipeData.getBrushSize() - 1, 2);
 			for (int y = 2 * snipeData.getBrushSize(); y >= 0; y--) {
 				if (splat[x][y] == 1 && xSquared + Math.pow(y - snipeData.getBrushSize() - 1, 2) <= rSquared) {
-					this.current.perform(targetBlock.getRelative(x - snipeData.getBrushSize(), 0, y - snipeData.getBrushSize()));
+					this.performer.perform(targetBlock.getRelative(x - snipeData.getBrushSize(), 0, y - snipeData.getBrushSize()));
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

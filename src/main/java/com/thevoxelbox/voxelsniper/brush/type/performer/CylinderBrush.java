@@ -45,16 +45,16 @@ public class CylinderBrush extends AbstractPerformerBrush {
 				double xSquared = Math.pow(x, 2);
 				for (int z = brushSize; z >= 0; z--) {
 					if ((xSquared + Math.pow(z, 2)) <= bSquared) {
-						this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
-						this.current.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() - z));
-						this.current.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() + z));
-						this.current.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() - z));
+						this.performer.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
+						this.performer.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() - z));
+						this.performer.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() + z));
+						this.performer.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() - z));
 					}
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

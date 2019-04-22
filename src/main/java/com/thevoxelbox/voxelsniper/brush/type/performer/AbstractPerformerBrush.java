@@ -20,14 +20,10 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
  */
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
 
-	protected Performer current = new MaterialPerformer();
+	protected Performer performer = new MaterialPerformer();
 
 	public AbstractPerformerBrush(String name) {
 		super(name);
-	}
-
-	public Performer getCurrentPerformer() {
-		return this.current;
 	}
 
 	@Override
@@ -36,7 +32,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 		if (Performers.has(handle)) {
 			Performer performer = Performers.getPerformer(handle);
 			if (performer != null) {
-				this.current = performer;
+				this.performer = performer;
 				Sniper owner = snipeData.getOwner();
 				String currentToolId = owner.getCurrentToolId();
 				if (currentToolId == null) {
@@ -44,7 +40,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 				}
 				Messages messages = snipeData.getMessages();
 				info(messages);
-				this.current.info(messages);
+				this.performer.info(messages);
 				if (args.length > 1) {
 					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
 					parameters(hackTheArray(additionalArguments), snipeData);
@@ -55,6 +51,17 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 		} else {
 			parameters(hackTheArray(args), snipeData);
 		}
+	}
+
+	@Override
+	public void showInfo(Messages messages) {
+		this.performer.info(messages);
+	}
+
+	@Override
+	public void initPerformer(SnipeData snipeData) {
+		this.performer.init(snipeData);
+		this.performer.setUndo();
 	}
 
 	/**
@@ -72,14 +79,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 		return returnValue;
 	}
 
-	@Override
-	public void initPerformer(SnipeData snipeData) {
-		this.current.init(snipeData);
-		this.current.setUndo();
-	}
-
-	@Override
-	public void showInfo(Messages messages) {
-		this.current.info(messages);
+	public Performer getPerformer() {
+		return this.performer;
 	}
 }

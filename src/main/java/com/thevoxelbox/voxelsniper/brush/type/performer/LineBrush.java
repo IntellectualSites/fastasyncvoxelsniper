@@ -49,16 +49,16 @@ public class LineBrush extends AbstractPerformerBrush {
 			.subtract(originClone);
 		double length = this.targetCoords.distance(this.originCoords);
 		if (length == 0) {
-			this.current.perform(this.targetCoords.toLocation(this.targetWorld)
+			this.performer.perform(this.targetCoords.toLocation(this.targetWorld)
 				.getBlock());
 		} else {
 			for (BlockIterator blockIterator = new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length)); blockIterator.hasNext(); ) {
 				Block currentBlock = blockIterator.next();
-				this.current.perform(currentBlock);
+				this.performer.perform(currentBlock);
 			}
 		}
 		v.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

@@ -43,15 +43,15 @@ public class EllipseBrush extends AbstractPerformerBrush {
 						switch (face) {
 							case NORTH:
 							case SOUTH:
-								this.current.perform(targetBlock.getRelative(0, x, y));
+								this.performer.perform(targetBlock.getRelative(0, x, y));
 								break;
 							case EAST:
 							case WEST:
-								this.current.perform(targetBlock.getRelative(x, y, 0));
+								this.performer.perform(targetBlock.getRelative(x, y, 0));
 								break;
 							case UP:
 							case DOWN:
-								this.current.perform(targetBlock.getRelative(x, 0, y));
+								this.performer.perform(targetBlock.getRelative(x, 0, y));
 								break;
 							default:
 								break;
@@ -66,13 +66,13 @@ public class EllipseBrush extends AbstractPerformerBrush {
 			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void ellipseFill(SnipeData snipeData, Block targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
-		this.current.perform(targetBlock);
+		this.performer.perform(targetBlock);
 		try {
 			if (ix >= iy) { // Need this unless you want weird holes
 				for (iy = this.yscl; iy > 0; iy--) {
@@ -86,15 +86,15 @@ public class EllipseBrush extends AbstractPerformerBrush {
 								switch (face) {
 									case NORTH:
 									case SOUTH:
-										this.current.perform(targetBlock.getRelative(0, x, y));
+										this.performer.perform(targetBlock.getRelative(0, x, y));
 										break;
 									case EAST:
 									case WEST:
-										this.current.perform(targetBlock.getRelative(x, y, 0));
+										this.performer.perform(targetBlock.getRelative(x, y, 0));
 										break;
 									case UP:
 									case DOWN:
-										this.current.perform(targetBlock.getRelative(x, 0, y));
+										this.performer.perform(targetBlock.getRelative(x, 0, y));
 										break;
 									default:
 										break;
@@ -119,15 +119,15 @@ public class EllipseBrush extends AbstractPerformerBrush {
 								switch (face) {
 									case NORTH:
 									case SOUTH:
-										this.current.perform(targetBlock.getRelative(0, x, y));
+										this.performer.perform(targetBlock.getRelative(0, x, y));
 										break;
 									case EAST:
 									case WEST:
-										this.current.perform(targetBlock.getRelative(x, y, 0));
+										this.performer.perform(targetBlock.getRelative(x, y, 0));
 										break;
 									case UP:
 									case DOWN:
-										this.current.perform(targetBlock.getRelative(x, 0, y));
+										this.performer.perform(targetBlock.getRelative(x, 0, y));
 										break;
 									default:
 										break;
@@ -145,7 +145,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 			snipeData.sendMessage(ChatColor.RED + "Invalid target.");
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void execute(SnipeData snipeData, Block targetBlock) {

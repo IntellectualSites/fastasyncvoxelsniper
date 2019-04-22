@@ -19,31 +19,31 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 	private void disc(SnipeData snipeData, Block targetBlock) {
 		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
 			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
-				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
+				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void discNorthSouth(SnipeData snipeData, Block targetBlock) {
 		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
 			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
-				this.current.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
+				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void discEastWest(SnipeData snipeData, Block targetBlock) {
 		for (int x = snipeData.getBrushSize(); x >= -snipeData.getBrushSize(); x--) {
 			for (int y = snipeData.getBrushSize(); y >= -snipeData.getBrushSize(); y--) {
-				this.current.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
+				this.performer.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private void pre(SnipeData snipeData, BlockFace blockFace, Block targetBlock) {

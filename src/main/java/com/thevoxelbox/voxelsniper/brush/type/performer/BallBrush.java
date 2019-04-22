@@ -29,47 +29,47 @@ public class BallBrush extends AbstractPerformerBrush {
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		this.current.perform(targetBlock);
+		this.performer.perform(targetBlock);
 		for (int z = 1; z <= brushSize; z++) {
 			double zSquared = Math.pow(z, 2);
-			this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
-			this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
-			this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
-			this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ));
-			this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
-			this.current.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
+			this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
+			this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
+			this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
+			this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ));
+			this.performer.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
+			this.performer.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
 			for (int x = 1; x <= brushSize; x++) {
 				double xSquared = Math.pow(x, 2);
 				if (zSquared + xSquared <= brushSizeSquared) {
-					this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
-					this.current.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
-					this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ + x));
-					this.current.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ - x));
-					this.current.perform(this.clampY(blockPositionX + z, blockPositionY + x, blockPositionZ));
-					this.current.perform(this.clampY(blockPositionX + z, blockPositionY - x, blockPositionZ));
-					this.current.perform(this.clampY(blockPositionX - z, blockPositionY + x, blockPositionZ));
-					this.current.perform(this.clampY(blockPositionX - z, blockPositionY - x, blockPositionZ));
-					this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ + x));
-					this.current.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ - x));
-					this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ + x));
-					this.current.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ - x));
+					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
+					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
+					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ + x));
+					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ - x));
+					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY + x, blockPositionZ));
+					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY - x, blockPositionZ));
+					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY + x, blockPositionZ));
+					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY - x, blockPositionZ));
+					this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ + x));
+					this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ - x));
+					this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ + x));
+					this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ - x));
 				}
 				for (int y = 1; y <= brushSize; y++) {
 					if ((xSquared + Math.pow(y, 2) + zSquared) <= brushSizeSquared) {
-						this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
-						this.current.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
-						this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
-						this.current.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
-						this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
-						this.current.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
-						this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
-						this.current.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
+						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
+						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
+						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
+						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
+						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
+						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
+						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
+						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
 					}
 				}
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

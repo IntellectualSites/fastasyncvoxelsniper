@@ -35,12 +35,12 @@ public class DiscBrush extends AbstractPerformerBrush {
 			for (int z = -snipeData.getBrushSize(); z <= snipeData.getBrushSize(); z++) {
 				currentPoint.setZ(centerPoint.getZ() + z);
 				if (centerPoint.distanceSquared(currentPoint) <= radiusSquared) {
-					this.current.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
+					this.performer.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
 				}
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

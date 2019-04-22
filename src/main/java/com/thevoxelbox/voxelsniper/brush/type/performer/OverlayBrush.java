@@ -41,7 +41,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 								for (int currentDepth = y; y - currentDepth < this.depth; currentDepth--) {
 									Material currentBlockType = this.getBlockType(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z);
 									if (isOverrideableMaterial(currentBlockType)) {
-										this.current.perform(this.clampY(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z));
+										this.performer.perform(this.clampY(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z));
 									}
 								}
 								break;
@@ -52,7 +52,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	private boolean isIgnoredBlock(Material material) {
@@ -114,7 +114,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 											case 49:
 											case 78:
 												for (int d = 1; (d < this.depth + 1); d++) {
-													this.current.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify
+													this.performer.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify
 													// in parameters
 													memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 												}
@@ -125,7 +125,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 										}
 									} else {
 										for (int d = 1; (d < this.depth + 1); d++) {
-											this.current.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify in
+											this.performer.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
@@ -139,7 +139,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 			}
 		}
 		Sniper owner = snipeData.getOwner();
-		owner.storeUndo(this.current.getUndo());
+		owner.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

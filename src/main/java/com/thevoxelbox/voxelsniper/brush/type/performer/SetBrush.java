@@ -55,7 +55,7 @@ public class SetBrush extends AbstractPerformerBrush {
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
-							this.current.perform(clampY(x, y, z));
+							this.performer.perform(clampY(x, y, z));
 						}
 					}
 				}
@@ -72,7 +72,7 @@ public class SetBrush extends AbstractPerformerBrush {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
 			Sniper owner = snipeData.getOwner();
-			owner.storeUndo(this.current.getUndo());
+			owner.storeUndo(this.performer.getUndo());
 		}
 	}
 
@@ -86,7 +86,7 @@ public class SetBrush extends AbstractPerformerBrush {
 			snipeData.sendMessage(ChatColor.GRAY + "Point one");
 		} else {
 			Sniper owner = snipeData.getOwner();
-			owner.storeUndo(this.current.getUndo());
+			owner.storeUndo(this.performer.getUndo());
 		}
 	}
 

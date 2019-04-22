@@ -117,14 +117,14 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 					double centerConstant = normalVector.getX() * (circumcenter.getX() + x + 0.5) + normalVector.getY() * (circumcenter.getY() + y + 0.5) + normalVector.getZ() * (circumcenter.getZ() + z + 0.5);
 					// Check if point is within sphere and on plane (some tolerance given)
 					if (tempDistance <= radius && (Math.abs(cornerConstant - planeConstant) < this.tolerance.getValue() || Math.abs(centerConstant - planeConstant) < this.tolerance.getValue())) {
-						this.current.perform(this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
+						this.performer.perform(this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
 					}
 				}
 			}
 		}
 		snipeData.sendMessage(ChatColor.GREEN + "Done.");
 		snipeData.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 		// Reset Brush
 		this.coordsOne = null;
 		this.coordsTwo = null;

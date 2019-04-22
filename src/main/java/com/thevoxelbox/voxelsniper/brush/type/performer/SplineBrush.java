@@ -89,10 +89,10 @@ public class SplineBrush extends AbstractPerformerBrush {
 			return;
 		}
 		for (Point point : this.spline) {
-			this.current.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
+			this.performer.perform(this.clampY(point.getX(), point.getY(), point.getZ()));
 		}
 		v.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

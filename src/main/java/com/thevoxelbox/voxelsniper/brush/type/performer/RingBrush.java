@@ -29,15 +29,15 @@ public class RingBrush extends AbstractPerformerBrush {
 			for (int z = brushSize; z >= 0; z--) {
 				double ySquared = Math.pow(z, 2);
 				if ((xSquared + ySquared) <= outerSquared && (xSquared + ySquared) >= innerSquared) {
-					this.current.perform(targetBlock.getRelative(x, 0, z));
-					this.current.perform(targetBlock.getRelative(x, 0, -z));
-					this.current.perform(targetBlock.getRelative(-x, 0, z));
-					this.current.perform(targetBlock.getRelative(-x, 0, -z));
+					this.performer.perform(targetBlock.getRelative(x, 0, z));
+					this.performer.perform(targetBlock.getRelative(x, 0, -z));
+					this.performer.perform(targetBlock.getRelative(-x, 0, z));
+					this.performer.perform(targetBlock.getRelative(-x, 0, -z));
 				}
 			}
 		}
 		v.getOwner()
-			.storeUndo(this.current.getUndo());
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
