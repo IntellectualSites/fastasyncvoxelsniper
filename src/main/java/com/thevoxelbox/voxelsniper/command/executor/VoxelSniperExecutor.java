@@ -56,15 +56,15 @@ public class VoxelSniperExecutor implements CommandExecutor {
 						sender.sendMessage("Can't parse number.");
 						return;
 					}
-					if (range < 0) {
-						sender.sendMessage("Negative values are not allowed.");
+					if (range < 1) {
+						sender.sendMessage("Values less than 1 are not allowed.");
 					}
-					toolkitProperties.setRange(range);
-					toolkitProperties.setRanged(true);
+					toolkitProperties.setBlockTracerRange(range);
 				} else {
-					toolkitProperties.setRanged(!toolkitProperties.isRanged());
+					toolkitProperties.setBlockTracerRange(0);
 				}
-				sender.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + (toolkitProperties.isRanged() ? "on" : "off") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + toolkitProperties.getRange());
+				Integer blockTracerRange = toolkitProperties.getBlockTracerRange();
+				sender.sendMessage(ChatColor.GOLD + "Distance Restriction toggled " + ChatColor.DARK_RED + (blockTracerRange == null ? "off" : "on") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + blockTracerRange);
 				return;
 			} else if (firstArgument.equalsIgnoreCase("perf")) {
 				sender.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");

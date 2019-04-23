@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,7 +44,8 @@ public class VoxelExecutor implements CommandExecutor {
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 		List<Material> liteSniperRestrictedMaterials = config.getLitesniperRestrictedMaterials();
 		if (arguments.length == 0) {
-			Block targetBlock = player.getTargetBlock(250);
+			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+			Block targetBlock = blockTracer.getTargetBlock();
 			if (targetBlock != null) {
 				Material targetBlockType = targetBlock.getType();
 				if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(targetBlockType)) {

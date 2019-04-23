@@ -12,6 +12,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -141,13 +142,13 @@ public class Sniper {
 			return false;
 		}
 		ToolkitProperties toolkitProperties = toolkit.getProperties();
-		int range = toolkitProperties.getRange();
+		BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+		Block targetBlock = clickedBlock == null ? blockTracer.getTargetBlock() : clickedBlock;
 		if (player.isSneaking()) {
-			Block targetBlock = clickedBlock == null ? toolkitProperties.isRanged() ? player.getTargetBlock(range) : player.getTargetBlock(120) : clickedBlock;
 			Messages messages = toolkitProperties.getMessages();
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 				if (toolAction == ToolAction.ARROW) {
-					if (targetBlock == null) {
+					if (targetBlock.isEmpty()) {
 						toolkitProperties.resetBlockData();
 					} else {
 						Material type = targetBlock.getType();
@@ -156,7 +157,7 @@ public class Sniper {
 					messages.blockDataType();
 					return true;
 				} else if (toolAction == ToolAction.GUNPOWDER) {
-					if (targetBlock == null) {
+					if (targetBlock.isEmpty()) {
 						toolkitProperties.resetBlockData();
 					} else {
 						BlockData blockData = targetBlock.getBlockData();
@@ -191,22 +192,9 @@ public class Sniper {
 			return false;
 		} else {
 			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-				Block targetBlock;
-				Block lastBlock;
-				if (clickedBlock == null) {
-					targetBlock = toolkitProperties.isRanged() ? player.getTargetBlock(range) : player.getTargetBlock(120);
-					lastBlock = player.getTargetBlock(120);
-					if (targetBlock == null || targetBlock.isEmpty() || lastBlock == null || lastBlock.isEmpty()) {
-						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
-						return true;
-					}
-				} else {
-					targetBlock = clickedBlock;
-					lastBlock = clickedBlock.getRelative(clickedBlockFace);
-					if (lastBlock.isEmpty()) {
-						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
-						return true;
-					}
+				if (targetBlock.isEmpty()) {
+					player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+					return true;
 				}
 				Brush currentBrush = toolkit.getCurrentBrush();
 				if (currentBrush == null) {
@@ -216,6 +204,7 @@ public class Sniper {
 					PerformerBrush performerBrush = (PerformerBrush) currentBrush;
 					performerBrush.initPerformer(toolkitProperties);
 				}
+				Block lastBlock = clickedBlock == null ? blockTracer.getLastBlock() : clickedBlock.getRelative(clickedBlockFace);
 				return currentBrush.perform(toolAction, toolkitProperties, targetBlock, lastBlock);
 			}
 		}

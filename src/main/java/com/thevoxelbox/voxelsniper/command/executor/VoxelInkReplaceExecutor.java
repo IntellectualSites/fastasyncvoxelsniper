@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -39,12 +40,9 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
 		}
 		BlockData dataValue;
 		if (arguments.length == 0) {
-			Block targetBlock = player.getTargetBlock(250);
-			if (targetBlock != null) {
-				dataValue = targetBlock.getBlockData();
-			} else {
-				return;
-			}
+			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+			Block targetBlock = blockTracer.getTargetBlock();
+			dataValue = targetBlock.getBlockData();
 		} else {
 			try {
 				dataValue = Bukkit.createBlockData(arguments[0]);

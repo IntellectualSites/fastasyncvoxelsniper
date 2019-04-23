@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -98,28 +99,27 @@ public abstract class AbstractBrush implements Brush {
 				toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
-			if (ownerToolkitProperties.isLightningEnabled()) {
-				targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
-			}
-			return true;
 		} else {
 			Player ownerPlayer = owner.getPlayer();
-			this.targetBlock = ownerToolkitProperties.isRanged() ? ownerPlayer.getTargetBlock(ownerToolkitProperties.getRange()) : ownerPlayer.getTargetBlock(250);
-			if (this.targetBlock != null) {
-				this.lastBlock = ownerPlayer.getTargetBlock(250);
-				if (this.lastBlock == null) {
-					toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
-					return false;
-				}
-				if (ownerToolkitProperties.isLightningEnabled()) {
-					targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
-				}
-				return true;
-			} else {
+			if (ownerPlayer == null) {
+				return false;
+			}
+			BlockTracer blockTracer = ownerToolkitProperties.createBlockTracer(ownerPlayer);
+			this.targetBlock = blockTracer.getTargetBlock();
+			if (this.targetBlock.isEmpty()) {
+				toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+				return false;
+			}
+			this.lastBlock = blockTracer.getLastBlock();
+			if (this.lastBlock == null) {
 				toolkitProperties.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 				return false;
 			}
 		}
+		if (ownerToolkitProperties.isLightningEnabled()) {
+			targetBlockWorld.strikeLightning(this.targetBlock.getLocation());
+		}
+		return true;
 	}
 
 	@Override

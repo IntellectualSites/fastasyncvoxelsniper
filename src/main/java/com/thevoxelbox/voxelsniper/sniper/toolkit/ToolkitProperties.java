@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.sniper.toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -25,8 +26,8 @@ public class ToolkitProperties {
 	private int brushSize;
 	private int voxelHeight;
 	private int cylinderCenter;
-	private int range;
-	private boolean ranged;
+	@Nullable
+	private Integer blockTracerRange;
 	private boolean lightningEnabled;
 	private List<BlockData> voxelList = new ArrayList<>();
 
@@ -82,8 +83,7 @@ public class ToolkitProperties {
 		this.brushSize = DEFAULT_BRUSH_SIZE;
 		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
 		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
-		this.range = 0;
-		this.ranged = false;
+		this.blockTracerRange = null;
 		this.lightningEnabled = false;
 		this.voxelList.clear();
 	}
@@ -110,6 +110,11 @@ public class ToolkitProperties {
 
 	public void setReplaceBlockDataType(Material type) {
 		this.replaceBlockData = type.createBlockData();
+	}
+
+	public BlockTracer createBlockTracer(Player player) {
+		int distance = this.blockTracerRange == null ? Bukkit.getViewDistance() * 16 - this.brushSize : this.blockTracerRange;
+		return new BlockTracer(player, distance);
 	}
 
 	public void addToVoxelList(BlockData blockData) {
@@ -168,20 +173,13 @@ public class ToolkitProperties {
 		this.cylinderCenter = cylinderCenter;
 	}
 
-	public int getRange() {
-		return this.range;
+	@Nullable
+	public Integer getBlockTracerRange() {
+		return this.blockTracerRange;
 	}
 
-	public void setRange(int range) {
-		this.range = range;
-	}
-
-	public boolean isRanged() {
-		return this.ranged;
-	}
-
-	public void setRanged(boolean ranged) {
-		this.ranged = ranged;
+	public void setBlockTracerRange(@Nullable Integer blockTracerRange) {
+		this.blockTracerRange = blockTracerRange;
 	}
 
 	public boolean isLightningEnabled() {

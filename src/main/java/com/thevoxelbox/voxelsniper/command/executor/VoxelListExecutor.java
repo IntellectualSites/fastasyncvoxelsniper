@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -39,7 +40,8 @@ public class VoxelListExecutor implements CommandExecutor {
 		}
 		Messages messages = toolkitProperties.getMessages();
 		if (arguments.length == 0) {
-			Block targetBlock = player.getTargetBlock(250);
+			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+			Block targetBlock = blockTracer.getTargetBlock();
 			if (targetBlock == null) {
 				return;
 			}

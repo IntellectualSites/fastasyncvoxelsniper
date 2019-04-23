@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -38,7 +39,8 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 			return;
 		}
 		if (arguments.length == 0) {
-			Block targetBlock = player.getTargetBlock(250);
+			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+			Block targetBlock = blockTracer.getTargetBlock();
 			if (targetBlock != null) {
 				toolkitProperties.setReplaceBlockDataType(targetBlock.getType());
 				Messages messages = toolkitProperties.getMessages();
