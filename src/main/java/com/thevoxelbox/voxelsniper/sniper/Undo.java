@@ -1,12 +1,10 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -25,32 +23,8 @@ import org.bukkit.util.Vector;
  */
 public class Undo {
 
-	private static final Set<Material> FALLING_MATERIALS = EnumSet.of(Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA);
-	private static final Set<Material> FALLOFF_MATERIALS = EnumSet.of(Material.LEGACY_SAPLING, Material.LEGACY_BED_BLOCK, Material.LEGACY_POWERED_RAIL, Material.LEGACY_DETECTOR_RAIL, Material.LEGACY_LONG_GRASS, Material.LEGACY_DEAD_BUSH, Material.LEGACY_PISTON_EXTENSION, Material.LEGACY_YELLOW_FLOWER, Material.LEGACY_RED_ROSE, Material.LEGACY_BROWN_MUSHROOM, Material.LEGACY_RED_MUSHROOM, Material.LEGACY_TORCH, Material.LEGACY_FIRE, Material.LEGACY_CROPS, Material.LEGACY_SIGN_POST, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_LADDER, Material.LEGACY_RAILS, Material.LEGACY_WALL_SIGN, Material.LEGACY_LEVER, Material.LEGACY_STONE_PLATE, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_WOOD_PLATE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_REDSTONE_WIRE, Material.LEGACY_STONE_BUTTON, Material.LEGACY_SNOW, Material.LEGACY_CACTUS, Material.LEGACY_SUGAR_CANE_BLOCK, Material.LEGACY_CAKE_BLOCK, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_TRAP_DOOR, Material.LEGACY_PUMPKIN_STEM, Material.LEGACY_MELON_STEM, Material.LEGACY_VINE, Material.LEGACY_WATER_LILY, Material.LEGACY_NETHER_WARTS);
-
-	private Set<Vector> containing;
-	private List<BlockState> all;
-	private List<BlockState> falloff;
-	private List<BlockState> dropDown;
-
-	/**
-	 * Default constructor of a Undo container.
-	 */
-	public Undo() {
-		this.containing = new HashSet<>();
-		this.all = new LinkedList<>();
-		this.falloff = new LinkedList<>();
-		this.dropDown = new LinkedList<>();
-	}
-
-	/**
-	 * Get the number of blocks in the collection.
-	 *
-	 * @return size of the Undo collection
-	 */
-	public int getSize() {
-		return this.containing.size();
-	}
+	private Set<Vector> positions = new HashSet<>();
+	private List<BlockState> blockStates = new LinkedList<>();
 
 	/**
 	 * Adds a Block to the collection.
@@ -60,35 +34,33 @@ public class Undo {
 	public void put(Block block) {
 		Location location = block.getLocation();
 		Vector position = location.toVector();
-		if (this.containing.contains(position)) {
+		if (this.positions.contains(position)) {
 			return;
 		}
-		this.containing.add(position);
-		Material type = block.getType();
+		this.positions.add(position);
 		BlockState state = block.getState();
-		if (FALLING_MATERIALS.contains(type)) {
-			this.dropDown.add(state);
-		} else if (FALLOFF_MATERIALS.contains(type)) {
-			this.falloff.add(state);
-		} else {
-			this.all.add(state);
-		}
+		this.blockStates.add(state);
+	}
+
+	public boolean isEmpty() {
+		return this.positions.isEmpty();
 	}
 
 	/**
-	 * Set the blockstates of all recorded blocks back to the state when they
+	 * Get the number of blocks in the collection.
+	 *
+	 * @return size of the Undo collection
+	 */
+	public int getSize() {
+		return this.positions.size();
+	}
+
+	/**
+	 * Set the block states of all recorded blocks back to the state when they
 	 * were inserted.
 	 */
 	public void undo() {
-		for (BlockState blockState : this.all) {
-			blockState.update(true, false);
-			updateSpecialBlocks(blockState);
-		}
-		for (BlockState blockState : this.falloff) {
-			blockState.update(true, false);
-			updateSpecialBlocks(blockState);
-		}
-		for (BlockState blockState : this.dropDown) {
+		for (BlockState blockState : this.blockStates) {
 			blockState.update(true, false);
 			updateSpecialBlocks(blockState);
 		}

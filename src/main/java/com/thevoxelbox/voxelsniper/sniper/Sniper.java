@@ -8,11 +8,11 @@ import java.util.UUID;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -211,38 +211,31 @@ public class Sniper {
 		return false;
 	}
 
-	public void storeUndo(@Nullable Undo undo) {
+	public void storeUndo(Undo undo) {
 		if (this.undoCacheSize <= 0) {
 			return;
 		}
-		if (undo != null && undo.getSize() > 0) {
-			while (this.undoList.size() >= this.undoCacheSize) {
-				this.undoList.pollLast();
-			}
-			this.undoList.push(undo);
+		if (undo.isEmpty()) {
+			return;
 		}
-	}
-
-	public void undo() {
-		undo(1);
+		while (this.undoList.size() >= this.undoCacheSize) {
+			this.undoList.pollLast();
+		}
+		this.undoList.push(undo);
 	}
 
 	public void undo(int amount) {
 		if (this.undoList.isEmpty()) {
 			sendMessage(ChatColor.GREEN + "There's nothing to undo.");
-		} else {
-			int sum = 0;
-			for (int x = 0; x < amount && !this.undoList.isEmpty(); x++) {
-				Undo undo = this.undoList.pop();
-				if (undo != null) {
-					undo.undo();
-					sum += undo.getSize();
-				} else {
-					break;
-				}
-			}
-			sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
+			return;
 		}
+		int sum = 0;
+		for (int index = 0; index < amount && !this.undoList.isEmpty(); index++) {
+			Undo undo = this.undoList.pop();
+			undo.undo();
+			sum += undo.getSize();
+		}
+		sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
 	}
 
 	public void displayInfo() {

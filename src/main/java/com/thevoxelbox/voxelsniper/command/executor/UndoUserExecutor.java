@@ -25,7 +25,10 @@ public class UndoUserExecutor implements CommandExecutor {
 			sender.sendMessage(ChatColor.GREEN + "Player not found.");
 			return;
 		}
-		Sniper sniperForPlayer = sniperRegistry.getSniper(player);
-		sniperForPlayer.undo();
+		Sniper sniper = sniperRegistry.getSniper(player);
+		if (sniper == null) {
+			return;
+		}
+		sniper.undo(1);
 	}
 }

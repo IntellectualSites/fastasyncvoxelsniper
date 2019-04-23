@@ -21,6 +21,9 @@ public class UndoExecutor implements CommandExecutor {
 		SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
 		Player player = (Player) sender;
 		Sniper sniper = sniperRegistry.getSniper(player);
+		if (sniper == null) {
+			return;
+		}
 		if (arguments.length == 1) {
 			Integer amount = NumericParser.parseInteger(arguments[0]);
 			if (amount == null) {
@@ -28,8 +31,8 @@ public class UndoExecutor implements CommandExecutor {
 				return;
 			}
 			sniper.undo(amount);
-		} else {
-			sniper.undo();
+			return;
 		}
+		sniper.undo(1);
 	}
 }
