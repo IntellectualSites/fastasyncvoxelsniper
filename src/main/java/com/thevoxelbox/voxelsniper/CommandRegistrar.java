@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.command.executor.BrushExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.BrushToolkitExecutor;
-import com.thevoxelbox.voxelsniper.command.executor.DebugExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.DefaultExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.GotoExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.PaintExecutor;
@@ -48,7 +47,6 @@ public class CommandRegistrar {
 		registerUndoCommand();
 		registerUndoUserCommand();
 		registerVoxelCommand();
-		registerDebugCommand();
 	}
 
 	private void registerBrushCommand() {
@@ -273,16 +271,6 @@ public class CommandRegistrar {
 			.sender(Player.class)
 			.build();
 		VoxelExecutor executor = new VoxelExecutor(this.plugin);
-		this.registry.register(properties, executor);
-	}
-
-	@Deprecated
-	private void registerDebugCommand() {
-		CommandProperties properties = CommandProperties.builder()
-			.name("debug")
-			.sender(Player.class)
-			.build();
-		DebugExecutor executor = new DebugExecutor(this.plugin);
 		this.registry.register(properties, executor);
 	}
 }
