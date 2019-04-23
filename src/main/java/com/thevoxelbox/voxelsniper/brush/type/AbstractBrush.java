@@ -55,15 +55,15 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	@Override
-	public boolean perform(ToolAction action, ToolkitProperties data, Block targetBlock, Block lastBlock) {
+	public boolean perform(ToolAction action, ToolkitProperties toolkitProperties, Block targetBlock, Block lastBlock) {
 		this.targetBlock = targetBlock;
 		this.lastBlock = lastBlock;
 		switch (action) {
 			case ARROW:
-				arrow(data);
+				arrow(toolkitProperties);
 				return true;
 			case GUNPOWDER:
-				powder(data);
+				powder(toolkitProperties);
 				return true;
 			default:
 				return false;
@@ -130,11 +130,6 @@ public abstract class AbstractBrush implements Brush {
 	@Override
 	public final void setName(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public String getBrushCategory() {
-		return "General";
 	}
 
 	/**

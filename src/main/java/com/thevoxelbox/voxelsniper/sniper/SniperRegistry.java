@@ -10,7 +10,8 @@ public class SniperRegistry {
 
 	private Map<UUID, Sniper> snipers = new HashMap<>();
 
-	public void registerSniper(UUID uuid, Sniper sniper) {
+	public void register(Sniper sniper) {
+		UUID uuid = sniper.getUuid();
 		this.snipers.put(uuid, sniper);
 	}
 

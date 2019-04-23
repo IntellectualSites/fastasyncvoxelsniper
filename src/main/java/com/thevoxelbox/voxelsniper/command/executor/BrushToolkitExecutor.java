@@ -53,7 +53,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 				ToolkitProperties properties = toolkit.getProperties();
 				properties.setOwner(sniper);
 			}
-			toolkit.addAction(itemType, action);
+			toolkit.addToolAction(itemType, action);
 			sniper.addToolkit(toolkit);
 			sender.sendMessage(itemType.name() + " has been assigned to '" + toolkitName + "' as action " + action.name() + ".");
 			return;
@@ -80,7 +80,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 				sender.sendMessage("Can't unassign default tool.");
 				return;
 			}
-			toolkit.removeAction(material);
+			toolkit.removeToolAction(material);
 			return;
 		}
 		sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");

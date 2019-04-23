@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 /**
  * @author Voxel
  */
-public interface PerformerBrush {
+public interface PerformerBrush extends Brush {
 
 	void parse(String[] args, ToolkitProperties toolkitProperties);
 

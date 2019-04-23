@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushCreator;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,11 +13,11 @@ public class Toolkit {
 
 	private String toolkitName;
 	@Nullable
-	private Class<? extends Brush> currentBrushType;
+	private BrushProperties currentBrushProperties;
 	@Nullable
-	private Class<? extends Brush> previousBrushType;
+	private BrushProperties previousBrushProperties;
 	private Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
-	private Map<Class<? extends Brush>, Brush> brushes = new HashMap<>();
+	private Map<BrushProperties, Brush> brushes = new HashMap<>();
 	private ToolkitProperties properties = new ToolkitProperties();
 
 	public Toolkit(String toolkitName) {
@@ -25,67 +25,52 @@ public class Toolkit {
 	}
 
 	public void reset() {
-		this.currentBrushType = null;
-		this.previousBrushType = null;
+		this.currentBrushProperties = null;
+		this.previousBrushProperties = null;
 		this.brushes.clear();
+		this.properties.reset();
 	}
 
-	public void addAction(Material itemType, ToolAction action) {
-		this.toolActions.put(itemType, action);
+	public void addToolAction(Material toolMaterial, ToolAction action) {
+		this.toolActions.put(toolMaterial, action);
 	}
 
-	public boolean hasAction(Material itemType) {
-		return this.toolActions.containsKey(itemType);
+	public boolean hasToolAction(Material toolMaterial) {
+		return this.toolActions.containsKey(toolMaterial);
 	}
 
 	@Nullable
-	public ToolAction getAction(Material itemType) {
-		return this.toolActions.get(itemType);
+	public ToolAction getToolAction(Material toolMaterial) {
+		return this.toolActions.get(toolMaterial);
 	}
 
-	public void removeAction(Material itemType) {
-		this.toolActions.remove(itemType);
+	public void removeToolAction(Material toolMaterial) {
+		this.toolActions.remove(toolMaterial);
 	}
 
-	public Brush useBrushType(Class<? extends Brush> brushType) {
-		Brush brush = this.brushes.get(brushType);
+	public Brush useBrush(BrushProperties properties) {
+		Brush brush = this.brushes.get(properties);
 		if (brush == null) {
-			brush = createBrush(brushType);
-			this.brushes.put(brushType, brush);
+			BrushCreator creator = properties.getCreator();
+			brush = creator.create();
+			this.brushes.put(properties, brush);
 		}
-		this.currentBrushType = brushType;
-		this.previousBrushType = this.currentBrushType;
+		this.previousBrushProperties = this.currentBrushProperties;
+		this.currentBrushProperties = properties;
 		return brush;
-	}
-
-	public Brush createBrush(Class<? extends Brush> brushType) {
-		try {
-			Constructor<? extends Brush> constructor = brushType.getConstructor();
-			return constructor.newInstance();
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException exception) {
-			throw new RuntimeException(exception);
-		}
 	}
 
 	@Nullable
 	public Brush getCurrentBrush() {
-		if (this.currentBrushType == null) {
+		if (this.currentBrushProperties == null) {
 			return null;
 		}
-		return getBrush(this.currentBrushType);
+		return getBrush(this.currentBrushProperties);
 	}
 
 	@Nullable
-	public Brush getPreviousBrush() {
-		if (this.previousBrushType == null) {
-			return null;
-		}
-		return getBrush(this.previousBrushType);
-	}
-
-	@Nullable
-	public Brush getBrush(Class<? extends Brush> brushType) {
-		return this.brushes.get(brushType);
+	public Brush getBrush(BrushProperties properties) {
+		return this.brushes.get(properties);
 	}
 
 	public String getToolkitName() {
@@ -93,21 +78,17 @@ public class Toolkit {
 	}
 
 	@Nullable
-	public Class<? extends Brush> getCurrentBrushType() {
-		return this.currentBrushType;
+	public BrushProperties getCurrentBrushProperties() {
+		return this.currentBrushProperties;
 	}
 
 	@Nullable
-	public Class<? extends Brush> getPreviousBrushType() {
-		return this.previousBrushType;
+	public BrushProperties getPreviousBrushProperties() {
+		return this.previousBrushProperties;
 	}
 
 	public Map<Material, ToolAction> getToolActions() {
 		return Map.copyOf(this.toolActions);
-	}
-
-	public Map<Class<? extends Brush>, Brush> getBrushes() {
-		return Map.copyOf(this.brushes);
 	}
 
 	public ToolkitProperties getProperties() {

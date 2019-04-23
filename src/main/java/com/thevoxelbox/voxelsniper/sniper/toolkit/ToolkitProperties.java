@@ -82,6 +82,9 @@ public class ToolkitProperties {
 		this.brushSize = DEFAULT_BRUSH_SIZE;
 		this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
 		this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
+		this.range = 0;
+		this.ranged = false;
+		this.lightningEnabled = false;
 		this.voxelList.clear();
 	}
 

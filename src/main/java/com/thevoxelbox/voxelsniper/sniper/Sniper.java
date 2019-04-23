@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
@@ -44,8 +45,8 @@ public class Sniper {
 
 	private Toolkit createDefaultToolkit() {
 		Toolkit toolkit = new Toolkit("default");
-		toolkit.addAction(Material.ARROW, ToolAction.ARROW);
-		toolkit.addAction(Material.GUNPOWDER, ToolAction.GUNPOWDER);
+		toolkit.addToolAction(Material.ARROW, ToolAction.ARROW);
+		toolkit.addToolAction(Material.GUNPOWDER, ToolAction.GUNPOWDER);
 		return toolkit;
 	}
 
@@ -94,7 +95,7 @@ public class Sniper {
 	@Nullable
 	public Toolkit getToolkit(Material itemType) {
 		return this.toolkits.stream()
-			.filter(toolkit -> toolkit.hasAction(itemType))
+			.filter(toolkit -> toolkit.hasToolAction(itemType))
 			.findFirst()
 			.orElse(null);
 	}
@@ -115,120 +116,101 @@ public class Sniper {
 	 * Sniper execution call.
 	 *
 	 * @param action Action player performed
-	 * @param itemInHand Item in hand of player
+	 * @param usedItem Item in hand of player
 	 * @param clickedBlock Block that the player targeted/interacted with
-	 * @param clickedFace Face of that targeted Block
+	 * @param clickedBlockFace Face of that targeted Block
 	 * @return true if command visibly processed, false otherwise.
 	 */
-	public boolean snipe(Action action, Material itemInHand, @Nullable Block clickedBlock, BlockFace clickedFace) {
-		Toolkit toolkit = getToolkit(itemInHand);
+	public boolean snipe(Player player, Action action, Material usedItem, @Nullable Block clickedBlock, BlockFace clickedBlockFace) {
+		Toolkit toolkit = getToolkit(usedItem);
 		if (toolkit == null) {
 			return false;
 		}
-		switch (action) {
-			case LEFT_CLICK_AIR:
-			case LEFT_CLICK_BLOCK:
-			case RIGHT_CLICK_AIR:
-			case RIGHT_CLICK_BLOCK:
-				break;
-			default:
-				return false;
+		ToolAction toolAction = toolkit.getToolAction(usedItem);
+		if (toolAction == null) {
+			return false;
 		}
-		if (toolkit.hasAction(itemInHand)) {
-			Player player = getPlayer();
-			if (player == null) {
+		BrushProperties currentBrushProperties = toolkit.getCurrentBrushProperties();
+		if (currentBrushProperties == null) {
+			player.sendMessage("No Brush selected.");
+			return false;
+		}
+		String permission = currentBrushProperties.getPermission();
+		if (permission != null && !player.hasPermission(permission)) {
+			player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + permission + "'");
+			return false;
+		}
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		int range = toolkitProperties.getRange();
+		if (player.isSneaking()) {
+			Block targetBlock = clickedBlock == null ? toolkitProperties.isRanged() ? player.getTargetBlock(range) : player.getTargetBlock(120) : clickedBlock;
+			Messages messages = toolkitProperties.getMessages();
+			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+				if (toolAction == ToolAction.ARROW) {
+					if (targetBlock == null) {
+						toolkitProperties.resetBlockData();
+					} else {
+						Material type = targetBlock.getType();
+						toolkitProperties.setBlockDataType(type);
+					}
+					messages.blockDataType();
+					return true;
+				} else if (toolAction == ToolAction.GUNPOWDER) {
+					if (targetBlock == null) {
+						toolkitProperties.resetBlockData();
+					} else {
+						BlockData blockData = targetBlock.getBlockData();
+						toolkitProperties.setBlockData(blockData);
+					}
+					messages.blockData();
+					return true;
+				}
+				return false;
+			} else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+				if (toolAction == ToolAction.ARROW) {
+					if (targetBlock == null) {
+						toolkitProperties.resetReplaceBlockData();
+					} else {
+						Material type = targetBlock.getType();
+						toolkitProperties.setReplaceBlockDataType(type);
+					}
+					messages.replaceBlockDataType();
+					return true;
+				} else if (toolAction == ToolAction.GUNPOWDER) {
+					if (targetBlock == null) {
+						toolkitProperties.resetReplaceBlockData();
+					} else {
+						BlockData blockData = targetBlock.getBlockData();
+						toolkitProperties.setReplaceBlockData(blockData);
+					}
+					messages.replaceBlockData();
+					return true;
+				}
 				return false;
 			}
-			Brush currentBrush = toolkit.getCurrentBrush();
-			if (currentBrush == null) {
-				player.sendMessage("No Brush selected.");
-				return true;
-			}
-			if (!player.hasPermission(currentBrush.getPermissionNode())) {
-				player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + currentBrush.getPermissionNode() + "'");
-				return true;
-			}
-			ToolkitProperties toolkitProperties = toolkit.getProperties();
-			if (player.isSneaking()) {
+			return false;
+		} else {
+			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
 				Block targetBlock;
-				ToolAction toolAction = toolkit.getAction(itemInHand);
-				Messages messages = toolkitProperties.getMessages();
-				if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
-					if (clickedBlock != null) {
-						targetBlock = clickedBlock;
-					} else {
-						targetBlock = toolkitProperties.isRanged() ? player.getTargetBlock(toolkitProperties.getRange()) : player.getTargetBlock(250);
-					}
-					if (toolAction == ToolAction.ARROW) {
-						if (targetBlock != null) {
-							Material type = targetBlock.getType();
-							toolkitProperties.setBlockDataType(type);
-						} else {
-							toolkitProperties.resetBlockData();
-						}
-						messages.blockDataType();
-						return true;
-					} else if (toolAction == ToolAction.GUNPOWDER) {
-						if (targetBlock != null) {
-							BlockData blockData = targetBlock.getBlockData();
-							toolkitProperties.setBlockData(blockData);
-						} else {
-							toolkitProperties.resetBlockData();
-						}
-						messages.blockData();
-						return true;
-					}
-				} else {
-					if (clickedBlock != null) {
-						targetBlock = clickedBlock;
-					} else {
-						targetBlock = toolkitProperties.isRanged() ? player.getTargetBlock(toolkitProperties.getRange()) : player.getTargetBlock(250);
-					}
-					if (toolAction == ToolAction.ARROW) {
-						if (targetBlock != null) {
-							Material type = targetBlock.getType();
-							toolkitProperties.setReplaceBlockDataType(type);
-						} else {
-							toolkitProperties.resetReplaceBlockData();
-						}
-						messages.replaceBlockDataType();
-						return true;
-					} else if (toolAction == ToolAction.GUNPOWDER) {
-						if (targetBlock != null) {
-							BlockData blockData = targetBlock.getBlockData();
-							toolkitProperties.setReplaceBlockData(blockData);
-						} else {
-							toolkitProperties.resetReplaceBlockData();
-						}
-						messages.replaceBlockData();
-						return true;
-					}
-				}
-			} else {
-				ToolAction toolAction = toolkit.getAction(itemInHand);
-				switch (action) {
-					case RIGHT_CLICK_AIR:
-					case RIGHT_CLICK_BLOCK:
-						break;
-					default:
-						return false;
-				}
 				Block lastBlock;
-				Block targetBlock;
-				if (clickedBlock != null) {
-					targetBlock = clickedBlock;
-					lastBlock = clickedBlock.getRelative(clickedFace);
-					if (lastBlock.isEmpty()) {
-						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
-						return true;
-					}
-				} else {
-					targetBlock = toolkitProperties.isRanged() ? player.getTargetBlock(toolkitProperties.getRange()) : player.getTargetBlock(120);
+				if (clickedBlock == null) {
+					targetBlock = toolkitProperties.isRanged() ? player.getTargetBlock(range) : player.getTargetBlock(120);
 					lastBlock = player.getTargetBlock(120);
 					if (targetBlock == null || targetBlock.isEmpty() || lastBlock == null || lastBlock.isEmpty()) {
 						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 						return true;
 					}
+				} else {
+					targetBlock = clickedBlock;
+					lastBlock = clickedBlock.getRelative(clickedBlockFace);
+					if (lastBlock.isEmpty()) {
+						player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+						return true;
+					}
+				}
+				Brush currentBrush = toolkit.getCurrentBrush();
+				if (currentBrush == null) {
+					return false;
 				}
 				if (currentBrush instanceof PerformerBrush) {
 					PerformerBrush performerBrush = (PerformerBrush) currentBrush;

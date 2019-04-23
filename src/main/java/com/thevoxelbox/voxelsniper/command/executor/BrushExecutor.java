@@ -3,8 +3,9 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -41,21 +42,22 @@ public class BrushExecutor implements CommandExecutor {
 		}
 		ToolkitProperties toolkitProperties = toolkit.getProperties();
 		if (arguments.length == 0) {
-			Class<? extends Brush> previousBrushType = toolkit.getPreviousBrushType();
-			if (previousBrushType == null) {
+			BrushProperties previousBrushProperties = toolkit.getPreviousBrushProperties();
+			if (previousBrushProperties == null) {
 				sender.sendMessage(ChatColor.RED + "Previous brush not found.");
 				return;
 			}
-			Brush brushToCheckPermission = toolkit.createBrush(previousBrushType);
-			if (!player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+			String permission = previousBrushProperties.getPermission();
+			if (permission != null && !player.hasPermission(permission)) {
 				sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 				return;
 			}
-			toolkit.useBrushType(previousBrushType);
+			Brush brush = toolkit.useBrush(previousBrushProperties);
 			sniper.displayInfo();
 			return;
 		}
-		Integer brushSize = NumericParser.parseInteger(arguments[0]);
+		String firstArgument = arguments[0];
+		Integer brushSize = NumericParser.parseInteger(firstArgument);
 		if (brushSize != null) {
 			VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 			int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
@@ -68,29 +70,28 @@ public class BrushExecutor implements CommandExecutor {
 			messages.size();
 			return;
 		}
-		BrushTypeRegistry brushTypeRegistry = this.plugin.getBrushTypeRegistry();
-		Class<? extends Brush> brushType = brushTypeRegistry.getBrushType(arguments[0]);
-		if (brushType == null) {
-			sender.sendMessage(ChatColor.RED + "Could not find brush for handle " + arguments[0] + ".");
+		BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
+		BrushProperties newBrush = brushRegistry.getBrushProperties(firstArgument);
+		if (newBrush == null) {
+			sender.sendMessage(ChatColor.RED + "Could not find brush for alias " + firstArgument + ".");
 			return;
 		}
-		Brush brushToCheckPermission = toolkit.createBrush(brushType);
-		if (!player.hasPermission(brushToCheckPermission.getPermissionNode())) {
+		String permission = newBrush.getPermission();
+		if (permission != null && !player.hasPermission(permission)) {
 			sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 			return;
 		}
-		Brush brush = toolkit.useBrushType(brushType);
+		Brush brush = toolkit.useBrush(newBrush);
 		if (arguments.length > 1) {
 			if (brush instanceof PerformerBrush) {
 				String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
 				PerformerBrush performerBrush = (PerformerBrush) brush;
 				performerBrush.parse(parameters, toolkitProperties);
-				return;
 			} else {
 				String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
 				brush.parameters(parameters, toolkitProperties);
-				return;
 			}
+			return;
 		}
 		sniper.displayInfo();
 	}

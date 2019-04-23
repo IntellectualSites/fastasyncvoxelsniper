@@ -1,93 +1,25 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.brush.type.BiomeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.BlockResetBrush;
-import com.thevoxelbox.voxelsniper.brush.type.BlockResetSurfaceBrush;
-import com.thevoxelbox.voxelsniper.brush.type.CleanSnowBrush;
-import com.thevoxelbox.voxelsniper.brush.type.CometBrush;
-import com.thevoxelbox.voxelsniper.brush.type.CopyPastaBrush;
-import com.thevoxelbox.voxelsniper.brush.type.DomeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.DrainBrush;
-import com.thevoxelbox.voxelsniper.brush.type.EntityBrush;
-import com.thevoxelbox.voxelsniper.brush.type.EntityRemovalBrush;
-import com.thevoxelbox.voxelsniper.brush.type.EraserBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ErodeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ExtrudeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.FlatOceanBrush;
-import com.thevoxelbox.voxelsniper.brush.type.GenerateTreeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.HeatRayBrush;
-import com.thevoxelbox.voxelsniper.brush.type.JockeyBrush;
-import com.thevoxelbox.voxelsniper.brush.type.LightningBrush;
-import com.thevoxelbox.voxelsniper.brush.type.MoveBrush;
-import com.thevoxelbox.voxelsniper.brush.type.OceanBrush;
-import com.thevoxelbox.voxelsniper.brush.type.PaintingBrush;
-import com.thevoxelbox.voxelsniper.brush.type.PullBrush;
-import com.thevoxelbox.voxelsniper.brush.type.RandomErodeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.RegenerateChunkBrush;
-import com.thevoxelbox.voxelsniper.brush.type.Rotation2DBrush;
-import com.thevoxelbox.voxelsniper.brush.type.Rotation2DVerticalBrush;
-import com.thevoxelbox.voxelsniper.brush.type.Rotation3DBrush;
-import com.thevoxelbox.voxelsniper.brush.type.RulerBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ScannerBrush;
-import com.thevoxelbox.voxelsniper.brush.type.SetRedstoneFlipBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ShellBallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ShellSetBrush;
-import com.thevoxelbox.voxelsniper.brush.type.ShellVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.type.SignOverwriteBrush;
-import com.thevoxelbox.voxelsniper.brush.type.SnowConeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.SpiralStaircaseBrush;
-import com.thevoxelbox.voxelsniper.brush.type.StencilBrush;
-import com.thevoxelbox.voxelsniper.brush.type.StencilListBrush;
-import com.thevoxelbox.voxelsniper.brush.type.TreeSnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.VoltMeterBrush;
-import com.thevoxelbox.voxelsniper.brush.type.WarpBrush;
-import com.thevoxelbox.voxelsniper.brush.type.blend.BlendBallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.blend.BlendDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.blend.BlendVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.type.blend.BlendVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.canyon.CanyonBrush;
-import com.thevoxelbox.voxelsniper.brush.type.canyon.CanyonSelectionBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.BallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.BlobBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.CheckerVoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.CylinderBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.DiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.DiscFaceBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.EllipseBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.EllipsoidBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.FillDownBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.JaggedLineBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.LineBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.OverlayBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.PunishBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.RingBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SetBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterBallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterOverlayBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.SplineBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.ThreePointCircleBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.TriangleBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.UnderlayBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelDiscFaceBrush;
-import com.thevoxelbox.voxelsniper.brush.type.stamp.CloneStampBrush;
 
-public class BrushTypeRegistrar {
+public class BrushRegistrar {
 
-	private BrushTypeRegistry registry;
+	private BrushRegistry registry;
 
-	public BrushTypeRegistrar(BrushTypeRegistry registry) {
+	public BrushRegistrar(BrushRegistry registry) {
 		this.registry = registry;
 	}
 
-	public void registerBrushTypes() {
-		this.registry.registerBrushType(BallBrush.class, "b", "ball");
-		this.registry.registerBrushType(BiomeBrush.class, "bio", "biome");
+	public void registerBrushes() {
+		registerBallBrush();
+		registerBiomeBrush();
+		//TODO: register all brushes
+		/*
+		//this.registry.registerBrushType(BallBrush.class, "b", "ball");
+		//this.registry.registerBrushType(BiomeBrush.class, "bio", "biome");
 		this.registry.registerBrushType(BlendBallBrush.class, "bb", "blendball");
 		this.registry.registerBrushType(BlendDiscBrush.class, "bd", "blenddisc");
 		this.registry.registerBrushType(BlendVoxelBrush.class, "bv", "blendvoxel");
@@ -162,5 +94,28 @@ public class BrushTypeRegistrar {
 		this.registry.registerBrushType(VoxelDiscBrush.class, "vd", "voxeldisc");
 		this.registry.registerBrushType(VoxelDiscFaceBrush.class, "vdf", "voxeldiscface");
 		this.registry.registerBrushType(WarpBrush.class, "world", "warp");
+		*/
+	}
+
+	private void registerBallBrush() {
+		BrushProperties properties = BrushProperties.builder()
+			.name("Ball")
+			.permission("voxelsniper.brush.ball")
+			.alias("b")
+			.alias("ball")
+			.creator(BallBrush::new)
+			.build();
+		this.registry.register(properties);
+	}
+
+	private void registerBiomeBrush() {
+		BrushProperties properties = BrushProperties.builder()
+			.name("Biome (/b biome [Biome Name])")
+			.permission("voxelsniper.brush.biome")
+			.alias("bio")
+			.alias("biome")
+			.creator(BiomeBrush::new)
+			.build();
+		this.registry.register(properties);
 	}
 }

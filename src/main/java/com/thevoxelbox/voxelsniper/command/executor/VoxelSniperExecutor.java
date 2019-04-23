@@ -3,9 +3,9 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import java.util.Map;
 import java.util.Set;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.brush.Brush;
-import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.performer.Performers;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -35,11 +35,11 @@ public class VoxelSniperExecutor implements CommandExecutor {
 		if (arguments.length >= 1) {
 			String firstArgument = arguments[0];
 			if (firstArgument.equalsIgnoreCase("brushes")) {
-				BrushTypeRegistry brushTypeRegistry = this.plugin.getBrushTypeRegistry();
-				Map<String, Class<? extends Brush>> brushes = brushTypeRegistry.getBrushTypes();
-				Set<String> handles = brushes.keySet();
-				String handlesString = String.join(", ", handles);
-				sender.sendMessage(handlesString);
+				BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
+				Map<String, BrushProperties> brushes = brushRegistry.getBrushesProperties();
+				Set<String> aliases = brushes.keySet();
+				String aliasesString = String.join(", ", aliases);
+				sender.sendMessage(aliasesString);
 				return;
 			} else if (firstArgument.equalsIgnoreCase("range")) {
 				Toolkit toolkit = sniper.getCurrentToolkit();

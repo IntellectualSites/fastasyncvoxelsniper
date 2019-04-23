@@ -23,7 +23,7 @@ public interface Brush {
 	 */
 	void parameters(String[] parameters, ToolkitProperties toolkitProperties);
 
-	boolean perform(ToolAction action, ToolkitProperties data, Block targetBlock, Block lastBlock);
+	boolean perform(ToolAction action, ToolkitProperties toolkitProperties, Block targetBlock, Block lastBlock);
 
 	/**
 	 * The arrow action. Executed when a player RightClicks with an Arrow
@@ -42,20 +42,18 @@ public interface Brush {
 	/**
 	 * @return The name of the Brush
 	 */
+	@Deprecated
 	String getName();
 
 	/**
 	 * @param name New name for the Brush
 	 */
+	@Deprecated
 	void setName(String name);
-
-	/**
-	 * @return The name of the category the brush is in.
-	 */
-	String getBrushCategory();
 
 	/**
 	 * @return Permission node required to use this brush
 	 */
+	@Deprecated
 	String getPermissionNode();
 }

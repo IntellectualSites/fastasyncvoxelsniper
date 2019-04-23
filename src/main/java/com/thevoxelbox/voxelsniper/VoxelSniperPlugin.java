@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.brush.BrushTypeRegistry;
+import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
@@ -22,13 +22,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class VoxelSniperPlugin extends JavaPlugin {
 
 	private VoxelSniperConfig voxelSniperConfig;
-	private BrushTypeRegistry brushTypeRegistry;
+	private BrushRegistry brushRegistry;
 	private SniperRegistry sniperRegistry;
 
 	@Override
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
-		this.brushTypeRegistry = loadBrushRegistry();
+		this.brushRegistry = loadBrushRegistry();
 		this.sniperRegistry = new SniperRegistry();
 		loadCommands();
 		loadListeners();
@@ -49,11 +49,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		return new VoxelSniperConfig(undoCacheSize, messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
 	}
 
-	private BrushTypeRegistry loadBrushRegistry() {
-		BrushTypeRegistry brushTypeRegistry = new BrushTypeRegistry();
-		BrushTypeRegistrar brushTypeRegistrar = new BrushTypeRegistrar(brushTypeRegistry);
-		brushTypeRegistrar.registerBrushTypes();
-		return brushTypeRegistry;
+	private BrushRegistry loadBrushRegistry() {
+		BrushRegistry brushRegistry = new BrushRegistry();
+		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
+		brushRegistrar.registerBrushes();
+		return brushRegistry;
 	}
 
 	private void loadCommands() {
@@ -78,12 +78,12 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	}
 
 	/**
-	 * Returns {@link BrushTypeRegistry} for current instance.
+	 * Returns {@link BrushRegistry} for current instance.
 	 *
 	 * @return Brush Manager for current instance.
 	 */
-	public BrushTypeRegistry getBrushTypeRegistry() {
-		return this.brushTypeRegistry;
+	public BrushRegistry getBrushRegistry() {
+		return this.brushRegistry;
 	}
 
 	/**
