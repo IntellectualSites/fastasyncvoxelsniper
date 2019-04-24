@@ -9,7 +9,7 @@ import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.performer.Performer;
 import com.thevoxelbox.voxelsniper.brush.performer.Performers;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;

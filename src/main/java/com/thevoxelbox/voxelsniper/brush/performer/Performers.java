@@ -9,37 +9,37 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.TreeMap;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboComboNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboInkNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboMaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboMaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ExcludeComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ExcludeInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ExcludeMaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.IncludeComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.IncludeInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.IncludeMaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkComboNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkInkNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkMaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkMaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.InkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialComboNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialInkNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialMaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialMaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.MaterialPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.NoUndoPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboComboNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboInkNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboInkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboMaterialNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ExcludeComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.ExcludeInkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.ExcludeMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.combo.IncludeComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.IncludeInkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.IncludeMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkComboNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkInkNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkInkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkMaterialNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialComboNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialInkNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialInkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialMaterialNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialNoPhysicsPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialNoUndoPerformer;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,6 +80,7 @@ public enum Performers {
 	MATERIAL_INK_NO_PHYSICS(MaterialInkNoPhysicsPerformer.class, "mip", "mat-ink-nophys"),
 	MATERIAL_COMBO(MaterialComboPerformer.class, "mc", "mat-combo"),
 	MATERIAL_COMBO_NO_PHYSICS(MaterialComboNoPhysicsPerformer.class, "mcp", "mat-combo-nophys"),
+	MATERIAL_NO_UNDO(MaterialNoUndoPerformer.class, "noundo", "noundo"),
 	INK(InkPerformer.class, "i", "ink"),
 	INK_MATERIAL(InkMaterialPerformer.class, "im", "ink-mat"),
 	INK_INK(InkInkPerformer.class, "ii", "ink-ink"),
@@ -101,8 +102,7 @@ public enum Performers {
 	EXCLUDE_COMBO(ExcludeComboPerformer.class, "xc", "exclude-combo"),
 	INCLUDE_MATERIAL(IncludeMaterialPerformer.class, "nm", "include-mat"),
 	INCLUDE_INK(IncludeInkPerformer.class, "ni", "include-ink"),
-	INCLUDE_COMBO(IncludeComboPerformer.class, "nc", "include-combo"),
-	MATERIAL_NO_UNDO(NoUndoPerformer.class, "noundo", "noundo");
+	INCLUDE_COMBO(IncludeComboPerformer.class, "nc", "include-combo");
 	//Other Performers which don't exist yet but are required for a full set of possibilities that actually could potentially do something:
 	//List does not include any no-physics, unless materials are being placed (or combo), or any update unless ink is being placed (or combo) -Gavjenks
 	//MAT_MAT_UPDATE(           pMatMatUpdate.class,            "mmu",          "mat-mat-update"    ),      //              place mat, replace mat, graphical update
