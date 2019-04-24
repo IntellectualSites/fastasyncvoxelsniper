@@ -1,6 +1,7 @@
-package com.thevoxelbox.voxelsniper.brush.type.performer;
+package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
 import java.util.Random;
+import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;

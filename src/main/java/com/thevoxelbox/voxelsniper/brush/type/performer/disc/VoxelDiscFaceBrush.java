@@ -1,5 +1,6 @@
-package com.thevoxelbox.voxelsniper.brush.type.performer;
+package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
+import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;

@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.brush.type;
+package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;

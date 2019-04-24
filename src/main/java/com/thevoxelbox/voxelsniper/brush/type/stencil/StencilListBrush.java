@@ -1,4 +1,4 @@
-package com.thevoxelbox.voxelsniper.brush.type;
+package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;

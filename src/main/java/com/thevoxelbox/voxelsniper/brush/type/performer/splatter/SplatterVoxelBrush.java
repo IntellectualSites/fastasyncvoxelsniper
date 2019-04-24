@@ -1,7 +1,7 @@
-package com.thevoxelbox.voxelsniper.brush.type.performer;
+package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
 import java.util.Random;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class SplatterBallBrush extends AbstractPerformerBrush {
+public class SplatterVoxelBrush extends AbstractPerformerBrush {
 
 	private static final int GROW_PERCENT_MIN = 1;
 	private static final int GROW_PERCENT_DEFAULT = 1000;
@@ -29,29 +29,29 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 	private int splatterRecursions; // How many times you grow the seeds
 	private Random generator = new Random();
 
-	public SplatterBallBrush() {
-		super("Splatter Ball");
+	public SplatterVoxelBrush() {
+		super("Splatter Voxel");
 	}
 
-	private void splatterBall(ToolkitProperties toolkitProperties, Block targetBlock) {
-		Sniper owner = toolkitProperties.getOwner();
+	private void voxelSplatterBall(ToolkitProperties toolkitProperties, Block targetBlock) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
-			owner.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
+			toolkitProperties.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
 			this.seedPercent = SEED_PERCENT_DEFAULT;
 		}
 		if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-			owner.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+			toolkitProperties.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
 			this.growPercent = GROW_PERCENT_DEFAULT;
 		}
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
-			owner.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
+			toolkitProperties.sendMessage(ChatColor.BLUE + "Recursions set to: 3");
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		int[][][] splat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
+		int brushSize = toolkitProperties.getBrushSize();
+		int[][][] splat = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
 		// Seed the array
-		for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
-				for (int z = 2 * toolkitProperties.getBrushSize(); z >= 0; z--) {
+		for (int x = 2 * brushSize; x >= 0; x--) {
+			for (int y = 2 * brushSize; y >= 0; y--) {
+				for (int z = 2 * brushSize; z >= 0; z--) {
 					if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
 						splat[x][y][z] = 1;
 					}
@@ -60,12 +60,12 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][][] tempSplat = new int[2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1][2 * toolkitProperties.getBrushSize() + 1];
+		int[][][] tempSplat = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
-			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
-					for (int z = 2 * toolkitProperties.getBrushSize(); z >= 0; z--) {
+			for (int x = 2 * brushSize; x >= 0; x--) {
+				for (int y = 2 * brushSize; y >= 0; y--) {
+					for (int z = 2 * brushSize; z >= 0; z--) {
 						tempSplat[x][y][z] = splat[x][y][z]; // prime tempsplat
 						int growcheck = 0;
 						if (splat[x][y][z] == 0) {
@@ -78,61 +78,59 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 							if (z != 0 && splat[x][y][z - 1] == 1) {
 								growcheck++;
 							}
-							if (x != 2 * toolkitProperties.getBrushSize() && splat[x + 1][y][z] == 1) {
+							if (x != 2 * brushSize && splat[x + 1][y][z] == 1) {
 								growcheck++;
 							}
-							if (y != 2 * toolkitProperties.getBrushSize() && splat[x][y + 1][z] == 1) {
+							if (y != 2 * brushSize && splat[x][y + 1][z] == 1) {
 								growcheck++;
 							}
-							if (z != 2 * toolkitProperties.getBrushSize() && splat[x][y][z + 1] == 1) {
+							if (z != 2 * brushSize && splat[x][y][z + 1] == 1) {
 								growcheck++;
 							}
 						}
-						if (growcheck >= GROW_PERCENT_MIN && this.generator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
+						if (growcheck >= 1 && this.generator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
 							tempSplat[x][y][z] = 1; // prevent bleed into splat
 						}
 					}
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
-			for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
-				for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
-					if (2 * toolkitProperties.getBrushSize() + 1 >= 0) {
-						System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, 2 * toolkitProperties.getBrushSize() + 1);
+			for (int x = 2 * brushSize; x >= 0; x--) {
+				for (int y = 2 * brushSize; y >= 0; y--) {
+					if (2 * brushSize + 1 >= 0) {
+						System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, 2 * brushSize + 1);
 					}
 				}
 			}
 		}
 		this.growPercent = gref;
 		// Fill 1x1x1 holes
-		for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
-			for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
-				for (int z = 2 * toolkitProperties.getBrushSize(); z >= 0; z--) {
-					if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * toolkitProperties.getBrushSize())][y][z] == 1 && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * toolkitProperties.getBrushSize(), y + 1)][z] == 1) {
+		for (int x = 2 * brushSize; x >= 0; x--) {
+			for (int y = 2 * brushSize; y >= 0; y--) {
+				for (int z = 2 * brushSize; z >= 0; z--) {
+					if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * brushSize)][y][z] == 1 && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * brushSize, y + 1)][z] == 1) {
 						splat[x][y][z] = 1;
 					}
 				}
 			}
 		}
 		// Make the changes
-		double rSquared = Math.pow(toolkitProperties.getBrushSize() + 1, 2);
-		for (int x = 2 * toolkitProperties.getBrushSize(); x >= 0; x--) {
-			double xSquared = Math.pow(x - toolkitProperties.getBrushSize() - 1, 2);
-			for (int y = 2 * toolkitProperties.getBrushSize(); y >= 0; y--) {
-				double ySquared = Math.pow(y - toolkitProperties.getBrushSize() - 1, 2);
-				for (int z = 2 * toolkitProperties.getBrushSize(); z >= 0; z--) {
-					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - toolkitProperties.getBrushSize() - 1, 2) <= rSquared) {
-						this.performer.perform(targetBlock.getRelative(-toolkitProperties.getBrushSize() + x, -toolkitProperties.getBrushSize() + y, -toolkitProperties.getBrushSize() + z));
+		for (int x = 2 * brushSize; x >= 0; x--) {
+			for (int y = 2 * brushSize; y >= 0; y--) {
+				for (int z = 2 * brushSize; z >= 0; z--) {
+					if (splat[x][y][z] == 1) {
+						this.performer.perform(targetBlock.getRelative(-brushSize + x, -brushSize + z, -brushSize + y));
 					}
 				}
 			}
 		}
-		owner.storeUndo(this.performer.getUndo());
+		toolkitProperties.getOwner()
+			.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
 	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.splatterBall(toolkitProperties, this.getTargetBlock());
+		this.voxelSplatterBall(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
@@ -141,7 +139,7 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 		if (lastBlock == null) {
 			return;
 		}
-		this.splatterBall(toolkitProperties, lastBlock);
+		this.voxelSplatterBall(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -155,7 +153,7 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		messages.brushName("Splatter Ball");
+		messages.brushName("Splatter Voxel");
 		messages.size();
 		messages.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
 		messages.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
@@ -167,10 +165,10 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Splatter Ball brush Parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sb s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sb g[int] -- set a growth percentage (1-9999).  Default is 1000");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sb r[int] -- set a recursion (1-10).  Default is 3");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
 				return;
 			} else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
 				double temp = Integer.parseInt(parameter.replace("s", ""));
@@ -204,6 +202,6 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 
 	@Override
 	public String getPermissionNode() {
-		return "voxelsniper.brush.splatterball";
+		return "voxelsniper.brush.splattervoxel";
 	}
 }

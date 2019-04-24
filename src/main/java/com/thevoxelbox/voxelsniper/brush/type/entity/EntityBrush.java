@@ -1,7 +1,8 @@
-package com.thevoxelbox.voxelsniper.brush.type;
+package com.thevoxelbox.voxelsniper.brush.type.entity;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;

@@ -1,6 +1,7 @@
-package com.thevoxelbox.voxelsniper.brush.type.performer;
+package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
 import java.util.Random;
+import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
@@ -11,7 +12,7 @@ import org.bukkit.block.Block;
  *
  * @author Voxel
  */
-public class SplatterVoxelBrush extends AbstractPerformerBrush {
+public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 
 	private static final int GROW_PERCENT_MIN = 1;
 	private static final int GROW_PERCENT_DEFAULT = 1000;
@@ -28,11 +29,11 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 	private int splatterRecursions; // How many times you grow the seeds
 	private Random generator = new Random();
 
-	public SplatterVoxelBrush() {
-		super("Splatter Voxel");
+	public SplatterVoxelDiscBrush() {
+		super("Splatter Voxel Disc");
 	}
 
-	private void voxelSplatterBall(ToolkitProperties toolkitProperties, Block targetBlock) {
+	private void vSplatterDisc(ToolkitProperties toolkitProperties, Block targetBlock) {
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
 			toolkitProperties.sendMessage(ChatColor.BLUE + "Seed percent set to: 10%");
 			this.seedPercent = SEED_PERCENT_DEFAULT;
@@ -46,80 +47,64 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
 		int brushSize = toolkitProperties.getBrushSize();
-		int[][][] splat = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
+		int[][] splat = new int[2 * brushSize + 1][2 * brushSize + 1];
 		// Seed the array
 		for (int x = 2 * brushSize; x >= 0; x--) {
 			for (int y = 2 * brushSize; y >= 0; y--) {
-				for (int z = 2 * brushSize; z >= 0; z--) {
-					if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
-						splat[x][y][z] = 1;
-					}
+				if (this.generator.nextInt(SEED_PERCENT_MAX + 1) <= this.seedPercent) {
+					splat[x][y] = 1;
 				}
 			}
 		}
 		// Grow the seeds
 		int gref = this.growPercent;
-		int[][][] tempSplat = new int[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
+		int[][] tempSplat = new int[2 * brushSize + 1][2 * brushSize + 1];
 		for (int r = 0; r < this.splatterRecursions; r++) {
 			this.growPercent = gref - ((gref / this.splatterRecursions) * (r));
 			for (int x = 2 * brushSize; x >= 0; x--) {
 				for (int y = 2 * brushSize; y >= 0; y--) {
-					for (int z = 2 * brushSize; z >= 0; z--) {
-						tempSplat[x][y][z] = splat[x][y][z]; // prime tempsplat
-						int growcheck = 0;
-						if (splat[x][y][z] == 0) {
-							if (x != 0 && splat[x - 1][y][z] == 1) {
-								growcheck++;
-							}
-							if (y != 0 && splat[x][y - 1][z] == 1) {
-								growcheck++;
-							}
-							if (z != 0 && splat[x][y][z - 1] == 1) {
-								growcheck++;
-							}
-							if (x != 2 * brushSize && splat[x + 1][y][z] == 1) {
-								growcheck++;
-							}
-							if (y != 2 * brushSize && splat[x][y + 1][z] == 1) {
-								growcheck++;
-							}
-							if (z != 2 * brushSize && splat[x][y][z + 1] == 1) {
-								growcheck++;
-							}
+					tempSplat[x][y] = splat[x][y]; // prime tempsplat
+					int growcheck = 0;
+					if (splat[x][y] == 0) {
+						if (x != 0 && splat[x - 1][y] == 1) {
+							growcheck++;
 						}
-						if (growcheck >= 1 && this.generator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
-							tempSplat[x][y][z] = 1; // prevent bleed into splat
+						if (y != 0 && splat[x][y - 1] == 1) {
+							growcheck++;
 						}
+						if (x != 2 * brushSize && splat[x + 1][y] == 1) {
+							growcheck++;
+						}
+						if (y != 2 * brushSize && splat[x][y + 1] == 1) {
+							growcheck++;
+						}
+					}
+					if (growcheck >= 1 && this.generator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
+						tempSplat[x][y] = 1; // prevent bleed into splat
 					}
 				}
 			}
 			// integrate tempsplat back into splat at end of iteration
 			for (int x = 2 * brushSize; x >= 0; x--) {
-				for (int y = 2 * brushSize; y >= 0; y--) {
-					if (2 * brushSize + 1 >= 0) {
-						System.arraycopy(tempSplat[x][y], 0, splat[x][y], 0, 2 * brushSize + 1);
-					}
+				if (2 * brushSize + 1 >= 0) {
+					System.arraycopy(tempSplat[x], 0, splat[x], 0, 2 * brushSize + 1);
 				}
 			}
 		}
 		this.growPercent = gref;
-		// Fill 1x1x1 holes
+		// Fill 1x1 holes
 		for (int x = 2 * brushSize; x >= 0; x--) {
 			for (int y = 2 * brushSize; y >= 0; y--) {
-				for (int z = 2 * brushSize; z >= 0; z--) {
-					if (splat[Math.max(x - 1, 0)][y][z] == 1 && splat[Math.min(x + 1, 2 * brushSize)][y][z] == 1 && splat[x][Math.max(0, y - 1)][z] == 1 && splat[x][Math.min(2 * brushSize, y + 1)][z] == 1) {
-						splat[x][y][z] = 1;
-					}
+				if (splat[Math.max(x - 1, 0)][y] == 1 && splat[Math.min(x + 1, 2 * brushSize)][y] == 1 && splat[x][Math.max(0, y - 1)] == 1 && splat[x][Math.min(2 * brushSize, y + 1)] == 1) {
+					splat[x][y] = 1;
 				}
 			}
 		}
 		// Make the changes
 		for (int x = 2 * brushSize; x >= 0; x--) {
 			for (int y = 2 * brushSize; y >= 0; y--) {
-				for (int z = 2 * brushSize; z >= 0; z--) {
-					if (splat[x][y][z] == 1) {
-						this.performer.perform(targetBlock.getRelative(-brushSize + x, -brushSize + z, -brushSize + y));
-					}
+				if (splat[x][y] == 1) {
+					this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY(), targetBlock.getZ() - brushSize + y));
 				}
 			}
 		}
@@ -129,7 +114,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 
 	@Override
 	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.voxelSplatterBall(toolkitProperties, this.getTargetBlock());
+		this.vSplatterDisc(toolkitProperties, this.getTargetBlock());
 	}
 
 	@Override
@@ -138,7 +123,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 		if (lastBlock == null) {
 			return;
 		}
-		this.voxelSplatterBall(toolkitProperties, lastBlock);
+		this.vSplatterDisc(toolkitProperties, lastBlock);
 	}
 
 	@Override
@@ -152,7 +137,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 		if (this.splatterRecursions < SPLATREC_PERCENT_MIN || this.splatterRecursions > SPLATREC_PERCENT_MAX) {
 			this.splatterRecursions = SPLATREC_PERCENT_DEFAULT;
 		}
-		messages.brushName("Splatter Voxel");
+		messages.brushName("Splatter Voxel Disc");
 		messages.size();
 		messages.custom(ChatColor.BLUE + "Seed percent set to: " + this.seedPercent / 100 + "%");
 		messages.custom(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%");
@@ -164,10 +149,10 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Splatter Voxel brush Parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv g[int] -- set a growth percentage (1-9999).  Default is 1000");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b sv r[int] -- set a recursion (1-10).  Default is 3");
+				toolkitProperties.sendMessage(ChatColor.GOLD + "Splatter Voxel Disc brush Parameters:");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b svd s[int] -- set a seed percentage (1-9999). 100 = 1% Default is 1000");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b svd g[int] -- set a growth percentage (1-9999).  Default is 1000");
+				toolkitProperties.sendMessage(ChatColor.AQUA + "/b svd r[int] -- set a recursion (1-10).  Default is 3");
 				return;
 			} else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
 				double temp = Integer.parseInt(parameter.replace("s", ""));
@@ -201,6 +186,6 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
 
 	@Override
 	public String getPermissionNode() {
-		return "voxelsniper.brush.splattervoxel";
+		return "voxelsniper.brush.splattervoxeldisc";
 	}
 }

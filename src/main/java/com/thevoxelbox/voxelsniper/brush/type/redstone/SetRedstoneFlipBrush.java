@@ -1,6 +1,7 @@
-package com.thevoxelbox.voxelsniper.brush.type;
+package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
 import java.util.stream.Stream;
+import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
