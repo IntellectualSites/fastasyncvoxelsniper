@@ -21,7 +21,7 @@ dependencies {
 bukkit {
 	name = properties["plugin-name"] as String
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
-	authors = listOf("przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer")
+	authors = listOf("przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
 	softDepend = listOf("VoxelModPackPlugin")
 	apiVersion = "1.13"
 }
