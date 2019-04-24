@@ -154,7 +154,6 @@ public class BrushRegistrar {
 		registerSplatterOverlayBrush();
 		registerSplatterVoxelBrush();
 		registerSplatterVoxelDiscBrush();
-		registerSplatterDiscBrush();
 		registerSplineBrush();
 		registerStencilBrush();
 		registerStencilListBrush();
