@@ -32,6 +32,7 @@ import com.thevoxelbox.voxelsniper.brush.type.Rotation3DBrush;
 import com.thevoxelbox.voxelsniper.brush.type.RulerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ScannerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.SetRedstoneFlipBrush;
+import com.thevoxelbox.voxelsniper.brush.type.SetRedstoneRotateBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ShellBallBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ShellSetBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ShellVoxelBrush;
@@ -69,6 +70,7 @@ import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterBallBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterOverlayBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.SplatterVoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SplineBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.ThreePointCircleBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.TriangleBrush;
@@ -139,6 +141,7 @@ public class BrushRegistrar {
 		registerScannerBrush();
 		registerSetBrush();
 		registerSetRedstoneFlipBrush();
+		registerSetRedstoneRotateBrush();
 		registerShellBallBrush();
 		registerShellSetBrush();
 		registerShellVoxelBrush();
@@ -150,6 +153,7 @@ public class BrushRegistrar {
 		registerSplatterDiscBrush();
 		registerSplatterOverlayBrush();
 		registerSplatterVoxelBrush();
+		registerSplatterVoxelDiscBrush();
 		registerSplatterDiscBrush();
 		registerSplineBrush();
 		registerStencilBrush();
@@ -660,7 +664,7 @@ public class BrushRegistrar {
 	private void registerRotation2DBrush() {
 		BrushProperties properties = BrushProperties.builder()
 			.name("Rotation2D")
-			.permission("voxelsniper.brush.rotation2d")
+			.permission("voxelsniper.brush.rot2d")
 			.alias("rot2")
 			.alias("rotation2d")
 			.creator(Rotation2DBrush::new)
@@ -671,7 +675,7 @@ public class BrushRegistrar {
 	private void registerRotation2DVerticalBrush() {
 		BrushProperties properties = BrushProperties.builder()
 			.name("Rotation2DVertical")
-			.permission("voxelsniper.brush.rotation2dvertical")
+			.permission("voxelsniper.brush.rot2dvert")
 			.alias("rot2v")
 			.alias("rotation2dvertical")
 			.creator(Rotation2DVerticalBrush::new)
@@ -682,7 +686,7 @@ public class BrushRegistrar {
 	private void registerRotation3DBrush() {
 		BrushProperties properties = BrushProperties.builder()
 			.name("Rotation3D")
-			.permission("voxelsniper.brush.rotation3d")
+			.permission("voxelsniper.brush.rot3d")
 			.alias("rot3")
 			.alias("rotation3d")
 			.creator(Rotation3DBrush::new)
@@ -729,6 +733,17 @@ public class BrushRegistrar {
 			.alias("setrf")
 			.alias("setredstoneflip")
 			.creator(SetRedstoneFlipBrush::new)
+			.build();
+		this.registry.register(properties);
+	}
+
+	private void registerSetRedstoneRotateBrush() {
+		BrushProperties properties = BrushProperties.builder()
+			.name("SetRedstoneRotate")
+			.permission("voxelsniper.brush.setredstonerotate")
+			.alias("setrr")
+			.alias("setredstonerotate")
+			.creator(SetRedstoneRotateBrush::new)
 			.build();
 		this.registry.register(properties);
 	}
@@ -854,13 +869,13 @@ public class BrushRegistrar {
 		this.registry.register(properties);
 	}
 
-	private void registerSplatterDiscBrush() {
+	private void registerSplatterVoxelDiscBrush() {
 		BrushProperties properties = BrushProperties.builder()
 			.name("SplatterDisc")
-			.permission("voxelsniper.brush.splatterdisc")
+			.permission("voxelsniper.brush.splattervoxeldisc")
 			.alias("svd")
 			.alias("splatvoxeldisc")
-			.creator(SplatterDiscBrush::new)
+			.creator(SplatterVoxelDiscBrush::new)
 			.build();
 		this.registry.register(properties);
 	}
