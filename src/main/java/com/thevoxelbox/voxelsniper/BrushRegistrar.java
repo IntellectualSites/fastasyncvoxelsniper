@@ -79,6 +79,7 @@ import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelDiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.type.stamp.CloneStampBrush;
+import com.thevoxelbox.voxelsniper.brush.type.stamp.StampBrush;
 
 public class BrushRegistrar {
 
@@ -155,6 +156,7 @@ public class BrushRegistrar {
 		registerSplatterVoxelBrush();
 		registerSplatterVoxelDiscBrush();
 		registerSplineBrush();
+		registerStampBrush();
 		registerStencilBrush();
 		registerStencilListBrush();
 		registerThreePointCircleBrush();
@@ -886,6 +888,16 @@ public class BrushRegistrar {
 			.alias("sp")
 			.alias("spline")
 			.creator(SplineBrush::new)
+			.build();
+		this.registry.register(properties);
+	}
+
+	private void registerStampBrush() {
+		BrushProperties properties = BrushProperties.builder()
+			.name("Stamp")
+			.permission("voxelsniper.brush.stamp")
+			.alias("stamp")
+			.creator(StampBrush::new)
 			.build();
 		this.registry.register(properties);
 	}
