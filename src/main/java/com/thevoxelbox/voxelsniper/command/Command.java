@@ -31,7 +31,7 @@ public final class Command extends org.bukkit.command.Command {
 			return true;
 		}
 		String permission = this.properties.getPermission();
-		if (permission != null && !permission.isBlank() && !sender.hasPermission(permission)) {
+		if (permission != null && !permission.isEmpty() && !sender.hasPermission(permission)) {
 			sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 			return true;
 		}

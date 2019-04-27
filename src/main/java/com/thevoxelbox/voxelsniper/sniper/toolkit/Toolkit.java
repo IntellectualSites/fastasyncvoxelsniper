@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class Toolkit {
 	}
 
 	public Map<Material, ToolAction> getToolActions() {
-		return Map.copyOf(this.toolActions);
+		return Collections.unmodifiableMap(this.toolActions);
 	}
 
 	public ToolkitProperties getProperties() {

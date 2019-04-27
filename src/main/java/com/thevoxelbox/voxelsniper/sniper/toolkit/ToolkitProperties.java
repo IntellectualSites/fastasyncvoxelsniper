@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.Bukkit;
@@ -191,6 +192,6 @@ public class ToolkitProperties {
 	}
 
 	public List<BlockData> getVoxelList() {
-		return List.copyOf(this.voxelList);
+		return Collections.unmodifiableList(this.voxelList);
 	}
 }

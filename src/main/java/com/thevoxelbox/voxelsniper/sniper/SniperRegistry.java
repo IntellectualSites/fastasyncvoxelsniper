@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +28,6 @@ public class SniperRegistry {
 	}
 
 	public Map<UUID, Sniper> getSnipers() {
-		return Map.copyOf(this.snipers);
+		return Collections.unmodifiableMap(this.snipers);
 	}
 }

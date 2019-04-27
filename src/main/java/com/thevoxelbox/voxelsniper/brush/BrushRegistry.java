@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,6 @@ public class BrushRegistry {
 	}
 
 	public Map<String, BrushProperties> getBrushesProperties() {
-		return Map.copyOf(this.brushesProperties);
+		return Collections.unmodifiableMap(this.brushesProperties);
 	}
 }
