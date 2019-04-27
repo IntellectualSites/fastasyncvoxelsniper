@@ -11,6 +11,8 @@ We use gradle to handle our dependencies.
 * Clone this repository
 * Run `./gradlew build`
 
+If you want to compile on Java 8, checkout to `java-8` branch and run `./gradlew build`.
+
 ## Issue Tracker Notes
 
 How do I create a ticket the right way?
