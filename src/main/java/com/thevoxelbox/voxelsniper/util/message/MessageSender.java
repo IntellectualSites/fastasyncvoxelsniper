@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
@@ -12,7 +13,7 @@ public class MessageSender {
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
 	private CommandSender sender;
-	private List<String> messages;
+	private List<String> messages = new ArrayList<>(0);
 
 	public MessageSender(CommandSender sender) {
 		this.sender = sender;
