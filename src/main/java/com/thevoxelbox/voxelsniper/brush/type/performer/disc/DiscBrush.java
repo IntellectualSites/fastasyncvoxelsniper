@@ -1,7 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -16,76 +18,64 @@ public class DiscBrush extends AbstractPerformerBrush {
 
 	private double trueCircle;
 
-	/**
-	 * Default Constructor.
-	 */
-	public DiscBrush() {
-		super("Disc");
-	}
-
-	/**
-	 * Disc executor.
-	 */
-	private void disc(ToolkitProperties toolkitProperties, Block targetBlock) {
-		double radiusSquared = (toolkitProperties.getBrushSize() + this.trueCircle) * (toolkitProperties.getBrushSize() + this.trueCircle);
-		Vector centerPoint = targetBlock.getLocation()
-			.toVector();
-		Vector currentPoint = new Vector().copy(centerPoint);
-		for (int x = -toolkitProperties.getBrushSize(); x <= toolkitProperties.getBrushSize(); x++) {
-			currentPoint.setX(centerPoint.getX() + x);
-			for (int z = -toolkitProperties.getBrushSize(); z <= toolkitProperties.getBrushSize(); z++) {
-				currentPoint.setZ(centerPoint.getZ() + z);
-				if (centerPoint.distanceSquared(currentPoint) <= radiusSquared) {
-					this.performer.perform(this.clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
-				}
-			}
-		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.disc(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.disc(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i].toLowerCase();
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
+				messenger.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
+				messenger.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");
 				return;
 			} else if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
 			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
 			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 			}
 		}
 	}
 
 	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.disc";
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		disc(snipe, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		disc(snipe, lastBlock);
+	}
+
+	private void disc(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int brushSize = toolkitProperties.getBrushSize();
+		double radiusSquared = (brushSize + this.trueCircle) * (brushSize + this.trueCircle);
+		Vector centerPoint = targetBlock.getLocation()
+			.toVector();
+		Vector currentPoint = new Vector().copy(centerPoint);
+		for (int x = -brushSize; x <= brushSize; x++) {
+			currentPoint.setX(centerPoint.getX() + x);
+			for (int z = -brushSize; z <= brushSize; z++) {
+				currentPoint.setZ(centerPoint.getZ() + z);
+				if (centerPoint.distanceSquared(currentPoint) <= radiusSquared) {
+					this.performer.perform(clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ()));
+				}
+			}
+		}
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
+	}
+
+	@Override
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.send();
 	}
 }

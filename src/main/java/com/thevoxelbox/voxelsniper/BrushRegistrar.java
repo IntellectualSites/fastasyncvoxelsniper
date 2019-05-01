@@ -10,8 +10,6 @@ import com.thevoxelbox.voxelsniper.brush.type.CometBrush;
 import com.thevoxelbox.voxelsniper.brush.type.CopyPastaBrush;
 import com.thevoxelbox.voxelsniper.brush.type.DomeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.DrainBrush;
-import com.thevoxelbox.voxelsniper.brush.type.entity.EntityBrush;
-import com.thevoxelbox.voxelsniper.brush.type.entity.EntityRemovalBrush;
 import com.thevoxelbox.voxelsniper.brush.type.EraserBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ExtrudeBrush;
@@ -26,21 +24,11 @@ import com.thevoxelbox.voxelsniper.brush.type.PaintingBrush;
 import com.thevoxelbox.voxelsniper.brush.type.PullBrush;
 import com.thevoxelbox.voxelsniper.brush.type.RandomErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.RegenerateChunkBrush;
-import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation2DBrush;
-import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation2DVerticalBrush;
-import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation3DBrush;
 import com.thevoxelbox.voxelsniper.brush.type.RulerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ScannerBrush;
-import com.thevoxelbox.voxelsniper.brush.type.redstone.SetRedstoneFlipBrush;
-import com.thevoxelbox.voxelsniper.brush.type.redstone.SetRedstoneRotateBrush;
-import com.thevoxelbox.voxelsniper.brush.type.shell.ShellBallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.shell.ShellSetBrush;
-import com.thevoxelbox.voxelsniper.brush.type.shell.ShellVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.type.SignOverwriteBrush;
 import com.thevoxelbox.voxelsniper.brush.type.SnowConeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.SpiralStaircaseBrush;
-import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilBrush;
-import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilListBrush;
 import com.thevoxelbox.voxelsniper.brush.type.TreeSnipeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.VoltMeterBrush;
 import com.thevoxelbox.voxelsniper.brush.type.WarpBrush;
@@ -50,12 +38,12 @@ import com.thevoxelbox.voxelsniper.brush.type.blend.BlendVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.type.blend.BlendVoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.canyon.CanyonBrush;
 import com.thevoxelbox.voxelsniper.brush.type.canyon.CanyonSelectionBrush;
+import com.thevoxelbox.voxelsniper.brush.type.entity.EntityBrush;
+import com.thevoxelbox.voxelsniper.brush.type.entity.EntityRemovalBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.BallBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.BlobBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.CheckerVoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.CylinderBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.disc.DiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.disc.DiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.EllipseBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.EllipsoidBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.FillDownBrush;
@@ -66,20 +54,31 @@ import com.thevoxelbox.voxelsniper.brush.type.performer.PunishBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.RingBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SetBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SnipeBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterBallBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterDiscBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterOverlayBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterVoxelBrush;
-import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterVoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.SplineBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.ThreePointCircleBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.TriangleBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.UnderlayBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.VoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.disc.DiscBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.disc.DiscFaceBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.disc.VoxelDiscBrush;
 import com.thevoxelbox.voxelsniper.brush.type.performer.disc.VoxelDiscFaceBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterBallBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterOverlayBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterVoxelBrush;
+import com.thevoxelbox.voxelsniper.brush.type.performer.splatter.SplatterVoxelDiscBrush;
+import com.thevoxelbox.voxelsniper.brush.type.redstone.SetRedstoneFlipBrush;
+import com.thevoxelbox.voxelsniper.brush.type.redstone.SetRedstoneRotateBrush;
+import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation2DBrush;
+import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation2DVerticalBrush;
+import com.thevoxelbox.voxelsniper.brush.type.rotation.Rotation3DBrush;
+import com.thevoxelbox.voxelsniper.brush.type.shell.ShellBallBrush;
+import com.thevoxelbox.voxelsniper.brush.type.shell.ShellSetBrush;
+import com.thevoxelbox.voxelsniper.brush.type.shell.ShellVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.type.stamp.CloneStampBrush;
-import com.thevoxelbox.voxelsniper.brush.type.stamp.StampBrush;
+import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilBrush;
+import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilListBrush;
 
 public class BrushRegistrar {
 
@@ -156,7 +155,6 @@ public class BrushRegistrar {
 		registerSplatterVoxelBrush();
 		registerSplatterVoxelDiscBrush();
 		registerSplineBrush();
-		registerStampBrush();
 		registerStencilBrush();
 		registerStencilListBrush();
 		registerThreePointCircleBrush();
@@ -888,16 +886,6 @@ public class BrushRegistrar {
 			.alias("sp")
 			.alias("spline")
 			.creator(SplineBrush::new)
-			.build();
-		this.registry.register(properties);
-	}
-
-	private void registerStampBrush() {
-		BrushProperties properties = BrushProperties.builder()
-			.name("Stamp")
-			.permission("voxelsniper.brush.stamp")
-			.alias("stamp")
-			.creator(StampBrush::new)
 			.build();
 		this.registry.register(properties);
 	}

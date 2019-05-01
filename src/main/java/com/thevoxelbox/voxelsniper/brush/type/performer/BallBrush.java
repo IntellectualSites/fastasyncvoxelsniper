@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -14,16 +15,46 @@ import org.bukkit.block.Block;
  */
 public class BallBrush extends AbstractPerformerBrush {
 
-	public static final double TRUE_CIRCLE_ON_VALUE = 0.5;
-	public static final int TRUE_CIRCLE_OFF_VALUE = 0;
+	private static final double TRUE_CIRCLE_ON_VALUE = 0.5;
+	private static final int TRUE_CIRCLE_OFF_VALUE = 0;
 
 	private double trueCircle;
 
-	public BallBrush() {
-		super("Ball");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
+				messenger.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
+				return;
+			} else if (parameter.startsWith("true")) {
+				this.trueCircle = TRUE_CIRCLE_ON_VALUE;
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+			} else if (parameter.startsWith("false")) {
+				this.trueCircle = TRUE_CIRCLE_OFF_VALUE;
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+			}
+		}
 	}
 
-	private void ball(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		ball(snipe, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		ball(snipe, lastBlock);
+	}
+
+	private void ball(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		int blockPositionX = targetBlock.getX();
@@ -68,52 +99,15 @@ public class BallBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.ball(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.ball(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Ball Brush Parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b b true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-				return;
-			} else if (parameter.startsWith("true")) {
-				this.trueCircle = TRUE_CIRCLE_ON_VALUE;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (parameter.startsWith("false")) {
-				this.trueCircle = TRUE_CIRCLE_OFF_VALUE;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.ball";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.send();
 	}
 }

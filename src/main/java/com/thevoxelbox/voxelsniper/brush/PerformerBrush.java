@@ -5,17 +5,16 @@
 
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 
 /**
  * @author Voxel
  */
 public interface PerformerBrush extends Brush {
 
-	void parse(String[] args, ToolkitProperties toolkitProperties);
+	void handlePerformerCommand(String[] parameters, Snipe snipe);
 
-	void showInfo(Messages messages);
+	void sendPerformerInfo(Snipe snipe);
 
-	void initPerformer(ToolkitProperties toolkitProperties);
+	void initialize(Snipe snipe);
 }

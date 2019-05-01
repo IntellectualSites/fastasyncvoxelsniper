@@ -1,45 +1,52 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandSender;
 
+@Deprecated
 public class Messages {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
 	private ToolkitProperties toolkitProperties;
+	private CommandSender sender;
 
-	public Messages(ToolkitProperties toolkitProperties) {
-		this.toolkitProperties = toolkitProperties;
+	public Messages(Snipe snipe) {
+		this.toolkitProperties = snipe.getToolkitProperties();
+		Sniper sniper = snipe.getSniper();
+		this.sender = sniper.getPlayer();
 	}
 
 	/**
 	 * Send a brush message styled message to the player.
 	 */
 	public void brushMessage(String brushMessage) {
-		this.toolkitProperties.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
+		this.sender.sendMessage(ChatColor.LIGHT_PURPLE + brushMessage);
 	}
 
 	/**
 	 * Display Brush Name.
 	 */
 	public void brushName(String brushName) {
-		this.toolkitProperties.sendMessage(ChatColor.AQUA + "Brush Type: " + ChatColor.LIGHT_PURPLE + brushName);
+		this.sender.sendMessage(ChatColor.AQUA + "Brush Type: " + ChatColor.LIGHT_PURPLE + brushName);
 	}
 
 	/**
 	 * Display Center Parameter.
 	 */
 	public void center() {
-		this.toolkitProperties.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + this.toolkitProperties.getCylinderCenter());
+		this.sender.sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + this.toolkitProperties.getCylinderCenter());
 	}
 
 	/**
 	 * Display custom message.
 	 */
 	public void custom(String message) {
-		this.toolkitProperties.sendMessage(message);
+		this.sender.sendMessage(message);
 	}
 
 	/**
@@ -47,21 +54,21 @@ public class Messages {
 	 */
 	public void blockData() {
 		BlockData blockData = this.toolkitProperties.getBlockData();
-		this.toolkitProperties.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString(true));
+		this.sender.sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString(true));
 	}
 
 	/**
 	 * Display voxel height.
 	 */
 	public void height() {
-		this.toolkitProperties.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + this.toolkitProperties.getVoxelHeight());
+		this.sender.sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + this.toolkitProperties.getVoxelHeight());
 	}
 
 	/**
 	 * Display performer.
 	 */
 	public void performerName(String performerName) {
-		this.toolkitProperties.sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
+		this.sender.sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
 	}
 
 	/**
@@ -69,7 +76,7 @@ public class Messages {
 	 */
 	public void replaceBlockDataType() {
 		Material replaceBlockDataType = this.toolkitProperties.getReplaceBlockDataType();
-		this.toolkitProperties.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockDataType.getKey());
+		this.sender.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockDataType.getKey());
 	}
 
 	/**
@@ -77,16 +84,16 @@ public class Messages {
 	 */
 	public void replaceBlockData() {
 		BlockData replaceBlockData = this.toolkitProperties.getReplaceBlockData();
-		this.toolkitProperties.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString(true));
+		this.sender.sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString(true));
 	}
 
 	/**
 	 * Display brush size.
 	 */
 	public void size() {
-		this.toolkitProperties.sendMessage(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + this.toolkitProperties.getBrushSize());
+		this.sender.sendMessage(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + this.toolkitProperties.getBrushSize());
 		if (this.toolkitProperties.getBrushSize() >= BRUSH_SIZE_WARNING_THRESHOLD) {
-			this.toolkitProperties.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
+			this.sender.sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
 		}
 	}
 
@@ -95,7 +102,7 @@ public class Messages {
 	 */
 	public void blockDataType() {
 		Material blockDataType = this.toolkitProperties.getBlockDataType();
-		this.toolkitProperties.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockDataType.getKey());
+		this.sender.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockDataType.getKey());
 	}
 
 	/**
@@ -104,7 +111,7 @@ public class Messages {
 	public void voxelList() {
 		if (this.toolkitProperties.getVoxelList()
 			.isEmpty()) {
-			this.toolkitProperties.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
+			this.sender.sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
 		} else {
 			StringBuilder returnValueBuilder = new StringBuilder();
 			returnValueBuilder.append(ChatColor.DARK_GREEN);
@@ -115,7 +122,7 @@ public class Messages {
 				returnValueBuilder.append(dataAsString);
 				returnValueBuilder.append(" ");
 			}
-			this.toolkitProperties.sendMessage(returnValueBuilder.toString());
+			this.sender.sendMessage(returnValueBuilder.toString());
 		}
 	}
 }

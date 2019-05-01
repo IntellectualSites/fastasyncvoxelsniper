@@ -1,39 +1,34 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 
 /**
  * @author Gavjenks
  */
 public class LightningBrush extends AbstractBrush {
 
-	public LightningBrush() {
-		super("Lightning");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
+		world.strikeLightning(targetBlock.getLocation());
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.brushMessage("Lightning Brush!  Please use in moderation.");
+	public void handleGunpowderAction(Snipe snipe) {
+		World world = getWorld();
+		Block targetBlock = getTargetBlock();
+		world.strikeLightning(targetBlock.getLocation());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.getWorld()
-			.strikeLightning(this.getTargetBlock()
-				.getLocation());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.getWorld()
-			.strikeLightning(this.getTargetBlock()
-				.getLocation());
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.lightning";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Lightning Brush! Please use in moderation.");
 	}
 }

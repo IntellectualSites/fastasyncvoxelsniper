@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type.redstone;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,8 +21,28 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	private Block block;
 	private Undo undo;
 
-	public SetRedstoneRotateBrush() {
-		super("Set Redstone Rotate");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		if (set(targetBlock)) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.GRAY + "Point one");
+		} else {
+			Sniper sniper = snipe.getSniper();
+			sniper.storeUndo(this.undo);
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		if (set(lastBlock)) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.GRAY + "Point one");
+		} else {
+			Sniper sniper = snipe.getSniper();
+			sniper.storeUndo(this.undo);
+		}
 	}
 
 	private boolean set(Block block) {
@@ -68,43 +88,9 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Block targetBlock = getTargetBlock();
-		Sniper owner = toolkitProperties.getOwner();
-		if (set(targetBlock)) {
-			owner.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			owner.storeUndo(this.undo);
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		Sniper owner = toolkitProperties.getOwner();
-		if (set(lastBlock)) {
-			owner.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			owner.storeUndo(this.undo);
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
+	public void sendInfo(Snipe snipe) {
 		this.block = null;
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		super.parameters(parameters, toolkitProperties);
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.setredstonerotate";
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

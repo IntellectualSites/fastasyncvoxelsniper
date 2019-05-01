@@ -3,7 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
@@ -21,15 +22,54 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
 	private String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
 
-	public SpiralStaircaseBrush() {
-		super("Spiral Staircase");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (parameters[1].equalsIgnoreCase("info")) {
+			messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
+			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
+			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
+			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
+			return;
+		}
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
+			if (Stream.of("block", "step", "woodstair", "cobblestair")
+				.anyMatch(parameter::equalsIgnoreCase)) {
+				this.stairType = parameter;
+				messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
+			} else if (parameter.equalsIgnoreCase("c") || parameter.equalsIgnoreCase("cc")) {
+				this.sdirect = parameter;
+				messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+			} else if (Stream.of("n", "e", "s", "world")
+				.anyMatch(parameter::equalsIgnoreCase)) {
+				this.sopen = parameter;
+				messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+			}
+		}
 	}
 
-	private void buildStairWell(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		digStairWell(snipe, targetBlock); // make stairwell below target
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		buildStairWell(snipe, lastBlock); // make stairwell above target
+	}
+
+	private void buildStairWell(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		SnipeMessenger messenger = snipe.createMessenger();
 		int voxelHeight = toolkitProperties.getVoxelHeight();
 		if (voxelHeight < 1) {
 			toolkitProperties.setVoxelHeight(1);
-			toolkitProperties.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+			messenger.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
 		int brushSize = toolkitProperties.getBrushSize();
 		// locate first block in staircase
@@ -271,15 +311,17 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
-	private void digStairWell(ToolkitProperties toolkitProperties, Block targetBlock) {
+	private void digStairWell(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		SnipeMessenger messenger = snipe.createMessenger();
 		int voxelHeight = toolkitProperties.getVoxelHeight();
 		if (voxelHeight < 1) {
 			toolkitProperties.setVoxelHeight(1);
-			toolkitProperties.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
+			messenger.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Set to 1.");
 		}
 		// initialize array
 		int brushSize = toolkitProperties.getBrushSize();
@@ -450,134 +492,83 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
-					switch (spiral[x][i][z]) {
-						case 0:
-							if (!getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty()) {
+					if (spiral[x][i][z] == 0) {
+						if (!getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty()) {
+							undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+						}
+						setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.AIR);
+					} else if (spiral[x][i][z] == 1) {
+						if (this.stairType.equalsIgnoreCase("block")) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
-							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.AIR);
-							break;
-						case 1:
-							if (this.stairType.equalsIgnoreCase("block")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
-									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
-							} else if (this.stairType.equalsIgnoreCase("step")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 44) {
-									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
-							} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
-									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
+						} else if (this.stairType.equalsIgnoreCase("step")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 44) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
-							break;
-						case 2:
-							if (this.stairType.equalsIgnoreCase("step")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 43) {
-									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_DOUBLE_STEP);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
-							} else if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
-									undo.put(clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
-							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
-									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
-								clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_COBBLESTONE_STAIRS.createBlockData());
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_STEP);
+							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
+						} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockDataType()) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
-							break;
-						default:
-							if (this.stairType.equalsIgnoreCase("woodstair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
-								//TODO:
-								//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
-							} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-								if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
-									undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
-								}
-								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
-								//TODO:
-								//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockDataType());
+						}
+					} else if (spiral[x][i][z] == 2) {
+						if (this.stairType.equalsIgnoreCase("step")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 43) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
-							break;
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_DOUBLE_STEP);
+							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
+						} else if (this.stairType.equalsIgnoreCase("woodstair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
+								undo.put(clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
+							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
+						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
+							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_COBBLESTONE_STAIRS.createBlockData());
+						}
+					} else {
+						if (this.stairType.equalsIgnoreCase("woodstair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 53) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
+							//TODO:
+							//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
+							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 67) {
+								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
+							}
+							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_COBBLESTONE_STAIRS);
+							//TODO:
+							//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
+						}
 					}
 				}
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.digStairWell(toolkitProperties, this.getTargetBlock()); // make stairwell below target
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.buildStairWell(toolkitProperties, lastBlock); // make stairwell above target
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName("Spiral Staircase");
-		messages.size();
-		messages.blockDataType();
-		messages.height();
-		messages.blockData();
-		messages.custom(ChatColor.BLUE + "Staircase type: " + this.stairType);
-		messages.custom(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-		messages.custom(ChatColor.BLUE + "Staircase opens: " + this.sopen);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		if (parameters[1].equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
-			return;
-		}
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			if (Stream.of("block", "step", "woodstair", "cobblestair")
-				.anyMatch(parameter::equalsIgnoreCase)) {
-				this.stairType = parameter;
-				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
-			} else if (parameter.equalsIgnoreCase("c") || parameter.equalsIgnoreCase("cc")) {
-				this.sdirect = parameter;
-				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-			} else if (Stream.of("n", "e", "s", "world")
-				.anyMatch(parameter::equalsIgnoreCase)) {
-				this.sopen = parameter;
-				toolkitProperties.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
-			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.spiralstaircase";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
+		messenger.sendBlockTypeMessage();
+		messenger.sendVoxelHeightMessage();
+		messenger.sendBlockDataMessage();
+		messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
+		messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+		messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
 	}
 }

@@ -2,8 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.EnumSet;
 import java.util.Set;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,11 +21,18 @@ public class EraserBrush extends AbstractBrush {
 	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.LEGACY_AIR, Material.LEGACY_STONE, Material.LEGACY_GRASS, Material.LEGACY_DIRT, Material.LEGACY_SAND, Material.LEGACY_GRAVEL, Material.LEGACY_SANDSTONE);
 	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA);
 
-	public EraserBrush() {
-		super("Eraser");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		doErase(snipe, false);
 	}
 
-	private void doErase(ToolkitProperties toolkitProperties, boolean keepWater) {
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		doErase(snipe, true);
+	}
+
+	private void doErase(Snipe snipe, boolean keepWater) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
 		Block targetBlock = this.getTargetBlock();
@@ -44,28 +53,14 @@ public class EraserBrush extends AbstractBrush {
 				}
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.doErase(toolkitProperties, false);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.doErase(toolkitProperties, true);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.eraser";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
 	}
 }

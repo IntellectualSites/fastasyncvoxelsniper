@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -50,8 +49,6 @@ public class BrushToolkitExecutor implements CommandExecutor {
 			Toolkit toolkit = sniper.getToolkit(toolkitName);
 			if (toolkit == null) {
 				toolkit = new Toolkit(toolkitName);
-				ToolkitProperties properties = toolkit.getProperties();
-				properties.setOwner(sniper);
 			}
 			toolkit.addToolAction(itemType, action);
 			sniper.addToolkit(toolkit);

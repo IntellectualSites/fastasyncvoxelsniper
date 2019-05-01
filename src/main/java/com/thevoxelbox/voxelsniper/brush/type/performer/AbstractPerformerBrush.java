@@ -11,6 +11,7 @@ import com.thevoxelbox.voxelsniper.brush.performer.Performer;
 import com.thevoxelbox.voxelsniper.brush.performer.Performers;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
@@ -21,41 +22,25 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 
 	protected Performer performer = new MaterialPerformer();
 
-	public AbstractPerformerBrush(String name) {
-		super(name);
-	}
-
 	@Override
-	public void parse(String[] args, ToolkitProperties toolkitProperties) {
-		String handle = args[0];
+	public void handlePerformerCommand(String[] parameters, Snipe snipe) {
+		String handle = parameters[0];
 		if (Performers.has(handle)) {
 			Performer performer = Performers.getPerformer(handle);
 			if (performer != null) {
 				this.performer = performer;
-				Messages messages = toolkitProperties.getMessages();
-				info(messages);
-				this.performer.info(messages);
-				if (args.length > 1) {
-					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
-					parameters(hackTheArray(additionalArguments), toolkitProperties);
+				sendInfo(snipe);
+				this.performer.info(new Messages(snipe));
+				if (parameters.length > 1) {
+					String[] additionalArguments = Arrays.copyOfRange(parameters, 1, parameters.length);
+					super.handleCommand(hackTheArray(additionalArguments), snipe);
 				}
 			} else {
-				parameters(hackTheArray(args), toolkitProperties);
+				super.handleCommand(hackTheArray(parameters), snipe);
 			}
 		} else {
-			parameters(hackTheArray(args), toolkitProperties);
+			super.handleCommand(hackTheArray(parameters), snipe);
 		}
-	}
-
-	@Override
-	public void showInfo(Messages messages) {
-		this.performer.info(messages);
-	}
-
-	@Override
-	public void initPerformer(ToolkitProperties toolkitProperties) {
-		this.performer.init(toolkitProperties);
-		this.performer.setUndo();
 	}
 
 	/**
@@ -71,6 +56,18 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 			returnValue[i + 1] = arg;
 		}
 		return returnValue;
+	}
+
+	@Override
+	public void sendPerformerInfo(Snipe snipe) {
+		this.performer.info(new Messages(snipe));
+	}
+
+	@Override
+	public void initialize(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.performer.init(toolkitProperties);
+		this.performer.setUndo();
 	}
 
 	public Performer getPerformer() {

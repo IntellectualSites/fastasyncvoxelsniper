@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,8 +19,37 @@ public class Rotation2DBrush extends AbstractBrush {
 	private BlockData[][][] snap;
 	private double angle;
 
-	public Rotation2DBrush() {
-		super("2D Rotation");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+	}
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		if (this.mode == 0) {
+			getMatrix();
+			rotate();
+		} else {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		if (this.mode == 0) {
+			getMatrix();
+			rotate();
+		} else {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+		}
 	}
 
 	private void getMatrix() {
@@ -89,13 +119,13 @@ public class Rotation2DBrush extends AbstractBrush {
 						// smart fill stuff
 						for (int y = 0; y < this.snap.length; y++) {
 							int fy = y + targetBlock.getY() - this.brushSize;
-							Material a = this.getBlockType(fx + 1, fy, fz);
-							Material b = this.getBlockType(fx, fy, fz - 1);
-							Material c = this.getBlockType(fx, fy, fz + 1);
-							Material d = this.getBlockType(fx - 1, fy, fz);
-							BlockData aData = this.getBlockData(fx + 1, fy, fz);
-							BlockData dData = this.getBlockData(fx - 1, fy, fz);
-							BlockData bData = this.getBlockData(fx, fy, fz - 1);
+							Material a = getBlockType(fx + 1, fy, fz);
+							Material b = getBlockType(fx, fy, fz - 1);
+							Material c = getBlockType(fx, fy, fz + 1);
+							Material d = getBlockType(fx - 1, fy, fz);
+							BlockData aData = getBlockData(fx + 1, fy, fz);
+							BlockData dData = getBlockData(fx - 1, fy, fz);
+							BlockData bData = getBlockData(fx, fy, fz - 1);
 							BlockData winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
@@ -115,40 +145,8 @@ public class Rotation2DBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		if (this.mode == 0) {
-			getMatrix();
-			rotate();
-		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Something went wrong.");
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		if (this.mode == 0) {
-			getMatrix();
-			rotate();
-		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Something went wrong.");
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
-		toolkitProperties.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.rot2d";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

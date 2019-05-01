@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -32,42 +31,9 @@ public class ToolkitProperties {
 	private List<BlockData> voxelList = new ArrayList<>();
 
 	@Deprecated
-	private Sniper owner;
-	@Deprecated
-	private Messages messages = new Messages(this);
-
-	@Deprecated
-	public void sendMessage(String message) {
-		Player player = this.owner.getPlayer();
-		if (player == null) {
-			return;
-		}
-		player.sendMessage(message);
-	}
-
-	@Deprecated
 	@Nullable
 	public World getWorld() {
-		Player player = this.owner.getPlayer();
-		if (player == null) {
-			return null;
-		}
-		return player.getWorld();
-	}
-
-	@Deprecated
-	public Sniper getOwner() {
-		return this.owner;
-	}
-
-	@Deprecated
-	public void setOwner(Sniper owner) {
-		this.owner = owner;
-	}
-
-	@Deprecated
-	public Messages getMessages() {
-		return this.messages;
+		return null;
 	}
 
 	public ToolkitProperties() {

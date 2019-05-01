@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,11 +20,48 @@ public class DrainBrush extends AbstractBrush {
 	private double trueCircle;
 	private boolean disc;
 
-	public DrainBrush() {
-		super("Drain");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
+				messenger.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
+				messenger.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
+				return;
+			} else if (parameter.startsWith("true")) {
+				this.trueCircle = 0.5;
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+			} else if (parameter.startsWith("false")) {
+				this.trueCircle = 0;
+				messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+			} else if (parameter.equalsIgnoreCase("d")) {
+				if (this.disc) {
+					this.disc = false;
+					messenger.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+				} else {
+					this.disc = true;
+					messenger.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+				}
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+			}
+		}
 	}
 
-	private void drain(ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		drain(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		drain(snipe);
+	}
+
+	private void drain(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
@@ -76,59 +114,16 @@ public class DrainBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		drain(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		drain(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.custom(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0 ? "True circle mode ON" : "True circle mode OFF"));
-		messages.custom(ChatColor.AQUA + (this.disc ? "Disc drain mode ON" : "Disc drain mode OFF"));
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
-				return;
-			} else if (parameter.startsWith("true")) {
-				this.trueCircle = 0.5;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (parameter.startsWith("false")) {
-				this.trueCircle = 0;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (parameter.equalsIgnoreCase("d")) {
-				if (this.disc) {
-					this.disc = false;
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
-				} else {
-					this.disc = true;
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
-				}
-			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.drain";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
+		messenger.sendMessage(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0 ? "True circle mode ON" : "True circle mode OFF"));
+		messenger.sendMessage(ChatColor.AQUA + (this.disc ? "Disc drain mode ON" : "Disc drain mode OFF"));
 	}
 }

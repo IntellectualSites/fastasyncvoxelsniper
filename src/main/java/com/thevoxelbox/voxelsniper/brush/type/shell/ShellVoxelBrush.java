@@ -3,7 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type.shell;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,11 +18,30 @@ import org.bukkit.block.Block;
  */
 public class ShellVoxelBrush extends AbstractBrush {
 
-	public ShellVoxelBrush() {
-		super("Shell Voxel");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (parameters[1].equalsIgnoreCase("info")) {
+			messenger.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
+		} else {
+			messenger.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
+		}
 	}
 
-	private void vShell(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		vShell(snipe, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		vShell(snipe, lastBlock);
+	}
+
+	private void vShell(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		Material[][][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
 		int blockPositionX = targetBlock.getX();
@@ -85,44 +105,19 @@ public class ShellVoxelBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
-		owner.sendMessage(ChatColor.AQUA + "Shell complete.");
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.vShell(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.vShell(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.blockDataType();
-		messages.replaceBlockDataType();
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		if (parameters[1].equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
-		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.shellvoxel";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.blockTypeMessage()
+			.replaceBlockTypeMessage()
+			.send();
 	}
 }

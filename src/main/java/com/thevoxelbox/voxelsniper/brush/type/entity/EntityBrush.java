@@ -3,9 +3,13 @@ package com.thevoxelbox.voxelsniper.brush.type.entity;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 /**
@@ -17,59 +21,59 @@ public class EntityBrush extends AbstractBrush {
 
 	private EntityType entityType = EntityType.ZOMBIE;
 
-	public EntityBrush() {
-		super("Entity");
-	}
-
-	private void spawn(ToolkitProperties toolkitProperties) {
-		for (int x = 0; x < toolkitProperties.getBrushSize(); x++) {
-			try {
-				this.getWorld()
-					.spawn(this.getLastBlock()
-						.getLocation(), this.entityType.getEntityClass());
-			} catch (IllegalArgumentException exception) {
-				toolkitProperties.sendMessage(ChatColor.RED + "Cannot spawn entity!");
-			}
-		}
-	}
-
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.spawn(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.spawn(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushMessage(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")");
-		messages.size();
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
 		if (parameters[1].equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
+			messenger.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
 			String names = Arrays.stream(EntityType.values())
 				.map(currentEntity -> ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName())
 				.collect(Collectors.joining("", "", ChatColor.AQUA + " |"));
-			toolkitProperties.sendMessage(names);
+			messenger.sendMessage(names);
 		} else {
 			EntityType currentEntity = EntityType.fromName(parameters[1]);
 			if (currentEntity != null) {
 				this.entityType = currentEntity;
-				toolkitProperties.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
+				messenger.sendMessage(ChatColor.GREEN + "Entity type set to " + this.entityType.getName());
 			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "This is not a valid entity!");
+				messenger.sendMessage(ChatColor.RED + "This is not a valid entity!");
 			}
 		}
 	}
 
 	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.entity";
+	public void handleArrowAction(Snipe snipe) {
+		spawn(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		spawn(snipe);
+	}
+
+	private void spawn(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int x = 0; x < toolkitProperties.getBrushSize(); x++) {
+			try {
+				World world = getWorld();
+				Block lastBlock = getLastBlock();
+				Class<? extends Entity> entityClass = this.entityType.getEntityClass();
+				if (entityClass == null) {
+					return;
+				}
+				world.spawn(lastBlock.getLocation(), entityClass);
+			} catch (IllegalArgumentException exception) {
+				messenger.sendMessage(ChatColor.RED + "Cannot spawn entity!");
+			}
+		}
+	}
+
+	@Override
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.message(ChatColor.LIGHT_PURPLE + "Entity brush" + " (" + this.entityType.getName() + ")")
+			.brushSizeMessage()
+			.send();
 	}
 }

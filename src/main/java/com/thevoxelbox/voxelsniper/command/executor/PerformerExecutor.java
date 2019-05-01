@@ -3,7 +3,9 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
@@ -35,12 +37,18 @@ public class PerformerExecutor implements CommandExecutor {
 		if (toolkitProperties == null) {
 			return;
 		}
+		BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
+		if (brushProperties == null) {
+			return;
+		}
 		Brush brush = toolkit.getCurrentBrush();
 		if (!(brush instanceof PerformerBrush)) {
 			sender.sendMessage("This brush is not a performer brush.");
 			return;
 		}
 		PerformerBrush performer = (PerformerBrush) brush;
-		performer.parse(arguments.length == 0 ? new String[] {"m"} : arguments, toolkitProperties);
+		Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
+		String[] parameters = arguments.length == 0 ? new String[] {"m"} : arguments;
+		performer.handlePerformerCommand(parameters, snipe);
 	}
 }

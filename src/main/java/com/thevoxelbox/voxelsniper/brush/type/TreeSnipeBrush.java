@@ -3,9 +3,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,11 +28,38 @@ public class TreeSnipeBrush extends AbstractBrush {
 
 	private TreeType treeType = TreeType.TREE;
 
-	public TreeSnipeBrush() {
-		super("Tree Snipe");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+				messenger.sendMessage(ChatColor.AQUA + "/b t treetype");
+				printTreeType(messenger);
+				return;
+			}
+			try {
+				this.treeType = TreeType.valueOf(parameter.toUpperCase());
+				printTreeType(messenger);
+			} catch (IllegalArgumentException exception) {
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tree type.");
+			}
+		}
 	}
 
-	private void single(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
+		single(snipe, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		single(snipe, getTargetBlock());
+	}
+
+	private void single(Snipe snipe, Block targetBlock) {
 		UndoDelegate undoDelegate = new UndoDelegate(targetBlock.getWorld());
 		Block blockBelow = targetBlock.getRelative(BlockFace.DOWN);
 		BlockState currentState = blockBelow.getState();
@@ -42,8 +70,8 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Undo undo = undoDelegate.getUndo();
 		blockBelow.setBlockData(currentState.getBlockData());
 		undo.put(blockBelow);
-		toolkitProperties.getOwner()
-			.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	private int getYOffset() {
@@ -56,55 +84,20 @@ public class TreeSnipeBrush extends AbstractBrush {
 			.orElse(0);
 	}
 
-	private void printTreeType(Messages messages) {
+	@Override
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		printTreeType(messenger);
+	}
+
+	private void printTreeType(SnipeMessenger messenger) {
 		String printout = Arrays.stream(TreeType.values())
 			.map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY + treeType.name()
 				.toLowerCase() : ChatColor.DARK_GRAY + treeType.name()
 				.toLowerCase()) + ChatColor.WHITE)
 			.collect(Collectors.joining(", "));
-		messages.custom(printout);
-	}
-
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Block targetBlock = getTargetBlock().getRelative(0, getYOffset(), 0);
-		this.single(toolkitProperties, targetBlock);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.single(toolkitProperties, getTargetBlock());
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		this.printTreeType(messages);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			Messages messages = toolkitProperties.getMessages();
-			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "/b t treetype");
-				this.printTreeType(messages);
-				return;
-			}
-			try {
-				this.treeType = TreeType.valueOf(parameter.toUpperCase());
-				this.printTreeType(messages);
-			} catch (IllegalArgumentException exception) {
-				messages.brushMessage("No such tree type.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.treesnipe";
+		messenger.sendMessage(printout);
 	}
 
 	private static final class UndoDelegate implements BlockChangeDelegate {

@@ -25,7 +25,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 		UUID uuid = player.getUniqueId();
 		Sniper sniper = getSniperFromRegistry(uuid);
 		if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
-			sniper.displayInfo();
+			sniper.sendInfo(player);
 		}
 	}
 

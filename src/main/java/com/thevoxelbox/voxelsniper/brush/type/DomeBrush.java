@@ -4,7 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,38 +22,42 @@ import org.bukkit.util.Vector;
  */
 public class DomeBrush extends AbstractBrush {
 
-	public DomeBrush() {
-		super("Dome");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		generateDome(snipe, targetBlock);
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.blockDataType();
-		messages.height();
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		generateDome(snipe, lastBlock);
 	}
 
-	private void generateDome(ToolkitProperties toolkitProperties, Block targetBlock) {
-		if (toolkitProperties.getVoxelHeight() == 0) {
-			toolkitProperties.sendMessage("VoxelHeight must not be 0.");
+	private void generateDome(Snipe snipe, Block block) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int voxelHeight = toolkitProperties.getVoxelHeight();
+		if (voxelHeight == 0) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage("VoxelHeight must not be 0.");
 			return;
 		}
-		int absoluteHeight = Math.abs(toolkitProperties.getVoxelHeight());
-		boolean negative = toolkitProperties.getVoxelHeight() < 0;
+		int absoluteHeight = Math.abs(voxelHeight);
+		boolean negative = voxelHeight < 0;
 		Set<Vector> changeablePositions = new HashSet<>();
 		Undo undo = new Undo();
-		int brushSizeTimesVoxelHeight = toolkitProperties.getBrushSize() * absoluteHeight;
-		double stepScale = (toolkitProperties.getBrushSize() * toolkitProperties.getBrushSize() + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5.0;
+		int brushSize = toolkitProperties.getBrushSize();
+		int brushSizeTimesVoxelHeight = brushSize * absoluteHeight;
+		double stepScale = (brushSize * brushSize + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5.0;
 		double stepSize = 1.0 / stepScale;
 		for (double u = 0; u <= Math.PI / 2; u += stepSize) {
 			double y = absoluteHeight * Math.sin(u);
 			for (double stepV = -Math.PI; stepV <= -(Math.PI / 2); stepV += stepSize) {
-				double x = toolkitProperties.getBrushSize() * Math.cos(u) * Math.cos(stepV);
-				double z = toolkitProperties.getBrushSize() * Math.cos(u) * Math.sin(stepV);
-				double targetBlockX = targetBlock.getX() + 0.5;
-				double targetBlockZ = targetBlock.getZ() + 0.5;
-				int targetY = NumberConversions.floor(targetBlock.getY() + (negative ? -y : y));
+				double x = brushSize * Math.cos(u) * Math.cos(stepV);
+				double z = brushSize * Math.cos(u) * Math.sin(stepV);
+				double targetBlockX = block.getX() + 0.5;
+				double targetBlockZ = block.getZ() + 0.5;
+				int targetY = NumberConversions.floor(block.getY() + (negative ? -y : y));
 				int currentBlockXAdd = NumberConversions.floor(targetBlockX + x);
 				int currentBlockZAdd = NumberConversions.floor(targetBlockZ + z);
 				int currentBlockXSubtract = NumberConversions.floor(targetBlockX - x);
@@ -74,26 +79,16 @@ public class DomeBrush extends AbstractBrush {
 				currentTargetBlock.setBlockData(snipeBlockData);
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.generateDome(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.generateDome(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.dome";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
+		messenger.sendBlockTypeMessage();
+		messenger.sendVoxelHeightMessage();
 	}
 }

@@ -8,8 +8,9 @@ import java.util.UUID;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -19,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -39,8 +41,6 @@ public class Sniper {
 		this.uuid = uuid;
 		this.undoCacheSize = undoCacheSize;
 		Toolkit defaultToolkit = createDefaultToolkit();
-		ToolkitProperties properties = defaultToolkit.getProperties();
-		properties.setOwner(this);
 		this.toolkits.add(defaultToolkit);
 	}
 
@@ -51,35 +51,17 @@ public class Sniper {
 		return toolkit;
 	}
 
-	public void sendMessages(String... messages) {
-		Player player = getPlayer();
-		if (player == null) {
-			return;
-		}
-		for (String message : messages) {
-			player.sendMessage(message);
-		}
-	}
-
-	public void sendMessage(String message) {
-		Player player = getPlayer();
-		if (player == null) {
-			return;
-		}
-		player.sendMessage(message);
-	}
-
-	@Nullable
 	public Player getPlayer() {
-		return Bukkit.getPlayer(this.uuid);
+		Player player = Bukkit.getPlayer(this.uuid);
+		if (player == null) {
+			throw new UnknownSniperPlayerException();
+		}
+		return player;
 	}
 
 	@Nullable
 	public Toolkit getCurrentToolkit() {
 		Player player = getPlayer();
-		if (player == null) {
-			return null;
-		}
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemInHand = inventory.getItemInMainHand();
 		Material itemType = itemInHand.getType();
@@ -145,7 +127,7 @@ public class Sniper {
 		BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
 		Block targetBlock = clickedBlock == null ? blockTracer.getTargetBlock() : clickedBlock;
 		if (player.isSneaking()) {
-			Messages messages = toolkitProperties.getMessages();
+			SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 				if (toolAction == ToolAction.ARROW) {
 					if (targetBlock.isEmpty()) {
@@ -154,7 +136,7 @@ public class Sniper {
 						Material type = targetBlock.getType();
 						toolkitProperties.setBlockDataType(type);
 					}
-					messages.blockDataType();
+					messenger.sendBlockTypeMessage();
 					return true;
 				} else if (toolAction == ToolAction.GUNPOWDER) {
 					if (targetBlock.isEmpty()) {
@@ -163,7 +145,7 @@ public class Sniper {
 						BlockData blockData = targetBlock.getBlockData();
 						toolkitProperties.setBlockData(blockData);
 					}
-					messages.blockData();
+					messenger.sendBlockDataMessage();
 					return true;
 				}
 				return false;
@@ -175,7 +157,7 @@ public class Sniper {
 						Material type = targetBlock.getType();
 						toolkitProperties.setReplaceBlockDataType(type);
 					}
-					messages.replaceBlockDataType();
+					messenger.sendReplaceBlockTypeMessage();
 					return true;
 				} else if (toolAction == ToolAction.GUNPOWDER) {
 					if (targetBlock == null) {
@@ -184,7 +166,7 @@ public class Sniper {
 						BlockData blockData = targetBlock.getBlockData();
 						toolkitProperties.setReplaceBlockData(blockData);
 					}
-					messages.replaceBlockData();
+					messenger.sendReplaceBlockDataMessage();
 					return true;
 				}
 				return false;
@@ -200,12 +182,14 @@ public class Sniper {
 				if (currentBrush == null) {
 					return false;
 				}
+				Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
 				if (currentBrush instanceof PerformerBrush) {
 					PerformerBrush performerBrush = (PerformerBrush) currentBrush;
-					performerBrush.initPerformer(toolkitProperties);
+					performerBrush.initialize(snipe);
 				}
 				Block lastBlock = clickedBlock == null ? blockTracer.getLastBlock() : clickedBlock.getRelative(clickedBlockFace);
-				return currentBrush.perform(toolAction, toolkitProperties, targetBlock, lastBlock);
+				currentBrush.perform(snipe, toolAction, targetBlock, lastBlock);
+				return true;
 			}
 		}
 		return false;
@@ -224,9 +208,9 @@ public class Sniper {
 		this.undoList.push(undo);
 	}
 
-	public void undo(int amount) {
+	public void undo(CommandSender sender, int amount) {
 		if (this.undoList.isEmpty()) {
-			sendMessage(ChatColor.GREEN + "There's nothing to undo.");
+			sender.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
 			return;
 		}
 		int sum = 0;
@@ -235,27 +219,32 @@ public class Sniper {
 			undo.undo();
 			sum += undo.getSize();
 		}
-		sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
+		sender.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
 	}
 
-	public void displayInfo() {
+	public void sendInfo(CommandSender sender) {
 		Toolkit toolkit = getCurrentToolkit();
 		if (toolkit == null) {
-			sendMessage("Current toolkit: none");
+			sender.sendMessage("Current toolkit: none");
 			return;
 		}
-		sendMessage("Current toolkit: " + toolkit.getToolkitName());
+		sender.sendMessage("Current toolkit: " + toolkit.getToolkitName());
+		BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
+		if (brushProperties == null) {
+			sender.sendMessage("No brush selected.");
+			return;
+		}
 		Brush brush = toolkit.getCurrentBrush();
 		if (brush == null) {
-			sendMessage("No brush selected.");
+			sender.sendMessage("No brush selected.");
 			return;
 		}
-		ToolkitProperties properties = toolkit.getProperties();
-		Messages messages = properties.getMessages();
-		brush.info(messages);
+		ToolkitProperties toolkitProperties = toolkit.getProperties();
+		Snipe snipe = new Snipe(this, toolkit, toolkitProperties, brushProperties, brush);
+		brush.sendInfo(snipe);
 		if (brush instanceof PerformerBrush) {
 			PerformerBrush performer = (PerformerBrush) brush;
-			performer.showInfo(messages);
+			performer.sendPerformerInfo(snipe);
 		}
 	}
 

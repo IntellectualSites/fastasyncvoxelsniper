@@ -5,8 +5,8 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -23,56 +23,55 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;
 
-	public AbstractBlendBrush(String name) {
-		super(name);
-	}
-
-	protected abstract void blend(ToolkitProperties toolkitProperties);
-
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.excludeAir = false;
-		this.blend(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.excludeAir = true;
-		this.blend(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.blockDataType();
-		messages.custom(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
-	}
-
-	@Override
-	public void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
 		for (int i = 1; i < parameters.length; ++i) {
 			String parameter = parameters[i];
 			if (parameter.equalsIgnoreCase("water")) {
 				this.excludeWater = !this.excludeWater;
-				toolkitProperties.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+				messenger.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
 			}
 		}
 	}
 
-	protected final boolean isExcludeAir() {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		this.excludeAir = false;
+		blend(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		this.excludeAir = true;
+		blend(snipe);
+	}
+
+	public abstract void blend(Snipe snipe);
+
+	@Override
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.blockTypeMessage()
+			.message(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"))
+			.send();
+	}
+
+	public boolean isExcludeAir() {
 		return this.excludeAir;
 	}
 
-	protected final void setExcludeAir(boolean excludeAir) {
+	public void setExcludeAir(boolean excludeAir) {
 		this.excludeAir = excludeAir;
 	}
 
-	protected final boolean isExcludeWater() {
+	public boolean isExcludeWater() {
 		return this.excludeWater;
 	}
 
-	protected final void setExcludeWater(boolean excludeWater) {
+	public void setExcludeWater(boolean excludeWater) {
 		this.excludeWater = excludeWater;
 	}
 }

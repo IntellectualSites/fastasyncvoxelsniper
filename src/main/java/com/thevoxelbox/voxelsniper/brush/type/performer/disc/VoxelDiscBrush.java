@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
@@ -12,42 +13,35 @@ import org.bukkit.block.Block;
  */
 public class VoxelDiscBrush extends AbstractPerformerBrush {
 
-	public VoxelDiscBrush() {
-		super("Voxel Disc");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		disc(snipe, targetBlock);
 	}
 
-	private void disc(ToolkitProperties toolkitProperties, Block targetBlock) {
-		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		disc(snipe, lastBlock);
+	}
+
+	private void disc(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int brushSize = toolkitProperties.getBrushSize();
+		for (int x = brushSize; x >= -toolkitProperties.getBrushSize(); x--) {
 			for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
 				this.performer.perform(targetBlock.getRelative(x, 0, z));
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.disc(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.disc(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.voxeldisc";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.send();
 	}
 }

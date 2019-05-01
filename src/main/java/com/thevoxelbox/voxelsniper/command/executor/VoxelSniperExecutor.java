@@ -89,6 +89,6 @@ public class VoxelSniperExecutor implements CommandExecutor {
 			}
 		}
 		sender.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
-		sniper.displayInfo();
+		sniper.sendInfo(sender);
 	}
 }

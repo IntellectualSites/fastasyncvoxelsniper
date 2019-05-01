@@ -3,7 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.Random;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,8 +28,38 @@ public class RandomErodeBrush extends AbstractBrush {
 	private int fillRecursion = 1;
 	private Random generator = new Random();
 
-	public RandomErodeBrush() {
-		super("RandomErode");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		this.snap = new BlockWrapper[0][0][0];
+		this.erodeFace = this.generator.nextInt(5) + 1;
+		this.fillFace = this.generator.nextInt(3) + 3;
+		this.erodeRecursion = this.generator.nextInt(3);
+		this.fillRecursion = this.generator.nextInt(3);
+		if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+			// chance to be zero though, for more interestingness -Gav
+			this.erodeRecursion = this.generator.nextInt(2) + 1;
+			this.fillRecursion = this.generator.nextInt(2) + 1;
+		}
+		randomErosion(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		this.snap = new BlockWrapper[0][0][0];
+		this.erodeFace = this.generator.nextInt(3) + 3;
+		this.fillFace = this.generator.nextInt(5) + 1;
+		this.erodeRecursion = this.generator.nextInt(3);
+		this.fillRecursion = this.generator.nextInt(3);
+		if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+			// chance to be zero though, for more interestingness -Gav
+			this.erodeRecursion = this.generator.nextInt(2) + 1;
+			this.fillRecursion = this.generator.nextInt(2) + 1;
+		}
+		randomFilling(snipe);
 	}
 
 	private boolean erode(int x, int y, int z) {
@@ -138,7 +169,7 @@ public class RandomErodeBrush extends AbstractBrush {
 		}
 	}
 
-	private void randomErosion(ToolkitProperties toolkitProperties) {
+	private void randomErosion(Snipe snipe) {
 		Undo undo = new Undo();
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
 			for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
@@ -190,11 +221,11 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
-	private void randomFilling(ToolkitProperties toolkitProperties) {
+	private void randomFilling(Snipe snipe) {
 		Undo undo = new Undo();
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
 			double bSquared = Math.pow(this.brushSize + 0.5, 2);
@@ -246,46 +277,15 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		this.snap = new BlockWrapper[0][0][0];
-		this.erodeFace = this.generator.nextInt(5) + 1;
-		this.fillFace = this.generator.nextInt(3) + 3;
-		this.erodeRecursion = this.generator.nextInt(3);
-		this.fillRecursion = this.generator.nextInt(3);
-		if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
-			// chance to be zero though, for more interestingness -Gav
-			this.erodeRecursion = this.generator.nextInt(2) + 1;
-			this.fillRecursion = this.generator.nextInt(2) + 1;
-		}
-		this.randomErosion(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		this.snap = new BlockWrapper[0][0][0];
-		this.erodeFace = this.generator.nextInt(3) + 3;
-		this.fillFace = this.generator.nextInt(5) + 1;
-		this.erodeRecursion = this.generator.nextInt(3);
-		this.fillRecursion = this.generator.nextInt(3);
-		if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
-			// chance to be zero though, for more interestingness -Gav
-			this.erodeRecursion = this.generator.nextInt(2) + 1;
-			this.fillRecursion = this.generator.nextInt(2) + 1;
-		}
-		this.randomFilling(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
 	}
 
 	/**
@@ -323,10 +323,5 @@ public class RandomErodeBrush extends AbstractBrush {
 		public void setType(Material type) {
 			this.type = type;
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.randomerode";
 	}
 }

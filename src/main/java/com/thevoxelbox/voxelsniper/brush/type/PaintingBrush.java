@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Painter;
 import org.bukkit.entity.Player;
 
@@ -14,47 +14,33 @@ import org.bukkit.entity.Player;
  */
 public class PaintingBrush extends AbstractBrush {
 
-	public PaintingBrush() {
-		super("Painting");
-	}
-
 	/**
 	 * Scroll painting forward.
 	 *
-	 * @param toolkitProperties Sniper caller
+	 * @param snipe Sniper caller
 	 */
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Sniper owner = toolkitProperties.getOwner();
-		Player player = owner.getPlayer();
-		if (player == null) {
-			return;
-		}
+	public void handleArrowAction(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		Painter.paint(player, true, false, 0);
 	}
 
 	/**
 	 * Scroll painting backwards.
 	 *
-	 * @param toolkitProperties Sniper caller
+	 * @param snipe Sniper caller
 	 */
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Sniper owner = toolkitProperties.getOwner();
-		Player player = owner.getPlayer();
-		if (player == null) {
-			return;
-		}
+	public void handleGunpowderAction(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		Painter.paint(player, true, true, 0);
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.painting";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

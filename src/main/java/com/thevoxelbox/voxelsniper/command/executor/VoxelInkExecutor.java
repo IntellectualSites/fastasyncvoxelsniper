@@ -4,10 +4,10 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
+import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -38,21 +38,21 @@ public class VoxelInkExecutor implements CommandExecutor {
 		if (toolkitProperties == null) {
 			return;
 		}
-		BlockData dataValue;
+		BlockData blockData;
 		if (arguments.length == 0) {
 			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
 			Block targetBlock = blockTracer.getTargetBlock();
-			dataValue = targetBlock.getBlockData();
+			blockData = targetBlock.getBlockData();
 		} else {
 			try {
-				dataValue = Bukkit.createBlockData(arguments[0]);
+				blockData = Bukkit.createBlockData(arguments[0]);
 			} catch (IllegalArgumentException exception) {
 				sender.sendMessage("Couldn't parse input.");
 				return;
 			}
 		}
-		toolkitProperties.setBlockData(dataValue);
-		Messages messages = toolkitProperties.getMessages();
-		messages.blockData();
+		toolkitProperties.setBlockData(blockData);
+		Messenger messenger = new Messenger(sender);
+		messenger.sendBlockDataMessage(blockData);
 	}
 }

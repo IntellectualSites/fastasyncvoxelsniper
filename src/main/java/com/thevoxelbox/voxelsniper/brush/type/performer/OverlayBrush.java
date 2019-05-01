@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
@@ -19,29 +20,69 @@ public class OverlayBrush extends AbstractPerformerBrush {
 	private int depth = DEFAULT_DEPTH;
 	private boolean allBlocks;
 
-	public OverlayBrush() {
-		super("Overlay (Topsoil Filling)");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
+				messenger.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
+				messenger.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+				return;
+			}
+			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+				try {
+					this.depth = Integer.parseInt(parameter.replace("d", ""));
+					if (this.depth < 1) {
+						this.depth = 1;
+					}
+					messenger.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
+				} catch (NumberFormatException e) {
+					messenger.sendMessage(ChatColor.RED + "Depth isn't a number.");
+				}
+			} else if (parameter.startsWith("all")) {
+				this.allBlocks = true;
+				messenger.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
+			} else if (parameter.startsWith("some")) {
+				this.allBlocks = false;
+				messenger.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+			}
+		}
 	}
 
-	private void overlay(ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		overlay(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		overlayTwo(snipe);
+	}
+
+	private void overlay(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				// check if column is valid
 				// column is valid if it has no solid block right above the clicked layer
-				Block targetBlock = this.getTargetBlock();
-				Material material = this.getBlockType(targetBlock.getX() + x, targetBlock.getY() + 1, targetBlock.getZ() + z);
+				Block targetBlock = getTargetBlock();
+				Material material = getBlockType(targetBlock.getX() + x, targetBlock.getY() + 1, targetBlock.getZ() + z);
 				if (isIgnoredBlock(material)) {
-					if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) {
+					if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) {
 						for (int y = targetBlock.getY(); y > 0; y--) {
 							// check for surface
-							Material layerBlockType = this.getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z);
+							Material layerBlockType = getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z);
 							if (!isIgnoredBlock(layerBlockType)) {
 								for (int currentDepth = y; y - currentDepth < this.depth; currentDepth--) {
-									Material currentBlockType = this.getBlockType(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z);
+									Material currentBlockType = getBlockType(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z);
 									if (isOverrideableMaterial(currentBlockType)) {
-										this.performer.perform(this.clampY(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z));
+										this.performer.perform(clampY(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z));
 									}
 								}
 								break;
@@ -51,8 +92,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private boolean isIgnoredBlock(Material material) {
@@ -81,7 +122,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	private void overlayTwo(ToolkitProperties toolkitProperties) {
+	private void overlayTwo(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
@@ -138,60 +180,15 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.overlay(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.overlayTwo(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-				toolkitProperties.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-				toolkitProperties.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
-				return;
-			}
-			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
-				try {
-					this.depth = Integer.parseInt(parameter.replace("d", ""));
-					if (this.depth < 1) {
-						this.depth = 1;
-					}
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
-				} catch (NumberFormatException e) {
-					toolkitProperties.sendMessage(ChatColor.RED + "Depth isn't a number.");
-				}
-			} else if (parameter.startsWith("all")) {
-				this.allBlocks = true;
-				toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
-			} else if (parameter.startsWith("some")) {
-				this.allBlocks = false;
-				toolkitProperties.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
-			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.overlay";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.send();
 	}
 }

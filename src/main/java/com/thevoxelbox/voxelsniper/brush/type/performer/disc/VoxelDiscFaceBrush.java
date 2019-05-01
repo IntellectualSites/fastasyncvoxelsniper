@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,98 +14,88 @@ import org.bukkit.block.BlockFace;
  */
 public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
-	public VoxelDiscFaceBrush() {
-		super("Voxel Disc Face");
-	}
-
-	private void disc(ToolkitProperties toolkitProperties, Block targetBlock) {
-		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
-			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
-				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
-			}
-		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
-	private void discNorthSouth(ToolkitProperties toolkitProperties, Block targetBlock) {
-		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
-			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
-				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
-			}
-		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
-	private void discEastWest(ToolkitProperties toolkitProperties, Block targetBlock) {
-		for (int x = toolkitProperties.getBrushSize(); x >= -toolkitProperties.getBrushSize(); x--) {
-			for (int y = toolkitProperties.getBrushSize(); y >= -toolkitProperties.getBrushSize(); y--) {
-				this.performer.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
-			}
-		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
-	private void pre(ToolkitProperties toolkitProperties, BlockFace blockFace, Block targetBlock) {
-		if (blockFace == null) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		Block targetBlock = getTargetBlock();
+		BlockFace face = targetBlock.getFace(lastBlock);
+		if (face == null) {
 			return;
 		}
+		pre(snipe, face, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		Block targetBlock = getTargetBlock();
+		BlockFace face = targetBlock.getFace(lastBlock);
+		if (face == null) {
+			return;
+		}
+		pre(snipe, face, lastBlock);
+	}
+
+	private void pre(Snipe snipe, BlockFace blockFace, Block targetBlock) {
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
-				this.discNorthSouth(toolkitProperties, targetBlock);
+				discNorthSouth(snipe, targetBlock);
 				break;
 			case EAST:
 			case WEST:
-				this.discEastWest(toolkitProperties, targetBlock);
+				discEastWest(snipe, targetBlock);
 				break;
 			case UP:
 			case DOWN:
-				this.disc(toolkitProperties, targetBlock);
+				disc(snipe, targetBlock);
 				break;
 			default:
 				break;
 		}
 	}
 
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
+	private void discNorthSouth(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int brushSize = toolkitProperties.getBrushSize();
+		for (int x = brushSize; x >= -brushSize; x--) {
+			for (int y = brushSize; y >= -brushSize; y--) {
+				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
+			}
 		}
-		Block targetBlock = this.getTargetBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
-		if (face == null) {
-			return;
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
+	}
+
+	private void discEastWest(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int brushSize = toolkitProperties.getBrushSize();
+		for (int x = brushSize; x >= -brushSize; x--) {
+			for (int y = brushSize; y >= -brushSize; y--) {
+				this.performer.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
+			}
 		}
-		this.pre(toolkitProperties, face, targetBlock);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
+	}
+
+	private void disc(Snipe snipe, Block targetBlock) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		int brushSize = toolkitProperties.getBrushSize();
+		for (int x = brushSize; x >= -brushSize; x--) {
+			for (int y = brushSize; y >= -brushSize; y--) {
+				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
+			}
+		}
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		Block targetBlock = this.getTargetBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
-		if (face == null) {
-			return;
-		}
-		this.pre(toolkitProperties, face, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.voxeldiscface";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.send();
 	}
 }

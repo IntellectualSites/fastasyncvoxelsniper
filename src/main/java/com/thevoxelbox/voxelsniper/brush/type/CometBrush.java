@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -20,21 +20,24 @@ public class CometBrush extends AbstractBrush {
 
 	private boolean useBigBalls;
 
-	public CometBrush() {
-		super("Comet");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		doFireball(snipe);
 	}
 
-	private void doFireball(ToolkitProperties toolkitProperties) {
+	@Override
+	public final void handleGunpowderAction(Snipe snipe) {
+		doFireball(snipe);
+	}
+
+	private void doFireball(Snipe snipe) {
 		Block targetBlock = getTargetBlock();
 		int x = targetBlock.getX();
 		int y = targetBlock.getY();
 		int z = targetBlock.getZ();
 		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
-		Sniper owner = toolkitProperties.getOwner();
-		Player player = owner.getPlayer();
-		if (player == null) {
-			return;
-		}
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		Location playerLocation = player.getEyeLocation();
 		Vector slope = targetCoordinates.subtract(playerLocation.toVector());
 		Vector normalizedSlope = slope.normalize();
@@ -48,50 +51,37 @@ public class CometBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 0; i < parameters.length; ++i) {
-			String parameter = parameters[i];
+	public final void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int index = 0; index < parameters.length; ++index) {
+			String parameter = parameters[index];
 			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage("Parameters:");
-				toolkitProperties.sendMessage("balls [big|small]  -- Sets your ball size.");
+				messenger.sendMessage("Parameters:");
+				messenger.sendMessage("balls [big|small]  -- Sets your ball size.");
 			}
 			if (parameter.equalsIgnoreCase("balls")) {
-				if (i + 1 >= parameters.length) {
-					toolkitProperties.sendMessage("The balls parameter expects a ball size after it.");
+				if (index + 1 >= parameters.length) {
+					messenger.sendMessage("The balls parameter expects a ball size after it.");
 				}
-				String newBallSize = parameters[++i];
+				String newBallSize = parameters[++index];
 				if (newBallSize.equalsIgnoreCase("big")) {
 					this.useBigBalls = true;
-					toolkitProperties.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
+					messenger.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
 				} else if (newBallSize.equalsIgnoreCase("small")) {
 					this.useBigBalls = false;
-					toolkitProperties.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
+					messenger.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
 				} else {
-					toolkitProperties.sendMessage("Unknown ball size.");
+					messenger.sendMessage("Unknown ball size.");
 				}
 			}
 		}
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.doFireball(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.doFireball(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.blockDataType();
-		messages.custom("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"));
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.comet";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBlockTypeMessage();
+		messenger.sendMessage("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"));
 	}
 }

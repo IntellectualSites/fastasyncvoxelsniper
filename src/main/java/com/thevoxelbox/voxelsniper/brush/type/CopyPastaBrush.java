@@ -3,8 +3,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -33,17 +33,85 @@ public class CopyPastaBrush extends AbstractBrush {
 	private int[] arraySize = new int[3];
 	private int pivot; // ccw degrees
 
-	public CopyPastaBrush() {
-		super("CopyPasta");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		String parameter = parameters[1];
+		if (parameter.equalsIgnoreCase("info")) {
+			snipe.createMessageSender()
+				.message(ChatColor.GOLD + "CopyPasta Parameters:")
+				.message(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste")
+				.message(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)")
+				.send();
+			return;
+		}
+		if (parameter.equalsIgnoreCase("air")) {
+			this.pasteAir = !this.pasteAir;
+			messenger.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
+			return;
+		}
+		if (Stream.of("90", "180", "270", "0")
+			.anyMatch(parameter::equalsIgnoreCase)) {
+			this.pivot = Integer.parseInt(parameter);
+			messenger.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+		}
 	}
 
-	private void doCopy(ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		Block targetBlock = getTargetBlock();
+		if (this.points == 0) {
+			this.firstPoint[0] = targetBlock.getX();
+			this.firstPoint[1] = targetBlock.getY();
+			this.firstPoint[2] = targetBlock.getZ();
+			messenger.sendMessage(ChatColor.GRAY + "First point");
+			this.points = 1;
+		} else if (this.points == 1) {
+			this.secondPoint[0] = targetBlock.getX();
+			this.secondPoint[1] = targetBlock.getY();
+			this.secondPoint[2] = targetBlock.getZ();
+			messenger.sendMessage(ChatColor.GRAY + "Second point");
+			this.points = 2;
+		} else {
+			this.firstPoint = new int[3];
+			this.secondPoint = new int[3];
+			this.numBlocks = 0;
+			this.blockArray = new Material[1];
+			this.dataArray = new BlockData[1];
+			this.points = 0;
+			messenger.sendMessage(ChatColor.GRAY + "Points cleared.");
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (this.points == 2) {
+			if (this.numBlocks == 0) {
+				doCopy(snipe);
+			} else if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
+				Block targetBlock = this.getTargetBlock();
+				this.pastePoint[0] = targetBlock.getX();
+				this.pastePoint[1] = targetBlock.getY();
+				this.pastePoint[2] = targetBlock.getZ();
+				doPasta(snipe);
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Error");
+			}
+		} else {
+			messenger.sendMessage(ChatColor.RED + "You must select exactly two points.");
+		}
+	}
+
+	private void doCopy(Snipe snipe) {
 		for (int i = 0; i < 3; i++) {
 			this.arraySize[i] = Math.abs(this.firstPoint[i] - this.secondPoint[i]) + 1;
 			this.minPoint[i] = Math.min(this.firstPoint[i], this.secondPoint[i]);
 			this.offsetPoint[i] = this.minPoint[i] - this.firstPoint[i]; // will always be negative or zero
 		}
 		this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
+		SnipeMessenger messenger = snipe.createMessenger();
 		if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
 			this.blockArray = new Material[this.numBlocks];
 			this.dataArray = new BlockData[this.numBlocks];
@@ -51,7 +119,7 @@ public class CopyPastaBrush extends AbstractBrush {
 				for (int j = 0; j < this.arraySize[1]; j++) {
 					for (int k = 0; k < this.arraySize[2]; k++) {
 						int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
-						World world = this.getWorld();
+						World world = getWorld();
 						Block block = world.getBlockAt(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
 						this.blockArray[currentPosition] = block.getType();
 						Block clamp = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
@@ -59,13 +127,13 @@ public class CopyPastaBrush extends AbstractBrush {
 					}
 				}
 			}
-			toolkitProperties.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks copied.");
+			messenger.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks copied.");
 		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
+			messenger.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
 		}
 	}
 
-	private void doPasta(ToolkitProperties toolkitProperties) {
+	private void doPasta(Snipe snipe) {
 		Undo undo = new Undo();
 		for (int i = 0; i < this.arraySize[0]; i++) {
 			for (int j = 0; j < this.arraySize[1]; j++) {
@@ -96,86 +164,18 @@ public class CopyPastaBrush extends AbstractBrush {
 				}
 			}
 		}
-		toolkitProperties.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks pasted.");
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks pasted.");
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Block targetBlock = this.getTargetBlock();
-		if (this.points == 0) {
-			this.firstPoint[0] = targetBlock.getX();
-			this.firstPoint[1] = targetBlock.getY();
-			this.firstPoint[2] = targetBlock.getZ();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "First point");
-			this.points = 1;
-		} else if (this.points == 1) {
-			this.secondPoint[0] = targetBlock.getX();
-			this.secondPoint[1] = targetBlock.getY();
-			this.secondPoint[2] = targetBlock.getZ();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Second point");
-			this.points = 2;
-		} else {
-			this.firstPoint = new int[3];
-			this.secondPoint = new int[3];
-			this.numBlocks = 0;
-			this.blockArray = new Material[1];
-			this.dataArray = new BlockData[1];
-			this.points = 0;
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Points cleared.");
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		if (this.points == 2) {
-			if (this.numBlocks == 0) {
-				this.doCopy(toolkitProperties);
-			} else if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
-				Block targetBlock = this.getTargetBlock();
-				this.pastePoint[0] = targetBlock.getX();
-				this.pastePoint[1] = targetBlock.getY();
-				this.pastePoint[2] = targetBlock.getZ();
-				this.doPasta(toolkitProperties);
-			} else {
-				toolkitProperties.sendMessage(ChatColor.RED + "Error");
-			}
-		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "You must select exactly two points.");
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.custom(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-		messages.custom(ChatColor.GOLD + "Pivot angle: " + this.pivot);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		String parameter = parameters[1];
-		if (parameter.equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "CopyPasta Parameters:");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)");
-			return;
-		}
-		if (parameter.equalsIgnoreCase("air")) {
-			this.pasteAir = !this.pasteAir;
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-			return;
-		}
-		if (Stream.of("90", "180", "270", "0")
-			.anyMatch(parameter::equalsIgnoreCase)) {
-			this.pivot = Integer.parseInt(parameter);
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.copypasta";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.message(ChatColor.GOLD + "Paste air: " + this.pasteAir)
+			.message(ChatColor.GOLD + "Pivot angle: " + this.pivot)
+			.send();
 	}
 }

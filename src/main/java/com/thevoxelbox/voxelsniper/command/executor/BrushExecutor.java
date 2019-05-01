@@ -10,10 +10,11 @@ import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
+import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -53,7 +54,7 @@ public class BrushExecutor implements CommandExecutor {
 				return;
 			}
 			Brush brush = toolkit.useBrush(previousBrushProperties);
-			sniper.displayInfo();
+			sniper.sendInfo(sender);
 			return;
 		}
 		String firstArgument = arguments[0];
@@ -66,8 +67,8 @@ public class BrushExecutor implements CommandExecutor {
 				sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
 			}
 			toolkitProperties.setBrushSize(brushSize);
-			Messages messages = toolkitProperties.getMessages();
-			messages.size();
+			Messenger messenger = new Messenger(sender);
+			messenger.sendBrushSizeMessage(brushSize);
 			return;
 		}
 		BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
@@ -83,17 +84,18 @@ public class BrushExecutor implements CommandExecutor {
 		}
 		Brush brush = toolkit.useBrush(newBrush);
 		if (arguments.length > 1) {
+			Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, newBrush, brush);
 			if (brush instanceof PerformerBrush) {
 				String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
 				PerformerBrush performerBrush = (PerformerBrush) brush;
-				performerBrush.parse(parameters, toolkitProperties);
+				performerBrush.handleCommand(parameters, snipe);
 			} else {
 				String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
-				brush.parameters(parameters, toolkitProperties);
+				brush.handleCommand(parameters, snipe);
 			}
 			return;
 		}
-		sniper.displayInfo();
+		sniper.sendInfo(sender);
 	}
 
 	/**

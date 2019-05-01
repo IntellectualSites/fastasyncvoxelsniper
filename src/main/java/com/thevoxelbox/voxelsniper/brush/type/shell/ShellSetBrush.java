@@ -5,7 +5,8 @@ import java.util.List;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,11 +26,27 @@ public class ShellSetBrush extends AbstractBrush {
 	@Nullable
 	private Block block;
 
-	public ShellSetBrush() {
-		super("Shell Set");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		if (set(targetBlock, snipe)) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.GRAY + "Point one");
+		}
 	}
 
-	private boolean set(Block block, ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		if (set(lastBlock, snipe)) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.GRAY + "Point one");
+		}
+	}
+
+	private boolean set(Block block, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		if (this.block == null) {
 			this.block = block;
 			return true;
@@ -38,7 +55,7 @@ public class ShellSetBrush extends AbstractBrush {
 				.getName()
 				.equals(block.getWorld()
 					.getName())) {
-				toolkitProperties.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+				messenger.sendMessage(ChatColor.RED + "You selected points in different worlds!");
 				this.block = null;
 				return true;
 			}
@@ -55,7 +72,7 @@ public class ShellSetBrush extends AbstractBrush {
 			int highY = (y1 >= y2) ? y1 : y2;
 			int highZ = (z1 >= z2) ? z1 : z2;
 			if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_SIZE) {
-				toolkitProperties.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+				messenger.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 			} else {
 				List<Block> blocks = new ArrayList<>(((Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY)) / 2));
 				for (int y = lowY; y <= highY; y++) {
@@ -71,14 +88,15 @@ public class ShellSetBrush extends AbstractBrush {
 				}
 				Undo undo = new Undo();
 				for (Block currentBlock : blocks) {
-					if (currentBlock.getType() != toolkitProperties.getBlockDataType()) {
+					Material blockType = toolkitProperties.getBlockDataType();
+					if (currentBlock.getType() != blockType) {
 						undo.put(currentBlock);
-						currentBlock.setType(toolkitProperties.getBlockDataType());
+						currentBlock.setType(blockType);
 					}
 				}
-				Sniper owner = toolkitProperties.getOwner();
-				owner.storeUndo(undo);
-				toolkitProperties.sendMessage(ChatColor.AQUA + "Shell complete.");
+				Sniper sniper = snipe.getSniper();
+				sniper.storeUndo(undo);
+				messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
 			}
 			this.block = null;
 			return false;
@@ -91,33 +109,12 @@ public class ShellSetBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		if (this.set(this.getTargetBlock(), toolkitProperties)) {
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		if (this.set(lastBlock, toolkitProperties)) {
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Point one");
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.blockDataType();
-		messages.replaceBlockDataType();
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.shellset";
+	public void sendInfo(Snipe snipe) {
+		snipe.createMessageSender()
+			.brushNameMessage()
+			.brushSizeMessage()
+			.blockTypeMessage()
+			.replaceBlockTypeMessage()
+			.send();
 	}
 }

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -19,17 +19,44 @@ public class FlatOceanBrush extends AbstractBrush {
 	private int waterLevel = DEFAULT_WATER_LEVEL;
 	private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
-	public FlatOceanBrush() {
-		super("FlatOcean");
+	@Override
+	public  void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
+				messenger.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
+			}
+			if (parameter.startsWith("yo")) {
+				int newWaterLevel = Integer.parseInt(parameter.replace("yo", ""));
+				if (newWaterLevel < this.floorLevel) {
+					newWaterLevel = this.floorLevel + 1;
+				}
+				this.waterLevel = newWaterLevel;
+				messenger.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
+			} else if (parameter.startsWith("yl")) {
+				int newFloorLevel = Integer.parseInt(parameter.replace("yl", ""));
+				if (newFloorLevel > this.waterLevel) {
+					newFloorLevel = this.waterLevel - 1;
+					if (newFloorLevel == 0) {
+						newFloorLevel = 1;
+						this.waterLevel = 2;
+					}
+				}
+				this.floorLevel = newFloorLevel;
+				messenger.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
+			}
+		}
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
+	public  void handleArrowAction(Snipe snipe) {
 		flatOceanAtTarget();
 	}
 
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
+	public  void handleGunpowderAction(Snipe snipe) {
 		flatOceanAtTarget();
 		flatOceanAtTarget(CHUNK_SIZE, 0);
 		flatOceanAtTarget(CHUNK_SIZE, CHUNK_SIZE);
@@ -77,45 +104,11 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(getName());
-		messages.custom(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
-		messages.custom(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-		messages.custom(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			if (parameter.equalsIgnoreCase("info")) {
-				toolkitProperties.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
-				toolkitProperties.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
-			}
-			if (parameter.startsWith("yo")) {
-				int newWaterLevel = Integer.parseInt(parameter.replace("yo", ""));
-				if (newWaterLevel < this.floorLevel) {
-					newWaterLevel = this.floorLevel + 1;
-				}
-				this.waterLevel = newWaterLevel;
-				toolkitProperties.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
-			} else if (parameter.startsWith("yl")) {
-				int newFloorLevel = Integer.parseInt(parameter.replace("yl", ""));
-				if (newFloorLevel > this.waterLevel) {
-					newFloorLevel = this.waterLevel - 1;
-					if (newFloorLevel == 0) {
-						newFloorLevel = 1;
-						this.waterLevel = 2;
-					}
-				}
-				this.floorLevel = newFloorLevel;
-				toolkitProperties.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.flatocean";
+	public  void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
+		messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+		messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
 	}
 }
