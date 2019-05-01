@@ -31,10 +31,10 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 			return;
 		}
 		this.performerProperties = performerProperties;
-		PerformerCreator performerCreator = performerProperties.getCreator();
+		PerformerCreator performerCreator = this.performerProperties.getCreator();
 		this.performer = performerCreator.create();
 		sendInfo(snipe);
-		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, performerProperties, this.performer);
+		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
 		this.performer.sendInfo(performerSnipe);
 		if (parameters.length > 1) {
 			String[] additionalArguments = Arrays.copyOfRange(parameters, 1, parameters.length);
