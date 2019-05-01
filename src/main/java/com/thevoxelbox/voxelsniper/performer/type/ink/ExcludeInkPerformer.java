@@ -2,7 +2,8 @@ package com.thevoxelbox.voxelsniper.performer.type.ink;
 
 import java.util.List;
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -12,20 +13,9 @@ public class ExcludeInkPerformer extends AbstractPerformer {
 	private List<BlockData> excludeList;
 	private BlockData blockData;
 
-	public ExcludeInkPerformer() {
-		super("Exclude Ink");
-	}
-
 	@Override
-	public void info(Messages messages) {
-		messages.performerName(this.getName());
-		messages.voxelList();
-		messages.blockData();
-	}
-
-	@Override
-	public void init(ToolkitProperties toolkitProperties) {
-		this.world = toolkitProperties.getWorld();
+	public void initialize(PerformerSnipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.blockData = toolkitProperties.getBlockData();
 		this.excludeList = toolkitProperties.getVoxelList();
 	}
@@ -34,8 +24,18 @@ public class ExcludeInkPerformer extends AbstractPerformer {
 	public void perform(Block block) {
 		BlockData blockData = block.getBlockData();
 		if (!this.excludeList.contains(blockData)) {
-			this.undo.put(block);
+			Undo undo = getUndo();
+			undo.put(block);
 			block.setBlockData(this.blockData);
 		}
+	}
+
+	@Override
+	public void sendInfo(PerformerSnipe snipe) {
+		snipe.createMessageSender()
+			.performerNameMessage()
+			.voxelListMessage()
+			.blockDataMessage()
+			.send();
 	}
 }

@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.performer.type.ink;
 
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,34 +13,28 @@ public class InkMaterialPerformer extends AbstractPerformer {
 	private BlockData blockData;
 	private Material replaceMaterial;
 
-	public InkMaterialPerformer() {
-		super("Ink-Material");
-	}
-
 	@Override
-	public void init(ToolkitProperties toolkitProperties) {
-		this.world = toolkitProperties.getWorld();
+	public void initialize(PerformerSnipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.blockData = toolkitProperties.getBlockData();
 		this.replaceMaterial = toolkitProperties.getReplaceBlockType();
 	}
 
 	@Override
-	public void info(Messages messages) {
-		messages.performerName(this.getName());
-		messages.blockData();
-		messages.replaceBlockDataType();
-	}
-
-	@Override
 	public void perform(Block block) {
 		if (block.getType() == this.replaceMaterial) {
-			this.undo.put(block);
+			Undo undo = getUndo();
+			undo.put(block);
 			block.setBlockData(this.blockData);
 		}
 	}
 
 	@Override
-	public boolean isUsingReplaceMaterial() {
-		return true;
+	public void sendInfo(PerformerSnipe snipe) {
+		snipe.createMessageSender()
+			.performerNameMessage()
+			.blockDataMessage()
+			.replaceBlockTypeMessage()
+			.send();
 	}
 }

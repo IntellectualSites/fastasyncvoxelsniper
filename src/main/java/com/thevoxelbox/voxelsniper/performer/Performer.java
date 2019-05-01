@@ -1,26 +1,18 @@
 package com.thevoxelbox.voxelsniper.performer;
 
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import org.bukkit.block.Block;
-import org.jetbrains.annotations.Nullable;
 
 public interface Performer {
 
-	void info(Messages messages);
-
-	void init(ToolkitProperties toolkitProperties);
-
-	void setUndo();
+	void initialize(PerformerSnipe snipe);
 
 	void perform(Block block);
 
-	@Nullable Undo getUndo();
+	void sendInfo(PerformerSnipe snipe);
 
-	boolean isUsingReplaceMaterial();
+	void initializeUndo();
 
-	String getName();
-
-	void setName(String name);
+	Undo getUndo();
 }

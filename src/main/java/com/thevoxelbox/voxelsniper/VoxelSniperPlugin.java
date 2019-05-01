@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
+import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -23,12 +24,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
 	private VoxelSniperConfig voxelSniperConfig;
 	private BrushRegistry brushRegistry;
+	private PerformerRegistry performerRegistry;
 	private SniperRegistry sniperRegistry;
 
 	@Override
 	public void onEnable() {
 		this.voxelSniperConfig = loadConfig();
 		this.brushRegistry = loadBrushRegistry();
+		this.performerRegistry = loadPerformerRegistry();
 		this.sniperRegistry = new SniperRegistry();
 		loadCommands();
 		loadListeners();
@@ -54,6 +57,13 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
 		brushRegistrar.registerBrushes();
 		return brushRegistry;
+	}
+
+	private PerformerRegistry loadPerformerRegistry() {
+		PerformerRegistry performerRegistry = new PerformerRegistry();
+		PerformerRegistrar performerRegistrar = new PerformerRegistrar(performerRegistry);
+		performerRegistrar.registerPerformers();
+		return performerRegistry;
 	}
 
 	private void loadCommands() {
@@ -84,6 +94,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	 */
 	public BrushRegistry getBrushRegistry() {
 		return this.brushRegistry;
+	}
+
+	public PerformerRegistry getPerformerRegistry() {
+		return this.performerRegistry;
 	}
 
 	/**

@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.performer.type.combo;
 
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -11,37 +12,31 @@ public class ComboComboPerformer extends AbstractPerformer {
 	private BlockData blockData;
 	private BlockData replaceBlockData;
 
-	public ComboComboPerformer() {
-		super("Combo-Combo");
-	}
-
 	@Override
-	public void init(ToolkitProperties toolkitProperties) {
-		this.world = toolkitProperties.getWorld();
+	public void initialize(PerformerSnipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.blockData = toolkitProperties.getBlockData();
 		this.replaceBlockData = toolkitProperties.getReplaceBlockData();
-	}
-
-	@Override
-	public void info(Messages messages) {
-		messages.performerName(this.getName());
-		messages.blockDataType();
-		messages.replaceBlockDataType();
-		messages.blockData();
-		messages.replaceBlockData();
 	}
 
 	@Override
 	public void perform(Block block) {
 		BlockData blockData = block.getBlockData();
 		if (blockData.equals(this.replaceBlockData)) {
-			this.undo.put(block);
+			Undo undo = getUndo();
+			undo.put(block);
 			block.setBlockData(this.blockData);
 		}
 	}
 
 	@Override
-	public boolean isUsingReplaceMaterial() {
-		return true;
+	public void sendInfo(PerformerSnipe snipe) {
+		snipe.createMessageSender()
+			.performerNameMessage()
+			.blockTypeMessage()
+			.replaceBlockTypeMessage()
+			.blockDataMessage()
+			.replaceBlockDataMessage()
+			.send();
 	}
 }

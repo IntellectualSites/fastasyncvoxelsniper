@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -44,8 +45,9 @@ public class PerformerExecutor implements CommandExecutor {
 			return;
 		}
 		PerformerBrush performer = (PerformerBrush) brush;
-		Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
 		String[] parameters = arguments.length == 0 ? new String[] {"m"} : arguments;
-		performer.handlePerformerCommand(parameters, snipe);
+		Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
+		PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
+		performer.handlePerformerCommand(parameters, snipe, performerRegistry);
 	}
 }

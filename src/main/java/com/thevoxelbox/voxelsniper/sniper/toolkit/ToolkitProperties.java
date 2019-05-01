@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -26,12 +25,6 @@ public class ToolkitProperties {
 	private Integer blockTracerRange;
 	private boolean lightningEnabled;
 	private List<BlockData> voxelList = new ArrayList<>();
-
-	@Deprecated
-	@Nullable
-	public World getWorld() {
-		return null;
-	}
 
 	public ToolkitProperties() {
 		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();

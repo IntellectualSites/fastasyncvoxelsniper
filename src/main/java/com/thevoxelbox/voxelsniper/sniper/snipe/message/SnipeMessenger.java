@@ -25,10 +25,6 @@ public class SnipeMessenger {
 		this.messenger.sendBrushNameMessage(brushName);
 	}
 
-	public void sendPerformerNameMessage(String performerName) {
-		this.messenger.sendPerformerNameMessage(performerName);
-	}
-
 	public void sendBlockTypeMessage() {
 		Material blockType = this.toolkitProperties.getBlockType();
 		this.messenger.sendBlockTypeMessage(blockType);
@@ -71,5 +67,9 @@ public class SnipeMessenger {
 
 	public void sendMessage(String message) {
 		this.messenger.sendMessage(message);
+	}
+
+	public Messenger getMessenger() {
+		return this.messenger;
 	}
 }

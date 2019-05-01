@@ -26,11 +26,6 @@ public class SnipeMessageSender {
 		return this;
 	}
 
-	public SnipeMessageSender performerNameMessage(String performerName) {
-		this.messageSender.performerNameMessage(performerName);
-		return this;
-	}
-
 	public SnipeMessageSender blockTypeMessage() {
 		Material blockType = this.toolkitProperties.getBlockType();
 		this.messageSender.blockTypeMessage(blockType);
@@ -86,5 +81,9 @@ public class SnipeMessageSender {
 
 	public void send() {
 		this.messageSender.send();
+	}
+
+	public MessageSender getMessageSender() {
+		return this.messageSender;
 	}
 }
