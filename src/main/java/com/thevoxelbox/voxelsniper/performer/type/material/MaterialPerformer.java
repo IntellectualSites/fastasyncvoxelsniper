@@ -1,0 +1,36 @@
+package com.thevoxelbox.voxelsniper.performer.type.material;
+
+import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
+public class MaterialPerformer extends AbstractPerformer {
+
+	private Material material;
+
+	public MaterialPerformer() {
+		super("Material");
+	}
+
+	@Override
+	public void init(ToolkitProperties toolkitProperties) {
+		this.world = toolkitProperties.getWorld();
+		this.material = toolkitProperties.getBlockType();
+	}
+
+	@Override
+	public void info(Messages messages) {
+		messages.performerName(this.getName());
+		messages.blockDataType();
+	}
+
+	@Override
+	public void perform(Block block) {
+		if (block.getType() != this.material) {
+			this.undo.put(block);
+			block.setType(this.material);
+		}
+	}
+}

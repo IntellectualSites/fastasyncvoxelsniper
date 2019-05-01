@@ -2,10 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
-import com.thevoxelbox.voxelsniper.brush.performer.Performer;
-import com.thevoxelbox.voxelsniper.brush.performer.Performers;
-import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.performer.Performer;
+import com.thevoxelbox.voxelsniper.performer.Performers;
+import com.thevoxelbox.voxelsniper.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
