@@ -13,7 +13,7 @@ import org.bukkit.block.data.BlockData;
  *
  * @author Gavjenks
  */
-public class VoltMeterBrush extends AbstractBrush {
+public class VoltmeterBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
