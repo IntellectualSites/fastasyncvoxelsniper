@@ -75,7 +75,7 @@ public class Messages {
 	 * Display replace material.
 	 */
 	public void replaceBlockDataType() {
-		Material replaceBlockDataType = this.toolkitProperties.getReplaceBlockDataType();
+		Material replaceBlockDataType = this.toolkitProperties.getReplaceBlockType();
 		this.sender.sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockDataType.getKey());
 	}
 
@@ -101,7 +101,7 @@ public class Messages {
 	 * Display voxel type.
 	 */
 	public void blockDataType() {
-		Material blockDataType = this.toolkitProperties.getBlockDataType();
+		Material blockDataType = this.toolkitProperties.getBlockType();
 		this.sender.sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockDataType.getKey());
 	}
 

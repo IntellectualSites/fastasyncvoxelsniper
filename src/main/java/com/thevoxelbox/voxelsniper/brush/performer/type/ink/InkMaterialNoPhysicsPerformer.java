@@ -23,7 +23,7 @@ public class InkMaterialNoPhysicsPerformer extends AbstractPerformer {
 	public void init(ToolkitProperties toolkitProperties) {
 		this.world = toolkitProperties.getWorld();
 		this.blockData = toolkitProperties.getBlockData();
-		this.replaceMaterial = toolkitProperties.getReplaceBlockDataType();
+		this.replaceMaterial = toolkitProperties.getReplaceBlockType();
 	}
 
 	@Override

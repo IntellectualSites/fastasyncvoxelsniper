@@ -57,7 +57,7 @@ public class RulerBrush extends AbstractBrush {
 	@Override
 	public void handleArrowAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		Material blockDataType = toolkitProperties.getBlockDataType();
+		Material blockDataType = toolkitProperties.getBlockType();
 		Block targetBlock = getTargetBlock();
 		Location location = targetBlock.getLocation();
 		this.coordinates = location.toVector();

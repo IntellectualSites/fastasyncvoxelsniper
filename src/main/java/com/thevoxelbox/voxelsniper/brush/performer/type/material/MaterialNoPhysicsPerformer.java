@@ -25,7 +25,7 @@ public class MaterialNoPhysicsPerformer extends AbstractPerformer {
 	@Override
 	public void init(ToolkitProperties toolkitProperties) {
 		this.world = toolkitProperties.getWorld();
-		this.material = toolkitProperties.getBlockDataType();
+		this.material = toolkitProperties.getBlockType();
 	}
 
 	@Override

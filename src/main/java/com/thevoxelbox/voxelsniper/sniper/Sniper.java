@@ -134,7 +134,7 @@ public class Sniper {
 						toolkitProperties.resetBlockData();
 					} else {
 						Material type = targetBlock.getType();
-						toolkitProperties.setBlockDataType(type);
+						toolkitProperties.setBlockType(type);
 					}
 					messenger.sendBlockTypeMessage();
 					return true;
@@ -155,7 +155,7 @@ public class Sniper {
 						toolkitProperties.resetReplaceBlockData();
 					} else {
 						Material type = targetBlock.getType();
-						toolkitProperties.setReplaceBlockDataType(type);
+						toolkitProperties.setReplaceBlockType(type);
 					}
 					messenger.sendReplaceBlockTypeMessage();
 					return true;

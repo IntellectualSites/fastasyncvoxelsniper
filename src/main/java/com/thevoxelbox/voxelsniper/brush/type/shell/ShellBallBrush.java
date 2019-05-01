@@ -60,26 +60,26 @@ public class ShellBallBrush extends AbstractBrush {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
 				for (int z = 0; z <= brushSizeDoubled; z++) {
 					int temp = 0;
-					if (oldMaterials[x + 1 + 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 + 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1 - 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1 - 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1 + 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1 + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1 - 1][z + 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1 - 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1][z + 1 + 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1][z + 1 + 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
-					if (oldMaterials[x + 1][y + 1][z + 1 - 1] == toolkitProperties.getReplaceBlockDataType()) {
+					if (oldMaterials[x + 1][y + 1][z + 1 - 1] == toolkitProperties.getReplaceBlockType()) {
 						temp++;
 					}
 					if (temp == 0) {
-						newMaterials[x][y][z] = toolkitProperties.getBlockDataType();
+						newMaterials[x][y][z] = toolkitProperties.getBlockType();
 					}
 				}
 			}

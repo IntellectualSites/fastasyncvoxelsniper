@@ -45,7 +45,7 @@ public class ScannerBrush extends AbstractBrush {
 	@Override
 	public void handleArrowAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		this.checkFor = toolkitProperties.getBlockDataType();
+		this.checkFor = toolkitProperties.getBlockType();
 		Block targetBlock = getTargetBlock();
 		Block lastBlock = getLastBlock();
 		BlockFace face = targetBlock.getFace(lastBlock);
@@ -58,7 +58,7 @@ public class ScannerBrush extends AbstractBrush {
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		this.checkFor = toolkitProperties.getBlockDataType();
+		this.checkFor = toolkitProperties.getBlockType();
 		Block targetBlock = getTargetBlock();
 		Block lastBlock = getLastBlock();
 		BlockFace face = targetBlock.getFace(lastBlock);

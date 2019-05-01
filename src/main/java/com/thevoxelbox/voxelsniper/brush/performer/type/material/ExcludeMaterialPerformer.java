@@ -35,7 +35,7 @@ public class ExcludeMaterialPerformer extends AbstractPerformer {
 	@Override
 	public void init(ToolkitProperties toolkitProperties) {
 		this.world = toolkitProperties.getWorld();
-		this.type = toolkitProperties.getBlockDataType();
+		this.type = toolkitProperties.getBlockType();
 		this.excludeList = toolkitProperties.getVoxelList();
 	}
 

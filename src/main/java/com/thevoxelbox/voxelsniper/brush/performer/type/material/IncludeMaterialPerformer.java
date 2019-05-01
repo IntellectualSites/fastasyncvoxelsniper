@@ -35,7 +35,7 @@ public class IncludeMaterialPerformer extends AbstractPerformer {
 	@Override
 	public void init(ToolkitProperties toolkitProperties) {
 		this.world = toolkitProperties.getWorld();
-		this.type = toolkitProperties.getBlockDataType();
+		this.type = toolkitProperties.getBlockType();
 		this.includeList = toolkitProperties.getVoxelList();
 	}
 

@@ -44,7 +44,7 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 			Block targetBlock = blockTracer.getTargetBlock();
 			if (targetBlock != null) {
 				Material type = targetBlock.getType();
-				toolkitProperties.setReplaceBlockDataType(type);
+				toolkitProperties.setReplaceBlockType(type);
 				messenger.sendReplaceBlockTypeMessage(type);
 			}
 			return;
@@ -52,7 +52,7 @@ public class VoxelReplaceExecutor implements CommandExecutor {
 		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null) {
 			if (material.isBlock()) {
-				toolkitProperties.setReplaceBlockDataType(material);
+				toolkitProperties.setReplaceBlockType(material);
 				messenger.sendReplaceBlockTypeMessage(material);
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");

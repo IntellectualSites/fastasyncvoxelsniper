@@ -79,7 +79,7 @@ public class ShellSetBrush extends AbstractBrush {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
 							World world = getWorld();
-							Material replaceBlockDataType = toolkitProperties.getReplaceBlockDataType();
+							Material replaceBlockDataType = toolkitProperties.getReplaceBlockType();
 							if (isBlockTypeNotEqual(world, y, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x + 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x - 1, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z + 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y, x, z - 1, replaceBlockDataType) && isBlockTypeNotEqual(world, y + 1, x, z, replaceBlockDataType) && isBlockTypeNotEqual(world, y - 1, x, z, replaceBlockDataType)) {
 								blocks.add(world.getBlockAt(x, y, z));
 							}
@@ -88,7 +88,7 @@ public class ShellSetBrush extends AbstractBrush {
 				}
 				Undo undo = new Undo();
 				for (Block currentBlock : blocks) {
-					Material blockType = toolkitProperties.getBlockDataType();
+					Material blockType = toolkitProperties.getBlockType();
 					if (currentBlock.getType() != blockType) {
 						undo.put(currentBlock);
 						currentBlock.setType(blockType);

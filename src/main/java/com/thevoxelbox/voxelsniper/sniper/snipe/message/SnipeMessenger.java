@@ -30,7 +30,7 @@ public class SnipeMessenger {
 	}
 
 	public void sendBlockTypeMessage() {
-		Material blockType = this.toolkitProperties.getBlockDataType();
+		Material blockType = this.toolkitProperties.getBlockType();
 		this.messenger.sendBlockTypeMessage(blockType);
 	}
 
@@ -40,7 +40,7 @@ public class SnipeMessenger {
 	}
 
 	public void sendReplaceBlockTypeMessage() {
-		Material replaceBlockType = this.toolkitProperties.getReplaceBlockDataType();
+		Material replaceBlockType = this.toolkitProperties.getReplaceBlockType();
 		this.messenger.sendReplaceBlockTypeMessage(replaceBlockType);
 	}
 

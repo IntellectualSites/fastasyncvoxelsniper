@@ -52,7 +52,7 @@ public class VoxelExecutor implements CommandExecutor {
 					sender.sendMessage("You are not allowed to use " + targetBlockType.name() + ".");
 					return;
 				}
-				toolkitProperties.setBlockDataType(targetBlockType);
+				toolkitProperties.setBlockType(targetBlockType);
 				messenger.sendBlockTypeMessage(targetBlockType);
 			}
 			return;
@@ -63,7 +63,7 @@ public class VoxelExecutor implements CommandExecutor {
 				sender.sendMessage("You are not allowed to use " + material.name() + ".");
 				return;
 			}
-			toolkitProperties.setBlockDataType(material);
+			toolkitProperties.setBlockType(material);
 			messenger.sendBlockTypeMessage(material);
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");

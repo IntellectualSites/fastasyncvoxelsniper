@@ -62,19 +62,19 @@ public class ToolkitProperties {
 		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
 	}
 
-	public Material getBlockDataType() {
+	public Material getBlockType() {
 		return this.blockData.getMaterial();
 	}
 
-	public void setBlockDataType(Material type) {
+	public void setBlockType(Material type) {
 		this.blockData = type.createBlockData();
 	}
 
-	public Material getReplaceBlockDataType() {
+	public Material getReplaceBlockType() {
 		return this.replaceBlockData.getMaterial();
 	}
 
-	public void setReplaceBlockDataType(Material type) {
+	public void setReplaceBlockType(Material type) {
 		this.replaceBlockData = type.createBlockData();
 	}
 
