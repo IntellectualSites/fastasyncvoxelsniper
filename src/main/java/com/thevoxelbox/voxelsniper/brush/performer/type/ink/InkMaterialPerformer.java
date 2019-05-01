@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.thevoxelbox.voxelsniper.brush.performer.type.ink;
 
 import com.thevoxelbox.voxelsniper.brush.performer.type.AbstractPerformer;

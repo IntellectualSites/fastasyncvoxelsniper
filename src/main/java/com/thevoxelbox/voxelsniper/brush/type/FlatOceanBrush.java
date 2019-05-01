@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -20,7 +20,7 @@ public class FlatOceanBrush extends AbstractBrush {
 	private int floorLevel = DEFAULT_FLOOR_LEVEL;
 
 	@Override
-	public  void handleCommand(String[] parameters, Snipe snipe) {
+	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
@@ -51,12 +51,12 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	public  void handleArrowAction(Snipe snipe) {
+	public void handleArrowAction(Snipe snipe) {
 		flatOceanAtTarget();
 	}
 
 	@Override
-	public  void handleGunpowderAction(Snipe snipe) {
+	public void handleGunpowderAction(Snipe snipe) {
 		flatOceanAtTarget();
 		flatOceanAtTarget(CHUNK_SIZE, 0);
 		flatOceanAtTarget(CHUNK_SIZE, CHUNK_SIZE);
@@ -104,7 +104,7 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	@Override
-	public  void sendInfo(Snipe snipe) {
+	public void sendInfo(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendBrushNameMessage();
 		messenger.sendMessage(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");

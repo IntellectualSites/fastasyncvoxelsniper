@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.thevoxelbox.voxelsniper.brush.performer;
 
 import java.lang.reflect.Constructor;
@@ -18,11 +13,9 @@ import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboMaterialPerfo
 import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ComboPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.combo.ExcludeComboPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.ink.ExcludeInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.material.ExcludeMaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.combo.IncludeComboPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.ink.ExcludeInkPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.IncludeInkPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.material.IncludeMaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkComboNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkComboPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkInkNoPhysicsPerformer;
@@ -31,6 +24,8 @@ import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkMaterialNoPhysics
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkMaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.ink.InkPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.ExcludeMaterialPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.IncludeMaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialComboNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialComboPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialInkNoPhysicsPerformer;
@@ -38,8 +33,8 @@ import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialInkPerf
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialMaterialNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialMaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialNoUndoPerformer;
+import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
