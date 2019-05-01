@@ -5,11 +5,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Brush
- *
- * @author Piotr
- */
 public class VoxelBrush extends AbstractPerformerBrush {
 
 	@Override

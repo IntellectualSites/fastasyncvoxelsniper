@@ -9,11 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Overlay_.2F_Topsoil_Brush
- *
- * @author Gavjenks
- */
 public class OverlayBrush extends AbstractPerformerBrush {
 
 	private static final int DEFAULT_DEPTH = 3;

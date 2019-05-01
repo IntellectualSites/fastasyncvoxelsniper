@@ -12,11 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Entity_Brush
- *
- * @author Piotr
- */
 public class EntityBrush extends AbstractBrush {
 
 	private EntityType entityType = EntityType.ZOMBIE;

@@ -13,11 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_OCEANATOR_5000
- *
- * @author Voxel
- */
 public class OceanBrush extends AbstractBrush {
 
 	private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here

@@ -10,11 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Extrude_Brush
- *
- * @author psanker
- */
 public class ExtrudeBrush extends AbstractBrush {
 
 	private double trueCircle;

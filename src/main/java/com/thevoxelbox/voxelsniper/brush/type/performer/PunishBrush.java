@@ -18,13 +18,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Punish_Brush
- *
- * @author Monofraps
- * @author Deamon
- * @author MikeMatrix
- */
 public class PunishBrush extends AbstractPerformerBrush {
 
 	private static final int MAX_RANDOM_TELEPORTATION_RANGE = 400;
@@ -322,11 +315,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 			.send();
 	}
 
-	/**
-	 * @author Monofraps
-	 */
 	private enum Punishment {
-		// Monofraps
 		FIRE,
 		LIGHTNING,
 		BLINDNESS,
@@ -334,7 +323,6 @@ public class PunishBrush extends AbstractPerformerBrush {
 		KILL,
 		RANDOMTP,
 		ALL_POTION,
-		// Deamon
 		SLOW,
 		JUMP,
 		ABSORPTION,
@@ -355,7 +343,6 @@ public class PunishBrush extends AbstractPerformerBrush {
 		WATER_BREATHING,
 		WEAKNESS,
 		WITHER,
-		// MikeMatrix
 		FORCE,
 		HYPNO
 	}

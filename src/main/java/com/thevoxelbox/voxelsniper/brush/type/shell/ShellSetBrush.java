@@ -14,11 +14,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
- *
- * @author Piotr
- */
 public class ShellSetBrush extends AbstractBrush {
 
 	private static final int MAX_SIZE = 5000000;

@@ -9,11 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Brushes
- *
- * @author Voxel
- */
 public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 
 	private static final int GROW_PERCENT_MIN = 1;

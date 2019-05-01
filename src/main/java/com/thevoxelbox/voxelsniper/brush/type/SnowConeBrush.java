@@ -11,11 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Snow;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Snow_cone_brush
- *
- * @author Voxel
- */
 public class SnowConeBrush extends AbstractBrush {
 
 	@Override

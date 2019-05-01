@@ -8,9 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Voxel
- */
 public class IncludeMaterialPerformer extends AbstractPerformer {
 
 	private List<BlockData> includeList;

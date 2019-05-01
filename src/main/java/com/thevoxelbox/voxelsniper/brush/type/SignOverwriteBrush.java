@@ -9,12 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
-/**
- * Overwrites signs. (Wiki:
- * http://www.voxelwiki.com/minecraft/VoxelSniper#Sign_Overwrite_Brush)
- *
- * @author Monofraps
- */
 public class SignOverwriteBrush extends AbstractBrush {
 
 	private static final int MAX_SIGN_LINE_LENGTH = 15;

@@ -10,11 +10,6 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_CANYONATOR
- *
- * @author Voxel
- */
 public class CanyonBrush extends AbstractBrush {
 
 	private static final int SHIFT_LEVEL_MIN = 10;

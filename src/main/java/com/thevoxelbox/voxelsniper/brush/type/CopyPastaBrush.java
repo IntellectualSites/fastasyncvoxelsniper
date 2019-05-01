@@ -11,11 +11,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#CopyPasta_Brush
- *
- * @author giltwist
- */
 public class CopyPastaBrush extends AbstractBrush {
 
 	private static final int BLOCK_LIMIT = 10000;

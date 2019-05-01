@@ -20,9 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Moves a selection blockPositionY a certain amount.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Move_Brush
- *
- * @author MikeMatrix
  */
 public class MoveBrush extends AbstractBrush {
 
@@ -164,11 +161,6 @@ public class MoveBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
 	}
 
-	/**
-	 * Selection Helper class.
-	 *
-	 * @author MikeMatrix
-	 */
 	private class Selection {
 
 		/**

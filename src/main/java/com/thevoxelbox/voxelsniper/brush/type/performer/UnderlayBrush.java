@@ -8,12 +8,6 @@ import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Underlay_Brush
- *
- * @author jmck95 Credit to GavJenks for framework and 95 of code. Big Thank you to GavJenks
- */
-
 public class UnderlayBrush extends AbstractPerformerBrush {
 
 	private static final int DEFAULT_DEPTH = 3;

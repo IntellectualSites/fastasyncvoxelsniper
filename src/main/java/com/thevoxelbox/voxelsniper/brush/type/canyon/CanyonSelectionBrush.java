@@ -7,11 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Canyon_Selection_Brush
- *
- * @author Voxel
- */
 public class CanyonSelectionBrush extends CanyonBrush {
 
 	private boolean first = true;

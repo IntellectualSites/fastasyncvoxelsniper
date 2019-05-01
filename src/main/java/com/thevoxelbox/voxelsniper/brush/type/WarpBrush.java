@@ -7,9 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-/**
- * @author MikeMatrix
- */
 public class WarpBrush extends AbstractBrush {
 
 	@Override

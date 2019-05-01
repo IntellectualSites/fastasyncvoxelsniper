@@ -7,9 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * @author Voxel
- */
 public class FillDownBrush extends AbstractPerformerBrush {
 
 	private double trueCircle;

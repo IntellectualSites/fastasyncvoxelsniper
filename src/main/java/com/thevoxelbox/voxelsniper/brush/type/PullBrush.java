@@ -12,9 +12,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Piotr
- */
 public class PullBrush extends AbstractBrush {
 
 	private Set<PullBrushBlockWrapper> surface = new HashSet<>();
@@ -215,9 +212,6 @@ public class PullBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.AQUA + "Bubble " + this.c2);
 	}
 
-	/**
-	 * @author Piotr
-	 */
 	private static final class PullBrushBlockWrapper {
 
 		private BlockData blockData;

@@ -5,9 +5,6 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Voxel
- */
 public abstract class AbstractPerformer implements Performer {
 
 	private String name;

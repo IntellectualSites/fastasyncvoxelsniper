@@ -8,9 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * @author MikeMatrix
- */
 public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 
 	private boolean useWorldCoordinates = true;

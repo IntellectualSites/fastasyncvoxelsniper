@@ -15,11 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Heat_Ray
- *
- * @author Gavjenks
- */
 public class HeatRayBrush extends AbstractBrush {
 
 	private static final double REQUIRED_OBSIDIAN_DENSITY = 0.6;

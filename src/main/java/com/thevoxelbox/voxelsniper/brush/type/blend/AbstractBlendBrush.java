@@ -10,10 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-/**
- * @author Monofraps
- */
-
 public abstract class AbstractBlendBrush extends AbstractBrush {
 
 	protected static final Set<Material> BLOCKS = Arrays.stream(Material.values())

@@ -9,12 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Drain_Brush
- *
- * @author Gavjenks
- * @author psanker
- */
 public class DrainBrush extends AbstractBrush {
 
 	private double trueCircle;

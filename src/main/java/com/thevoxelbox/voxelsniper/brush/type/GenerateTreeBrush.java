@@ -15,11 +15,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#VoxelTrees_Brush
- *
- * @author Ghost8700 @ Voxel
- */
 public class GenerateTreeBrush extends AbstractBrush {
 
 	// Tree Variables.

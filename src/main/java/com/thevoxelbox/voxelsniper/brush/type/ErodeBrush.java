@@ -21,12 +21,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/VoxelSniper#The_Erosion_Brush
- *
- * @author Piotr
- * @author MikeMatrix
- */
 public class ErodeBrush extends AbstractBrush {
 
 	private static final Vector[] FACES_TO_CHECK = {new Vector(0, 0, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), new Vector(0, -1, 0), new Vector(1, 0, 0), new Vector(-1, 0, 0)};
@@ -219,9 +213,6 @@ public class ErodeBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
 	}
 
-	/**
-	 * @author MikeMatrix
-	 */
 	private enum Preset {
 
 		MELT("melt", new ErosionPreset(2, 1, 5, 1)),
@@ -255,9 +246,6 @@ public class ErodeBrush extends AbstractBrush {
 		}
 	}
 
-	/**
-	 * @author MikeMatrix
-	 */
 	private static final class BlockChangeTracker {
 
 		private final Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
@@ -301,9 +289,6 @@ public class ErodeBrush extends AbstractBrush {
 		}
 	}
 
-	/**
-	 * @author MikeMatrix
-	 */
 	private static final class BlockWrapper {
 
 		@Nullable
@@ -339,9 +324,6 @@ public class ErodeBrush extends AbstractBrush {
 		}
 	}
 
-	/**
-	 * @author MikeMatrix
-	 */
 	private static final class ErosionPreset implements Serializable {
 
 		private static final long serialVersionUID = 8997952776355430411L;

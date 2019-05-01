@@ -9,11 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Disc_Face_Brush
- *
- * @author Voxel
- */
 public class DiscFaceBrush extends AbstractPerformerBrush {
 
 	private double trueCircle;

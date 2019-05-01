@@ -9,12 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Random-Erode_Brush
- *
- * @author Piotr
- * @author Giltwist (Randomized blockPositionY)
- */
 public class RandomErodeBrush extends AbstractBrush {
 
 	private static final double TRUE_CIRCLE = 0.5;
@@ -288,9 +282,6 @@ public class RandomErodeBrush extends AbstractBrush {
 		messenger.sendBrushSizeMessage();
 	}
 
-	/**
-	 * @author unknown
-	 */
 	private static final class BlockWrapper {
 
 		private Block nativeBlock;

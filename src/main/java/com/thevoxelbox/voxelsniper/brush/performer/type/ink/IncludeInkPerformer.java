@@ -7,9 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Voxel
- */
 public class IncludeInkPerformer extends AbstractPerformer {
 
 	private List<BlockData> includeList;

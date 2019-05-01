@@ -38,9 +38,7 @@ import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerform
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Voxel
- */
+
 
 /* The m/i/c system of naming performers: <placement-option>[replacement-option][extras]
  *

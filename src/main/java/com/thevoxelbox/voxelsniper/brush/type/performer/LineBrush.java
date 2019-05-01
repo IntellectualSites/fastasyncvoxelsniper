@@ -11,13 +11,6 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Line_Brush
- *
- * @author Gavjenks
- * @author giltwist
- * @author MikeMatrix
- */
 public class LineBrush extends AbstractPerformerBrush {
 
 	private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);

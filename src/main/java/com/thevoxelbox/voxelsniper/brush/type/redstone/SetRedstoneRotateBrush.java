@@ -12,9 +12,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Voxel
- */
 public class SetRedstoneRotateBrush extends AbstractBrush {
 
 	@Nullable

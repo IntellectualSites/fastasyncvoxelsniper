@@ -8,11 +8,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Set_Brush
- *
- * @author Voxel
- */
 public class SetBrush extends AbstractPerformerBrush {
 
 	private static final int SELECTION_SIZE_MAX = 5000000;

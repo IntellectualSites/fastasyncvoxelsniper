@@ -19,11 +19,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Tree_Brush
- *
- * @author Mick
- */
 public class TreeSnipeBrush extends AbstractBrush {
 
 	private TreeType treeType = TreeType.TREE;

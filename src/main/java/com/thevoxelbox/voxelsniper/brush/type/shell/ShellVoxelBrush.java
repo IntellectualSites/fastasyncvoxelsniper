@@ -10,12 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * THIS BRUSH SHOULD NOT USE PERFORMERS.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Shell_Brushes
- *
- * @author Voxel
- */
 public class ShellVoxelBrush extends AbstractBrush {
 
 	@Override

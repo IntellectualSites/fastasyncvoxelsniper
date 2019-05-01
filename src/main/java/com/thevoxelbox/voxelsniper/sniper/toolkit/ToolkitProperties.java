@@ -9,9 +9,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Piotr
- */
 public class ToolkitProperties {
 
 	private static final Material DEFAULT_BLOCK_MATERIAL = Material.AIR;

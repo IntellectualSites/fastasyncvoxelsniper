@@ -8,11 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Blob_Brush
- *
- * @author Giltwist
- */
 public class BlobBrush extends AbstractPerformerBrush {
 
 	private static final int GROW_PERCENT_DEFAULT = 1000;

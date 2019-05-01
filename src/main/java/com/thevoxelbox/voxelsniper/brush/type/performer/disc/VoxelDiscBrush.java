@@ -6,11 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Disc_Brush
- *
- * @author Voxel
- */
 public class VoxelDiscBrush extends AbstractPerformerBrush {
 
 	@Override

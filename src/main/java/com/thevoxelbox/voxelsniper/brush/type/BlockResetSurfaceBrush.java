@@ -22,8 +22,6 @@ import org.bukkit.block.data.BlockData;
  * about a factor of 5-6 for a size 20 brush. For a complicated city or ship, etc., this may be only a factor of about 2. In a hypothetical worst case scenario
  * of a 3d checkerboard of stone and air every other block, this brush should only be about 1.5x slower than the original brush. Savings increase for larger
  * brushes.
- *
- * @author GavJenks
  */
 public class BlockResetSurfaceBrush extends AbstractBrush {
 

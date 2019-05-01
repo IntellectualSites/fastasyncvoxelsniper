@@ -11,11 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Spiral_Staircase_Brush
- *
- * @author giltwist
- */
 public class SpiralStaircaseBrush extends AbstractBrush {
 
 	private String stairType = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners

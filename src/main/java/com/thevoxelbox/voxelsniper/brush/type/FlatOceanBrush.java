@@ -8,9 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-/**
- * @author GavJenks
- */
 public class FlatOceanBrush extends AbstractBrush {
 
 	private static final int DEFAULT_WATER_LEVEL = 29;

@@ -29,8 +29,6 @@ import org.bukkit.block.data.BlockData;
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
  * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
  * TODO: Make limit a config option
- *
- * @author Gavjenks
  */
 public class StencilBrush extends AbstractBrush {
 

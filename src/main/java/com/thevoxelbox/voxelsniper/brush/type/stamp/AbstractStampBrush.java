@@ -229,18 +229,12 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 		this.stamp = stamp;
 	}
 
-	/**
-	 * @author Monofraps
-	 */
 	protected enum StampType {
 		NO_AIR,
 		FILL,
 		DEFAULT
 	}
 
-	/**
-	 * @author Voxel
-	 */
 	protected static class StampBrushBlockWrapper {
 
 		private BlockData blockData;

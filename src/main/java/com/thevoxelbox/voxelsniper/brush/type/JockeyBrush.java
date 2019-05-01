@@ -17,12 +17,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush
- *
- * @author Voxel
- * @author Monofraps
- */
 public class JockeyBrush extends AbstractBrush {
 
 	private static final int ENTITY_STACK_LIMIT = 50;
@@ -165,7 +159,6 @@ public class JockeyBrush extends AbstractBrush {
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendBrushNameMessage();
 		messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
-		messenger.sendMessage(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
 	}
 
 	/**

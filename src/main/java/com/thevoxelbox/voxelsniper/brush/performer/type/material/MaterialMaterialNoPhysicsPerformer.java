@@ -6,9 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * @author Voxel
- */
 public class MaterialMaterialNoPhysicsPerformer extends AbstractPerformer {
 
 	private Material material;

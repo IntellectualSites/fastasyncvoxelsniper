@@ -9,11 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Clean_Snow_Brush
- *
- * @author psanker
- */
 public class CleanSnowBrush extends AbstractBrush {
 
 	private double trueCircle;

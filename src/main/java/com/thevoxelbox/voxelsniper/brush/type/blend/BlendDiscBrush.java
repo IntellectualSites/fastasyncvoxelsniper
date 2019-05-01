@@ -11,9 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
- */
 public class BlendDiscBrush extends AbstractBlendBrush {
 
 	@Override

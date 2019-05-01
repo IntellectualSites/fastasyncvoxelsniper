@@ -9,9 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Piotr
- */
 public class Rotation2DBrush extends AbstractBrush {
 
 	private int mode;

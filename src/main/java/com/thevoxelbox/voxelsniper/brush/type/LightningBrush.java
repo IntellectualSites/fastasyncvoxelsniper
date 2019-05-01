@@ -6,9 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-/**
- * @author Gavjenks
- */
 public class LightningBrush extends AbstractBrush {
 
 	@Override

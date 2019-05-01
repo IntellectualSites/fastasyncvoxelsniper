@@ -12,11 +12,6 @@ import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Three-Point_Circle_Brush
- *
- * @author Giltwist
- */
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
 	@Nullable
@@ -172,11 +167,6 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 		messageSender.send();
 	}
 
-	/**
-	 * Enumeration on Tolerance values.
-	 *
-	 * @author MikeMatrix
-	 */
 	private enum Tolerance {
 
 		DEFAULT(1000),

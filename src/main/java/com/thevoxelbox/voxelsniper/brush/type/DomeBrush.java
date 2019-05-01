@@ -14,12 +14,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Dome_Brush
- *
- * @author Gavjenks
- * @author MikeMatrix
- */
 public class DomeBrush extends AbstractBrush {
 
 	@Override

@@ -8,11 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Triangle_Brush
- *
- * @author Giltwist
- */
 public class TriangleBrush extends AbstractPerformerBrush {
 
 	private double[] coordinatesOne = new double[3]; // Three corners

@@ -7,11 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ring_Brush
- *
- * @author Voxel
- */
 public class RingBrush extends AbstractPerformerBrush {
 
 	private double trueCircle;

@@ -11,11 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Splatter_Overlay_Brush
- *
- * @author Gavjenks Splatterized blockPositionY Giltwist
- */
 public class SplatterOverlayBrush extends AbstractPerformerBrush {
 
 	private static final int GROW_PERCENT_MIN = 1;

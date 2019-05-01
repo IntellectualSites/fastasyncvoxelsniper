@@ -9,11 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
- *
- * @author psanker
- */
 public class EllipseBrush extends AbstractPerformerBrush {
 
 	private static final double TWO_PI = (2 * Math.PI);

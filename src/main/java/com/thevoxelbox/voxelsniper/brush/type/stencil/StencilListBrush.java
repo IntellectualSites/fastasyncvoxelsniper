@@ -19,9 +19,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Gavjenks
- */
 public class StencilListBrush extends AbstractBrush {
 
 	private byte pasteOption = 1; // 0 = full, 1 = fill, 2 = replace

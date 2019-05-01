@@ -11,8 +11,6 @@ import org.bukkit.block.Block;
 
 /**
  * Regenerates the target chunk.
- *
- * @author Mick
  */
 public class RegenerateChunkBrush extends AbstractBrush {
 

@@ -11,9 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-/**
- * @author DivineRage
- */
 public class ScannerBrush extends AbstractBrush {
 
 	private static final int DEPTH_MIN = 1;

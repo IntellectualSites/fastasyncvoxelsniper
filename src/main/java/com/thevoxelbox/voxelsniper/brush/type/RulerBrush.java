@@ -11,11 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Ruler_Brush
- *
- * @author Gavjenks
- */
 public class RulerBrush extends AbstractBrush {
 
 	private boolean first = true;

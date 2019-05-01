@@ -12,8 +12,6 @@ import org.bukkit.block.Block;
 /**
  * FOR ANY BRUSH THAT USES A SPLINE, EXTEND THAT BRUSH FROM THIS BRUSH!!! That way, the spline calculations are already there. Also, the UI for
  * the splines will be included.
- *
- * @author psanker
  */
 public class SplineBrush extends AbstractPerformerBrush {
 

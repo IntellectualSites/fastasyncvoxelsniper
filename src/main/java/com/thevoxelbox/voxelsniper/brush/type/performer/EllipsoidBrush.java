@@ -6,9 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipsoid_Brush
- */
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
 	private double xRad;

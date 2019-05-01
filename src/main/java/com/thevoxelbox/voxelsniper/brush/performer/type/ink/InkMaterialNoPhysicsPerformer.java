@@ -7,9 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Voxel
- */
 public class InkMaterialNoPhysicsPerformer extends AbstractPerformer {
 
 	private BlockData blockData;

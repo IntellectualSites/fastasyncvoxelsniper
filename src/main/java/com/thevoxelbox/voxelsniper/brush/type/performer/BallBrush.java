@@ -9,9 +9,6 @@ import org.bukkit.block.Block;
 
 /**
  * A brush that creates a solid ball.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Ball_Brush
- *
- * @author Piotr
  */
 public class BallBrush extends AbstractPerformerBrush {
 

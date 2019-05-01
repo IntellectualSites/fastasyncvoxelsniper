@@ -7,11 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Voxel_Disc_Face_Brush
- *
- * @author Voxel
- */
 public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
 	@Override

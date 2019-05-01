@@ -10,9 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
-/**
- * @author Voxel
- */
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
 
 	protected Performer performer = new MaterialPerformer();
