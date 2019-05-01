@@ -114,10 +114,6 @@ public class Sniper {
 			return false;
 		}
 		BrushProperties currentBrushProperties = toolkit.getCurrentBrushProperties();
-		if (currentBrushProperties == null) {
-			player.sendMessage("No Brush selected.");
-			return false;
-		}
 		String permission = currentBrushProperties.getPermission();
 		if (permission != null && !player.hasPermission(permission)) {
 			player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + permission + "'");
@@ -230,10 +226,6 @@ public class Sniper {
 		}
 		sender.sendMessage("Current toolkit: " + toolkit.getToolkitName());
 		BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
-		if (brushProperties == null) {
-			sender.sendMessage("No brush selected.");
-			return;
-		}
 		Brush brush = toolkit.getCurrentBrush();
 		if (brush == null) {
 			sender.sendMessage("No brush selected.");

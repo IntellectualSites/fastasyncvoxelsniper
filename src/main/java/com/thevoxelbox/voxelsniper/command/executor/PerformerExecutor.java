@@ -38,9 +38,6 @@ public class PerformerExecutor implements CommandExecutor {
 			return;
 		}
 		BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
-		if (brushProperties == null) {
-			return;
-		}
 		Brush brush = toolkit.getCurrentBrush();
 		if (!(brush instanceof PerformerBrush)) {
 			sender.sendMessage("This brush is not a performer brush.");

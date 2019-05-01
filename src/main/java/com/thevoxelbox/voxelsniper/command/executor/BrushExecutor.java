@@ -44,10 +44,6 @@ public class BrushExecutor implements CommandExecutor {
 		ToolkitProperties toolkitProperties = toolkit.getProperties();
 		if (arguments.length == 0) {
 			BrushProperties previousBrushProperties = toolkit.getPreviousBrushProperties();
-			if (previousBrushProperties == null) {
-				sender.sendMessage(ChatColor.RED + "Previous brush not found.");
-				return;
-			}
 			String permission = previousBrushProperties.getPermission();
 			if (permission != null && !player.hasPermission(permission)) {
 				sender.sendMessage(ChatColor.RED + "Insufficient permissions.");

@@ -82,6 +82,14 @@ import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilListBrush;
 
 public class BrushRegistrar {
 
+	public static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushProperties.builder()
+		.name("Snipe")
+		.permission("voxelsniper.brush.snipe")
+		.alias("s")
+		.alias("snipe")
+		.creator(SnipeBrush::new)
+		.build();
+
 	private BrushRegistry registry;
 
 	public BrushRegistrar(BrushRegistry registry) {
@@ -821,14 +829,7 @@ public class BrushRegistrar {
 	}
 
 	private void registerSnipeBrush() {
-		BrushProperties properties = BrushProperties.builder()
-			.name("Snipe")
-			.permission("voxelsniper.brush.snipe")
-			.alias("s")
-			.alias("snipe")
-			.creator(SnipeBrush::new)
-			.build();
-		this.registry.register(properties);
+		this.registry.register(DEFAULT_BRUSH_PROPERTIES);
 	}
 
 	private void registerSnowConeBrush() {
