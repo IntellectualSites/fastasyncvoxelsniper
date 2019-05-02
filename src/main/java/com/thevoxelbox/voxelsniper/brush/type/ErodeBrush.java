@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ErodeBrush extends AbstractBrush {
 
-	private static final List<Vector3i> FACES_TO_CHECK = List.of(new Vector3i(0, 0, 1), new Vector3i(0, 0, -1), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0));
+	private static final List<Vector3i> FACES_TO_CHECK = Arrays.asList(new Vector3i(0, 0, 1), new Vector3i(0, 0, -1), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0));
 
 	private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 

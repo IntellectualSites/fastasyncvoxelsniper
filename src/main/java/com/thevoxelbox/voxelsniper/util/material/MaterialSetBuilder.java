@@ -20,7 +20,7 @@ public class MaterialSetBuilder {
 	}
 
 	public MaterialSetBuilder with(Material... materials) {
-		List<Material> list = List.of(materials);
+		List<Material> list = Arrays.asList(materials);
 		this.materials.addAll(list);
 		return this;
 	}

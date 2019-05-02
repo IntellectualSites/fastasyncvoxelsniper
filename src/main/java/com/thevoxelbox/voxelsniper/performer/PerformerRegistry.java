@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.performer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,6 @@ public class PerformerRegistry {
 	}
 
 	public Map<String, PerformerProperties> getPerformerProperties() {
-		return Map.copyOf(this.performerProperties);
+		return Collections.unmodifiableMap(this.performerProperties);
 	}
 }

@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -46,6 +47,6 @@ public class MaterialSet implements Iterable<Material> {
 	}
 
 	public Set<Material> getMaterials() {
-		return Set.copyOf(this.materials);
+		return Collections.unmodifiableSet(this.materials);
 	}
 }
