@@ -2,14 +2,17 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import java.util.HashSet;
 import java.util.Set;
+import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
@@ -47,42 +50,32 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 	}
 
 	protected boolean falling(Material material) {
-		int id = LegacyMaterialConverter.getLegacyMaterialId(material);
-		return (id > 7 && id < 14);
+		return MaterialSets.FALLING.contains(material);
 	}
 
 	protected boolean fallsOff(Material material) {
-		int id = LegacyMaterialConverter.getLegacyMaterialId(material);
-		switch (id) {
-			// 6, 37, 38, 39, 40, 50, 51, 55, 59, 63, 64, 65, 66, 69, 70, 71, 72, 75, 76, 77, 83
-			case 6:
-			case 37:
-			case 38:
-			case 39:
-			case 40:
-			case 50:
-			case 51:
-			case 55:
-			case 59:
-			case 63:
-			case 64:
-			case 65:
-			case 66:
-			case 68:
-			case 69:
-			case 70:
-			case 71:
-			case 72:
-			case 75:
-			case 76:
-			case 77:
-			case 78:
-			case 83:
-			case 93:
-			case 94:
-			default:
-				return false;
-		}
+		MaterialSet fallsOff = MaterialSet.builder()
+			.with(Tag.SAPLINGS)
+			.with(Tag.DOORS)
+			.with(Tag.RAILS)
+			.with(Tag.BUTTONS)
+			.with(MaterialTags.SIGNS)
+			.with(MaterialTags.PRESSURE_PLATES)
+			.with(MaterialSets.FLOWERS)
+			.with(MaterialSets.MUSHROOMS)
+			.with(MaterialSets.TORCHES)
+			.with(MaterialSets.REDSTONE_TORCHES)
+			.add(Material.FIRE)
+			.add(Material.REDSTONE_WIRE)
+			.add(Material.WHEAT)
+			.add(Material.LADDER)
+			.add(Material.LEVER)
+			.add(Material.SNOW)
+			.add(Material.SUGAR_CANE)
+			.add(Material.REPEATER)
+			.add(Material.COMPARATOR)
+			.build();
+		return fallsOff.contains(material);
 	}
 
 	protected void setBlock(StampBrushBlockWrapper blockWrapper) {

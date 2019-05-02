@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -235,15 +234,16 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
+					Material blockType = getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z);
 					if (spiral[x][i][z] == 0) {
 						if (i == voxelHeight - 1) {
-							if (!getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).isEmpty()) {
+							if (!blockType.isEmpty()) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
 						} else {
 							if (!((this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) && spiral[x][i + 1][z] == 1)) {
-								if (!getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).isEmpty()) {
+								if (!blockType.isEmpty()) {
 									undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 								}
 								setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.AIR);
@@ -251,12 +251,12 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 						}
 					} else if (spiral[x][i][z] == 1) {
 						if (this.stairType.equalsIgnoreCase("block")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockType()) {
+							if (blockType != toolkitProperties.getBlockType()) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, toolkitProperties.getBlockType());
 						} else if (this.stairType.equalsIgnoreCase("step")) {
-							if (!Tag.SLABS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z))) {
+							if (!Tag.SLABS.isTagged(blockType)) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_STEP);
@@ -269,35 +269,35 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 						}
 					} else if (spiral[x][i][z] == 2) {
 						if (this.stairType.equalsIgnoreCase("step")) {
-							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z)) != 43) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							if (!Tag.SLABS.isTagged(blockType)) { //TODO: check if double slab
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_DOUBLE_STEP);
 							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 						} else if (this.stairType.equalsIgnoreCase("woodstair")) {
-							if (!Tag.WOODEN_STAIRS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z))) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							if (!Tag.WOODEN_STAIRS.isTagged(blockType)) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
 							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
 						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != Material.COBBLESTONE_STAIRS) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							if (blockType != Material.COBBLESTONE_STAIRS) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.COBBLESTONE_STAIRS);
 							clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setBlockData(Material.COBBLESTONE_STAIRS.createBlockData());
 						}
 					} else {
 						if (this.stairType.equalsIgnoreCase("woodstair")) {
-							if (!Tag.WOODEN_STAIRS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z))) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							if (!Tag.WOODEN_STAIRS.isTagged(blockType)) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.LEGACY_WOOD_STAIRS);
 							//TODO:
 							//clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
 						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z) != Material.COBBLESTONE_STAIRS) {
-								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
+							if (blockType != Material.COBBLESTONE_STAIRS) {
+								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY + i, Material.COBBLESTONE_STAIRS);
 							//TODO:
@@ -488,44 +488,45 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
+					Material blockType = getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z);
 					if (spiral[x][i][z] == 0) {
-						if (!getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty()) {
+						if (!blockType.isEmpty()) {
 							undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 						}
 						setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.AIR);
 					} else if (spiral[x][i][z] == 1) {
 						if (this.stairType.equalsIgnoreCase("block")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockType()) {
+							if (blockType != toolkitProperties.getBlockType()) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockType());
 						} else if (this.stairType.equalsIgnoreCase("step")) {
-							if (!Tag.SLABS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z))) {
+							if (!Tag.SLABS.isTagged(blockType)) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_STEP);
 							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 						} else if (this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != toolkitProperties.getBlockType()) {
+							if (blockType != toolkitProperties.getBlockType()) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, toolkitProperties.getBlockType());
 						}
 					} else if (spiral[x][i][z] == 2) {
 						if (this.stairType.equalsIgnoreCase("step")) {
-							if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) != 43) {
+							if (!Tag.SLABS.isTagged(blockType)) { //TODO: check if double slab
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_DOUBLE_STEP);
 							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(toolkitProperties.getBlockData());
 						} else if (this.stairType.equalsIgnoreCase("woodstair")) {
-							if (!Tag.WOODEN_STAIRS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z))) {
+							if (!Tag.WOODEN_STAIRS.isTagged(blockType)) {
 								undo.put(clampY(blockPositionX - brushSize - x, blockPositionY + i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
 							clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setBlockData(Material.LEGACY_WOOD_STAIRS.createBlockData());
 						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != Material.COBBLESTONE_STAIRS) {
+							if (blockType != Material.COBBLESTONE_STAIRS) {
 								undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.COBBLESTONE_STAIRS);
@@ -533,14 +534,14 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 						}
 					} else {
 						if (this.stairType.equalsIgnoreCase("woodstair")) {
-							if (!Tag.WOODEN_STAIRS.isTagged(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z))) {
+							if (!Tag.WOODEN_STAIRS.isTagged(blockType)) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.LEGACY_WOOD_STAIRS);
 							//TODO:
 							//clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).setData((byte) (spiral[x][i][z] - 2));
 						} else if (this.stairType.equalsIgnoreCase("cobblestair")) {
-							if (getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) != Material.COBBLESTONE_STAIRS) {
+							if (blockType != Material.COBBLESTONE_STAIRS) {
 								undo.put(this.clampY(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z));
 							}
 							setBlockType(blockPositionZ - brushSize + z, blockPositionX - brushSize + x, blockPositionY - i, Material.COBBLESTONE_STAIRS);

@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -192,31 +192,18 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 									}
 								} else {
 									// if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-									switch (LegacyMaterialConverter.getLegacyMaterialId(this.getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
-										case 1:
-										case 2:
-										case 3:
-										case 12:
-										case 13:
-										case 24:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-										case 48:
-										case 82:
-										case 49:
-										case 78:
-											int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
-											for (int d = this.depth - 1; ((this.depth - d) <= depth); d--) {
-												if (!this.clampY(targetBlock.getX() + x, y - d, targetBlock.getZ() + z)
-													.getType()
-													.isEmpty()) {
-													// fills down as many layers as you specify in parameters
-													this.performer.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
-													// stop it from checking any other blocks in this vertical 1x1 column.
-													memory[x + brushSize][z + brushSize] = 1;
-												}
+									if (MaterialSets.OVERRIDEABLE.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+										int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
+										for (int d = this.depth - 1; ((this.depth - d) <= depth); d--) {
+											if (!this.clampY(targetBlock.getX() + x, y - d, targetBlock.getZ() + z)
+												.getType()
+												.isEmpty()) {
+												// fills down as many layers as you specify in parameters
+												this.performer.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
+												// stop it from checking any other blocks in this vertical 1x1 column.
+												memory[x + brushSize][z + brushSize] = 1;
 											}
-											break;
-										default:
-											break;
+										}
 									}
 								}
 							}
@@ -297,30 +284,13 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-										switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
-											case 1:
-											case 2:
-											case 3:
-											case 12:
-											case 13:
-											case 14: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to
-												// mess with.
-											case 15:
-											case 16:
-											case 24:
-											case 48:
-											case 82:
-											case 49:
-											case 78:
-												int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
-												for (int i = 1; (i < depth + 1); i++) {
-													this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
-													// in parameters
-													memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-												}
-												break;
-											default:
-												break;
+										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+											int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
+											for (int i = 1; (i < depth + 1); i++) {
+												this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
+												// in parameters
+												memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+											}
 										}
 									}
 								}

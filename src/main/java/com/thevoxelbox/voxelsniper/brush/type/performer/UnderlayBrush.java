@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -77,28 +77,15 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 									}
 								}
 							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
-									case 1:
-									case 2:
-									case 3:
-									case 12:
-									case 13:
-									case 24:// These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess with.
-									case 48:
-									case 82:
-									case 49:
-									case 78:
-										for (int i = 0; (i < this.depth); i++) {
-											if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
-												.isEmpty()) {
-												this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
-												// parameters
-												memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-											}
+								if (MaterialSets.OVERRIDEABLE.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+									for (int i = 0; (i < this.depth); i++) {
+										if (!clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType()
+											.isEmpty()) {
+											this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+											// parameters
+											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
-										break;
-									default:
-										break;
+									}
 								}
 							}
 						}
@@ -127,30 +114,14 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 									// parameters
 									memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 								}
-							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								switch (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
-									case 1:
-									case 2:
-									case 3:
-									case 12:
-									case 13:
-									case 14: // These cases filter out any manufactured or refined blocks, any trees and leas, etc. that you don't want to mess
-										// with.
-									case 15:
-									case 16:
-									case 24:
-									case 48:
-									case 82:
-									case 49:
-									case 78:
-										for (int i = -1; i < this.depth - 1; i++) {
-											this.performer.perform(clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
-											// parameters
-											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-										}
-										break;
-									default:
-										break;
+							} else {
+								// if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+								if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+									for (int i = -1; i < this.depth - 1; i++) {
+										this.performer.perform(clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+										// parameters
+										memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+									}
 								}
 							}
 						}

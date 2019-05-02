@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
+import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 
 public final class MaterialSets {
 
@@ -114,6 +116,31 @@ public final class MaterialSets {
 	public static final MaterialSet LIQUIDS = MaterialSet.builder()
 		.add(Material.WATER)
 		.add(Material.LAVA)
+		.build();
+
+	public static final MaterialSet FALLING = MaterialSet.builder()
+		.with(LIQUIDS)
+		.with(Tag.SAND)
+		.add(Material.GRAVEL)
+		.build();
+
+	public static final MaterialSet OVERRIDEABLE = MaterialSet.builder()
+		.with(STONES)
+		.with(GRASSES)
+		.with(DIRT)
+		.with(Tag.SAND)
+		.with(MaterialTags.SANDSTONES)
+		.with(MaterialTags.RED_SANDSTONES)
+		.add(Material.GRAVEL)
+		.add(Material.MOSSY_COBBLESTONE)
+		.add(Material.OBSIDIAN)
+		.add(Material.SNOW)
+		.add(Material.CLAY)
+		.build();
+
+	public static final MaterialSet OVERRIDEABLE_WITH_ORES = MaterialSet.builder()
+		.with(OVERRIDEABLE)
+		.with(MaterialTags.ORES)
 		.build();
 
 	private MaterialSets() {

@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 public class OverlayBrush extends AbstractPerformerBrush {
 
 	private static final int DEFAULT_DEPTH = 3;
+
 	private int depth = DEFAULT_DEPTH;
 	private boolean allBlocks;
 
@@ -99,22 +100,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		if (this.allBlocks && !material.isEmpty()) {
 			return true;
 		}
-		int id = LegacyMaterialConverter.getLegacyMaterialId(material);
-		switch (id) {
-			case 1:
-			case 2:
-			case 3:
-			case 12:
-			case 13:
-			case 24:
-			case 48:
-			case 82:
-			case 49:
-			case 78:
-				return true;
-			default:
-				return false;
-		}
+		return MaterialSets.OVERRIDEABLE.contains(material);
 	}
 
 	private void overlayTwo(Snipe snipe) {
@@ -134,39 +120,23 @@ public class OverlayBrush extends AbstractPerformerBrush {
 							if (!getBlockType(targetBlockX + x, y - 1, targetBlockZ + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
 								if (getBlockType(targetBlockX + x, y + 1, targetBlockZ + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
-									if (!this.allBlocks) { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-										Material type = getBlockType(targetBlockX + x, y, targetBlockZ + z);
-										switch (LegacyMaterialConverter.getLegacyMaterialId(type)) {
-											case 1:
-											case 2:
-											case 3:
-											case 12:
-											case 13:
-											case 14:
-											case 15:
-											case 16:
-											case 24:
-											case 48:
-											case 82:
-											case 49:
-											case 78:
-												for (int d = 1; (d < this.depth + 1); d++) {
-													this.performer.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify
-													// in parameters
-													memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-												}
-												surfaceFound = true;
-												break;
-											default:
-												break;
-										}
-									} else {
-										for (int d = 1; (d < this.depth + 1); d++) {
-											this.performer.perform(this.clampY(targetBlockX + x, y + d, targetBlockZ + z)); // fills down as many layers as you specify in
+									if (this.allBlocks) {
+										for (int index = 1; (index < this.depth + 1); index++) {
+											this.performer.perform(this.clampY(targetBlockX + x, y + index, targetBlockZ + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 										surfaceFound = true;
+									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+										Material type = getBlockType(targetBlockX + x, y, targetBlockZ + z);
+										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
+											for (int index = 1; (index < this.depth + 1); index++) {
+												this.performer.perform(this.clampY(targetBlockX + x, y + index, targetBlockZ + z)); // fills down as many layers as you specify
+												// in parameters
+												memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+											}
+											surfaceFound = true;
+										}
 									}
 								}
 							}
