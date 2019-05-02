@@ -1,15 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
-import java.util.Set;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -18,7 +19,23 @@ public class OceanBrush extends AbstractBrush {
 	private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
 	private static final int WATER_LEVEL_MIN = 12;
 	private static final int LOW_CUT_LEVEL = 12;
-	private static final Set<Material> EXCLUDED_MATERIALS = EnumSet.of(Material.LEGACY_AIR, Material.LEGACY_SAPLING, Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA, Material.LEGACY_LOG, Material.LEGACY_LEAVES, Material.LEGACY_YELLOW_FLOWER, Material.LEGACY_RED_ROSE, Material.LEGACY_RED_MUSHROOM, Material.LEGACY_BROWN_MUSHROOM, Material.LEGACY_MELON_BLOCK, Material.LEGACY_MELON_STEM, Material.LEGACY_PUMPKIN, Material.LEGACY_PUMPKIN_STEM, Material.LEGACY_COCOA, Material.LEGACY_SNOW, Material.LEGACY_SNOW_BLOCK, Material.LEGACY_ICE, Material.LEGACY_SUGAR_CANE_BLOCK, Material.LEGACY_LONG_GRASS);
+	private static final MaterialSet EXCLUDED_MATERIALS = MaterialSet.builder()
+		.with(Tag.SAPLINGS)
+		.with(Tag.LOGS)
+		.with(Tag.LEAVES)
+		.with(Tag.ICE)
+		.with(MaterialSets.AIRS)
+		.with(MaterialSets.LIQUIDS)
+		.with(MaterialSets.SNOWS)
+		.with(MaterialSets.STEMS)
+		.with(MaterialSets.MUSHROOMS)
+		.with(MaterialSets.FLOWERS)
+		.add(Material.MELON)
+		.add(Material.PUMPKIN)
+		.add(Material.COCOA)
+		.add(Material.SUGAR_CANE)
+		.add(Material.TALL_GRASS)
+		.build();
 
 	private int waterLevel = WATER_LEVEL_DEFAULT;
 	private boolean coverFloor;

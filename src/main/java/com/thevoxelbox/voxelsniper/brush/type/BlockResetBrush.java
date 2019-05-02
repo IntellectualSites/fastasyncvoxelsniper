@@ -1,17 +1,28 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
-import java.util.Set;
+import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class BlockResetBrush extends AbstractBrush {
 
-	private static final Set<Material> DENIED_UPDATES = EnumSet.of(Material.LEGACY_SIGN, Material.LEGACY_SIGN_POST, Material.LEGACY_WALL_SIGN, Material.LEGACY_CHEST, Material.LEGACY_FURNACE, Material.LEGACY_BURNING_FURNACE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_REDSTONE_WIRE, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_WOOD_DOOR, Material.LEGACY_IRON_DOOR, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_FENCE_GATE);
+	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
+		.with(Tag.DOORS)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.CHESTS)
+		.with(MaterialSets.REDSTONE_TORCHES)
+		.with(MaterialSets.FENCE_GATES)
+		.add(Material.FURNACE)
+		.add(Material.REDSTONE_WIRE)
+		.add(Material.REPEATER)
+		.build();
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {

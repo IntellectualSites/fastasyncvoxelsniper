@@ -1,18 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -26,7 +29,27 @@ public class MoveBrush extends AbstractBrush {
 	/**
 	 * Breakable Blocks to determine if no-physics should be used.
 	 */
-	private static final Set<Material> BREAKABLE_MATERIALS = EnumSet.of(Material.LEGACY_SAPLING, Material.LEGACY_BED_BLOCK, Material.LEGACY_POWERED_RAIL, Material.LEGACY_DETECTOR_RAIL, Material.LEGACY_LONG_GRASS, Material.LEGACY_DEAD_BUSH, Material.LEGACY_PISTON_EXTENSION, Material.LEGACY_YELLOW_FLOWER, Material.LEGACY_RED_ROSE, Material.LEGACY_BROWN_MUSHROOM, Material.LEGACY_RED_MUSHROOM, Material.LEGACY_TORCH, Material.LEGACY_FIRE, Material.LEGACY_CROPS, Material.LEGACY_SIGN_POST, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_LADDER, Material.LEGACY_RAILS, Material.LEGACY_WALL_SIGN, Material.LEGACY_LEVER, Material.LEGACY_STONE_PLATE, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_WOOD_PLATE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_STONE_BUTTON, Material.LEGACY_SNOW, Material.LEGACY_CACTUS, Material.LEGACY_SUGAR_CANE_BLOCK, Material.LEGACY_CAKE_BLOCK, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_TRAP_DOOR, Material.LEGACY_PUMPKIN_STEM, Material.LEGACY_MELON_STEM, Material.LEGACY_VINE, Material.LEGACY_WATER_LILY, Material.LEGACY_NETHER_WARTS);
+	private static final MaterialSet BREAKABLE_MATERIALS = MaterialSet.builder()
+		.with(Tag.SAPLINGS)
+		.with(Tag.RAILS)
+		.with(Tag.TRAPDOORS)
+		.with(Tag.DOORS)
+		.with(Tag.BUTTONS)
+		.with(MaterialTags.PISTONS)
+		.with(MaterialTags.PRESSURE_PLATES)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialTags.BEDS)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.REDSTONE_TORCHES)
+		.with(MaterialSets.TORCHES)
+		.with(MaterialSets.FLORA)
+		.add(Material.FIRE)
+		.add(Material.REPEATER)
+		.add(Material.SNOW)
+		.add(Material.CAKE)
+		.add(Material.LADDER)
+		.add(Material.LEVER)
+		.build();
 
 	/**
 	 * Saved direction.

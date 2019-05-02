@@ -1,20 +1,34 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
-import java.util.Set;
+import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class EraserBrush extends AbstractBrush {
 
-	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.LEGACY_AIR, Material.LEGACY_STONE, Material.LEGACY_GRASS, Material.LEGACY_DIRT, Material.LEGACY_SAND, Material.LEGACY_GRAVEL, Material.LEGACY_SANDSTONE);
-	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA);
+	private static final MaterialSet EXCLUSIVE_MATERIALS = MaterialSet.builder()
+		.with(Tag.SAND)
+		.with(MaterialTags.SANDSTONES)
+		.with(MaterialTags.RED_SANDSTONES)
+		.with(MaterialSets.AIRS)
+		.with(MaterialSets.STONES)
+		.with(MaterialSets.GRASSES)
+		.with(MaterialSets.DIRT)
+		.add(Material.GRAVEL)
+		.build();
+
+	private static final MaterialSet EXCLUSIVE_LIQUIDS = MaterialSet.builder()
+		.with(MaterialSets.LIQUIDS)
+		.build();
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {

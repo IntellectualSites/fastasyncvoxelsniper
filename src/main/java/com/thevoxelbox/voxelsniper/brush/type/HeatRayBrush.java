@@ -1,16 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
 import java.util.Random;
-import java.util.Set;
+import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
@@ -21,7 +23,29 @@ public class HeatRayBrush extends AbstractBrush {
 	private static final double REQUIRED_COBBLE_DENSITY = 0.5;
 	private static final double REQUIRED_FIRE_DENSITY = -0.25;
 	private static final double REQUIRED_AIR_DENSITY = 0;
-	private static final Set<Material> FLAMEABLE_BLOCKS = EnumSet.of(Material.LEGACY_WOOD, Material.LEGACY_SAPLING, Material.LEGACY_LOG, Material.LEGACY_LEAVES, Material.LEGACY_SPONGE, Material.LEGACY_WEB, Material.LEGACY_LONG_GRASS, Material.LEGACY_DEAD_BUSH, Material.LEGACY_WOOL, Material.LEGACY_YELLOW_FLOWER, Material.LEGACY_RED_ROSE, Material.LEGACY_TORCH, Material.LEGACY_FIRE, Material.LEGACY_WOOD_STAIRS, Material.LEGACY_CROPS, Material.LEGACY_SIGN_POST, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_LADDER, Material.LEGACY_WALL_SIGN, Material.LEGACY_WOOD_PLATE, Material.LEGACY_SNOW, Material.LEGACY_ICE, Material.LEGACY_SUGAR_CANE_BLOCK, Material.LEGACY_FENCE, Material.LEGACY_TRAP_DOOR, Material.LEGACY_VINE, Material.LEGACY_FENCE_GATE, Material.LEGACY_WATER_LILY);
+	private static final MaterialSet FLAMEABLE_BLOCKS = MaterialSet.builder()
+		.with(Tag.LOGS)
+		.with(Tag.SAPLINGS)
+		.with(Tag.PLANKS)
+		.with(Tag.LEAVES)
+		.with(Tag.WOOL)
+		.with(Tag.WOODEN_SLABS)
+		.with(Tag.WOODEN_STAIRS)
+		.with(Tag.WOODEN_DOORS)
+		.with(Tag.WOODEN_TRAPDOORS)
+		.with(Tag.WOODEN_PRESSURE_PLATES)
+		.with(Tag.ICE)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.WOODEN_FENCES)
+		.with(MaterialSets.FENCE_GATES)
+		.with(MaterialSets.SNOWS)
+		.with(MaterialSets.TORCHES)
+		.with(MaterialSets.FLORA)
+		.add(Material.SPONGE)
+		.add(Material.COBWEB)
+		.add(Material.FIRE)
+		.add(Material.LADDER)
+		.build();
 
 	private int octaves = 5;
 	private double frequency = 1;
@@ -64,7 +88,7 @@ public class HeatRayBrush extends AbstractBrush {
 	/**
 	 * Heat Ray executer.
 	 */
-	public final void heatRay(Snipe snipe) {
+	public void heatRay(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(new Random());
 		Block targetBlock = getTargetBlock();
@@ -83,42 +107,42 @@ public class HeatRayBrush extends AbstractBrush {
 					if (currentLocationVector.isInSphere(targetBlockVector, brushSize)) {
 						Block currentBlock = currentLocation.getBlock();
 						Material currentBlockType = currentBlock.getType();
-						if (currentBlockType == Material.LEGACY_CHEST) {
+						if (currentBlockType == Material.CHEST) {
 							continue;
 						}
 						if (currentBlock.isLiquid()) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.LEGACY_AIR);
+							currentBlock.setType(Material.AIR);
 							continue;
 						}
 						if (FLAMEABLE_BLOCKS.contains(currentBlockType)) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.LEGACY_FIRE);
+							currentBlock.setType(Material.FIRE);
 							continue;
 						}
-						if (currentBlockType != Material.LEGACY_AIR) {
+						if (currentBlockType != Material.AIR) {
 							double airDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double fireDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double obsidianDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.LEGACY_OBSIDIAN) {
-									currentBlock.setType(Material.LEGACY_OBSIDIAN);
+								if (currentBlockType != Material.OBSIDIAN) {
+									currentBlock.setType(Material.OBSIDIAN);
 								}
 							} else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.LEGACY_COBBLESTONE) {
-									currentBlock.setType(Material.LEGACY_COBBLESTONE);
+								if (currentBlockType != Material.COBBLESTONE) {
+									currentBlock.setType(Material.COBBLESTONE);
 								}
 							} else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.LEGACY_FIRE) {
-									currentBlock.setType(Material.LEGACY_FIRE);
+								if (currentBlockType != Material.FIRE) {
+									currentBlock.setType(Material.FIRE);
 								}
 							} else if (airDensity >= REQUIRED_AIR_DENSITY) {
 								undo.put(currentBlock);
-								currentBlock.setType(Material.LEGACY_AIR);
+								currentBlock.setType(Material.AIR);
 							}
 						}
 					}

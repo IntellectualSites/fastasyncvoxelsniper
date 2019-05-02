@@ -1,20 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public abstract class AbstractBlendBrush extends AbstractBrush {
 
-	protected static final Set<Material> BLOCKS = Arrays.stream(Material.values())
-		.filter(Material::isBlock)
-		.collect(Collectors.toCollection(() -> EnumSet.noneOf(Material.class)));
+	protected static final MaterialSet BLOCKS = MaterialSet.builder()
+		.filtered(Material::isBlock)
+		.build();
 
 	protected boolean excludeAir = true;
 	protected boolean excludeWater = true;

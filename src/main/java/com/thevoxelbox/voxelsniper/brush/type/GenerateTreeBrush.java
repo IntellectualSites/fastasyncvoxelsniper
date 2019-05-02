@@ -3,14 +3,15 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.LegacyMaterialConverter;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
@@ -39,13 +40,12 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private int branchLength = 8;
 	private int nodeMax = 4;
 	private int nodeMin = 3;
-
 	private int blockPositionX;
 	private int blockPositionY;
 	private int blockPositionZ;
 
 	@Override
-	public final void handleCommand(String[] parameters, Snipe snipe) {
+	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		for (int i = 1; i < parameters.length; i++) {
 			String parameter = parameters[i];
@@ -165,7 +165,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void handleArrowAction(Snipe snipe) {
+	public void handleArrowAction(Snipe snipe) {
 		this.undo = new Undo();
 		this.branchBlocks.clear();
 		// Sets the location variables.
@@ -174,9 +174,9 @@ public class GenerateTreeBrush extends AbstractBrush {
 		this.blockPositionY = targetBlock.getY() + this.startHeight;
 		this.blockPositionZ = targetBlock.getZ();
 		// Generates the roots.
-		this.rootGen();
+		rootGen();
 		// Generates the trunk, which also generates branches.
-		this.trunkGen();
+		generateTrunk();
 		// Each branch block was saved in an array. This is now fed through an array.
 		// This array takes each branch block and constructs a leaf node around it.
 		for (Block block : this.branchBlocks) {
@@ -192,8 +192,8 @@ public class GenerateTreeBrush extends AbstractBrush {
 	// The Powder currently does nothing extra.
 
 	@Override
-	public final void handleGunpowderAction(Snipe snipe) {
-		this.handleArrowAction(snipe);
+	public void handleGunpowderAction(Snipe snipe) {
+		handleArrowAction(snipe);
 	}
 	// Branch Creation based on direction chosen from the parameters passed.
 
@@ -219,7 +219,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				this.blockPositionY += this.randGenerator.nextInt(2);
 			}
 			// Add block to undo function.
-			if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ)) != Material.LEGACY_LOG.getId()) {
+			if (!Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 				this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 			}
 			// Creates a branch block.
@@ -267,7 +267,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			Block block = world.getBlockAt(x, y, z);
 			if (block.isEmpty()) {
 				// Adds block to undo function.
-				if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(x, y, z)) != Material.LEGACY_LEAVES.getId()) {
+				if (!Tag.LEAVES.isTagged(getBlockType(x, y, z))) {
 					this.undo.put(clampY(x, y, z));
 				}
 				// Creates block.
@@ -303,7 +303,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				// For the purposes of this algorithm, logs aren't considered solid.
 				// If not solid then...
 				// Save for undo function
-				if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ)) != Material.LEGACY_LOG.getId()) {
+				if (!Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 					// Place log block.
 					//TODO: add wood type
@@ -313,10 +313,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 					// End loop
 					break;
 				}
+				MaterialSet solids = MaterialSet.builder()
+					.with(Tag.LOGS)
+					.with(MaterialSets.AIRS)
+					.add(Material.WATER)
+					.add(Material.SNOW)
+					.build();
 				// Checks is block below is solid
-				if (Stream.of(Material.LEGACY_AIR, Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_SNOW, Material.LEGACY_LOG)
-					.anyMatch(material -> this.clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ)
-						.getType() == material)) {
+				if (solids.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
 					// Mos down if solid.
 					this.blockPositionY -= 1;
 					if (this.rootFloat) {
@@ -336,9 +340,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 						this.blockPositionZ += zDirection;
 					}
 					// Checks if new location is solid, if not then move down.
-					if (Stream.of(Material.LEGACY_AIR, Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_SNOW, Material.LEGACY_LOG)
-						.anyMatch(material -> this.clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ)
-							.getType() == material)) {
+					if (solids.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
 						this.blockPositionY -= 1;
 					}
 				}
@@ -383,7 +385,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		Block block = world.getBlockAt(x, this.blockPositionY, y);
 		if (block.isEmpty()) {
 			// Adds block to undo function.
-			if (LegacyMaterialConverter.getLegacyMaterialId(getBlockType(x, this.blockPositionY, y)) != Material.LEGACY_LOG.getId()) {
+			if (!Tag.LOGS.isTagged(getBlockType(x, this.blockPositionY, y))) {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));
 			}
 			// Creates block.
@@ -392,12 +394,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		}
 	}
 
-	/*
-	 *
-	 * Code Concerning Trunk Generation
-	 */
-
-	private void trunkGen() {
+	private void generateTrunk() {
 		// Sets Origin
 		int originX = this.blockPositionX;
 		int originY = this.blockPositionY;
@@ -405,7 +402,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		// ----------
 		// Main Trunk
 		// ----------
-		// Sets diretional preferences.
+		// Sets directional preferences.
 		int xPreference = this.randGenerator.nextInt(this.slopeChance);
 		int zPreference = this.randGenerator.nextInt(this.slopeChance);
 		// Sets direction.
@@ -439,7 +436,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			// Mos up for next section
 			this.blockPositionY += 1;
 		}
-		// Generates branchs at top of trunk for each quadrant.
+		// Generates branches at top of trunk for each quadrant.
 		this.createBranch(1, 1);
 		this.createBranch(-1, 1);
 		this.createBranch(1, -1);
@@ -451,7 +448,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		// ---------------
 		// Secondary Trunk
 		// ---------------
-		// Sets diretional preferences.
+		// Sets directional preferences.
 		int nextXPreference = this.randGenerator.nextInt(this.slopeChance);
 		int nextZPreference = this.randGenerator.nextInt(this.slopeChance);
 		// Sets direction.
@@ -484,11 +481,11 @@ public class GenerateTreeBrush extends AbstractBrush {
 				// Mos up for next section
 				this.blockPositionY += 1;
 			}
-			// Generates branchs at top of trunk for each quadrant.
-			this.createBranch(1, 1);
-			this.createBranch(-1, 1);
-			this.createBranch(1, -1);
-			this.createBranch(-1, -1);
+			// Generates branches at top of trunk for each quadrant.
+			createBranch(1, 1);
+			createBranch(-1, 1);
+			createBranch(1, -1);
+			createBranch(-1, -1);
 		}
 	}
 
