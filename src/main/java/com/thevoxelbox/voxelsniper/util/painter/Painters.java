@@ -12,6 +12,10 @@ public final class Painters {
 		return new SpherePainter();
 	}
 
+	public static CubePainter cube() {
+		return new CubePainter();
+	}
+
 	public static BlockPainter block(Painter painter) {
 		Vector3i center = painter.getCenter();
 		BlockSetter blockSetter = painter.getBlockSetter();
