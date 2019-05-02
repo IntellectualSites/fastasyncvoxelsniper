@@ -2,8 +2,9 @@ package com.thevoxelbox.voxelsniper.performer.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.thevoxelbox.voxelsniper.util.Builder;
 
-public class PerformerPropertiesBuilder {
+public class PerformerPropertiesBuilder implements Builder<PerformerProperties> {
 
 	private String name;
 	private boolean usingReplaceMaterial;
@@ -30,6 +31,7 @@ public class PerformerPropertiesBuilder {
 		return this;
 	}
 
+	@Override
 	public PerformerProperties build() {
 		if (this.name == null) {
 			throw new RuntimeException("Performer name must be specified");

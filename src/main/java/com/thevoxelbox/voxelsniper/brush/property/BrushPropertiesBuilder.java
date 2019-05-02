@@ -2,8 +2,9 @@ package com.thevoxelbox.voxelsniper.brush.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.thevoxelbox.voxelsniper.util.Builder;
 
-public class BrushPropertiesBuilder {
+public class BrushPropertiesBuilder implements Builder<BrushProperties> {
 
 	private String name;
 	private String permission;
@@ -30,6 +31,7 @@ public class BrushPropertiesBuilder {
 		return this;
 	}
 
+	@Override
 	public BrushProperties build() {
 		if (this.name == null) {
 			throw new RuntimeException("Brush name must be specified");
