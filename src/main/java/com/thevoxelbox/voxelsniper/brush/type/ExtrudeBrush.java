@@ -112,7 +112,7 @@ public class ExtrudeBrush extends AbstractBrush {
 	private void perform(Block block1, Block block2, ToolkitProperties toolkitProperties, Undo undo) {
 		if (toolkitProperties.isVoxelListContains(getBlockData(block1.getX(), block1.getY(), block1.getZ()))) {
 			undo.put(block2);
-			setBlockType(block2.getZ(), block2.getX(), block2.getY(), getBlockType(block1.getX(), block1.getY(), block1.getZ()));
+			setBlockType(block2.getX(), block2.getY(), block2.getZ(), getBlockType(block1.getX(), block1.getY(), block1.getZ()));
 			clampY(block2.getX(), block2.getY(), block2.getZ()).setBlockData(clampY(block1.getX(), block1.getY(), block1.getZ()).getBlockData());
 		}
 	}

@@ -101,7 +101,7 @@ public class BlendBallBrush extends AbstractBlendBrush {
 							if (getBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z) != material) {
 								undo.put(clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z));
 							}
-							setBlockType(targetBlock.getZ() - brushSize + z, targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, material);
+							setBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z, material);
 						}
 					}
 				}

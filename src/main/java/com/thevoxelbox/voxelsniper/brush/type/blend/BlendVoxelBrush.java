@@ -97,7 +97,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 						if (this.getBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z) != material) {
 							undo.put(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z));
 						}
-						this.setBlockType(targetBlock.getZ() - brushSize + z, targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, material);
+						this.setBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z, material);
 					}
 				}
 			}
