@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.util.math;
 
+import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -74,6 +75,28 @@ public class Vector3i {
 
 	public Vector toBukkit() {
 		return new Vector(this.x, this.y, this.z);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (object == null || getClass() != object.getClass()) {
+			return false;
+		}
+		Vector3i that = (Vector3i) object;
+		return this.x == that.x && this.y == that.y && this.z == that.z;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.x, this.y, this.z);
+	}
+
+	@Override
+	public String toString() {
+		return "Vector3i{" + "x=" + this.x + ", y=" + this.y + ", z=" + this.z + "}";
 	}
 
 	public int getX() {

@@ -68,7 +68,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 					int mostCommonFrequency = 0;
 					for (Material material : BLOCKS) {
 						int frequency = materialFrequency.getOrDefault(material, 0);
-						if (frequency > mostCommonFrequency && !(this.excludeAir && material.isEmpty()) && !(this.excludeWater && material == Material.WATER)) {
+						if (frequency > mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
 							mostCommonFrequency = frequency;
 							mostCommonMaterial = material;
 						}
@@ -76,7 +76,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 					// Make sure there'world not a tie for most common
 					boolean tieCheck = true;
 					for (Material material : BLOCKS) {
-						if (materialFrequency.getOrDefault(material, 0) == mostCommonFrequency && !(this.excludeAir && material.isEmpty()) && !(this.excludeWater && material == Material.WATER)) {
+						if (materialFrequency.getOrDefault(material, 0) == mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
 							tieCheck = false;
 						}
 					}
@@ -93,7 +93,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 			for (int y = 0; y <= brushSizeDoubled; y++) {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					Material material = newMaterials[x][y][z];
-					if (!(this.excludeAir && material.isEmpty() || this.excludeWater && material == Material.WATER)) {
+					if (!(isAirExcluded() && material.isEmpty() || isWaterExcluded() && material == Material.WATER)) {
 						if (this.getBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z) != material) {
 							undo.put(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z));
 						}
