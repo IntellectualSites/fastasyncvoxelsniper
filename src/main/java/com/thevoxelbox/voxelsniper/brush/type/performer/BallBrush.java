@@ -1,9 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -53,51 +56,56 @@ public class BallBrush extends AbstractPerformerBrush {
 	private void ball(Snipe snipe, Block targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		int blockPositionX = targetBlock.getX();
-		int blockPositionY = targetBlock.getY();
-		int blockPositionZ = targetBlock.getZ();
+		double brushSizeSquared = MathHelper.square(brushSize + this.trueCircle);
+		Vector3i blockPosition = new Vector3i(targetBlock);
 		this.performer.perform(targetBlock);
 		for (int z = 1; z <= brushSize; z++) {
-			double zSquared = Math.pow(z, 2);
-			this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ));
-			this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ));
-			this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ));
-			this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ));
-			this.performer.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ + z));
-			this.performer.perform(this.clampY(blockPositionX, blockPositionY, blockPositionZ - z));
+			performClamped(blockPosition.addX(z));
+			performClamped(blockPosition.addX(-z));
+			performClamped(blockPosition.addY(z));
+			performClamped(blockPosition.addY(-z));
+			performClamped(blockPosition.addZ(z));
+			performClamped(blockPosition.addZ(-z));
+			double zSquared = MathHelper.square(z);
 			for (int x = 1; x <= brushSize; x++) {
-				double xSquared = Math.pow(x, 2);
+				double xSquared = MathHelper.square(x);
 				if (zSquared + xSquared <= brushSizeSquared) {
-					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ + x));
-					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY, blockPositionZ - x));
-					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ + x));
-					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY, blockPositionZ - x));
-					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY + x, blockPositionZ));
-					this.performer.perform(this.clampY(blockPositionX + z, blockPositionY - x, blockPositionZ));
-					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY + x, blockPositionZ));
-					this.performer.perform(this.clampY(blockPositionX - z, blockPositionY - x, blockPositionZ));
-					this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ + x));
-					this.performer.perform(this.clampY(blockPositionX, blockPositionY + z, blockPositionZ - x));
-					this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ + x));
-					this.performer.perform(this.clampY(blockPositionX, blockPositionY - z, blockPositionZ - x));
+					performClamped(blockPosition.add(z, 0, x));
+					performClamped(blockPosition.add(z, 0, -x));
+					performClamped(blockPosition.add(-z, 0, x));
+					performClamped(blockPosition.add(-z, 0, -x));
+					performClamped(blockPosition.add(z, x, 0));
+					performClamped(blockPosition.add(z, -x, 0));
+					performClamped(blockPosition.add(-z, x, 0));
+					performClamped(blockPosition.add(-z, -x, 0));
+					performClamped(blockPosition.add(0, z, x));
+					performClamped(blockPosition.add(0, z, -x));
+					performClamped(blockPosition.add(0, -z, x));
+					performClamped(blockPosition.add(0, -z, -x));
 				}
 				for (int y = 1; y <= brushSize; y++) {
-					if ((xSquared + Math.pow(y, 2) + zSquared) <= brushSizeSquared) {
-						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ + z));
-						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY + y, blockPositionZ - z));
-						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ + z));
-						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY + y, blockPositionZ - z));
-						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ + z));
-						this.performer.perform(this.clampY(blockPositionX + x, blockPositionY - y, blockPositionZ - z));
-						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ + z));
-						this.performer.perform(this.clampY(blockPositionX - x, blockPositionY - y, blockPositionZ - z));
+					int ySquared = MathHelper.square(y);
+					if (xSquared + ySquared + zSquared <= brushSizeSquared) {
+						performClamped(blockPosition.add(x, y, z));
+						performClamped(blockPosition.add(x, y, -z));
+						performClamped(blockPosition.add(-x, y, z));
+						performClamped(blockPosition.add(-x, y, -z));
+						performClamped(blockPosition.add(x, -y, z));
+						performClamped(blockPosition.add(x, -y, -z));
+						performClamped(blockPosition.add(-x, -y, z));
+						performClamped(blockPosition.add(-x, -y, -z));
 					}
 				}
 			}
 		}
 		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
+		Undo undo = this.performer.getUndo();
+		sniper.storeUndo(undo);
+	}
+
+	private void performClamped(Vector3i position) {
+		Block block = clampY(position);
+		this.performer.perform(block);
 	}
 
 	@Override

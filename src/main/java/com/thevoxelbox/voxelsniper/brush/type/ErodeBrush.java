@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -12,6 +13,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ErodeBrush extends AbstractBrush {
 
-	private static final Vector[] FACES_TO_CHECK = {new Vector(0, 0, 1), new Vector(0, 0, -1), new Vector(0, 1, 0), new Vector(0, -1, 0), new Vector(1, 0, 0), new Vector(-1, 0, 0)};
+	private static final List<Vector3i> FACES_TO_CHECK = List.of(new Vector3i(0, 0, 1), new Vector3i(0, 0, -1), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0));
 
 	private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 
@@ -140,10 +142,9 @@ public class ErodeBrush extends AbstractBrush {
 						}
 						int count = 0;
 						Map<BlockWrapper, Integer> blockCount = new HashMap<>();
-						for (Vector vector : FACES_TO_CHECK) {
-							Vector relativePosition = new Vector().
-								copy(currentPosition)
-								.add(vector);
+						for (Vector3i vector : FACES_TO_CHECK) {
+							Vector relativePosition = new Vector3i(currentPosition).add(vector)
+								.toBukkit();
 							BlockWrapper relativeBlock = blockChangeTracker.get(relativePosition, currentIteration);
 							if (!(relativeBlock.isEmpty() || relativeBlock.isLiquid())) {
 								count++;
@@ -186,10 +187,9 @@ public class ErodeBrush extends AbstractBrush {
 						if (currentBlock.isEmpty() || currentBlock.isLiquid()) {
 							continue;
 						}
-						int count = (int) Arrays.stream(FACES_TO_CHECK)
-							.map(vector -> new Vector().
-								copy(currentPosition)
-								.add(vector))
+						int count = (int) FACES_TO_CHECK.stream()
+							.map(vector -> new Vector3i(currentPosition).add(vector))
+							.map(Vector3i::toBukkit)
 							.map(relativePosition -> blockChangeTracker.get(relativePosition, currentIteration))
 							.filter(relativeBlock -> relativeBlock.isEmpty() || relativeBlock.isLiquid())
 							.count();
@@ -248,9 +248,9 @@ public class ErodeBrush extends AbstractBrush {
 
 	private static final class BlockChangeTracker {
 
-		private final Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
-		private final Map<Vector, BlockWrapper> flatChanges;
-		private final World world;
+		private Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
+		private Map<Vector, BlockWrapper> flatChanges;
+		private World world;
 		private int nextIterationId;
 
 		private BlockChangeTracker(World world) {
@@ -276,7 +276,9 @@ public class ErodeBrush extends AbstractBrush {
 		}
 
 		public int nextIteration() {
-			return this.nextIterationId++;
+			int nextIterationId = this.nextIterationId;
+			this.nextIterationId++;
+			return nextIterationId;
 		}
 
 		public void put(Vector position, BlockWrapper changedBlock, int iteration) {

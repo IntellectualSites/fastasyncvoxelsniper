@@ -44,7 +44,7 @@ public class EraserBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
-		Block targetBlock = this.getTargetBlock();
+		Block targetBlock = getTargetBlock();
 		World world = targetBlock.getWorld();
 		Undo undo = new Undo();
 		for (int x = brushSizeDoubled; x >= 0; x--) {
@@ -54,11 +54,10 @@ public class EraserBrush extends AbstractBrush {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					int currentZ = targetBlock.getZ() - brushSize + z;
 					Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
-					if (EXCLUSIVE_MATERIALS.contains(currentBlock.getType()) || (keepWater && EXCLUSIVE_LIQUIDS.contains(currentBlock.getType()))) {
-						continue;
+					if (!EXCLUSIVE_MATERIALS.contains(currentBlock) && (!keepWater || !EXCLUSIVE_LIQUIDS.contains(currentBlock))) {
+						undo.put(currentBlock);
+						currentBlock.setType(Material.AIR);
 					}
-					undo.put(currentBlock);
-					currentBlock.setType(Material.AIR);
 				}
 			}
 		}

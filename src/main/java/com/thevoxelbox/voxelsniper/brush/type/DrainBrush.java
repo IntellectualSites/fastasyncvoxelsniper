@@ -5,6 +5,8 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -63,15 +65,17 @@ public class DrainBrush extends AbstractBrush {
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
+		Vector3i position = new Vector3i(targetBlock);
 		if (this.disc) {
 			for (int x = brushSize; x >= 0; x--) {
-				double xSquared = Math.pow(x, 2);
+				double xSquared = MathHelper.square(x);
 				for (int y = brushSize; y >= 0; y--) {
-					if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-						Material typePlusPlus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ + y);
+					double ySquared = MathHelper.square(y);
+					if (xSquared + ySquared <= brushSizeSquared) {
+						Material typePlusPlus = getBlockType(position.add(x, 0, y));
 						if (typePlusPlus == Material.WATER || typePlusPlus == Material.LAVA) {
-							undo.put(clampY(targetBlockX + x, targetBlockY, targetBlockZ + y));
-							setBlockType(targetBlockZ + y, targetBlockX + x, targetBlockY, Material.AIR);
+							undo.put(clampY(position.add(x, 0, y)));
+							setBlockType(position.add(y, x, 0), Material.AIR);
 						}
 						Material typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
 						if (typePlusMinus == Material.WATER || typePlusMinus == Material.LAVA) {
@@ -93,11 +97,11 @@ public class DrainBrush extends AbstractBrush {
 			}
 		} else {
 			for (int y = (brushSize + 1) * 2; y >= 0; y--) {
-				double ySquared = Math.pow(y - brushSize, 2);
+				double ySquared = MathHelper.square(y - brushSize);
 				for (int x = (brushSize + 1) * 2; x >= 0; x--) {
-					double xSquared = Math.pow(x - brushSize, 2);
+					double xSquared = MathHelper.square(x - brushSize);
 					for (int z = (brushSize + 1) * 2; z >= 0; z--) {
-						if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared) {
+						if ((xSquared + MathHelper.square(z - brushSize) + ySquared) <= brushSizeSquared) {
 							Material type = getBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize);
 							if (type == Material.WATER || type == Material.LAVA) {
 								undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));

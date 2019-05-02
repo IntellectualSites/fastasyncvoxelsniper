@@ -5,6 +5,7 @@ import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -77,39 +78,39 @@ public class TriangleBrush extends AbstractPerformerBrush {
 	private void triangleP(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		// Calculate slope vectors
-		for (int i = 0; i < 3; i++) {
-			this.vectorOne[i] = this.coordinatesTwo[i] - this.coordinatesOne[i];
-			this.vectorTwo[i] = this.coordinatesThree[i] - this.coordinatesOne[i];
-			this.vectorThree[i] = this.coordinatesThree[i] - this.coordinatesTwo[i];
+		for (int index = 0; index < 3; index++) {
+			this.vectorOne[index] = this.coordinatesTwo[index] - this.coordinatesOne[index];
+			this.vectorTwo[index] = this.coordinatesThree[index] - this.coordinatesOne[index];
+			this.vectorThree[index] = this.coordinatesThree[index] - this.coordinatesTwo[index];
 		}
 		// Calculate the cross product of vectorone and vectortwo
 		this.normalVector[0] = this.vectorOne[1] * this.vectorTwo[2] - this.vectorOne[2] * this.vectorTwo[1];
 		this.normalVector[1] = this.vectorOne[2] * this.vectorTwo[0] - this.vectorOne[0] * this.vectorTwo[2];
 		this.normalVector[2] = this.vectorOne[0] * this.vectorTwo[1] - this.vectorOne[1] * this.vectorTwo[0];
 		// Calculate magnitude of slope vectors
-		double lengthOne = Math.pow(IntStream.of(0, 1, 2)
-			.mapToDouble(v -> Math.pow(this.vectorOne[v], 2))
-			.sum(), 0.5);
-		double lengthTwo = Math.pow(IntStream.of(0, 1, 2)
-			.mapToDouble(v -> Math.pow(this.vectorTwo[v], 2))
-			.sum(), 0.5);
-		double lengthThree = Math.pow(IntStream.of(0, 1, 2)
-			.mapToDouble(v -> Math.pow(this.vectorThree[v], 2))
-			.sum(), 0.5);
+		double lengthOne = Math.sqrt(IntStream.of(0, 1, 2)
+			.mapToDouble(number -> MathHelper.square(this.vectorOne[number]))
+			.sum());
+		double lengthTwo = Math.sqrt(IntStream.of(0, 1, 2)
+			.mapToDouble(number -> MathHelper.square(this.vectorTwo[number]))
+			.sum());
+		double lengthThree = Math.sqrt(IntStream.of(0, 1, 2)
+			.mapToDouble(number -> MathHelper.square(this.vectorThree[number]))
+			.sum());
 		// Bigger vector determines brush size
-		int brushSize = (int) Math.ceil((lengthOne > lengthTwo) ? lengthOne : lengthTwo);
+		int brushSize = (int) Math.ceil(lengthOne > lengthTwo ? lengthOne : lengthTwo);
 		// Calculate constant term
 		double planeConstant = this.normalVector[0] * this.coordinatesOne[0] + this.normalVector[1] * this.coordinatesOne[1] + this.normalVector[2] * this.coordinatesOne[2];
 		// Calculate the area of the full triangle
-		double heronBig = 0.25 * Math.pow(Math.pow(DoubleStream.of(lengthOne, lengthTwo, lengthThree)
-			.map(v -> Math.pow(v, 2))
-			.sum(), 2) - 2 * (DoubleStream.of(lengthOne, lengthTwo, lengthThree)
-			.map(v1 -> Math.pow(v1, 4))
-			.sum()), 0.5);
-		if (lengthOne == 0 || lengthTwo == 0 || (IntStream.of(0, 1, 2)
-			.allMatch(v -> this.coordinatesOne[v] == 0)) || (IntStream.of(0, 1, 2)
-			.allMatch(i1 -> this.coordinatesTwo[i1] == 0)) || (IntStream.of(0, 1, 2)
-			.allMatch(i2 -> this.coordinatesThree[i2] == 0))) {
+		double heronBig = 0.25 * Math.sqrt(MathHelper.square(DoubleStream.of(lengthOne, lengthTwo, lengthThree)
+			.map(MathHelper::square)
+			.sum()) - 2 * DoubleStream.of(lengthOne, lengthTwo, lengthThree)
+			.map(number -> Math.pow(number, 4))
+			.sum());
+		if (lengthOne == 0 || lengthTwo == 0 || IntStream.of(0, 1, 2)
+			.allMatch(number -> this.coordinatesOne[number] == 0) || IntStream.of(0, 1, 2)
+			.allMatch(number -> this.coordinatesTwo[number] == 0) || IntStream.of(0, 1, 2)
+			.allMatch(number -> this.coordinatesThree[number] == 0)) {
 			messenger.sendMessage(ChatColor.RED + "ERROR: Invalid corners, please try again.");
 		} else {
 			// Make the Changes
@@ -127,16 +128,16 @@ public class TriangleBrush extends AbstractPerformerBrush {
 						cVectorTwo[i] = this.currentCoordinates[i] - this.coordinatesOne[i];
 						cVectorThree[i] = this.currentCoordinates[i] - this.coordinatesTwo[i];
 					}
-					double cLengthOne = Math.pow(IntStream.of(0, 1, 2)
-						.mapToDouble(v -> Math.pow(cVectorOne[v], 2))
-						.sum(), 0.5);
-					double cLengthTwo = Math.pow(IntStream.of(0, 1, 2)
-						.mapToDouble(v -> Math.pow(cVectorTwo[v], 2))
-						.sum(), 0.5);
-					double cLengthThree = Math.pow(IntStream.of(0, 1, 2)
-						.mapToDouble(v -> Math.pow(cVectorThree[v], 2))
-						.sum(), 0.5);
-					double heronOne = 0.25 * Math.pow(Math.pow(Math.pow(cLengthOne, 2) + Math.pow(cLengthTwo, 2) + Math.pow(cLengthThree, 2), 2) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)), 0.5);
+					double cLengthOne = Math.sqrt(IntStream.of(0, 1, 2)
+						.mapToDouble(number -> MathHelper.square(cVectorOne[number]))
+						.sum());
+					double cLengthTwo = Math.sqrt(IntStream.of(0, 1, 2)
+						.mapToDouble(number -> MathHelper.square(cVectorTwo[number]))
+						.sum());
+					double cLengthThree = Math.sqrt(IntStream.of(0, 1, 2)
+						.mapToDouble(number -> MathHelper.square(cVectorThree[number]))
+						.sum());
+					double heronOne = 0.25 * Math.sqrt(MathHelper.square(MathHelper.square(cLengthOne) + MathHelper.square(cLengthTwo) + MathHelper.square(cLengthThree)) - 2 * (Math.pow(cLengthOne, 4) + Math.pow(cLengthTwo, 4) + Math.pow(cLengthThree, 4)));
 					// Area of triangle currentcoords, coordsthree, coordstwo
 					for (int i = 0; i < 3; i++) {
 						cVectorOne[i] = this.coordinatesTwo[i] - this.coordinatesThree[i];

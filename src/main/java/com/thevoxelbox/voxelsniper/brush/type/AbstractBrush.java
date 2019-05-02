@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -36,6 +37,13 @@ public abstract class AbstractBrush implements Brush {
 		}
 	}
 
+	public Block clampY(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return clampY(x, y, z);
+	}
+
 	public Block clampY(int x, int y, int z) {
 		int clampedY = y;
 		World world = this.targetBlock.getWorld();
@@ -50,10 +58,24 @@ public abstract class AbstractBrush implements Brush {
 		return world.getBlockAt(x, clampedY, z);
 	}
 
+	public Material getBlockType(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return getBlockType(x, y, z);
+	}
+
 	public Material getBlockType(int x, int y, int z) {
 		World world = this.targetBlock.getWorld();
 		Block block = world.getBlockAt(x, y, z);
 		return block.getType();
+	}
+
+	public BlockData getBlockData(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return getBlockData(x, y, z);
 	}
 
 	public BlockData getBlockData(int x, int y, int z) {
@@ -62,10 +84,24 @@ public abstract class AbstractBrush implements Brush {
 		return block.getBlockData();
 	}
 
+	public void setBlockType(Vector3i position, Material type) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		setBlockType(x, y, z, type);
+	}
+
 	public void setBlockType(int x, int y, int z, Material type) {
 		World world = this.targetBlock.getWorld();
 		Block block = world.getBlockAt(x, y, z);
 		block.setType(type);
+	}
+
+	public void setBlockData(Vector3i position, BlockData blockData) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		setBlockData(x, y, z, blockData);
 	}
 
 	public void setBlockData(int x, int y, int z, BlockData blockData) {

@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -50,16 +51,16 @@ public class CleanSnowBrush extends AbstractBrush {
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
 		for (int y = (brushSize + 1) * 2; y >= 0; y--) {
-			double ySquared = Math.pow(y - brushSize, 2);
+			double ySquared = MathHelper.square(y - brushSize);
 			for (int x = (brushSize + 1) * 2; x >= 0; x--) {
-				double xSquared = Math.pow(x - brushSize, 2);
+				double xSquared = MathHelper.square(x - brushSize);
 				for (int z = (brushSize + 1) * 2; z >= 0; z--) {
-					if ((xSquared + Math.pow(z - brushSize, 2) + ySquared) <= brushSizeSquared) {
+					if (xSquared + MathHelper.square(z - brushSize) + ySquared <= brushSizeSquared) {
 						Block targetBlock = getTargetBlock();
 						int targetBlockX = targetBlock.getX();
 						int targetBlockY = targetBlock.getY();
 						int targetBlockZ = targetBlock.getZ();
-						if ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.SNOW) && ((clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.SNOW) || (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.AIR))) {
+						if (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.SNOW && (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.SNOW || clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.AIR)) {
 							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
 							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR.createBlockData());
 						}

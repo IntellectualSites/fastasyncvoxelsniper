@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -38,7 +38,7 @@ public class DomeBrush extends AbstractBrush {
 		}
 		int absoluteHeight = Math.abs(voxelHeight);
 		boolean negative = voxelHeight < 0;
-		Set<Vector> changeablePositions = new HashSet<>();
+		List<Vector> changeablePositions = new ArrayList<>();
 		Undo undo = new Undo();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeTimesVoxelHeight = brushSize * absoluteHeight;

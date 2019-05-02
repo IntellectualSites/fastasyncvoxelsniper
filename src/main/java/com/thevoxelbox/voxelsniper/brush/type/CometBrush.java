@@ -16,37 +16,7 @@ public class CometBrush extends AbstractBrush {
 	private boolean useBigBalls;
 
 	@Override
-	public void handleArrowAction(Snipe snipe) {
-		doFireball(snipe);
-	}
-
-	@Override
-	public final void handleGunpowderAction(Snipe snipe) {
-		doFireball(snipe);
-	}
-
-	private void doFireball(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		int x = targetBlock.getX();
-		int y = targetBlock.getY();
-		int z = targetBlock.getZ();
-		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
-		Sniper sniper = snipe.getSniper();
-		Player player = sniper.getPlayer();
-		Location playerLocation = player.getEyeLocation();
-		Vector slope = targetCoordinates.subtract(playerLocation.toVector());
-		Vector normalizedSlope = slope.normalize();
-		if (this.useBigBalls) {
-			LargeFireball fireball = player.launchProjectile(LargeFireball.class);
-			fireball.setVelocity(normalizedSlope);
-		} else {
-			SmallFireball fireball = player.launchProjectile(SmallFireball.class);
-			fireball.setVelocity(normalizedSlope);
-		}
-	}
-
-	@Override
-	public final void handleCommand(String[] parameters, Snipe snipe) {
+	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		for (int index = 0; index < parameters.length; ++index) {
 			String parameter = parameters[index];
@@ -69,6 +39,36 @@ public class CometBrush extends AbstractBrush {
 					messenger.sendMessage("Unknown ball size.");
 				}
 			}
+		}
+	}
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		doFireball(snipe);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		doFireball(snipe);
+	}
+
+	private void doFireball(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		int x = targetBlock.getX();
+		int y = targetBlock.getY();
+		int z = targetBlock.getZ();
+		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
+		Location playerLocation = player.getEyeLocation();
+		Vector slope = targetCoordinates.subtract(playerLocation.toVector());
+		Vector normalizedSlope = slope.normalize();
+		if (this.useBigBalls) {
+			LargeFireball fireball = player.launchProjectile(LargeFireball.class);
+			fireball.setVelocity(normalizedSlope);
+		} else {
+			SmallFireball fireball = player.launchProjectile(SmallFireball.class);
+			fireball.setVelocity(normalizedSlope);
 		}
 	}
 
