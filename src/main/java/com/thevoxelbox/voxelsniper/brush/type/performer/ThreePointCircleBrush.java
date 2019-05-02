@@ -2,89 +2,104 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Three-Point_Circle_Brush
- *
- * @author Giltwist
- */
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
 	@Nullable
-	private Vector coordsOne;
+	private Vector coordinatesOne;
 	@Nullable
-	private Vector coordsTwo;
+	private Vector coordinatesTwo;
 	@Nullable
-	private Vector coordsThree;
+	private Vector coordinatesThree;
 	private Tolerance tolerance = Tolerance.DEFAULT;
 
-	/**
-	 * Default Constructor.
-	 */
-	public ThreePointCircleBrush() {
-		super("3-Point Circle");
-	}
-
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		if (this.coordsOne == null) {
-			this.coordsOne = this.getTargetBlock()
-				.getLocation()
-				.toVector();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "First Corner set.");
-		} else if (this.coordsTwo == null) {
-			this.coordsTwo = this.getTargetBlock()
-				.getLocation()
-				.toVector();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Second Corner set.");
-		} else if (this.coordsThree == null) {
-			this.coordsThree = this.getTargetBlock()
-				.getLocation()
-				.toVector();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Third Corner set.");
-		} else {
-			this.coordsOne = this.getTargetBlock()
-				.getLocation()
-				.toVector();
-			this.coordsTwo = null;
-			this.coordsThree = null;
-			toolkitProperties.sendMessage(ChatColor.GRAY + "First Corner set.");
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (parameters[1].equalsIgnoreCase("info")) {
+			messenger.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
+			String toleranceOptions = Arrays.stream(Tolerance.values())
+				.map(tolerance -> tolerance.name()
+					.toLowerCase())
+				.collect(Collectors.joining("|"));
+			messenger.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
+			return;
+		}
+		for (int i = 1; i < parameters.length; i++) {
+			String parameter = parameters[i].toUpperCase();
+			try {
+				this.tolerance = Tolerance.valueOf(parameter);
+				messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
+					.toLowerCase() + " tolerance.");
+				return;
+			} catch (IllegalArgumentException exception) {
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tolerance.");
+			}
 		}
 	}
 
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		if (this.coordsOne == null || this.coordsTwo == null || this.coordsThree == null) {
+	public void handleArrowAction(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		Block targetBlock = getTargetBlock();
+		if (this.coordinatesOne == null) {
+			this.coordinatesOne = targetBlock.getLocation()
+				.toVector();
+			messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
+		} else if (this.coordinatesTwo == null) {
+			this.coordinatesTwo = targetBlock.getLocation()
+				.toVector();
+			messenger.sendMessage(ChatColor.GRAY + "Second Corner set.");
+		} else if (this.coordinatesThree == null) {
+			this.coordinatesThree = targetBlock.getLocation()
+				.toVector();
+			messenger.sendMessage(ChatColor.GRAY + "Third Corner set.");
+		} else {
+			this.coordinatesOne = targetBlock.getLocation()
+				.toVector();
+			this.coordinatesTwo = null;
+			this.coordinatesThree = null;
+			messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		if (this.coordinatesOne == null || this.coordinatesTwo == null || this.coordinatesThree == null) {
 			return;
 		}
 		// Calculate triangle defining vectors
-		Vector vectorOne = this.coordsTwo.clone();
-		vectorOne.subtract(this.coordsOne);
-		Vector vectorTwo = this.coordsThree.clone();
-		vectorTwo.subtract(this.coordsOne);
-		Vector vectorThree = this.coordsThree.clone();
+		Vector vectorOne = this.coordinatesTwo.clone();
+		vectorOne.subtract(this.coordinatesOne);
+		Vector vectorTwo = this.coordinatesThree.clone();
+		vectorTwo.subtract(this.coordinatesOne);
+		Vector vectorThree = this.coordinatesThree.clone();
 		vectorThree.subtract(vectorTwo);
+		SnipeMessenger messenger = snipe.createMessenger();
 		// Redundant data check
 		if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne.angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0) {
-			toolkitProperties.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
-			this.coordsOne = null;
-			this.coordsTwo = null;
-			this.coordsThree = null;
+			messenger.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
+			this.coordinatesOne = null;
+			this.coordinatesTwo = null;
+			this.coordinatesThree = null;
 			return;
 		}
 		// Calculate normal vector of the plane.
 		Vector normalVector = vectorOne.clone();
 		normalVector.crossProduct(vectorTwo);
 		// Calculate constant term of the plane.
-		double planeConstant = normalVector.getX() * this.coordsOne.getX() + normalVector.getY() * this.coordsOne.getY() + normalVector.getZ() * this.coordsOne.getZ();
-		Vector midpointOne = this.coordsOne.getMidpoint(this.coordsTwo);
-		Vector midpointTwo = this.coordsOne.getMidpoint(this.coordsThree);
+		double planeConstant = normalVector.getX() * this.coordinatesOne.getX() + normalVector.getY() * this.coordinatesOne.getY() + normalVector.getZ() * this.coordinatesOne.getZ();
+		Vector midpointOne = this.coordinatesOne.getMidpoint(this.coordinatesTwo);
+		Vector midpointTwo = this.coordinatesOne.getMidpoint(this.coordinatesThree);
 		// Find perpendicular vectors to two sides in the plane
 		Vector perpendicularOne = normalVector.clone();
 		perpendicularOne.crossProduct(vectorOne);
@@ -104,7 +119,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 		circumcenter.add(midpointOne);
 		Vector brushCenter = new Vector(Math.round(circumcenter.getX()), Math.round(circumcenter.getY()), Math.round(circumcenter.getZ()));
 		// Calculate radius of circumcircle and determine brushsize
-		double radius = circumcenter.distance(new Vector(this.coordsOne.getX(), this.coordsOne.getY(), this.coordsOne.getZ()));
+		double radius = circumcenter.distance(new Vector(this.coordinatesOne.getX(), this.coordinatesOne.getY(), this.coordinatesOne.getZ()));
 		int brushSize = NumberConversions.ceil(radius) + 1;
 		for (int x = -brushSize; x <= brushSize; x++) {
 			for (int y = -brushSize; y <= brushSize; y++) {
@@ -122,68 +137,42 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		toolkitProperties.sendMessage(ChatColor.GREEN + "Done.");
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
+		messenger.sendMessage(ChatColor.GREEN + "Done.");
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 		// Reset Brush
-		this.coordsOne = null;
-		this.coordsTwo = null;
-		this.coordsThree = null;
+		this.coordinatesOne = null;
+		this.coordinatesTwo = null;
+		this.coordinatesThree = null;
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
+	public void sendInfo(Snipe snipe) {
+		SnipeMessageSender messageSender = snipe.createMessageSender()
+			.brushNameMessage();
 		switch (this.tolerance) {
 			case ACCURATE:
-				messages.custom(ChatColor.GOLD + "Mode: Accurate");
+				messageSender.message(ChatColor.GOLD + "Mode: Accurate");
 				break;
 			case DEFAULT:
-				messages.custom(ChatColor.GOLD + "Mode: Default");
+				messageSender.message(ChatColor.GOLD + "Mode: Default");
 				break;
 			case SMOOTH:
-				messages.custom(ChatColor.GOLD + "Mode: Smooth");
+				messageSender.message(ChatColor.GOLD + "Mode: Smooth");
 				break;
 			default:
-				messages.custom(ChatColor.GOLD + "Mode: Unknown");
+				messageSender.message(ChatColor.GOLD + "Mode: Unknown");
 				break;
 		}
+		messageSender.send();
 	}
 
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		if (parameters[1].equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-			String toleranceOptions = Arrays.stream(Tolerance.values())
-				.map(tolerance -> tolerance.name()
-					.toLowerCase())
-				.collect(Collectors.joining("|"));
-			toolkitProperties.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
-			return;
-		}
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i].toUpperCase();
-			try {
-				this.tolerance = Tolerance.valueOf(parameter);
-				toolkitProperties.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
-					.toLowerCase() + " tolerance.");
-				return;
-			} catch (IllegalArgumentException exception) {
-				toolkitProperties.getMessages()
-					.brushMessage("No such tolerance.");
-			}
-		}
-	}
-
-	/**
-	 * Enumeration on Tolerance values.
-	 *
-	 * @author MikeMatrix
-	 */
 	private enum Tolerance {
+
 		DEFAULT(1000),
 		ACCURATE(10),
 		SMOOTH(2000);
+
 		private int value;
 
 		Tolerance(int value) {
@@ -193,10 +182,5 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 		public int getValue() {
 			return this.value;
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.threepointcircle";
 	}
 }

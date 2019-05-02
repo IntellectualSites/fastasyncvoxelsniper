@@ -1,32 +1,50 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
-import java.util.Set;
+import com.destroystokyo.paper.MaterialTags;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Eraser_Brush
- *
- * @author Voxel
- */
 public class EraserBrush extends AbstractBrush {
 
-	private static final Set<Material> EXCLUSIVE_MATERIALS = EnumSet.of(Material.LEGACY_AIR, Material.LEGACY_STONE, Material.LEGACY_GRASS, Material.LEGACY_DIRT, Material.LEGACY_SAND, Material.LEGACY_GRAVEL, Material.LEGACY_SANDSTONE);
-	private static final Set<Material> EXCLUSIVE_LIQUIDS = EnumSet.of(Material.LEGACY_WATER, Material.LEGACY_STATIONARY_WATER, Material.LEGACY_LAVA, Material.LEGACY_STATIONARY_LAVA);
+	private static final MaterialSet EXCLUSIVE_MATERIALS = MaterialSet.builder()
+		.with(Tag.SAND)
+		.with(MaterialTags.SANDSTONES)
+		.with(MaterialTags.RED_SANDSTONES)
+		.with(MaterialSets.AIRS)
+		.with(MaterialSets.STONES)
+		.with(MaterialSets.GRASSES)
+		.with(MaterialSets.DIRT)
+		.add(Material.GRAVEL)
+		.build();
 
-	public EraserBrush() {
-		super("Eraser");
+	private static final MaterialSet EXCLUSIVE_LIQUIDS = MaterialSet.builder()
+		.with(MaterialSets.LIQUIDS)
+		.build();
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		doErase(snipe, false);
 	}
 
-	private void doErase(ToolkitProperties toolkitProperties, boolean keepWater) {
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		doErase(snipe, true);
+	}
+
+	private void doErase(Snipe snipe, boolean keepWater) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
-		Block targetBlock = this.getTargetBlock();
+		Block targetBlock = getTargetBlock();
 		World world = targetBlock.getWorld();
 		Undo undo = new Undo();
 		for (int x = brushSizeDoubled; x >= 0; x--) {
@@ -36,36 +54,21 @@ public class EraserBrush extends AbstractBrush {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					int currentZ = targetBlock.getZ() - brushSize + z;
 					Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
-					if (EXCLUSIVE_MATERIALS.contains(currentBlock.getType()) || (keepWater && EXCLUSIVE_LIQUIDS.contains(currentBlock.getType()))) {
-						continue;
+					if (!EXCLUSIVE_MATERIALS.contains(currentBlock) && (!keepWater || !EXCLUSIVE_LIQUIDS.contains(currentBlock))) {
+						undo.put(currentBlock);
+						currentBlock.setType(Material.AIR);
 					}
-					undo.put(currentBlock);
-					currentBlock.setType(Material.AIR);
 				}
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.doErase(toolkitProperties, false);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.doErase(toolkitProperties, true);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.eraser";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
 	}
 }

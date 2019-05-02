@@ -1,45 +1,31 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Snipe_Brush
- *
- * @author Voxel
- */
 public class SnipeBrush extends AbstractPerformerBrush {
 
-	public SnipeBrush() {
-		super("Snipe");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		this.performer.perform(targetBlock);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.performer.perform(this.getTargetBlock());
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
 		this.performer.perform(lastBlock);
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.snipe";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

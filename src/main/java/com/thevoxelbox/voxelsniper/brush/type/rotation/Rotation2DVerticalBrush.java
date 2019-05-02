@@ -1,17 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Gavjenks, hack job from the other 2d rotation brush blockPositionY piotr
- */
 // The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rotation2DVerticalBrush extends AbstractBrush {
@@ -21,8 +19,42 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	private BlockData[][][] snap;
 	private double angle;
 
-	public Rotation2DVerticalBrush() {
-		super("2D Rotation");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		Double angle = NumericParser.parseDouble(parameters[1]);
+		if (angle == null) {
+			messenger.sendMessage("Exception while parsing parameter: " + parameters[1]);
+			return;
+		}
+		this.angle = Math.toRadians(angle);
+		messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+	}
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		if (this.mode == 0) {
+			this.getMatrix();
+			this.rotate();
+		} else {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		this.brushSize = toolkitProperties.getBrushSize();
+		if (this.mode == 0) {
+			this.getMatrix();
+			this.rotate();
+		} else {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+		}
 	}
 
 	private void getMatrix() {
@@ -114,47 +146,8 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		if (this.mode == 0) {
-			this.getMatrix();
-			this.rotate();
-		} else {
-			Sniper owner = toolkitProperties.getOwner();
-			owner.sendMessage(ChatColor.RED + "Something went wrong.");
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		this.brushSize = toolkitProperties.getBrushSize();
-		if (this.mode == 0) {
-			this.getMatrix();
-			this.rotate();
-		} else {
-			Sniper owner = toolkitProperties.getOwner();
-			owner.sendMessage(ChatColor.RED + "Something went wrong.");
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		try {
-			this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
-			toolkitProperties.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
-		} catch (NumberFormatException exception) {
-			toolkitProperties.sendMessage("Exception while parsing parameter: " + parameters[1]);
-			exception.printStackTrace();
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.rot2dvert";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

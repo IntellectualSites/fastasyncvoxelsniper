@@ -1,61 +1,45 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import java.util.Arrays;
+import com.thevoxelbox.voxelsniper.PerformerRegistrar;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
-import com.thevoxelbox.voxelsniper.brush.performer.Performer;
-import com.thevoxelbox.voxelsniper.brush.performer.Performers;
-import com.thevoxelbox.voxelsniper.brush.performer.type.material.MaterialPerformer;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.performer.Performer;
+import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerCreator;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
-/**
- * @author Voxel
- */
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
 
-	protected Performer performer = new MaterialPerformer();
+	private PerformerProperties performerProperties;
+	protected Performer performer;
 
-	public AbstractPerformerBrush(String name) {
-		super(name);
+	public AbstractPerformerBrush() {
+		this.performerProperties = PerformerRegistrar.DEFAULT_PERFORMER_PROPERTIES;
+		PerformerCreator performerCreator = this.performerProperties.getCreator();
+		this.performer = performerCreator.create();
 	}
 
 	@Override
-	public void parse(String[] args, ToolkitProperties toolkitProperties) {
-		String handle = args[0];
-		if (Performers.has(handle)) {
-			Performer performer = Performers.getPerformer(handle);
-			if (performer != null) {
-				this.performer = performer;
-				Messages messages = toolkitProperties.getMessages();
-				info(messages);
-				this.performer.info(messages);
-				if (args.length > 1) {
-					String[] additionalArguments = Arrays.copyOfRange(args, 1, args.length);
-					parameters(hackTheArray(additionalArguments), toolkitProperties);
-				}
-			} else {
-				parameters(hackTheArray(args), toolkitProperties);
-			}
-		} else {
-			parameters(hackTheArray(args), toolkitProperties);
+	public void handlePerformerCommand(String[] parameters, Snipe snipe, PerformerRegistry performerRegistry) {
+		String parameter = parameters[0];
+		PerformerProperties performerProperties = performerRegistry.getPerformerProperties(parameter);
+		if (performerProperties == null) {
+			super.handleCommand(hackTheArray(parameters), snipe);
+			return;
 		}
-	}
-
-	@Override
-	public void showInfo(Messages messages) {
-		this.performer.info(messages);
-	}
-
-	@Override
-	public void initPerformer(ToolkitProperties toolkitProperties) {
-		this.performer.init(toolkitProperties);
-		this.performer.setUndo();
+		this.performerProperties = performerProperties;
+		PerformerCreator performerCreator = this.performerProperties.getCreator();
+		this.performer = performerCreator.create();
+		sendInfo(snipe);
+		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
+		this.performer.sendInfo(performerSnipe);
+		if (parameters.length > 1) {
+			String[] additionalArguments = Arrays.copyOfRange(parameters, 1, parameters.length);
+			super.handleCommand(hackTheArray(additionalArguments), snipe);
+		}
 	}
 
 	/**
@@ -71,6 +55,23 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 			returnValue[i + 1] = arg;
 		}
 		return returnValue;
+	}
+
+	@Override
+	public void initialize(Snipe snipe) {
+		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
+		this.performer.initialize(performerSnipe);
+		this.performer.initializeUndo();
+	}
+
+	@Override
+	public void sendPerformerInfo(Snipe snipe) {
+		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
+		this.performer.sendInfo(performerSnipe);
+	}
+
+	public PerformerProperties getPerformerProperties() {
+		return this.performerProperties;
 	}
 
 	public Performer getPerformer() {

@@ -29,6 +29,6 @@ public class UndoUserExecutor implements CommandExecutor {
 		if (sniper == null) {
 			return;
 		}
-		sniper.undo(1);
+		sniper.undo(sender, 1);
 	}
 }

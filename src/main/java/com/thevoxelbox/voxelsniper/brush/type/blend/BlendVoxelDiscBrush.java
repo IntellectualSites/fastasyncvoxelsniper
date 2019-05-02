@@ -2,23 +2,31 @@ package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import java.util.EnumMap;
 import java.util.Map;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Blend_Brushes
- */
 public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 
-	public BlendVoxelDiscBrush() {
-		super("Blend Voxel Disc");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (parameters[1].equalsIgnoreCase("info")) {
+			messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
+			messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
+			return;
+		}
+		super.handleCommand(parameters, snipe);
 	}
 
 	@Override
-	protected final void blend(ToolkitProperties toolkitProperties) {
+	public void blend(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		Material[][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
 		// Log current materials into oldmats
@@ -83,22 +91,7 @@ public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 				}
 			}
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(undo);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		if (parameters[1].equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
-			return;
-		}
-		super.parameters(parameters, toolkitProperties);
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.blendvoxeldisc";
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 }

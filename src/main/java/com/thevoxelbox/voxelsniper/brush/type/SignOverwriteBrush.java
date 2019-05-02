@@ -1,19 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Arrays;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
-/**
- * Overwrites signs. (Wiki:
- * http://www.voxelwiki.com/minecraft/VoxelSniper#Sign_Overwrite_Brush)
- *
- * @author Monofraps
- */
 public class SignOverwriteBrush extends AbstractBrush {
 
 	private static final int MAX_SIGN_LINE_LENGTH = 15;
@@ -28,9 +23,95 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private boolean rangedMode;
 
 	public SignOverwriteBrush() {
-		super("Sign Overwrite Brush");
 		clearBuffer();
 		resetStates();
+	}
+
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		boolean textChanged = false;
+		for (int index = 0; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			try {
+				if (parameter.equalsIgnoreCase("info")) {
+					messenger.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
+					messenger.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
+					messenger.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
+					messenger.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
+					messenger.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
+					messenger.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
+					messenger.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
+					messenger.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
+					messenger.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
+					messenger.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
+					messenger.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
+				} else if (parameter.startsWith("-1")) {
+					textChanged = true;
+					index = parseSignLineFromParam(parameters, SIGN_LINE_1, snipe, index);
+				} else if (parameter.startsWith("-2")) {
+					textChanged = true;
+					index = parseSignLineFromParam(parameters, SIGN_LINE_2, snipe, index);
+				} else if (parameter.startsWith("-3")) {
+					textChanged = true;
+					index = parseSignLineFromParam(parameters, SIGN_LINE_3, snipe, index);
+				} else if (parameter.startsWith("-4")) {
+					textChanged = true;
+					index = parseSignLineFromParam(parameters, SIGN_LINE_4, snipe, index);
+				} else if (parameter.equalsIgnoreCase("-clear") || parameter.equalsIgnoreCase("-c")) {
+					clearBuffer();
+					messenger.sendMessage(ChatColor.BLUE + "Internal text buffer cleard.");
+				} else if (parameter.equalsIgnoreCase("-clearall") || parameter.equalsIgnoreCase("-ca")) {
+					clearBuffer();
+					resetStates();
+					messenger.sendMessage(ChatColor.BLUE + "Internal text buffer cleard and states back to enabled.");
+				} else if (parameter.equalsIgnoreCase("-multiple") || parameter.equalsIgnoreCase("-m")) {
+					if ((index + 1) >= parameters.length) {
+						messenger.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+						continue;
+					}
+					this.rangedMode = (parameters[++index].equalsIgnoreCase("on") || parameters[++index].equalsIgnoreCase("yes"));
+					messenger.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+					if (this.rangedMode) {
+						messenger.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + toolkitProperties.getBrushSize());
+						messenger.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + toolkitProperties.getVoxelHeight());
+					}
+				}
+			} catch (RuntimeException exception) {
+				messenger.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
+				exception.printStackTrace();
+			}
+		}
+		if (textChanged) {
+			displayBuffer(snipe);
+		}
+	}
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		if (this.rangedMode) {
+			setRanged(snipe);
+		} else {
+			setSingle(snipe);
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		if (targetBlock.getState() instanceof Sign) {
+			Sign sign = (Sign) targetBlock.getState();
+			for (int i = 0; i < this.signTextLines.length; i++) {
+				if (this.signLinesEnabled[i]) {
+					this.signTextLines[i] = sign.getLine(i);
+				}
+			}
+			displayBuffer(snipe);
+		} else {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Target block is not a sign.");
+		}
 	}
 
 	/**
@@ -48,27 +129,30 @@ public class SignOverwriteBrush extends AbstractBrush {
 	/**
 	 * Sets the text of the target sign if the target block is a sign.
 	 */
-	private void setSingle(ToolkitProperties toolkitProperties) {
-		if (this.getTargetBlock()
-			.getState() instanceof Sign) {
-			setSignText((Sign) this.getTargetBlock()
-				.getState());
+	private void setSingle(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		if (targetBlock.getState() instanceof Sign) {
+			setSignText((Sign) targetBlock.getState());
 		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Target block is not a sign.");
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Target block is not a sign.");
 		}
 	}
 
 	/**
 	 * Sets all signs in a range of box{x=z=brushSize*2+1 ; z=voxelHeight*2+1}.
 	 */
-	private void setRanged(ToolkitProperties toolkitProperties) {
+	private void setRanged(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		Block targetBlock = getTargetBlock();
-		int minX = targetBlock.getX() - toolkitProperties.getBrushSize();
-		int maxX = targetBlock.getX() + toolkitProperties.getBrushSize();
-		int minY = targetBlock.getY() - toolkitProperties.getVoxelHeight();
-		int maxY = targetBlock.getY() + toolkitProperties.getVoxelHeight();
-		int minZ = targetBlock.getZ() - toolkitProperties.getBrushSize();
-		int maxZ = targetBlock.getZ() + toolkitProperties.getBrushSize();
+		int brushSize = toolkitProperties.getBrushSize();
+		int voxelHeight = toolkitProperties.getVoxelHeight();
+		int minX = targetBlock.getX() - brushSize;
+		int maxX = targetBlock.getX() + brushSize;
+		int minY = targetBlock.getY() - voxelHeight;
+		int maxY = targetBlock.getY() + voxelHeight;
+		int minZ = targetBlock.getZ() - brushSize;
+		int maxZ = targetBlock.getZ() + brushSize;
 		boolean signFound = false; // indicates whether or not a sign was set
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
@@ -84,92 +168,8 @@ public class SignOverwriteBrush extends AbstractBrush {
 			}
 		}
 		if (!signFound) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Did not found any sign in selection box.");
-		}
-	}
-
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		if (this.rangedMode) {
-			setRanged(toolkitProperties);
-		} else {
-			setSingle(toolkitProperties);
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		if (this.getTargetBlock()
-			.getState() instanceof Sign) {
-			Sign sign = (Sign) this.getTargetBlock()
-				.getState();
-			for (int i = 0; i < this.signTextLines.length; i++) {
-				if (this.signLinesEnabled[i]) {
-					this.signTextLines[i] = sign.getLine(i);
-				}
-			}
-			displayBuffer(toolkitProperties);
-		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Target block is not a sign.");
-		}
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		boolean textChanged = false;
-		for (int i = 0; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			try {
-				if (parameter.equalsIgnoreCase("info")) {
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
-					toolkitProperties.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
-					toolkitProperties.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
-					toolkitProperties.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
-				} else if (parameter.startsWith("-1")) {
-					textChanged = true;
-					i = parseSignLineFromParam(parameters, SIGN_LINE_1, toolkitProperties, i);
-				} else if (parameter.startsWith("-2")) {
-					textChanged = true;
-					i = parseSignLineFromParam(parameters, SIGN_LINE_2, toolkitProperties, i);
-				} else if (parameter.startsWith("-3")) {
-					textChanged = true;
-					i = parseSignLineFromParam(parameters, SIGN_LINE_3, toolkitProperties, i);
-				} else if (parameter.startsWith("-4")) {
-					textChanged = true;
-					i = parseSignLineFromParam(parameters, SIGN_LINE_4, toolkitProperties, i);
-				} else if (parameter.equalsIgnoreCase("-clear") || parameter.equalsIgnoreCase("-c")) {
-					clearBuffer();
-					toolkitProperties.sendMessage(ChatColor.BLUE + "Internal text buffer cleard.");
-				} else if (parameter.equalsIgnoreCase("-clearall") || parameter.equalsIgnoreCase("-ca")) {
-					clearBuffer();
-					resetStates();
-					toolkitProperties.sendMessage(ChatColor.BLUE + "Internal text buffer cleard and states back to enabled.");
-				} else if (parameter.equalsIgnoreCase("-multiple") || parameter.equalsIgnoreCase("-m")) {
-					if ((i + 1) >= parameters.length) {
-						toolkitProperties.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
-						continue;
-					}
-					this.rangedMode = (parameters[++i].equalsIgnoreCase("on") || parameters[++i].equalsIgnoreCase("yes"));
-					toolkitProperties.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
-					if (this.rangedMode) {
-						toolkitProperties.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + toolkitProperties.getBrushSize());
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + toolkitProperties.getVoxelHeight());
-					}
-				}
-			} catch (RuntimeException exception) {
-				toolkitProperties.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
-				exception.printStackTrace();
-			}
-		}
-		if (textChanged) {
-			displayBuffer(toolkitProperties);
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Did not found any sign in selection box.");
 		}
 	}
 
@@ -178,14 +178,15 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 * Iterates though the given array until the next top level param (a parameter which starts
 	 * with a dash -) is found.
 	 */
-	private int parseSignLineFromParam(String[] params, int lineNumber, ToolkitProperties toolkitProperties, int i) {
+	private int parseSignLineFromParam(String[] params, int lineNumber, Snipe snipe, int i) {
+		SnipeMessenger messenger = snipe.createMessenger();
 		int lineIndex = lineNumber - 1;
 		String parameter = params[i];
 		boolean statusSet = false;
 		if (parameter.contains(":")) {
 			this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(':'))
 				.equalsIgnoreCase(":enabled");
-			toolkitProperties.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
+			messenger.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
 			statusSet = true;
 		}
 		if ((i + 1) >= params.length) {
@@ -193,7 +194,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 			if (statusSet) {
 				return i;
 			}
-			toolkitProperties.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
+			messenger.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 			this.signTextLines[lineIndex] = "";
 			return i;
 		}
@@ -201,7 +202,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 		// go through the array until the next top level parameter is found
 		for (i++; i < params.length; i++) {
 			String currentParameter = params[i];
-			if (currentParameter.startsWith("-")) {
+			if (!currentParameter.isEmpty() && currentParameter.charAt(0) == '-') {
 				i--;
 				break;
 			} else {
@@ -218,21 +219,22 @@ public class SignOverwriteBrush extends AbstractBrush {
 			if (statusSet) {
 				return i;
 			}
-			toolkitProperties.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
+			messenger.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 		}
 		// check the line length and cut the text if needed
 		if (newText.length() > MAX_SIGN_LINE_LENGTH) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
+			messenger.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
 			newText = new StringBuilder(newText.substring(0, MAX_SIGN_LINE_LENGTH));
 		}
 		this.signTextLines[lineIndex] = newText.toString();
 		return i;
 	}
 
-	private void displayBuffer(ToolkitProperties v) {
-		v.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
-		for (int i = 0; i < this.signTextLines.length; i++) {
-			v.sendMessage((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
+	private void displayBuffer(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
+		for (int index = 0; index < this.signTextLines.length; index++) {
+			messenger.sendMessage((this.signLinesEnabled[index] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[index]);
 		}
 	}
 
@@ -253,21 +255,17 @@ public class SignOverwriteBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName("Sign Overwrite Brush");
-		messages.custom(ChatColor.BLUE + "Buffer text: ");
-		for (int i = 0; i < this.signTextLines.length; i++) {
-			messages.custom((this.signLinesEnabled[i] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[i]);
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage(ChatColor.BLUE + "Buffer text: ");
+		for (int index = 0; index < this.signTextLines.length; index++) {
+			messenger.sendMessage((this.signLinesEnabled[index] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[index]);
 		}
-		messages.custom(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
+		messenger.sendMessage(ChatColor.BLUE + String.format("Ranged mode is %s", ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")));
 		if (this.rangedMode) {
-			messages.size();
-			messages.height();
+			messenger.sendBrushSizeMessage();
+			messenger.sendVoxelHeightMessage();
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.signoverwrite";
 	}
 }

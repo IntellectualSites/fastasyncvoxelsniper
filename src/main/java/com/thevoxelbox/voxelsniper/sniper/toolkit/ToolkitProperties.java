@@ -3,17 +3,12 @@ package com.thevoxelbox.voxelsniper.sniper.toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Piotr
- */
 public class ToolkitProperties {
 
 	private static final Material DEFAULT_BLOCK_MATERIAL = Material.AIR;
@@ -31,45 +26,6 @@ public class ToolkitProperties {
 	private Integer blockTracerRange;
 	private boolean lightningEnabled;
 	private List<BlockData> voxelList = new ArrayList<>();
-
-	@Deprecated
-	private Sniper owner;
-	@Deprecated
-	private Messages messages = new Messages(this);
-
-	@Deprecated
-	public void sendMessage(String message) {
-		Player player = this.owner.getPlayer();
-		if (player == null) {
-			return;
-		}
-		player.sendMessage(message);
-	}
-
-	@Deprecated
-	@Nullable
-	public World getWorld() {
-		Player player = this.owner.getPlayer();
-		if (player == null) {
-			return null;
-		}
-		return player.getWorld();
-	}
-
-	@Deprecated
-	public Sniper getOwner() {
-		return this.owner;
-	}
-
-	@Deprecated
-	public void setOwner(Sniper owner) {
-		this.owner = owner;
-	}
-
-	@Deprecated
-	public Messages getMessages() {
-		return this.messages;
-	}
 
 	public ToolkitProperties() {
 		this.blockData = DEFAULT_BLOCK_MATERIAL.createBlockData();
@@ -97,19 +53,19 @@ public class ToolkitProperties {
 		this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.createBlockData();
 	}
 
-	public Material getBlockDataType() {
+	public Material getBlockType() {
 		return this.blockData.getMaterial();
 	}
 
-	public void setBlockDataType(Material type) {
+	public void setBlockType(Material type) {
 		this.blockData = type.createBlockData();
 	}
 
-	public Material getReplaceBlockDataType() {
+	public Material getReplaceBlockType() {
 		return this.replaceBlockData.getMaterial();
 	}
 
-	public void setReplaceBlockDataType(Material type) {
+	public void setReplaceBlockType(Material type) {
 		this.replaceBlockData = type.createBlockData();
 	}
 

@@ -2,8 +2,8 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,18 +11,38 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Snow;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Snow_cone_brush
- *
- * @author Voxel
- */
 public class SnowConeBrush extends AbstractBrush {
 
-	public SnowConeBrush() {
-		super("Snow Cone");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		String firstParameter = parameters[1];
+		if (firstParameter.equalsIgnoreCase("info")) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
+		}
 	}
 
-	private void addSnow(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		if (targetBlock.getType() == Material.SNOW) {
+			addSnow(snipe, targetBlock);
+		} else {
+			Block blockAbove = targetBlock.getRelative(BlockFace.UP);
+			Material type = blockAbove.getType();
+			if (type.isEmpty()) {
+				addSnow(snipe, blockAbove);
+			} else {
+				SnipeMessenger messenger = snipe.createMessenger();
+				messenger.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
+			}
+		}
+	}
+
+	private void addSnow(Snipe snipe, Block targetBlock) {
 		int brushSize;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
@@ -101,8 +121,8 @@ public class SnowConeBrush extends AbstractBrush {
 				clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z).setBlockData(snowConeData[x][z]);
 			}
 		}
-		Sniper owner = toolkitProperties.getOwner();
-		owner.storeUndo(undo);
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(undo);
 	}
 
 	private int blockDataToSnowLayers(BlockData blockData) {
@@ -122,41 +142,8 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block targetBlock = getTargetBlock();
-		if (targetBlock.getType() == Material.SNOW) {
-			this.addSnow(toolkitProperties, targetBlock);
-		} else {
-			Block blockAbove = targetBlock.getRelative(BlockFace.UP);
-			Material type = blockAbove.getType();
-			if (type.isEmpty()) {
-				addSnow(toolkitProperties, blockAbove);
-			} else {
-				Sniper owner = toolkitProperties.getOwner();
-				owner.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
-			}
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName("Snow Cone");
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		String firstParameter = parameters[1];
-		if (firstParameter.equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.snowcone";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

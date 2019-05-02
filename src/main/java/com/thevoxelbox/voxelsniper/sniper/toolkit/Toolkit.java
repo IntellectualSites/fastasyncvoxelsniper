@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import com.thevoxelbox.voxelsniper.BrushRegistrar;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushCreator;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -12,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class Toolkit {
 
+	private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
+
 	private String toolkitName;
-	@Nullable
 	private BrushProperties currentBrushProperties;
-	@Nullable
 	private BrushProperties previousBrushProperties;
 	private Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
 	private Map<BrushProperties, Brush> brushes = new HashMap<>();
@@ -23,13 +24,17 @@ public class Toolkit {
 
 	public Toolkit(String toolkitName) {
 		this.toolkitName = toolkitName;
+		this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+		this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+		createBrush(DEFAULT_BRUSH_PROPERTIES);
 	}
 
 	public void reset() {
-		this.currentBrushProperties = null;
-		this.previousBrushProperties = null;
+		this.currentBrushProperties = DEFAULT_BRUSH_PROPERTIES;
+		this.previousBrushProperties = DEFAULT_BRUSH_PROPERTIES;
 		this.brushes.clear();
 		this.properties.reset();
+		createBrush(DEFAULT_BRUSH_PROPERTIES);
 	}
 
 	public void addToolAction(Material toolMaterial, ToolAction action) {
@@ -50,22 +55,24 @@ public class Toolkit {
 	}
 
 	public Brush useBrush(BrushProperties properties) {
-		Brush brush = this.brushes.get(properties);
+		Brush brush = getBrush(properties);
 		if (brush == null) {
-			BrushCreator creator = properties.getCreator();
-			brush = creator.create();
-			this.brushes.put(properties, brush);
+			brush = createBrush(properties);
 		}
 		this.previousBrushProperties = this.currentBrushProperties;
 		this.currentBrushProperties = properties;
 		return brush;
 	}
 
+	private Brush createBrush(BrushProperties properties) {
+		BrushCreator creator = properties.getCreator();
+		Brush brush = creator.create();
+		this.brushes.put(properties, brush);
+		return brush;
+	}
+
 	@Nullable
 	public Brush getCurrentBrush() {
-		if (this.currentBrushProperties == null) {
-			return null;
-		}
 		return getBrush(this.currentBrushProperties);
 	}
 
@@ -78,12 +85,10 @@ public class Toolkit {
 		return this.toolkitName;
 	}
 
-	@Nullable
 	public BrushProperties getCurrentBrushProperties() {
 		return this.currentBrushProperties;
 	}
 
-	@Nullable
 	public BrushProperties getPreviousBrushProperties() {
 		return this.previousBrushProperties;
 	}

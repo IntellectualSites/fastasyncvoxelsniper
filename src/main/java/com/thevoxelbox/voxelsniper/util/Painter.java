@@ -9,11 +9,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 
-/**
- * Painting state change handler.
- *
- * @author Piotr
- */
 public final class Painter {
 
 	private Painter() {

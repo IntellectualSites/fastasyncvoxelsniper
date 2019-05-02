@@ -1,16 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Ellipse_Brush
- *
- * @author psanker
- */
 public class EllipseBrush extends AbstractPerformerBrush {
 
 	private static final double TWO_PI = (2 * Math.PI);
@@ -27,35 +25,112 @@ public class EllipseBrush extends AbstractPerformerBrush {
 	private double stepSize;
 	private boolean fill;
 
-	public EllipseBrush() {
-		super("Ellipse");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
+				messenger.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
+				messenger.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
+				messenger.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
+				messenger.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
+				return;
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
+				Integer tempXScale = NumericParser.parseInteger(parameters[index].replace("x", ""));
+				if (tempXScale == null) {
+					messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+					return;
+				}
+				if (tempXScale < SCL_MIN || tempXScale > SCL_MAX) {
+					messenger.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+					continue;
+				}
+				this.xscl = tempXScale;
+				messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
+				Integer tempYScale = NumericParser.parseInteger(parameters[index].replace("y", ""));
+				if (tempYScale == null) {
+					messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+					return;
+				}
+				if (tempYScale < SCL_MIN || tempYScale > SCL_MAX) {
+					messenger.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
+					continue;
+				}
+				this.yscl = tempYScale;
+				messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
+			} else if (!parameter.isEmpty() && parameter.charAt(0) == 't') {
+				Integer tempSteps = NumericParser.parseInteger(parameters[index].replace("t", ""));
+				if (tempSteps == null) {
+					messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
+					return;
+				}
+				if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX) {
+					messenger.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
+					continue;
+				}
+				this.steps = tempSteps;
+				messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
+			} else if (parameter.equalsIgnoreCase("fill")) {
+				if (this.fill) {
+					this.fill = false;
+					messenger.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+				} else {
+					this.fill = true;
+					messenger.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+				}
+			} else {
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+			}
+		}
 	}
 
-	private void ellipse(ToolkitProperties toolkitProperties, Block targetBlock) {
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		Block targetBlock = getTargetBlock();
+		execute(snipe, targetBlock);
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Block lastBlock = getLastBlock();
+		execute(snipe, lastBlock);
+	}
+
+	private void execute(Snipe snipe, Block targetBlock) {
+		this.stepSize = TWO_PI / this.steps;
+		if (this.fill) {
+			ellipseFill(snipe, targetBlock);
+		} else {
+			ellipse(snipe, targetBlock);
+		}
+	}
+
+	private void ellipse(Snipe snipe, Block targetBlock) {
 		try {
 			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
 				int y = (int) Math.round(this.yscl * Math.sin(steps));
 				Block lastBlock = getLastBlock();
-				if (lastBlock != null) {
-					BlockFace face = getTargetBlock().getFace(lastBlock);
-					if (face != null) {
-						switch (face) {
-							case NORTH:
-							case SOUTH:
-								this.performer.perform(targetBlock.getRelative(0, x, y));
-								break;
-							case EAST:
-							case WEST:
-								this.performer.perform(targetBlock.getRelative(x, y, 0));
-								break;
-							case UP:
-							case DOWN:
-								this.performer.perform(targetBlock.getRelative(x, 0, y));
-								break;
-							default:
-								break;
-						}
+				BlockFace face = getTargetBlock().getFace(lastBlock);
+				if (face != null) {
+					switch (face) {
+						case NORTH:
+						case SOUTH:
+							this.performer.perform(targetBlock.getRelative(0, x, y));
+							break;
+						case EAST:
+						case WEST:
+							this.performer.perform(targetBlock.getRelative(x, y, 0));
+							break;
+						case UP:
+						case DOWN:
+							this.performer.perform(targetBlock.getRelative(x, 0, y));
+							break;
+						default:
+							break;
 					}
 				}
 				if (steps >= TWO_PI) {
@@ -63,13 +138,14 @@ public class EllipseBrush extends AbstractPerformerBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Invalid target.");
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void ellipseFill(ToolkitProperties toolkitProperties, Block targetBlock) {
+	private void ellipseFill(Snipe snipe, Block targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
 		this.performer.perform(targetBlock);
@@ -80,25 +156,23 @@ public class EllipseBrush extends AbstractPerformerBrush {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
 						Block lastBlock = getLastBlock();
-						if (lastBlock != null) {
-							BlockFace face = getTargetBlock().getFace(lastBlock);
-							if (face != null) {
-								switch (face) {
-									case NORTH:
-									case SOUTH:
-										this.performer.perform(targetBlock.getRelative(0, x, y));
-										break;
-									case EAST:
-									case WEST:
-										this.performer.perform(targetBlock.getRelative(x, y, 0));
-										break;
-									case UP:
-									case DOWN:
-										this.performer.perform(targetBlock.getRelative(x, 0, y));
-										break;
-									default:
-										break;
-								}
+						BlockFace face = getTargetBlock().getFace(lastBlock);
+						if (face != null) {
+							switch (face) {
+								case NORTH:
+								case SOUTH:
+									this.performer.perform(targetBlock.getRelative(0, x, y));
+									break;
+								case EAST:
+								case WEST:
+									this.performer.perform(targetBlock.getRelative(x, y, 0));
+									break;
+								case UP:
+								case DOWN:
+									this.performer.perform(targetBlock.getRelative(x, 0, y));
+									break;
+								default:
+									break;
 							}
 						}
 						if (steps >= TWO_PI) {
@@ -113,25 +187,23 @@ public class EllipseBrush extends AbstractPerformerBrush {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
 						Block lastBlock = getLastBlock();
-						if (lastBlock != null) {
-							BlockFace face = getTargetBlock().getFace(lastBlock);
-							if (face != null) {
-								switch (face) {
-									case NORTH:
-									case SOUTH:
-										this.performer.perform(targetBlock.getRelative(0, x, y));
-										break;
-									case EAST:
-									case WEST:
-										this.performer.perform(targetBlock.getRelative(x, y, 0));
-										break;
-									case UP:
-									case DOWN:
-										this.performer.perform(targetBlock.getRelative(x, 0, y));
-										break;
-									default:
-										break;
-								}
+						BlockFace face = getTargetBlock().getFace(lastBlock);
+						if (face != null) {
+							switch (face) {
+								case NORTH:
+								case SOUTH:
+									this.performer.perform(targetBlock.getRelative(0, x, y));
+									break;
+								case EAST:
+								case WEST:
+									this.performer.perform(targetBlock.getRelative(x, y, 0));
+									break;
+								case UP:
+								case DOWN:
+									this.performer.perform(targetBlock.getRelative(x, 0, y));
+									break;
+								default:
+									break;
 							}
 						}
 						if (steps >= TWO_PI) {
@@ -142,37 +214,15 @@ public class EllipseBrush extends AbstractPerformerBrush {
 				}
 			}
 		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Invalid target.");
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Invalid target.");
 		}
-		toolkitProperties.getOwner()
-			.storeUndo(this.performer.getUndo());
-	}
-
-	private void execute(ToolkitProperties toolkitProperties, Block targetBlock) {
-		this.stepSize = (TWO_PI / this.steps);
-		if (this.fill) {
-			this.ellipseFill(toolkitProperties, targetBlock);
-		} else {
-			this.ellipse(toolkitProperties, targetBlock);
-		}
+		Sniper sniper = snipe.getSniper();
+		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		this.execute(toolkitProperties, this.getTargetBlock());
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Block lastBlock = this.getLastBlock();
-		if (lastBlock == null) {
-			return;
-		}
-		this.execute(toolkitProperties, lastBlock);
-	}
-
-	@Override
-	public final void info(Messages messages) {
+	public void sendInfo(Snipe snipe) {
 		if (this.xscl < SCL_MIN || this.xscl > SCL_MAX) {
 			this.xscl = SCL_DEFAULT;
 		}
@@ -182,72 +232,12 @@ public class EllipseBrush extends AbstractPerformerBrush {
 		if (this.steps < STEPS_MIN || this.steps > STEPS_MAX) {
 			this.steps = STEPS_DEFAULT;
 		}
-		messages.brushName(this.getName());
-		messages.custom(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl);
-		messages.custom(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl);
-		messages.custom(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps);
-		if (this.fill) {
-			messages.custom(ChatColor.AQUA + "Fill mode is enabled");
-		} else {
-			messages.custom(ChatColor.AQUA + "Fill mode is disabled");
-		}
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			try {
-				if (parameter.equalsIgnoreCase("info")) {
-					toolkitProperties.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-					toolkitProperties.sendMessage(ChatColor.AQUA + "x[n]: Set X size modifier to n");
-					toolkitProperties.sendMessage(ChatColor.AQUA + "y[n]: Set Y size modifier to n");
-					toolkitProperties.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
-					toolkitProperties.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
-					return;
-				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
-					int tempXScale = Integer.parseInt(parameters[i].replace("x", ""));
-					if (tempXScale < SCL_MIN || tempXScale > SCL_MAX) {
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-						continue;
-					}
-					this.xscl = tempXScale;
-					toolkitProperties.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
-				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
-					int tempYScale = Integer.parseInt(parameters[i].replace("y", ""));
-					if (tempYScale < SCL_MIN || tempYScale > SCL_MAX) {
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-						continue;
-					}
-					this.yscl = tempYScale;
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
-				} else if (!parameter.isEmpty() && parameter.charAt(0) == 't') {
-					int tempSteps = Integer.parseInt(parameters[i].replace("t", ""));
-					if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX) {
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
-						continue;
-					}
-					this.steps = tempSteps;
-					toolkitProperties.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
-				} else if (parameter.equalsIgnoreCase("fill")) {
-					if (this.fill) {
-						this.fill = false;
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
-					} else {
-						this.fill = true;
-						toolkitProperties.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
-					}
-				} else {
-					toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
-				}
-			} catch (NumberFormatException exception) {
-				toolkitProperties.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-			}
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.ellipse";
+		SnipeMessageSender messageSender = snipe.createMessageSender();
+		messageSender.brushNameMessage()
+			.message(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl)
+			.message(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl)
+			.message(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps)
+			.message(ChatColor.AQUA + "Fill mode is " + (this.fill ? "enabled" : "disabled"))
+			.send();
 	}
 }

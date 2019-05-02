@@ -1,33 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-/**
- * @author MikeMatrix
- */
 public class WarpBrush extends AbstractBrush {
 
-	public WarpBrush() {
-		super("Warp");
-	}
-
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		Sniper owner = toolkitProperties.getOwner();
-		Player player = owner.getPlayer();
-		if (player == null) {
-			return;
-		}
+	public void handleArrowAction(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
@@ -40,12 +25,9 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		Sniper owner = toolkitProperties.getOwner();
-		Player player = owner.getPlayer();
-		if (player == null) {
-			return;
-		}
+	public void handleGunpowderAction(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		Block lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
@@ -60,7 +42,8 @@ public class WarpBrush extends AbstractBrush {
 	}
 
 	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.warp";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

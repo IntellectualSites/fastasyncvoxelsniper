@@ -30,9 +30,9 @@ public class UndoExecutor implements CommandExecutor {
 				sender.sendMessage("Error while parsing amount of undo. Number format exception.");
 				return;
 			}
-			sniper.undo(amount);
+			sniper.undo(sender, amount);
 			return;
 		}
-		sniper.undo(1);
+		sniper.undo(sender, 1);
 	}
 }

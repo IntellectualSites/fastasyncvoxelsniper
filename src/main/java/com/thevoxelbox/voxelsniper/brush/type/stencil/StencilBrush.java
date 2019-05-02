@@ -11,8 +11,8 @@ import java.io.IOException;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,8 +29,6 @@ import org.bukkit.block.data.BlockData;
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
  * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
  * TODO: Make limit a config option
- *
- * @author Gavjenks
  */
 public class StencilBrush extends AbstractBrush {
 
@@ -48,13 +46,81 @@ public class StencilBrush extends AbstractBrush {
 	private int[] pastePoint = new int[3];
 	private byte point = 1;
 
-	public StencilBrush() {
-		super("Stencil");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		String firstParameter = parameters[1];
+		if (firstParameter.equalsIgnoreCase("info")) {
+			messenger.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
+			messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+			messenger.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
+			return;
+		} else if (firstParameter.equalsIgnoreCase("full")) {
+			this.pasteOption = (byte) 0;
+			this.pasteParam = (byte) 1;
+		} else if (firstParameter.equalsIgnoreCase("fill")) {
+			this.pasteOption = (byte) 1;
+			this.pasteParam = (byte) 1;
+		} else if (firstParameter.equalsIgnoreCase("replace")) {
+			this.pasteOption = (byte) 2;
+			this.pasteParam = (byte) 1;
+		}
+		try {
+			this.filename = parameters[1 + this.pasteParam];
+			File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+			if (file.exists()) {
+				messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+			} else {
+				messenger.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+			}
+		} catch (RuntimeException exception) {
+			messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+		}
 	}
 
-	private void stencilPaste(ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleArrowAction(Snipe snipe) { // will be used to copy/save later on?
+		SnipeMessenger messenger = snipe.createMessenger();
+		Block targetBlock = getTargetBlock();
+		if (this.point == 1) {
+			this.firstPoint[0] = targetBlock.getX();
+			this.firstPoint[1] = targetBlock.getZ();
+			this.firstPoint[2] = targetBlock.getY();
+			messenger.sendMessage(ChatColor.GRAY + "First point");
+			messenger.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
+			this.point = (byte) 2;
+		} else if (this.point == 2) {
+			this.secondPoint[0] = targetBlock.getX();
+			this.secondPoint[1] = targetBlock.getZ();
+			this.secondPoint[2] = targetBlock.getY();
+			if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000) {
+				messenger.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
+				this.point = (byte) 1;
+			} else {
+				messenger.sendMessage(ChatColor.GRAY + "Second point");
+				messenger.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
+				this.point = (byte) 3;
+			}
+		} else if (this.point == 3) {
+			this.pastePoint[0] = targetBlock.getX();
+			this.pastePoint[1] = targetBlock.getZ();
+			this.pastePoint[2] = targetBlock.getY();
+			messenger.sendMessage(ChatColor.GRAY + "Paste Reference point");
+			messenger.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
+			this.point = (byte) 1;
+			this.stencilSave(snipe);
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) { // will be used to paste later on
+		this.stencilPaste(snipe);
+	}
+
+	private void stencilPaste(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
 		if (this.filename.matches("NoFileLoaded")) {
-			toolkitProperties.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
+			messenger.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
 			return;
 		}
 		Undo undo = new Undo();
@@ -193,14 +259,14 @@ public class StencilBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				Sniper owner = toolkitProperties.getOwner();
-				owner.storeUndo(undo);
+				Sniper sniper = snipe.getSniper();
+				sniper.storeUndo(undo);
 			} catch (IOException exception) {
-				toolkitProperties.sendMessage(ChatColor.RED + "Something went wrong.");
+				messenger.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();
 			}
 		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+			messenger.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
 		}
 	}
 
@@ -209,7 +275,8 @@ public class StencilBrush extends AbstractBrush {
 		return Bukkit.createBlockData(blockDataString);
 	}
 
-	private void stencilSave(ToolkitProperties toolkitProperties) {
+	private void stencilSave(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
 		File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 		try {
 			this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
@@ -219,7 +286,7 @@ public class StencilBrush extends AbstractBrush {
 			this.zRef = (short) ((this.firstPoint[1] > this.secondPoint[1]) ? (this.pastePoint[1] - this.secondPoint[1]) : (this.pastePoint[1] - this.firstPoint[1]));
 			this.yRef = (short) ((this.firstPoint[2] > this.secondPoint[2]) ? (this.pastePoint[2] - this.secondPoint[2]) : (this.pastePoint[2] - this.firstPoint[2]));
 			if ((this.x * this.y * this.z) > 50000) {
-				toolkitProperties.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
+				messenger.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
 				return;
 			}
 			createParentDirs(file);
@@ -234,7 +301,7 @@ public class StencilBrush extends AbstractBrush {
 			out.writeShort(this.xRef);
 			out.writeShort(this.zRef);
 			out.writeShort(this.yRef);
-			toolkitProperties.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
+			messenger.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
 			BlockData[] blockDataArray = new BlockData[this.x * this.z * this.y];
 			byte[] runSizeArray = new byte[this.x * this.z * this.y];
 			World world = getWorld();
@@ -272,10 +339,10 @@ public class StencilBrush extends AbstractBrush {
 				}
 				out.writeUTF(blockDataArray[i].getAsString());
 			}
-			toolkitProperties.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
+			messenger.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
 			out.close();
 		} catch (IOException exception) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Something went wrong.");
+			messenger.sendMessage(ChatColor.RED + "Something went wrong.");
 			exception.printStackTrace();
 		}
 	}
@@ -293,82 +360,9 @@ public class StencilBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) { // will be used to copy/save later on?
-		Block targetBlock = getTargetBlock();
-		if (this.point == 1) {
-			this.firstPoint[0] = targetBlock.getX();
-			this.firstPoint[1] = targetBlock.getZ();
-			this.firstPoint[2] = targetBlock.getY();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "First point");
-			toolkitProperties.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
-			this.point = (byte) 2;
-		} else if (this.point == 2) {
-			this.secondPoint[0] = targetBlock.getX();
-			this.secondPoint[1] = targetBlock.getZ();
-			this.secondPoint[2] = targetBlock.getY();
-			if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000) {
-				toolkitProperties.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
-				this.point = (byte) 1;
-			} else {
-				toolkitProperties.sendMessage(ChatColor.GRAY + "Second point");
-				toolkitProperties.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
-				this.point = (byte) 3;
-			}
-		} else if (this.point == 3) {
-			this.pastePoint[0] = targetBlock.getX();
-			this.pastePoint[1] = targetBlock.getZ();
-			this.pastePoint[2] = targetBlock.getY();
-			toolkitProperties.sendMessage(ChatColor.GRAY + "Paste Reference point");
-			toolkitProperties.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
-			this.point = (byte) 1;
-			this.stencilSave(toolkitProperties);
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) { // will be used to paste later on
-		this.stencilPaste(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.custom("File loaded: " + this.filename);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		String firstParameter = parameters[1];
-		if (firstParameter.equalsIgnoreCase("info")) {
-			toolkitProperties.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
-			toolkitProperties.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-			toolkitProperties.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
-			return;
-		} else if (firstParameter.equalsIgnoreCase("full")) {
-			this.pasteOption = (byte) 0;
-			this.pasteParam = (byte) 1;
-		} else if (firstParameter.equalsIgnoreCase("fill")) {
-			this.pasteOption = (byte) 1;
-			this.pasteParam = (byte) 1;
-		} else if (firstParameter.equalsIgnoreCase("replace")) {
-			this.pasteOption = (byte) 2;
-			this.pasteParam = (byte) 1;
-		}
-		try {
-			this.filename = parameters[1 + this.pasteParam];
-			File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
-			if (file.exists()) {
-				toolkitProperties.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
-			} else {
-				toolkitProperties.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
-			}
-		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage(ChatColor.RED + "You need to type a stencil name.");
-		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.stencil";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage("File loaded: " + this.filename);
 	}
 }

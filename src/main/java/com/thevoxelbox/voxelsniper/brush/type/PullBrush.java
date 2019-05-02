@@ -2,17 +2,16 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-/**
- * @author Piotr
- */
 public class PullBrush extends AbstractBrush {
 
 	private Set<PullBrushBlockWrapper> surface = new HashSet<>();
@@ -20,97 +19,22 @@ public class PullBrush extends AbstractBrush {
 	private double c1 = 1;
 	private double c2;
 
-	/**
-	 * Default Constructor.
-	 */
-	public PullBrush() {
-		super("Soft Selection");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		Double pinch = NumericParser.parseDouble(parameters[1]);
+		Double bubble = NumericParser.parseDouble(parameters[2]);
+		if (pinch == null || bubble == null) {
+			SnipeMessenger messenger = snipe.createMessenger();
+			messenger.sendMessage(ChatColor.RED + "Invalid brush parameters!");
+			return;
+		}
+		this.c1 = 1 - pinch;
+		this.c2 = bubble;
 	}
 
 	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.size();
-		messages.height();
-		messages.custom(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-		messages.custom(ChatColor.AQUA + "Bubble " + this.c2);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		try {
-			double pinch = Double.parseDouble(parameters[1]);
-			double bubble = Double.parseDouble(parameters[2]);
-			this.c1 = 1 - pinch;
-			this.c2 = bubble;
-		} catch (NumberFormatException exception) {
-			toolkitProperties.sendMessage(ChatColor.RED + "Invalid brush parameters!");
-		}
-	}
-
-	private double getStr(double t) {
-		double lt = 1 - t;
-		return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
-	}
-
-	private void getSurface(ToolkitProperties toolkitProperties) {
-		this.surface.clear();
-		int brushSize = toolkitProperties.getBrushSize();
-		double bSquared = Math.pow(brushSize + 0.5, 2);
-		for (int z = -brushSize; z <= brushSize; z++) {
-			double zSquared = Math.pow(z, 2);
-			Block targetBlock = getTargetBlock();
-			int actualZ = targetBlock.getZ() + z;
-			for (int x = -brushSize; x <= brushSize; x++) {
-				double xSquared = Math.pow(x, 2);
-				int actualX = targetBlock.getX() + x;
-				for (int y = -brushSize; y <= brushSize; y++) {
-					double volume = (xSquared + Math.pow(y, 2) + zSquared);
-					if (volume <= bSquared) {
-						if (this.isSurface(actualX, targetBlock.getY() + y, actualZ)) {
-							this.surface.add(new PullBrushBlockWrapper(this.clampY(actualX, targetBlock.getY() + y, actualZ), this.getStr(((volume / bSquared)))));
-						}
-					}
-				}
-			}
-		}
-	}
-
-	private boolean isSurface(int x, int y, int z) {
-		return !isEmpty(x, y, z) && (isEmpty(x, y - 1, z) || isEmpty(x, y + 1, z) || isEmpty(x + 1, y, z) || isEmpty(x - 1, y, z) || isEmpty(x, y, z + 1) || isEmpty(x, y, z - 1));
-	}
-
-	private boolean isEmpty(int x, int y, int i) {
-		Material type = getBlockType(x, y, i);
-		return type.isEmpty();
-	}
-
-	private void setBlock(PullBrushBlockWrapper block) {
-		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
-		if (getBlockType(block.getX(), block.getY() - 1, block.getZ()).isEmpty()) {
-			currentBlock.setBlockData(block.getBlockData());
-			for (int y = block.getY(); y < currentBlock.getY(); y++) {
-				setBlockType(block.getZ(), block.getX(), y, Material.AIR);
-			}
-		} else {
-			currentBlock.setBlockData(block.getBlockData());
-			for (int y = block.getY() - 1; y < currentBlock.getY(); y++) {
-				Block current = this.clampY(block.getX(), y, block.getZ());
-				current.setBlockData(block.getBlockData());
-			}
-		}
-	}
-
-	private void setBlockDown(PullBrushBlockWrapper block) {
-		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
-		currentBlock.setBlockData(block.getBlockData());
-		for (int y = block.getY(); y > currentBlock.getY(); y--) {
-			this.setBlockType(block.getZ(), block.getX(), y, Material.AIR);
-		}
-	}
-
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
+	public void handleArrowAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.voxelHeight = toolkitProperties.getVoxelHeight();
 		getSurface(toolkitProperties);
 		if (this.voxelHeight > 0) {
@@ -125,15 +49,16 @@ public class PullBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
+	public void handleGunpowderAction(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.voxelHeight = toolkitProperties.getVoxelHeight();
 		this.surface.clear();
 		int lastY;
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		// Are we pulling up ?
-		Block targetBlock = this.getTargetBlock();
-		World world = this.getWorld();
+		Block targetBlock = getTargetBlock();
+		World world = getWorld();
 		if (this.voxelHeight > 0) {
 			// Z - Axis
 			for (int z = -brushSize; z <= brushSize; z++) {
@@ -216,10 +141,78 @@ public class PullBrush extends AbstractBrush {
 		}
 	}
 
-	/**
-	 * @author Piotr
-	 */
-	private static class PullBrushBlockWrapper {
+	private double getStr(double t) {
+		double lt = 1 - t;
+		return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
+	}
+
+	private void getSurface(ToolkitProperties toolkitProperties) {
+		this.surface.clear();
+		int brushSize = toolkitProperties.getBrushSize();
+		double bSquared = Math.pow(brushSize + 0.5, 2);
+		for (int z = -brushSize; z <= brushSize; z++) {
+			double zSquared = Math.pow(z, 2);
+			Block targetBlock = getTargetBlock();
+			int actualZ = targetBlock.getZ() + z;
+			for (int x = -brushSize; x <= brushSize; x++) {
+				double xSquared = Math.pow(x, 2);
+				int actualX = targetBlock.getX() + x;
+				for (int y = -brushSize; y <= brushSize; y++) {
+					double volume = (xSquared + Math.pow(y, 2) + zSquared);
+					if (volume <= bSquared) {
+						if (this.isSurface(actualX, targetBlock.getY() + y, actualZ)) {
+							this.surface.add(new PullBrushBlockWrapper(this.clampY(actualX, targetBlock.getY() + y, actualZ), this.getStr(((volume / bSquared)))));
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean isSurface(int x, int y, int z) {
+		return !isEmpty(x, y, z) && (isEmpty(x, y - 1, z) || isEmpty(x, y + 1, z) || isEmpty(x + 1, y, z) || isEmpty(x - 1, y, z) || isEmpty(x, y, z + 1) || isEmpty(x, y, z - 1));
+	}
+
+	private boolean isEmpty(int x, int y, int i) {
+		Material type = getBlockType(x, y, i);
+		return type.isEmpty();
+	}
+
+	private void setBlock(PullBrushBlockWrapper block) {
+		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
+		if (getBlockType(block.getX(), block.getY() - 1, block.getZ()).isEmpty()) {
+			currentBlock.setBlockData(block.getBlockData());
+			for (int y = block.getY(); y < currentBlock.getY(); y++) {
+				setBlockType(block.getZ(), block.getX(), y, Material.AIR);
+			}
+		} else {
+			currentBlock.setBlockData(block.getBlockData());
+			for (int y = block.getY() - 1; y < currentBlock.getY(); y++) {
+				Block current = this.clampY(block.getX(), y, block.getZ());
+				current.setBlockData(block.getBlockData());
+			}
+		}
+	}
+
+	private void setBlockDown(PullBrushBlockWrapper block) {
+		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
+		currentBlock.setBlockData(block.getBlockData());
+		for (int y = block.getY(); y > currentBlock.getY(); y--) {
+			this.setBlockType(block.getZ(), block.getX(), y, Material.AIR);
+		}
+	}
+
+	@Override
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendBrushSizeMessage();
+		messenger.sendVoxelHeightMessage();
+		messenger.sendMessage(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
+		messenger.sendMessage(ChatColor.AQUA + "Bubble " + this.c2);
+	}
+
+	private static final class PullBrushBlockWrapper {
 
 		private BlockData blockData;
 		private final double str;
@@ -254,10 +247,5 @@ public class PullBrush extends AbstractBrush {
 		public int getZ() {
 			return this.z;
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.pull";
 	}
 }

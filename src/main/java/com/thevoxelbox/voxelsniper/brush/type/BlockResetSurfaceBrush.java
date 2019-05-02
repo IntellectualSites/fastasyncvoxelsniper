@@ -1,10 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.EnumSet;
-import java.util.Set;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.destroystokyo.paper.MaterialTags;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -21,18 +24,36 @@ import org.bukkit.block.data.BlockData;
  * about a factor of 5-6 for a size 20 brush. For a complicated city or ship, etc., this may be only a factor of about 2. In a hypothetical worst case scenario
  * of a 3d checkerboard of stone and air every other block, this brush should only be about 1.5x slower than the original brush. Savings increase for larger
  * brushes.
- *
- * @author GavJenks
  */
 public class BlockResetSurfaceBrush extends AbstractBrush {
 
-	private static final Set<Material> DENIED_UPDATES = EnumSet.of(Material.LEGACY_SIGN, Material.LEGACY_SIGN_POST, Material.LEGACY_WALL_SIGN, Material.LEGACY_CHEST, Material.LEGACY_FURNACE, Material.LEGACY_BURNING_FURNACE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_REDSTONE_WIRE, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_WOOD_DOOR, Material.LEGACY_IRON_DOOR, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_FENCE_GATE, Material.LEGACY_AIR);
+	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
+		.with(Tag.DOORS)
+		.with(Tag.TRAPDOORS)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.CHESTS)
+		.with(MaterialSets.FENCE_GATES)
+		.with(MaterialSets.AIRS)
+		.add(Material.FURNACE)
+		.add(Material.REDSTONE_TORCH)
+		.add(Material.REDSTONE_WALL_TORCH)
+		.add(Material.REDSTONE_WIRE)
+		.add(Material.REPEATER)
+		.add(Material.COMPARATOR)
+		.build();
 
-	public BlockResetSurfaceBrush() {
-		super("Block Reset Brush Surface Only");
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		applyBrush(snipe);
 	}
 
-	private void applyBrush(ToolkitProperties toolkitProperties) {
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		applyBrush(snipe);
+	}
+
+	private void applyBrush(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int size = toolkitProperties.getBrushSize();
 		for (int x = -size; x <= size; x++) {
 			for (int y = -size; y <= size; y++) {
@@ -78,22 +99,8 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		applyBrush(toolkitProperties);
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		applyBrush(toolkitProperties);
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.blockresetsurface";
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
 	}
 }

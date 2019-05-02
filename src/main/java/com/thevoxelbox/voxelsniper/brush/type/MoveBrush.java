@@ -1,17 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import com.destroystokyo.paper.MaterialTags;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
+import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -19,16 +23,33 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Moves a selection blockPositionY a certain amount.
- * http://www.voxelwiki.com/minecraft/Voxelsniper#Move_Brush
- *
- * @author MikeMatrix
  */
 public class MoveBrush extends AbstractBrush {
 
 	/**
 	 * Breakable Blocks to determine if no-physics should be used.
 	 */
-	private static final Set<Material> BREAKABLE_MATERIALS = EnumSet.of(Material.LEGACY_SAPLING, Material.LEGACY_BED_BLOCK, Material.LEGACY_POWERED_RAIL, Material.LEGACY_DETECTOR_RAIL, Material.LEGACY_LONG_GRASS, Material.LEGACY_DEAD_BUSH, Material.LEGACY_PISTON_EXTENSION, Material.LEGACY_YELLOW_FLOWER, Material.LEGACY_RED_ROSE, Material.LEGACY_BROWN_MUSHROOM, Material.LEGACY_RED_MUSHROOM, Material.LEGACY_TORCH, Material.LEGACY_FIRE, Material.LEGACY_CROPS, Material.LEGACY_SIGN_POST, Material.LEGACY_WOODEN_DOOR, Material.LEGACY_LADDER, Material.LEGACY_RAILS, Material.LEGACY_WALL_SIGN, Material.LEGACY_LEVER, Material.LEGACY_STONE_PLATE, Material.LEGACY_IRON_DOOR_BLOCK, Material.LEGACY_WOOD_PLATE, Material.LEGACY_REDSTONE_TORCH_OFF, Material.LEGACY_REDSTONE_TORCH_ON, Material.LEGACY_STONE_BUTTON, Material.LEGACY_SNOW, Material.LEGACY_CACTUS, Material.LEGACY_SUGAR_CANE_BLOCK, Material.LEGACY_CAKE_BLOCK, Material.LEGACY_DIODE_BLOCK_OFF, Material.LEGACY_DIODE_BLOCK_ON, Material.LEGACY_TRAP_DOOR, Material.LEGACY_PUMPKIN_STEM, Material.LEGACY_MELON_STEM, Material.LEGACY_VINE, Material.LEGACY_WATER_LILY, Material.LEGACY_NETHER_WARTS);
+	private static final MaterialSet BREAKABLE_MATERIALS = MaterialSet.builder()
+		.with(Tag.SAPLINGS)
+		.with(Tag.RAILS)
+		.with(Tag.TRAPDOORS)
+		.with(Tag.DOORS)
+		.with(Tag.BUTTONS)
+		.with(MaterialTags.PISTONS)
+		.with(MaterialTags.PRESSURE_PLATES)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialTags.BEDS)
+		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.REDSTONE_TORCHES)
+		.with(MaterialSets.TORCHES)
+		.with(MaterialSets.FLORA)
+		.add(Material.FIRE)
+		.add(Material.REPEATER)
+		.add(Material.SNOW)
+		.add(Material.CAKE)
+		.add(Material.LADDER)
+		.add(Material.LEVER)
+		.build();
 
 	/**
 	 * Saved direction.
@@ -40,15 +61,86 @@ public class MoveBrush extends AbstractBrush {
 	@Nullable
 	private Selection selection;
 
-	public MoveBrush() {
-		super("Move");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		BrushProperties brushProperties = snipe.getBrushProperties();
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
+			if (parameter.equalsIgnoreCase("info")) {
+				messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");
+				messenger.sendMessage(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
+				messenger.sendMessage(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
+				messenger.sendMessage(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
+				messenger.sendMessage(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
+				messenger.sendMessage(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
+			}
+			if (parameter.equalsIgnoreCase("reset")) {
+				this.moveDirections[0] = 0;
+				this.moveDirections[1] = 0;
+				this.moveDirections[2] = 0;
+				messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+				messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
+				messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+			}
+			String parameterLowered = parameter.toLowerCase();
+			if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'x') {
+				this.moveDirections[0] = Integer.valueOf(parameter.substring(1));
+				messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'y') {
+				this.moveDirections[1] = Integer.valueOf(parameter.substring(1));
+				messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
+			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'z') {
+				this.moveDirections[2] = Integer.valueOf(parameter.substring(1));
+				messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+			}
+		}
+	}
+
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (this.selection == null) {
+			this.selection = new Selection();
+		}
+		this.selection.setLocation1(this.getTargetBlock()
+			.getLocation());
+		messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 1 set.");
+		try {
+			if (this.selection.calculateRegion()) {
+				moveSelection(snipe, this.selection, this.moveDirections);
+				this.selection = null;
+			}
+		} catch (RuntimeException exception) {
+			messenger.sendMessage(exception.getMessage());
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		if (this.selection == null) {
+			this.selection = new Selection();
+		}
+		this.selection.setLocation2(this.getTargetBlock()
+			.getLocation());
+		messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 2 set.");
+		try {
+			if (this.selection.calculateRegion()) {
+				this.moveSelection(snipe, this.selection, this.moveDirections);
+				this.selection = null;
+			}
+		} catch (RuntimeException exception) {
+			messenger.sendMessage(exception.getMessage());
+		}
 	}
 
 	/**
 	 * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
 	 */
-
-	private void moveSelection(ToolkitProperties toolkitProperties, Selection selection, int[] direction) {
+	private void moveSelection(Snipe snipe, Selection selection, int[] direction) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		Sniper sniper = snipe.getSniper();
 		List<BlockState> blockStates = selection.getBlockStates();
 		if (!blockStates.isEmpty()) {
 			BlockState firstState = blockStates.get(0);
@@ -64,8 +156,7 @@ public class MoveBrush extends AbstractBrush {
 			try {
 				newSelection.calculateRegion();
 			} catch (RuntimeException exception) {
-				Messages messages = toolkitProperties.getMessages();
-				messages.brushMessage("The new Selection has more blocks than the original selection. This should never happen!");
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "The new Selection has more blocks than the original selection. This should never happen!");
 			}
 			Set<Block> undoSet = blockStates.stream()
 				.map(BlockState::getBlock)
@@ -75,8 +166,7 @@ public class MoveBrush extends AbstractBrush {
 				.map(BlockState::getBlock)
 				.forEach(undoSet::add);
 			undoSet.forEach(undo::put);
-			Sniper owner = toolkitProperties.getOwner();
-			owner.storeUndo(undo);
+			sniper.storeUndo(undo);
 			blockStates.stream()
 				.map(BlockState::getBlock)
 				.forEach(block -> block.setType(Material.AIR));
@@ -88,89 +178,12 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		if (this.selection == null) {
-			this.selection = new Selection();
-		}
-		this.selection.setLocation1(this.getTargetBlock()
-			.getLocation());
-		toolkitProperties.getMessages()
-			.brushMessage("Point 1 set.");
-		try {
-			if (this.selection.calculateRegion()) {
-				this.moveSelection(toolkitProperties, this.selection, this.moveDirections);
-				this.selection = null;
-			}
-		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage(exception.getMessage());
-		}
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
 	}
 
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		if (this.selection == null) {
-			this.selection = new Selection();
-		}
-		this.selection.setLocation2(this.getTargetBlock()
-			.getLocation());
-		toolkitProperties.getMessages()
-			.brushMessage("Point 2 set.");
-		try {
-			if (this.selection.calculateRegion()) {
-				this.moveSelection(toolkitProperties, this.selection, this.moveDirections);
-				this.selection = null;
-			}
-		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage(exception.getMessage());
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.custom(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
-			Messages messages = toolkitProperties.getMessages();
-			if (parameter.equalsIgnoreCase("info")) {
-				messages.custom(ChatColor.GOLD + this.getName() + " Parameters:");
-				messages.custom(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
-				messages.custom(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
-				messages.custom(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
-				messages.custom(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
-				messages.custom(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
-			}
-			if (parameter.equalsIgnoreCase("reset")) {
-				this.moveDirections[0] = 0;
-				this.moveDirections[1] = 0;
-				this.moveDirections[2] = 0;
-				messages.custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-				messages.custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-				messages.custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
-			}
-			String parameterLowered = parameter.toLowerCase();
-			if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'x') {
-				this.moveDirections[0] = Integer.valueOf(parameter.substring(1));
-				messages.custom(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'y') {
-				this.moveDirections[1] = Integer.valueOf(parameter.substring(1));
-				messages.custom(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'z') {
-				this.moveDirections[2] = Integer.valueOf(parameter.substring(1));
-				messages.custom(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
-			}
-		}
-	}
-
-	/**
-	 * Selection Helper class.
-	 *
-	 * @author MikeMatrix
-	 */
 	private class Selection {
 
 		/**
@@ -246,10 +259,5 @@ public class MoveBrush extends AbstractBrush {
 		public void setLocation2(Location location2) {
 			this.location2 = location2;
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.move";
 	}
 }

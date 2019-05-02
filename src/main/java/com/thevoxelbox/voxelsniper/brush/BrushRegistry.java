@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import org.jetbrains.annotations.Nullable;
 
 public class BrushRegistry {
 
@@ -17,6 +18,7 @@ public class BrushRegistry {
 		}
 	}
 
+	@Nullable
 	public BrushProperties getBrushProperties(String alias) {
 		return this.brushesProperties.get(alias);
 	}

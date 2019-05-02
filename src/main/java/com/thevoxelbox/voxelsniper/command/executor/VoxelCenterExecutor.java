@@ -4,10 +4,10 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.NumericParser;
+import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,7 +42,7 @@ public class VoxelCenterExecutor implements CommandExecutor {
 			return;
 		}
 		toolkitProperties.setCylinderCenter(center);
-		Messages messages = toolkitProperties.getMessages();
-		messages.center();
+		Messenger messenger = new Messenger(sender);
+		messenger.sendCylinderCenterMessage(center);
 	}
 }

@@ -16,4 +16,13 @@ public final class NumericParser {
 			return null;
 		}
 	}
+
+	@Nullable
+	public static Double parseDouble(String string) {
+		try {
+			return Double.parseDouble(string);
+		} catch (NumberFormatException exception) {
+			return null;
+		}
+	}
 }

@@ -1,59 +1,34 @@
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.block.Block;
 
-/**
- * Brush Interface.
- */
 public interface Brush {
-
-	/**
-	 * @param messages Messages object
-	 */
-	void info(Messages messages);
 
 	/**
 	 * Handles parameters passed to brushes.
 	 *
 	 * @param parameters Array of string containing parameters
-	 * @param toolkitProperties Snipe Data
+	 * @param snipe Snipe
 	 */
-	void parameters(String[] parameters, ToolkitProperties toolkitProperties);
+	void handleCommand(String[] parameters, Snipe snipe);
 
-	boolean perform(ToolAction action, ToolkitProperties toolkitProperties, Block targetBlock, Block lastBlock);
+	void perform(Snipe snipe, ToolAction action, Block targetBlock, Block lastBlock);
 
 	/**
 	 * The arrow action. Executed when a player RightClicks with an Arrow
 	 *
-	 * @param toolkitProperties Sniper caller
+	 * @param snipe Snipe
 	 */
-	void arrow(ToolkitProperties toolkitProperties);
+	void handleArrowAction(Snipe snipe);
 
 	/**
 	 * The powder action. Executed when a player RightClicks with Gunpowder
 	 *
-	 * @param toolkitProperties Sniper caller
+	 * @param snipe Snipe
 	 */
-	void powder(ToolkitProperties toolkitProperties);
+	void handleGunpowderAction(Snipe snipe);
 
-	/**
-	 * @return The name of the Brush
-	 */
-	@Deprecated
-	String getName();
-
-	/**
-	 * @param name New name for the Brush
-	 */
-	@Deprecated
-	void setName(String name);
-
-	/**
-	 * @return Permission node required to use this brush
-	 */
-	@Deprecated
-	String getPermissionNode();
+	void sendInfo(Snipe snipe);
 }

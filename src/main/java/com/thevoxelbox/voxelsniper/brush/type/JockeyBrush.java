@@ -1,23 +1,22 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.List;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
+import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush
- *
- * @author Voxel
- * @author Monofraps
- */
 public class JockeyBrush extends AbstractBrush {
 
 	private static final int ENTITY_STACK_LIMIT = 50;
@@ -25,26 +24,74 @@ public class JockeyBrush extends AbstractBrush {
 	@Nullable
 	private Entity jockeyedEntity;
 
-	public JockeyBrush() {
-		super("Jockey");
+	@Override
+	public void handleCommand(String[] parameters, Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		boolean stack = false;
+		boolean playerOnly = false;
+		boolean inverse = false;
+		for (String parameter : parameters) {
+			int length = parameter.length();
+			if (parameter.startsWith("-i:")) {
+				inverse = parameter.charAt(length - 1) == 'y';
+			}
+			if (parameter.startsWith("-po:")) {
+				playerOnly = parameter.charAt(length - 1) == 'y';
+			}
+			if (parameter.startsWith("-s:")) {
+				stack = parameter.charAt(length - 1) == 'y';
+			}
+		}
+		if (inverse) {
+			this.jockeyType = playerOnly ? JockeyType.INVERSE_PLAYER_ONLY : JockeyType.INVERSE_ALL_ENTITIES;
+		} else if (stack) {
+			this.jockeyType = playerOnly ? JockeyType.STACK_PLAYER_ONLY : JockeyType.STACK_ALL_ENTITIES;
+		} else {
+			this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
+		}
+		messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
 	}
 
-	private void sitOn(ToolkitProperties toolkitProperties) {
-		Chunk targetChunk = this.getWorld()
-			.getChunkAt(this.getTargetBlock()
-				.getLocation());
+	@Override
+	public void handleArrowAction(Snipe snipe) {
+		if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES || this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
+			stack(snipe);
+		} else {
+			sitOn(snipe);
+		}
+	}
+
+	@Override
+	public void handleGunpowderAction(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
+		if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
+			player.eject();
+			player.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
+		} else {
+			if (this.jockeyedEntity != null) {
+				this.jockeyedEntity.eject();
+				this.jockeyedEntity = null;
+				player.sendMessage(ChatColor.GOLD + "You have been ejected!");
+			}
+		}
+	}
+
+	private void sitOn(Snipe snipe) {
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
+		Block targetBlock = getTargetBlock();
+		World world = getWorld();
+		Chunk targetChunk = world.getChunkAt(targetBlock.getLocation());
 		int targetChunkX = targetChunk.getX();
 		int targetChunkZ = targetChunk.getZ();
 		double range = Double.MAX_VALUE;
 		Entity closest = null;
 		for (int x = targetChunkX - 1; x <= targetChunkX + 1; x++) {
 			for (int y = targetChunkZ - 1; y <= targetChunkZ + 1; y++) {
-				for (Entity entity : this.getWorld()
-					.getChunkAt(x, y)
-					.getEntities()) {
-					if (entity.getEntityId() == toolkitProperties.getOwner()
-						.getPlayer()
-						.getEntityId()) {
+				Chunk chunk = world.getChunkAt(x, y);
+				for (Entity entity : chunk.getEntities()) {
+					if (entity.getEntityId() == player.getEntityId()) {
 						continue;
 					}
 					if (this.jockeyType == JockeyType.NORMAL_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY) {
@@ -53,9 +100,7 @@ public class JockeyBrush extends AbstractBrush {
 						}
 					}
 					Location entityLocation = entity.getLocation();
-					double entityDistance = entityLocation.distance(toolkitProperties.getOwner()
-						.getPlayer()
-						.getLocation());
+					double entityDistance = entityLocation.distance(player.getLocation());
 					if (entityDistance < range) {
 						range = entityDistance;
 						closest = entity;
@@ -64,133 +109,70 @@ public class JockeyBrush extends AbstractBrush {
 			}
 		}
 		if (closest != null) {
-			Player player = toolkitProperties.getOwner()
-				.getPlayer();
 			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-			Bukkit.getPluginManager()
-				.callEvent(playerTeleportEvent);
+			PluginManager pluginManager = Bukkit.getPluginManager();
+			pluginManager.callEvent(playerTeleportEvent);
 			if (!playerTeleportEvent.isCancelled()) {
 				if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-					player.setPassenger(closest);
+					player.addPassenger(closest);
 				} else {
-					closest.setPassenger(player);
+					closest.addPassenger(player);
 					this.jockeyedEntity = closest;
 				}
-				toolkitProperties.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
+				player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
 			}
 		} else {
-			toolkitProperties.sendMessage(ChatColor.RED + "Could not find any entities");
+			player.sendMessage(ChatColor.RED + "Could not find any entities");
 		}
 	}
 
-	private void stack(ToolkitProperties toolkitProperties) {
+	private void stack(Snipe snipe) {
+		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+		Sniper sniper = snipe.getSniper();
+		Player player = sniper.getPlayer();
 		int brushSizeDoubled = toolkitProperties.getBrushSize() * 2;
-		List<Entity> nearbyEntities = toolkitProperties.getOwner()
-			.getPlayer()
-			.getNearbyEntities(brushSizeDoubled, brushSizeDoubled, brushSizeDoubled);
-		Entity lastEntity = toolkitProperties.getOwner()
-			.getPlayer();
+		List<Entity> nearbyEntities = player.getNearbyEntities(brushSizeDoubled, brushSizeDoubled, brushSizeDoubled);
+		Entity lastEntity = player;
 		int stackHeight = 0;
 		for (Entity entity : nearbyEntities) {
-			if (!(stackHeight >= ENTITY_STACK_LIMIT)) {
-				if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES) {
-					lastEntity.setPassenger(entity);
-					lastEntity = entity;
-					stackHeight++;
-				} else if (this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
-					if (entity instanceof Player) {
-						lastEntity.setPassenger(entity);
-						lastEntity = entity;
-						stackHeight++;
-					}
-				} else {
-					toolkitProperties.getOwner()
-						.getPlayer()
-						.sendMessage("You broke stack! :O");
-				}
-			} else {
+			if (stackHeight >= ENTITY_STACK_LIMIT) {
 				return;
 			}
-		}
-	}
-
-	@Override
-	public final void arrow(ToolkitProperties toolkitProperties) {
-		if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES || this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
-			stack(toolkitProperties);
-		} else {
-			this.sitOn(toolkitProperties);
-		}
-	}
-
-	@Override
-	public final void powder(ToolkitProperties toolkitProperties) {
-		if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-			toolkitProperties.getOwner()
-				.getPlayer()
-				.eject();
-			toolkitProperties.getOwner()
-				.getPlayer()
-				.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
-		} else {
-			if (this.jockeyedEntity != null) {
-				this.jockeyedEntity.eject();
-				this.jockeyedEntity = null;
-				toolkitProperties.getOwner()
-					.getPlayer()
-					.sendMessage(ChatColor.GOLD + "You have been ejected!");
-			}
-		}
-	}
-
-	@Override
-	public final void info(Messages messages) {
-		messages.brushName(this.getName());
-		messages.custom("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
-		messages.custom(ChatColor.GREEN + "Help: " + ChatColor.AQUA + "http://www.voxelwiki.com/minecraft/Voxelsniper#The_Jockey_Brush");
-	}
-
-	@Override
-	public final void parameters(String[] parameters, ToolkitProperties toolkitProperties) {
-		try {
-			boolean stack = false;
-			boolean playerOnly = false;
-			boolean inverse = false;
-			for (String parameter : parameters) {
-				if (parameter.startsWith("-i:")) {
-					inverse = parameter.endsWith("y");
+			if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES) {
+				lastEntity.addPassenger(entity);
+				lastEntity = entity;
+				stackHeight++;
+			} else if (this.jockeyType == JockeyType.STACK_PLAYER_ONLY) {
+				if (entity instanceof Player) {
+					lastEntity.addPassenger(entity);
+					lastEntity = entity;
+					stackHeight++;
 				}
-				if (parameter.startsWith("-po:")) {
-					playerOnly = parameter.endsWith("y");
-				}
-				if (parameter.startsWith("-s:")) {
-					stack = parameter.endsWith("y");
-				}
-			}
-			if (inverse) {
-				this.jockeyType = playerOnly ? JockeyType.INVERSE_PLAYER_ONLY : JockeyType.INVERSE_ALL_ENTITIES;
-			} else if (stack) {
-				this.jockeyType = playerOnly ? JockeyType.STACK_PLAYER_ONLY : JockeyType.STACK_ALL_ENTITIES;
 			} else {
-				this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
+				player.sendMessage("You broke stack! :O");
 			}
-			toolkitProperties.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
-		} catch (RuntimeException exception) {
-			toolkitProperties.sendMessage("Error while parsing your arguments.");
-			exception.printStackTrace();
 		}
+	}
+
+	@Override
+	public void sendInfo(Snipe snipe) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		messenger.sendBrushNameMessage();
+		messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
 	}
 
 	/**
 	 * Available types of jockey modes.
 	 */
 	private enum JockeyType {
+
 		NORMAL_ALL_ENTITIES("Normal (All)"),
 		NORMAL_PLAYER_ONLY("Normal (Player only)"),
 		INVERSE_ALL_ENTITIES("Inverse (All)"),
 		INVERSE_PLAYER_ONLY("Inverse (Player only)"),
 		STACK_ALL_ENTITIES("Stack (All)"),
 		STACK_PLAYER_ONLY("Stack (Player only)");
+
 		private String name;
 
 		JockeyType(String name) {
@@ -201,10 +183,5 @@ public class JockeyBrush extends AbstractBrush {
 		public String toString() {
 			return this.name;
 		}
-	}
-
-	@Override
-	public String getPermissionNode() {
-		return "voxelsniper.brush.jockey";
 	}
 }

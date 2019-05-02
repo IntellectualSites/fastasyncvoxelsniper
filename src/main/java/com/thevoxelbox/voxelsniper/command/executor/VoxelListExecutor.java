@@ -1,13 +1,14 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import java.util.List;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
+import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -38,7 +39,7 @@ public class VoxelListExecutor implements CommandExecutor {
 		if (toolkitProperties == null) {
 			return;
 		}
-		Messages messages = toolkitProperties.getMessages();
+		Messenger messenger = new Messenger(sender);
 		if (arguments.length == 0) {
 			BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
 			Block targetBlock = blockTracer.getTargetBlock();
@@ -47,12 +48,14 @@ public class VoxelListExecutor implements CommandExecutor {
 			}
 			BlockData blockData = targetBlock.getBlockData();
 			toolkitProperties.addToVoxelList(blockData);
-			messages.voxelList();
+			List<BlockData> voxelList = toolkitProperties.getVoxelList();
+			messenger.sendVoxelListMessage(voxelList);
 			return;
 		} else {
 			if (arguments[0].equalsIgnoreCase("clear")) {
 				toolkitProperties.clearVoxelList();
-				messages.voxelList();
+				List<BlockData> voxelList = toolkitProperties.getVoxelList();
+				messenger.sendVoxelListMessage(voxelList);
 				return;
 			}
 		}
@@ -73,7 +76,8 @@ public class VoxelListExecutor implements CommandExecutor {
 				} else {
 					toolkitProperties.addToVoxelList(blockData);
 				}
-				messages.voxelList();
+				List<BlockData> voxelList = toolkitProperties.getVoxelList();
+				messenger.sendVoxelListMessage(voxelList);
 			}
 		}
 	}

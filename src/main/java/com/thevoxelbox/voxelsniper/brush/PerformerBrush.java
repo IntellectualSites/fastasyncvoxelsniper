@@ -1,21 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.thevoxelbox.voxelsniper.brush;
 
-import com.thevoxelbox.voxelsniper.sniper.toolkit.Messages;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
+import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 
-/**
- * @author Voxel
- */
 public interface PerformerBrush extends Brush {
 
-	void parse(String[] args, ToolkitProperties toolkitProperties);
+	void handlePerformerCommand(String[] parameters, Snipe snipe, PerformerRegistry performerRegistry);
 
-	void showInfo(Messages messages);
+	void initialize(Snipe snipe);
 
-	void initPerformer(ToolkitProperties toolkitProperties);
+	void sendPerformerInfo(Snipe snipe);
 }
