@@ -17,9 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * Bukkit extension point.
- */
 public class VoxelSniperPlugin extends JavaPlugin {
 
 	private VoxelSniperConfig voxelSniperConfig;
@@ -78,20 +75,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		pluginManager.registerEvents(new PlayerInteractListener(this), this);
 	}
 
-	/**
-	 * Returns object for accessing global VoxelSniper options.
-	 *
-	 * @return {@link VoxelSniperConfig} object for accessing global VoxelSniper options.
-	 */
 	public VoxelSniperConfig getVoxelSniperConfig() {
 		return this.voxelSniperConfig;
 	}
 
-	/**
-	 * Returns {@link BrushRegistry} for current instance.
-	 *
-	 * @return Brush Manager for current instance.
-	 */
 	public BrushRegistry getBrushRegistry() {
 		return this.brushRegistry;
 	}
@@ -100,11 +87,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		return this.performerRegistry;
 	}
 
-	/**
-	 * Returns {@link SniperRegistry} for current instance.
-	 *
-	 * @return SniperRegistry
-	 */
 	public SniperRegistry getSniperRegistry() {
 		return this.sniperRegistry;
 	}
