@@ -10,6 +10,7 @@ import com.thevoxelbox.voxelsniper.command.executor.PerformerExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.UndoExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.UndoUserExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelCenterExecutor;
+import com.thevoxelbox.voxelsniper.command.executor.VoxelChunkExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelHeightExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelInkExecutor;
@@ -47,6 +48,7 @@ public class CommandRegistrar {
 		registerUndoCommand();
 		registerUndoUserCommand();
 		registerVoxelCommand();
+		registerVoxelChunkCommand();
 	}
 
 	private void registerBrushCommand() {
@@ -271,6 +273,20 @@ public class CommandRegistrar {
 			.sender(Player.class)
 			.build();
 		VoxelExecutor executor = new VoxelExecutor(this.plugin);
+		this.registry.register(properties, executor);
+	}
+
+	private void registerVoxelChunkCommand() {
+		CommandProperties properties = CommandProperties.builder()
+			.name("voxel_chunk")
+			.description("Update the chunk you are standing in.")
+			.permission("voxelsniper.sniper")
+			.alias("vchunk")
+			.usage("/vchunk")
+			.usage("Example: /vchunk -- Loads the chunk you're standing in.")
+			.sender(Player.class)
+			.build();
+		VoxelChunkExecutor executor = new VoxelChunkExecutor();
 		this.registry.register(properties, executor);
 	}
 }
