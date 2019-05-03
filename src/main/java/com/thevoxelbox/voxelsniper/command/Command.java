@@ -1,20 +1,27 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import java.util.List;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Command extends org.bukkit.command.Command {
 
 	private CommandProperties properties;
 	private CommandExecutor executor;
+	private TabCompleter tabCompleter;
 
 	public Command(CommandProperties properties, CommandExecutor executor) {
 		super(properties.getName(), properties.getDescriptionOrDefault(), properties.getUsage(), properties.getAliases());
 		setupPermission(properties);
 		this.properties = properties;
 		this.executor = executor;
+		if (executor instanceof TabCompleter) {
+			this.tabCompleter = (TabCompleter) executor;
+		}
 	}
 
 	private void setupPermission(CommandProperties properties) {
@@ -37,5 +44,13 @@ public final class Command extends org.bukkit.command.Command {
 		}
 		this.executor.executeCommand(sender, args);
 		return true;
+	}
+
+	@Override
+	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args, @Nullable Location location) {
+		if (this.tabCompleter == null) {
+			return super.tabComplete(sender, alias, args, location);
+		}
+		return this.tabCompleter.complete(sender, args);
 	}
 }

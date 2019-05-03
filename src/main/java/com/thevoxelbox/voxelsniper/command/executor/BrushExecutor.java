@@ -1,12 +1,15 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.command.TabCompleter;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
@@ -19,7 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class BrushExecutor implements CommandExecutor {
+public class BrushExecutor implements CommandExecutor, TabCompleter {
 
 	private VoxelSniperPlugin plugin;
 
@@ -108,5 +111,20 @@ public class BrushExecutor implements CommandExecutor {
 			returnValue[i + 1] = arg;
 		}
 		return returnValue;
+	}
+
+	@Override
+	public List<String> complete(CommandSender sender, String[] arguments) {
+		if (arguments.length == 1) {
+			String argument = arguments[0];
+			String argumentLowered = argument.toLowerCase();
+			return this.plugin.getBrushRegistry()
+				.getBrushesProperties()
+				.keySet()
+				.stream()
+				.filter(brushAlias -> brushAlias.startsWith(argumentLowered))
+				.collect(Collectors.toUnmodifiableList());
+		}
+		return List.of();
 	}
 }
