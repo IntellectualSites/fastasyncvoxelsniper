@@ -2,9 +2,10 @@ package com.thevoxelbox.voxelsniper.command.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.thevoxelbox.voxelsniper.util.Builder;
 import org.bukkit.command.CommandSender;
 
-public class CommandPropertiesBuilder {
+public class CommandPropertiesBuilder implements Builder<CommandProperties> {
 
 	private String name;
 	private String description;
@@ -43,6 +44,7 @@ public class CommandPropertiesBuilder {
 		return this;
 	}
 
+	@Override
 	public CommandProperties build() {
 		if (this.name == null) {
 			throw new RuntimeException("Command name must be specified");

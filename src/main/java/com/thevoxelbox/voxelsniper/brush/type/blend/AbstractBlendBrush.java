@@ -9,34 +9,35 @@ import org.bukkit.Material;
 
 public abstract class AbstractBlendBrush extends AbstractBrush {
 
+	@Deprecated
 	protected static final MaterialSet BLOCKS = MaterialSet.builder()
 		.filtered(Material::isBlock)
 		.build();
 
-	protected boolean excludeAir = true;
-	protected boolean excludeWater = true;
+	private boolean airExcluded = true;
+	private boolean waterExcluded = true;
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; ++i) {
-			String parameter = parameters[i];
+		for (int index = 1; index < parameters.length; ++index) {
+			String parameter = parameters[index];
 			if (parameter.equalsIgnoreCase("water")) {
-				this.excludeWater = !this.excludeWater;
-				messenger.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.excludeWater ? "exclude" : "include"));
+				this.waterExcluded = !this.waterExcluded;
+				messenger.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"));
 			}
 		}
 	}
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		this.excludeAir = false;
+		this.airExcluded = false;
 		blend(snipe);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		this.excludeAir = true;
+		this.airExcluded = true;
 		blend(snipe);
 	}
 
@@ -48,23 +49,15 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 			.brushNameMessage()
 			.brushSizeMessage()
 			.blockTypeMessage()
-			.message(ChatColor.BLUE + "Water Mode: " + (this.excludeWater ? "exclude" : "include"))
+			.message(ChatColor.BLUE + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"))
 			.send();
 	}
 
-	public boolean isExcludeAir() {
-		return this.excludeAir;
+	public boolean isAirExcluded() {
+		return this.airExcluded;
 	}
 
-	public void setExcludeAir(boolean excludeAir) {
-		this.excludeAir = excludeAir;
-	}
-
-	public boolean isExcludeWater() {
-		return this.excludeWater;
-	}
-
-	public void setExcludeWater(boolean excludeWater) {
-		this.excludeWater = excludeWater;
+	public boolean isWaterExcluded() {
+		return this.waterExcluded;
 	}
 }

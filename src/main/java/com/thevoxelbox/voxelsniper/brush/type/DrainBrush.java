@@ -75,22 +75,22 @@ public class DrainBrush extends AbstractBrush {
 						Material typePlusPlus = getBlockType(position.add(x, 0, y));
 						if (typePlusPlus == Material.WATER || typePlusPlus == Material.LAVA) {
 							undo.put(clampY(position.add(x, 0, y)));
-							setBlockType(position.add(y, x, 0), Material.AIR);
+							setBlockType(position.add(x, 0, y), Material.AIR);
 						}
 						Material typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
 						if (typePlusMinus == Material.WATER || typePlusMinus == Material.LAVA) {
 							undo.put(clampY(targetBlockX + x, targetBlockY, targetBlockZ - y));
-							setBlockType(targetBlockZ - y, targetBlockX + x, targetBlockY, Material.AIR);
+							setBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y, Material.AIR);
 						}
 						Material typeMinusPlus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y);
 						if (typeMinusPlus == Material.WATER || typeMinusPlus == Material.LAVA) {
 							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ + y));
-							setBlockType(targetBlockZ + y, targetBlockX - x, targetBlockY, Material.AIR);
+							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y, Material.AIR);
 						}
 						Material typeMinusMinus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y);
 						if (typeMinusMinus == Material.WATER || typeMinusMinus == Material.LAVA) {
 							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ - y));
-							setBlockType(targetBlockZ - y, targetBlockX - x, targetBlockY, Material.AIR);
+							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y, Material.AIR);
 						}
 					}
 				}
@@ -105,7 +105,7 @@ public class DrainBrush extends AbstractBrush {
 							Material type = getBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize);
 							if (type == Material.WATER || type == Material.LAVA) {
 								undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
-								setBlockType(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR);
+								setBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize, Material.AIR);
 							}
 						}
 					}

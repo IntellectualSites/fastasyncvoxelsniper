@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import com.thevoxelbox.voxelsniper.util.Builder;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 
-public class MaterialSetBuilder {
+public class MaterialSetBuilder implements Builder<MaterialSet> {
 
 	private List<Material> materials = new ArrayList<>(1);
 
@@ -50,6 +51,7 @@ public class MaterialSetBuilder {
 		return this;
 	}
 
+	@Override
 	public MaterialSet build() {
 		return new MaterialSet(this.materials);
 	}

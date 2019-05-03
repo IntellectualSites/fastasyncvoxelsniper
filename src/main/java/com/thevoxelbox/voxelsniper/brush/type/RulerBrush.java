@@ -66,7 +66,7 @@ public class RulerBrush extends AbstractBrush {
 			int y = targetBlock.getY();
 			int z = targetBlock.getZ();
 			undo.put(clampY(x + this.offsetX, y + this.offsetY, z + this.offsetZ));
-			setBlockType(z + this.offsetZ, x + this.offsetX, y + this.offsetY, blockDataType);
+			setBlockType(x + this.offsetX, y + this.offsetY, z + this.offsetZ, blockDataType);
 			Sniper sniper = snipe.getSniper();
 			sniper.storeUndo(undo);
 		}

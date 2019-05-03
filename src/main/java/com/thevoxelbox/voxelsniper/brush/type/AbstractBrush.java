@@ -55,7 +55,7 @@ public abstract class AbstractBrush implements Brush {
 				clampedY = maxHeight;
 			}
 		}
-		return world.getBlockAt(x, clampedY, z);
+		return getBlock(x, clampedY, z);
 	}
 
 	public Material getBlockType(Vector3i position) {
@@ -66,8 +66,7 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	public Material getBlockType(int x, int y, int z) {
-		World world = this.targetBlock.getWorld();
-		Block block = world.getBlockAt(x, y, z);
+		Block block = getBlock(x, y, z);
 		return block.getType();
 	}
 
@@ -79,8 +78,7 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	public BlockData getBlockData(int x, int y, int z) {
-		World world = this.targetBlock.getWorld();
-		Block block = world.getBlockAt(x, y, z);
+		Block block = getBlock(x, y, z);
 		return block.getBlockData();
 	}
 
@@ -92,8 +90,7 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	public void setBlockType(int x, int y, int z, Material type) {
-		World world = this.targetBlock.getWorld();
-		Block block = world.getBlockAt(x, y, z);
+		Block block = getBlock(x, y, z);
 		block.setType(type);
 	}
 
@@ -105,9 +102,20 @@ public abstract class AbstractBrush implements Brush {
 	}
 
 	public void setBlockData(int x, int y, int z, BlockData blockData) {
-		World world = this.targetBlock.getWorld();
-		Block block = world.getBlockAt(x, y, z);
+		Block block = getBlock(x, y, z);
 		block.setBlockData(blockData);
+	}
+
+	public Block getBlock(Vector3i position) {
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		return getBlock(x, y, z);
+	}
+
+	public Block getBlock(int x, int y, int z) {
+		World world = getWorld();
+		return world.getBlockAt(x, y, z);
 	}
 
 	public World getWorld() {

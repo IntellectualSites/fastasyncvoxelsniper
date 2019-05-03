@@ -183,7 +183,7 @@ public class PullBrush extends AbstractBrush {
 		if (getBlockType(block.getX(), block.getY() - 1, block.getZ()).isEmpty()) {
 			currentBlock.setBlockData(block.getBlockData());
 			for (int y = block.getY(); y < currentBlock.getY(); y++) {
-				setBlockType(block.getZ(), block.getX(), y, Material.AIR);
+				setBlockType(block.getX(), y, block.getZ(), Material.AIR);
 			}
 		} else {
 			currentBlock.setBlockData(block.getBlockData());
@@ -198,7 +198,7 @@ public class PullBrush extends AbstractBrush {
 		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
 		currentBlock.setBlockData(block.getBlockData());
 		for (int y = block.getY(); y > currentBlock.getY(); y--) {
-			this.setBlockType(block.getZ(), block.getX(), y, Material.AIR);
+			this.setBlockType(block.getX(), y, block.getZ(), Material.AIR);
 		}
 	}
 
