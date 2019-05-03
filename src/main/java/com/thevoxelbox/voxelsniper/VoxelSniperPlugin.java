@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,7 +52,8 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
 	private BrushRegistry loadBrushRegistry() {
 		BrushRegistry brushRegistry = new BrushRegistry();
-		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry);
+		File dataFolder = getDataFolder();
+		BrushRegistrar brushRegistrar = new BrushRegistrar(brushRegistry, dataFolder);
 		brushRegistrar.registerBrushes();
 		return brushRegistry;
 	}

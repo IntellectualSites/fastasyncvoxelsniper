@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import java.io.File;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.brush.type.BiomeBrush;
@@ -91,9 +92,11 @@ public class BrushRegistrar {
 		.build();
 
 	private BrushRegistry registry;
+	private File pluginDataFolder;
 
-	public BrushRegistrar(BrushRegistry registry) {
+	public BrushRegistrar(BrushRegistry registry, File pluginDataFolder) {
 		this.registry = registry;
+		this.pluginDataFolder = pluginDataFolder;
 	}
 
 	public void registerBrushes() {
@@ -823,7 +826,7 @@ public class BrushRegistrar {
 			.alias("sio")
 			.alias("signoverwriter")
 			.alias("sign_overwrite")
-			.creator(SignOverwriteBrush::new)
+			.creator(() -> new SignOverwriteBrush(this.pluginDataFolder))
 			.build();
 		this.registry.register(properties);
 	}
