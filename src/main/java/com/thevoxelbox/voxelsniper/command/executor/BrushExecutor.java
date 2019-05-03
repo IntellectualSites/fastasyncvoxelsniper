@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
@@ -123,8 +124,8 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
 				.keySet()
 				.stream()
 				.filter(brushAlias -> brushAlias.startsWith(argumentLowered))
-				.collect(Collectors.toUnmodifiableList());
+				.collect(Collectors.toList());
 		}
-		return List.of();
+		return Collections.emptyList();
 	}
 }

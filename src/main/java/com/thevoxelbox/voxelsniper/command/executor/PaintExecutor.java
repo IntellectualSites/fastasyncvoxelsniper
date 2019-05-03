@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
@@ -16,7 +17,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
 	private static final List<String> ART_NAMES = Arrays.stream(Art.values())
 		.map(Art::name)
 		.map(String::toLowerCase)
-		.collect(Collectors.toUnmodifiableList());
+		.collect(Collectors.toList());
 
 	@Override
 	public void executeCommand(CommandSender sender, String[] arguments) {
@@ -44,8 +45,8 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
 			String argumentLowered = argument.toLowerCase();
 			return ART_NAMES.stream()
 				.filter(artName -> artName.startsWith(argumentLowered))
-				.collect(Collectors.toUnmodifiableList());
+				.collect(Collectors.toList());
 		}
-		return List.of();
+		return Collections.emptyList();
 	}
 }
