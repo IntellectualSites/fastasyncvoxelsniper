@@ -1,12 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.painter.Painters;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,73 +32,52 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 	public void blend(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		Material[][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a buffer
-		// Log current materials into oldmats
-		Block targetBlock = this.getTargetBlock();
-		for (int x = 0; x <= 2 * (brushSize + 1); x++) {
-			for (int z = 0; z <= 2 * (brushSize + 1); z++) {
-				oldMaterials[x][z] = this.getBlockType(targetBlock.getX() - brushSize - 1 + x, targetBlock.getY(), targetBlock.getZ() - brushSize - 1 + z);
-			}
-		}
-		// Log current materials into newmats
-		// Array that holds the blended materials
-		int brushSizeDoubled = 2 * brushSize;
-		Material[][] newMaterials = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1];
-		for (int x = 0; x <= brushSizeDoubled; x++) {
-			System.arraycopy(oldMaterials[x + 1], 1, newMaterials[x], 0, brushSizeDoubled + 1);
-		}
-		// Blend materials
-		for (int x = 0; x <= brushSizeDoubled; x++) {
-			for (int z = 0; z <= brushSizeDoubled; z++) {
-				Map<Material, Integer> materialFrequency = new EnumMap<>(Material.class); //Map that tracks frequency of materials neighboring given block
-				for (int m = -1; m <= 1; m++) {
-					for (int n = -1; n <= 1; n++) {
-						if (!(m == 0 && n == 0)) {
-							Material oldMaterial = oldMaterials[x + 1 + m][z + 1 + n];
-							materialFrequency.computeIfPresent(oldMaterial, (key, value) -> value + 1);
-						}
+		int largeCircleArea = (int) MathHelper.circleArea(brushSize + 2);
+		Map<Vector3i, Block> largeCircle = new HashMap<>(largeCircleArea);
+		Block targetBlock = getTargetBlock();
+		Painters.circle()
+			.center(targetBlock)
+			.radius(brushSize + 2)
+			.blockSetter(position -> {
+				Block block = getBlock(position);
+				largeCircle.put(position, block);
+			})
+			.paint();
+		int smallCircleArea = (int) MathHelper.circleArea(brushSize);
+		Map<Vector3i, Block> smallCircle = new HashMap<>(smallCircleArea);
+		Map<Vector3i, Material> smallCircleMaterials = new HashMap<>(smallCircleArea);
+		Painters.circle()
+			.center(targetBlock)
+			.radius(brushSize)
+			.blockSetter(position -> {
+				Block block = largeCircle.get(position);
+				smallCircle.put(position, block);
+				smallCircleMaterials.put(position, block.getType());
+			})
+			.paint();
+		for (Block smallCircleBlock : smallCircle.values()) {
+			Vector3i blockPosition = new Vector3i(smallCircleBlock);
+			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
+			Painters.square()
+				.center(smallCircleBlock)
+				.radius(1)
+				.blockSetter(position -> {
+					if (position.equals(blockPosition)) {
+						return;
 					}
-				}
-				// Find most common neighboring material.
-				Material mostCommonMaterial = null;
-				int mostCommonFrequency = 0;
-				for (Material material : BLOCKS) {
-					int frequency = materialFrequency.getOrDefault(material, 0);
-					if (frequency > mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
-						mostCommonFrequency = frequency;
-						mostCommonMaterial = material;
-					}
-				}
-				// Make sure there'world not a tie for most common
-				boolean tieCheck = true;
-				for (Material material : BLOCKS) {
-					if (materialFrequency.getOrDefault(material, 0) == mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
-						tieCheck = false;
-					}
-				}
-				// Record most common neighbor material for this block
-				if (tieCheck && mostCommonMaterial != null) {
-					newMaterials[x][z] = mostCommonMaterial;
-				}
+					Block block = largeCircle.get(position);
+					Material material = block.getType();
+					materialsFrequencies.merge(material, 1, Integer::sum);
+				})
+				.paint();
+			CommonMaterial commonMaterial = findCommonMaterial(materialsFrequencies);
+			Material material = commonMaterial.getMaterial();
+			if (material != null) {
+				smallCircleMaterials.put(blockPosition, material);
 			}
 		}
 		Undo undo = new Undo();
-		double rSquared = Math.pow(brushSize + 1, 2);
-		// Make the changes
-		for (int x = brushSizeDoubled; x >= 0; x--) {
-			double xSquared = Math.pow(x - brushSize - 1, 2);
-			for (int z = brushSizeDoubled; z >= 0; z--) {
-				if (xSquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
-					Material material = newMaterials[x][z];
-					if (!(isAirExcluded() && material.isEmpty() || isWaterExcluded() && material == Material.WATER)) {
-						if (this.getBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY(), targetBlock.getZ() - brushSize + z) != material) {
-							undo.put(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY(), targetBlock.getZ() - brushSize + z));
-						}
-						setBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY(), targetBlock.getZ() - brushSize + z, material);
-					}
-				}
-			}
-		}
+		setBlocks(smallCircleMaterials, undo);
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 	}

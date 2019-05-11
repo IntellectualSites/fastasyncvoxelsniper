@@ -1,12 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.painter.Painters;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,80 +32,53 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 	public void blend(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		// Array that holds the original materials plus a buffer
-		Material[][][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1];
-		// Array that holds the blended materials
-		// Log current materials into oldmats
-		Block targetBlock = this.getTargetBlock();
-		for (int x = 0; x <= 2 * (brushSize + 1); x++) {
-			for (int y = 0; y <= 2 * (brushSize + 1); y++) {
-				for (int z = 0; z <= 2 * (brushSize + 1); z++) {
-					oldMaterials[x][y][z] = this.getBlockType(targetBlock.getX() - brushSize - 1 + x, targetBlock.getY() - brushSize - 1 + y, targetBlock.getZ() - brushSize - 1 + z);
-				}
-			}
-		}
-		// Log current materials into newmats
-		int brushSizeDoubled = 2 * brushSize;
-		Material[][][] newMaterials = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
-		for (int x = 0; x <= brushSizeDoubled; x++) {
-			for (int y = 0; y <= brushSizeDoubled; y++) {
-				System.arraycopy(oldMaterials[x + 1][y + 1], 1, newMaterials[x][y], 0, brushSizeDoubled + 1);
-			}
-		}
-		// Blend materials
-		for (int x = 0; x <= brushSizeDoubled; x++) {
-			for (int y = 0; y <= brushSizeDoubled; y++) {
-				for (int z = 0; z <= brushSizeDoubled; z++) {
-					Map<Material, Integer> materialFrequency = new EnumMap<>(Material.class); //Map that tracks frequency of materials neighboring given block
-					for (int m = -1; m <= 1; m++) {
-						for (int n = -1; n <= 1; n++) {
-							for (int o = -1; o <= 1; o++) {
-								if (!(m == 0 && n == 0 && o == 0)) {
-									Material oldMaterial = oldMaterials[x + 1 + m][y + 1 + n][z + 1 + o];
-									materialFrequency.computeIfPresent(oldMaterial, (key, value) -> value + 1);
-								}
-							}
-						}
+		int cubeEdge = 2 * brushSize + 1;
+		int largeCubeVolume = MathHelper.cube(cubeEdge + 2);
+		Map<Vector3i, Block> largeCube = new HashMap<>(largeCubeVolume);
+		Block targetBlock = getTargetBlock();
+		Painters.cube()
+			.center(targetBlock)
+			.radius(brushSize + 2)
+			.blockSetter(position -> {
+				Block block = getBlock(position);
+				largeCube.put(position, block);
+			})
+			.paint();
+		int smallCubeVolume = MathHelper.cube(cubeEdge);
+		Map<Vector3i, Block> smallCube = new HashMap<>(smallCubeVolume);
+		Map<Vector3i, Material> smallCubeMaterials = new HashMap<>(smallCubeVolume);
+		Painters.cube()
+			.center(targetBlock)
+			.radius(brushSize)
+			.blockSetter(position -> {
+				Block block = largeCube.get(position);
+				smallCube.put(position, block);
+				smallCubeMaterials.put(position, block.getType());
+			})
+			.paint();
+		for (Block smallCubeBlock : smallCube.values()) {
+			Vector3i blockPosition = new Vector3i(smallCubeBlock);
+			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
+			Painters.cube()
+				.center(smallCubeBlock)
+				.radius(1)
+				.blockSetter(position -> {
+					if (position.equals(blockPosition)) {
+						return;
 					}
-					// Find most common neighboring material.
-					Material mostCommonMaterial = null;
-					int mostCommonFrequency = 0;
-					for (Material material : BLOCKS) {
-						int frequency = materialFrequency.getOrDefault(material, 0);
-						if (frequency > mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
-							mostCommonFrequency = frequency;
-							mostCommonMaterial = material;
-						}
-					}
-					// Make sure there'world not a tie for most common
-					boolean tieCheck = true;
-					for (Material material : BLOCKS) {
-						if (materialFrequency.getOrDefault(material, 0) == mostCommonFrequency && !(isAirExcluded() && material.isEmpty()) && !(isWaterExcluded() && material == Material.WATER)) {
-							tieCheck = false;
-						}
-					}
-					// Record most common neighbor material for this block
-					if (tieCheck && mostCommonMaterial != null) {
-						newMaterials[x][y][z] = mostCommonMaterial;
-					}
-				}
+					Block block = largeCube.get(position);
+					Material material = block.getType();
+					materialsFrequencies.merge(material, 1, Integer::sum);
+				})
+				.paint();
+			CommonMaterial commonMaterial = findCommonMaterial(materialsFrequencies);
+			Material material = commonMaterial.getMaterial();
+			if (material != null) {
+				smallCubeMaterials.put(blockPosition, material);
 			}
 		}
 		Undo undo = new Undo();
-		// Make the changes
-		for (int x = brushSizeDoubled; x >= 0; x--) {
-			for (int y = 0; y <= brushSizeDoubled; y++) {
-				for (int z = brushSizeDoubled; z >= 0; z--) {
-					Material material = newMaterials[x][y][z];
-					if (!(isAirExcluded() && material.isEmpty() || isWaterExcluded() && material == Material.WATER)) {
-						if (this.getBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z) != material) {
-							undo.put(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z));
-						}
-						this.setBlockType(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + y, targetBlock.getZ() - brushSize + z, material);
-					}
-				}
-			}
-		}
+		setBlocks(smallCubeMaterials, undo);
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 	}

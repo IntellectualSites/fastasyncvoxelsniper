@@ -16,6 +16,14 @@ public final class Painters {
 		return new CubePainter();
 	}
 
+	public static CirclePainter circle() {
+		return new CirclePainter();
+	}
+
+	public static SquarePainter square() {
+		return new SquarePainter();
+	}
+
 	public static BlockPainter block(Painter painter) {
 		Vector3i center = painter.getCenter();
 		BlockSetter blockSetter = painter.getBlockSetter();
