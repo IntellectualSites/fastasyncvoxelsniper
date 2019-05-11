@@ -1,5 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -18,11 +24,14 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private static final int SIGN_LINE_2 = 2;
 	private static final int SIGN_LINE_3 = 3;
 	private static final int SIGN_LINE_4 = 4;
+
+	private File pluginDataFolder;
 	private String[] signTextLines = new String[NUM_SIGN_LINES];
 	private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
 	private boolean rangedMode;
 
-	public SignOverwriteBrush() {
+	public SignOverwriteBrush(File pluginDataFolder) {
+		this.pluginDataFolder = pluginDataFolder;
 		clearBuffer();
 		resetStates();
 	}
@@ -36,17 +45,21 @@ public class SignOverwriteBrush extends AbstractBrush {
 			String parameter = parameters[index];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					messenger.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:");
-					messenger.sendMessage(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.");
-					messenger.sendMessage(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.");
-					messenger.sendMessage(ChatColor.AQUA + "Sign Overwrite Brush Parameters:");
-					messenger.sendMessage(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)");
-					messenger.sendMessage(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)");
-					messenger.sendMessage(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)");
-					messenger.sendMessage(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)");
-					messenger.sendMessage(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)");
-					messenger.sendMessage(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)");
-					messenger.sendMessage(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)");
+					snipe.createMessageSender()
+						.message(ChatColor.AQUA + "Sign Overwrite Brush Powder/Arrow:")
+						.message(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.")
+						.message(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.")
+						.message(ChatColor.AQUA + "Sign Overwrite Brush Parameters:")
+						.message(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)")
+						.message(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)")
+						.message(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)")
+						.message(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)")
+						.message(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)")
+						.message(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)")
+						.message(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)")
+						.message(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)")
+						.message(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)")
+						.send();
 				} else if (parameter.startsWith("-1")) {
 					textChanged = true;
 					index = parseSignLineFromParam(parameters, SIGN_LINE_1, snipe, index);
@@ -77,6 +90,21 @@ public class SignOverwriteBrush extends AbstractBrush {
 						messenger.sendMessage(ChatColor.GREEN + "Brush size set to " + ChatColor.RED + toolkitProperties.getBrushSize());
 						messenger.sendMessage(ChatColor.AQUA + "Brush height set to " + ChatColor.RED + toolkitProperties.getVoxelHeight());
 					}
+				} else if (parameter.equalsIgnoreCase("-save") || parameter.equalsIgnoreCase("-s")) {
+					if ((index + 1) >= parameters.length) {
+						messenger.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+						continue;
+					}
+					String fileName = parameters[++index];
+					saveBufferToFile(snipe, fileName);
+				} else if (parameter.equalsIgnoreCase("-open") || parameter.equalsIgnoreCase("-o")) {
+					if ((index + 1) >= parameters.length) {
+						messenger.sendMessage(ChatColor.RED + String.format("Missing parameter after %s.", parameter));
+						continue;
+					}
+					String fileName = parameters[++index];
+					loadBufferFromFile(snipe, fileName);
+					textChanged = true;
 				}
 			} catch (RuntimeException exception) {
 				messenger.sendMessage(ChatColor.RED + String.format("Error while parsing parameter %s", parameter));
@@ -235,6 +263,59 @@ public class SignOverwriteBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
 		for (int index = 0; index < this.signTextLines.length; index++) {
 			messenger.sendMessage((this.signLinesEnabled[index] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ") + ChatColor.BLACK + this.signTextLines[index]);
+		}
+	}
+
+	/**
+	 * Saves the buffer to file.
+	 */
+	private void saveBufferToFile(Snipe snipe, String fileName) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		File store = new File(this.pluginDataFolder, fileName + ".vsign");
+		if (store.exists()) {
+			messenger.sendMessage("This file already exists.");
+			return;
+		}
+		try {
+			store.createNewFile();
+			FileWriter outFile = new FileWriter(store);
+			BufferedWriter outStream = new BufferedWriter(outFile);
+			for (int i = 0; i < this.signTextLines.length; i++) {
+				outStream.write(this.signLinesEnabled[i] + "\n");
+				outStream.write(this.signTextLines[i] + "\n");
+			}
+			outStream.close();
+			outFile.close();
+			messenger.sendMessage(ChatColor.BLUE + "File saved successfully.");
+		} catch (IOException exception) {
+			messenger.sendMessage(ChatColor.RED + "Failed to save file. " + exception.getMessage());
+			exception.printStackTrace();
+		}
+	}
+
+	/**
+	 * Loads a buffer from a file.
+	 */
+	private void loadBufferFromFile(Snipe snipe, String fileName) {
+		SnipeMessenger messenger = snipe.createMessenger();
+		File store = new File(this.pluginDataFolder, fileName + ".vsign");
+		if (!store.exists()) {
+			messenger.sendMessage("This file does not exist.");
+			return;
+		}
+		try {
+			FileReader inFile = new FileReader(store);
+			BufferedReader inStream = new BufferedReader(inFile);
+			for (int i = 0; i < this.signTextLines.length; i++) {
+				this.signLinesEnabled[i] = Boolean.valueOf(inStream.readLine());
+				this.signTextLines[i] = inStream.readLine();
+			}
+			inStream.close();
+			inFile.close();
+			messenger.sendMessage(ChatColor.BLUE + "File loaded successfully.");
+		} catch (IOException exception) {
+			messenger.sendMessage(ChatColor.RED + "Failed to load file. " + exception.getMessage());
+			exception.printStackTrace();
 		}
 	}
 

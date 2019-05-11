@@ -14,8 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-// Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 
+// Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 public class GenerateTreeBrush extends AbstractBrush {
 
 	// Tree Variables.
@@ -23,10 +23,8 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private List<Block> branchBlocks = new ArrayList<>();
 	private Undo undo;
 	// If these default values are edited. Remember to change default values in the default preset.
-	@Deprecated
-	private byte leafType;
-	@Deprecated
-	private byte woodType;
+	private Material leafType = Material.OAK_LEAVES;
+	private Material woodType = Material.OAK_LOG;
 	private boolean rootFloat;
 	private int startHeight;
 	private int rootLength = 9;
@@ -35,7 +33,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private int thickness = 1;
 	private int slopeChance = 40;
 	private int twistChance = 5; // This is a hidden value not available through Parameters. Otherwise messy.
-	private int heightMininmum = 14;
+	private int heightMinimum = 14;
 	private int heightMaximum = 18;
 	private int branchLength = 8;
 	private int nodeMax = 4;
@@ -47,38 +45,52 @@ public class GenerateTreeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (int index = 1; index < parameters.length; index++) {
+			String parameter = parameters[index];
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
-					messenger.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
-					messenger.sendMessage(ChatColor.AQUA + "lt# - leaf type (data value)");
-					messenger.sendMessage(ChatColor.AQUA + "wt# - wood type (data value)");
-					messenger.sendMessage(ChatColor.AQUA + "tt# - tree thickness (whote number)");
-					messenger.sendMessage(ChatColor.AQUA + "rfX - root float (true or false)");
-					messenger.sendMessage(ChatColor.AQUA + "sh# - starting height (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "rl# - root length (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "ts# - trunk slope chance (0-100)");
-					messenger.sendMessage(ChatColor.AQUA + "bl# - branch length (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "info2 - more parameters");
+					snipe.createMessageSender()
+						.message(ChatColor.GOLD + "This brush takes the following parameters:")
+						.message(ChatColor.AQUA + "lt* - leaf type (e.g. oak)")
+						.message(ChatColor.AQUA + "wt* - wood type (e.g. oak)")
+						.message(ChatColor.AQUA + "tt# - tree thickness (whole number)")
+						.message(ChatColor.AQUA + "rf* - root float (true or false)")
+						.message(ChatColor.AQUA + "sh# - starting height (whole number)")
+						.message(ChatColor.AQUA + "rl# - root length (whole number)")
+						.message(ChatColor.AQUA + "ts# - trunk slope chance (0-100)")
+						.message(ChatColor.AQUA + "bl# - branch length (whole number)")
+						.message(ChatColor.AQUA + "info2 - more parameters")
+						.send();
 					return;
 				}
 				if (parameter.equalsIgnoreCase("info2")) {
-					messenger.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
-					messenger.sendMessage(ChatColor.AQUA + "minr# - minimum roots (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "maxr# - maximum roots (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "minh# - minimum height (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "maxh# - maximum height (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "minl# - minimum leaf node size (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "maxl# - maximum leaf node size (whole number)");
-					messenger.sendMessage(ChatColor.AQUA + "default - restore default params");
+					snipe.createMessageSender()
+						.message(ChatColor.GOLD + "This brush takes the following parameters:")
+						.message(ChatColor.AQUA + "minr# - minimum roots (whole number)")
+						.message(ChatColor.AQUA + "maxr# - maximum roots (whole number)")
+						.message(ChatColor.AQUA + "minh# - minimum height (whole number)")
+						.message(ChatColor.AQUA + "maxh# - maximum height (whole number)")
+						.message(ChatColor.AQUA + "minl# - minimum leaf node size (whole number)")
+						.message(ChatColor.AQUA + "maxl# - maximum leaf node size (whole number)")
+						.message(ChatColor.AQUA + "default - restore default params")
+						.send();
 					return;
 				}
 				if (parameter.startsWith("lt")) { // Leaf Type
-					this.leafType = Byte.parseByte(parameter.replace("lt", ""));
+					Material leafType = Material.matchMaterial(parameter.replace("lt", "") + "_leaves");
+					if (leafType == null) {
+						messenger.sendMessage(ChatColor.RED + "Invalid leaf type");
+						return;
+					}
+					this.leafType = leafType;
 					messenger.sendMessage(ChatColor.BLUE + "Leaf Type set to " + this.leafType);
 				} else if (parameter.startsWith("wt")) { // Wood Type
-					this.woodType = Byte.parseByte(parameter.replace("wt", ""));
+					Material woodType = Material.matchMaterial(parameter.replace("wt", "") + "_log");
+					if (woodType == null) {
+						messenger.sendMessage(ChatColor.RED + "Invalid wood type");
+						return;
+					}
+					this.woodType = woodType;
 					messenger.sendMessage(ChatColor.BLUE + "Wood Type set to " + this.woodType);
 				} else if (parameter.startsWith("tt")) { // Tree Thickness
 					this.thickness = Integer.parseInt(parameter.replace("tt", ""));
@@ -112,17 +124,17 @@ public class GenerateTreeBrush extends AbstractBrush {
 					this.slopeChance = Integer.parseInt(parameter.replace("ts", ""));
 					messenger.sendMessage(ChatColor.BLUE + "Trunk Slope set to " + this.slopeChance);
 				} else if (parameter.startsWith("minh")) { // Height Minimum
-					this.heightMininmum = Integer.parseInt(parameter.replace("minh", ""));
-					if (this.heightMininmum > this.heightMaximum) {
-						this.heightMininmum = this.heightMaximum;
-						messenger.sendMessage(ChatColor.RED + "Minimum Height exceed than Maximum Height, has been set to " + this.heightMininmum + " Instead!");
+					this.heightMinimum = Integer.parseInt(parameter.replace("minh", ""));
+					if (this.heightMinimum > this.heightMaximum) {
+						this.heightMinimum = this.heightMaximum;
+						messenger.sendMessage(ChatColor.RED + "Minimum Height exceed than Maximum Height, has been set to " + this.heightMinimum + " Instead!");
 					} else {
-						messenger.sendMessage(ChatColor.BLUE + "Minimum Height set to " + this.heightMininmum);
+						messenger.sendMessage(ChatColor.BLUE + "Minimum Height set to " + this.heightMinimum);
 					}
 				} else if (parameter.startsWith("maxh")) { // Height Maximum
 					this.heightMaximum = Integer.parseInt(parameter.replace("maxh", ""));
-					if (this.heightMininmum > this.heightMaximum) {
-						this.heightMaximum = this.heightMininmum;
+					if (this.heightMinimum > this.heightMaximum) {
+						this.heightMaximum = this.heightMinimum;
 						messenger.sendMessage(ChatColor.RED + "Maximum Height can't be lower than Minimum Height, has been set to " + this.heightMaximum + " Instead!");
 					} else {
 						messenger.sendMessage(ChatColor.BLUE + "Maximum Roots set to " + this.heightMaximum);
@@ -140,8 +152,8 @@ public class GenerateTreeBrush extends AbstractBrush {
 					// Presets
 					// -------
 				} else if (parameter.startsWith("default")) { // Default settings.
-					this.leafType = 0;
-					this.woodType = 0;
+					this.leafType = Material.OAK_LEAVES;
+					this.woodType = Material.OAK_LOG;
 					this.rootFloat = false;
 					this.startHeight = 0;
 					this.rootLength = 9;
@@ -149,7 +161,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 					this.minRoots = 1;
 					this.thickness = 1;
 					this.slopeChance = 40;
-					this.heightMininmum = 14;
+					this.heightMinimum = 14;
 					this.heightMaximum = 18;
 					this.branchLength = 8;
 					this.nodeMax = 4;
@@ -159,7 +171,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 					messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameters[i] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameters[index] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
 			}
 		}
 	}
@@ -223,8 +235,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 			}
 			// Creates a branch block.
-			//TODO: add wood type
-			clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setBlockData(Material.LEGACY_LOG.createBlockData(), false);
+			clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
 			this.branchBlocks.add(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 		}
 		// Resets the origin
@@ -271,8 +282,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 					this.undo.put(clampY(x, y, z));
 				}
 				// Creates block.
-				//TODO: add leaves type
-				clampY(x, y, z).setBlockData(Material.LEGACY_LEAVES.createBlockData(), false);
+				clampY(x, y, z).setType(this.leafType, false);
 			}
 		}
 	}
@@ -306,8 +316,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				if (!Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 					// Place log block.
-					//TODO: add wood type
-					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setBlockData(Material.LEGACY_LOG.createBlockData(), false);
+					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
 				} else {
 					// If solid then...
 					// End loop
@@ -389,8 +398,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));
 			}
 			// Creates block.
-			//TODO: add wood type
-			clampY(x, this.blockPositionY, y).setBlockData(Material.LEGACY_LOG.createBlockData(), false);
+			clampY(x, this.blockPositionY, y).setType(this.woodType, false);
 		}
 	}
 
@@ -415,7 +423,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			zDirection = -1;
 		}
 		// Generates a height for trunk.
-		int height = this.randGenerator.nextInt(this.heightMaximum - this.heightMininmum + 1) + this.heightMininmum;
+		int height = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
 		for (int p = 0; p < height; p++) {
 			if (p > 3) {
 				if (this.randGenerator.nextInt(100) <= this.twistChance) {
@@ -461,7 +469,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			nextZDirection = -1;
 		}
 		// Generates a height for trunk.
-		int nextHeight = this.randGenerator.nextInt(this.heightMaximum - this.heightMininmum + 1) + this.heightMininmum;
+		int nextHeight = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
 		if (nextHeight > 4) {
 			for (int p = 0; p < nextHeight; p++) {
 				if (this.randGenerator.nextInt(100) <= this.twistChance) {

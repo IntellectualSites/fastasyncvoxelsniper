@@ -6,6 +6,10 @@ public final class MathHelper {
 		throw new UnsupportedOperationException("Cannot create instance of utility class");
 	}
 
+	public static double circleArea(int radius) {
+		return Math.PI * square(radius);
+	}
+
 	public static double sphereVolume(int radius) {
 		return 4.0 / 3.0 * Math.PI * cube(radius);
 	}
