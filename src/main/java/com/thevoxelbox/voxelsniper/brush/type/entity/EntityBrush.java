@@ -16,6 +16,7 @@ public class EntityBrush extends AbstractBrush {
 
 	private EntityType entityType = EntityType.ZOMBIE;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
@@ -64,6 +65,7 @@ public class EntityBrush extends AbstractBrush {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void sendInfo(Snipe snipe) {
 		snipe.createMessageSender()

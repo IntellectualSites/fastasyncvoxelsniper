@@ -92,6 +92,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		sniper.storeUndo(this.performer.getUndo());
 	}
 
+	@SuppressWarnings("deprecation")
 	private boolean isIgnoredBlock(Material material) {
 		return material == Material.WATER || material.isTransparent() || material == Material.CACTUS;
 	}
