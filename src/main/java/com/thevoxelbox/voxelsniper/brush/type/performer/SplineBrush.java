@@ -24,8 +24,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				snipe.createMessageSender()
 					.message(ChatColor.GOLD + "Spline brush parameters")

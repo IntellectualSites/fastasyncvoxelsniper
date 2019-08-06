@@ -19,8 +19,7 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; ++index) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("water")) {
 				this.waterExcluded = !this.waterExcluded;
 				messenger.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"));

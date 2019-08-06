@@ -15,7 +15,7 @@ public class SnowConeBrush extends AbstractBrush {
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
-		String firstParameter = parameters[1];
+		String firstParameter = parameters[0];
 		if (firstParameter.equalsIgnoreCase("info")) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");

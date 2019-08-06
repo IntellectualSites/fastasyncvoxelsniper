@@ -16,8 +16,8 @@ public class DiscBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index].toLowerCase();
+		for (String s : parameters) {
+			String parameter = s.toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Disc Brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b d true|false" + " -- toggles useing the true circle algorithm instead of the skinnier version with classic sniper nubs. (false is default)");

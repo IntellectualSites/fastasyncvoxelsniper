@@ -21,8 +21,8 @@ public class PullBrush extends AbstractBrush {
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
-		Double pinch = NumericParser.parseDouble(parameters[1]);
-		Double bubble = NumericParser.parseDouble(parameters[2]);
+		Double pinch = NumericParser.parseDouble(parameters[0]);
+		Double bubble = NumericParser.parseDouble(parameters[1]);
 		if (pinch == null || bubble == null) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.RED + "Invalid brush parameters!");

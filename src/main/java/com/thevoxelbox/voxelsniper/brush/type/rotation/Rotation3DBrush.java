@@ -25,8 +25,7 @@ public class Rotation3DBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			// which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");

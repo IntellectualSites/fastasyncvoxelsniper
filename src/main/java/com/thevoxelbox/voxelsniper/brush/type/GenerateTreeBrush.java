@@ -45,8 +45,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					snipe.createMessageSender()
@@ -171,7 +170,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 					messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameters[index] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameter + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
 			}
 		}
 	}

@@ -20,8 +20,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);

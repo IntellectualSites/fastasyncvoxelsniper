@@ -19,8 +19,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");

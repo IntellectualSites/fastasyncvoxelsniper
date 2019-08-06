@@ -23,8 +23,7 @@ public class ScannerBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");

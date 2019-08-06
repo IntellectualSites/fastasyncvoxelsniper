@@ -32,8 +32,7 @@ public class ErodeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			Preset preset = Preset.getPreset(parameter);
 			if (preset != null) {
 				try {

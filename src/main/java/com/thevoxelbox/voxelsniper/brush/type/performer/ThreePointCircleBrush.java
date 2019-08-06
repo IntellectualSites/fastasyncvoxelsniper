@@ -25,7 +25,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		if (parameters[1].equalsIgnoreCase("info")) {
+		if (parameters[0].equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
 			String toleranceOptions = Arrays.stream(Tolerance.values())
 				.map(tolerance -> tolerance.name()
@@ -34,9 +34,9 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 			messenger.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
 			return;
 		}
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i].toUpperCase();
+		for (String s : parameters) {
 			try {
+				String parameter = s.toUpperCase();
 				this.tolerance = Tolerance.valueOf(parameter);
 				messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
 					.toLowerCase() + " tolerance.");

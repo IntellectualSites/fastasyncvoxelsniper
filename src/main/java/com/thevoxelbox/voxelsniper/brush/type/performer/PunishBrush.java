@@ -37,7 +37,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
+		for (int i = 0; i < parameters.length; i++) {
 			String parameter = parameters[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
 				snipe.createMessageSender()

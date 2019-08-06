@@ -22,9 +22,9 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Double angle = NumericParser.parseDouble(parameters[1]);
+		Double angle = NumericParser.parseDouble(parameters[0]);
 		if (angle == null) {
-			messenger.sendMessage("Exception while parsing parameter: " + parameters[1]);
+			messenger.sendMessage("Exception while parsing parameter: " + parameters[0]);
 			return;
 		}
 		this.angle = Math.toRadians(angle);

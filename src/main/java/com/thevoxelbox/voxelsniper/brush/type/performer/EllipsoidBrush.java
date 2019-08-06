@@ -17,8 +17,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		this.istrue = false;
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					messenger.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
@@ -27,13 +26,13 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 					messenger.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
 					return;
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
-					this.xRad = Integer.parseInt(parameters[index].replace("x", ""));
+					this.xRad = Integer.parseInt(parameter.replace("x", ""));
 					messenger.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
-					this.yRad = Integer.parseInt(parameters[index].replace("y", ""));
+					this.yRad = Integer.parseInt(parameter.replace("y", ""));
 					messenger.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
 				} else if (!parameter.isEmpty() && parameter.charAt(0) == 'z') {
-					this.zRad = Integer.parseInt(parameters[index].replace("z", ""));
+					this.zRad = Integer.parseInt(parameter.replace("z", ""));
 					messenger.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
 				} else if (parameter.equalsIgnoreCase("true")) {
 					this.istrue = true;

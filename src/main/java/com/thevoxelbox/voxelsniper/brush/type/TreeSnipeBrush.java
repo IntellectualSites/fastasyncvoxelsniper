@@ -26,8 +26,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
 				messenger.sendMessage(ChatColor.AQUA + "/b t treetype");

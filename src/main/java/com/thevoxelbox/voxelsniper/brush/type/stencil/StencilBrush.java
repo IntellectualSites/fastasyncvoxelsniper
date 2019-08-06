@@ -49,7 +49,7 @@ public class StencilBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		String firstParameter = parameters[1];
+		String firstParameter = parameters[0];
 		if (firstParameter.equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
 			messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");

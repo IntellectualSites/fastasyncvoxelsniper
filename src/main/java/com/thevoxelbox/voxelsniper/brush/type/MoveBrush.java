@@ -65,8 +65,7 @@ public class MoveBrush extends AbstractBrush {
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		BrushProperties brushProperties = snipe.getBrushProperties();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
@@ -85,13 +84,13 @@ public class MoveBrush extends AbstractBrush {
 			}
 			String parameterLowered = parameter.toLowerCase();
 			if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'x') {
-				this.moveDirections[0] = Integer.valueOf(parameter.substring(1));
+				this.moveDirections[0] = Integer.parseInt(parameter.substring(1));
 				messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
 			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'y') {
-				this.moveDirections[1] = Integer.valueOf(parameter.substring(1));
+				this.moveDirections[1] = Integer.parseInt(parameter.substring(1));
 				messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
 			} else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'z') {
-				this.moveDirections[2] = Integer.valueOf(parameter.substring(1));
+				this.moveDirections[2] = Integer.parseInt(parameter.substring(1));
 				messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
 			}
 		}

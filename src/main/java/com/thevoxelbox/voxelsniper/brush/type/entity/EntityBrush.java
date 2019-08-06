@@ -20,7 +20,7 @@ public class EntityBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		if (parameters[1].equalsIgnoreCase("info")) {
+		if (parameters[0].equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.BLUE + "The available entity types are as follows:");
 			String names = Arrays.stream(EntityType.values())
 				.map(currentEntity -> ChatColor.AQUA + " | " + ChatColor.DARK_GREEN + currentEntity.getName())
