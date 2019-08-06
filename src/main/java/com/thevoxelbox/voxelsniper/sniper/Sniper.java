@@ -126,7 +126,7 @@ public class Sniper {
 			SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 				if (toolAction == ToolAction.ARROW) {
-					if (targetBlock.isEmpty()) {
+					if (targetBlock.getType().isEmpty()) {
 						toolkitProperties.resetBlockData();
 					} else {
 						Material type = targetBlock.getType();
@@ -135,7 +135,7 @@ public class Sniper {
 					messenger.sendBlockTypeMessage();
 					return true;
 				} else if (toolAction == ToolAction.GUNPOWDER) {
-					if (targetBlock.isEmpty()) {
+					if (targetBlock.getType().isEmpty()) {
 						toolkitProperties.resetBlockData();
 					} else {
 						BlockData blockData = targetBlock.getBlockData();
@@ -170,7 +170,7 @@ public class Sniper {
 			return false;
 		} else {
 			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-				if (targetBlock.isEmpty()) {
+				if (targetBlock.getType().isEmpty()) {
 					player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return true;
 				}

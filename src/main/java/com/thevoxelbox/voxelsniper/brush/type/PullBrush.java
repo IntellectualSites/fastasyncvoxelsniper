@@ -72,8 +72,7 @@ public class PullBrush extends AbstractBrush {
 					for (int y = brushSize; y >= -brushSize; y--) {
 						double volume = zSquared + xSquared + (y * y);
 						// Is this in the range of the brush?
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ)
-							.isEmpty()) {
+						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
 							int actualY = targetBlock.getY() + y;
 							// Starting strength and new Position
 							double str = this.getStr(volume / brushSizeSquared);
@@ -113,8 +112,7 @@ public class PullBrush extends AbstractBrush {
 					int actualX = targetBlock.getX() + x;
 					for (int y = -brushSize; y <= brushSize; y++) {
 						double volume = (xSquared + Math.pow(y, 2) + zSquared);
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ)
-							.isEmpty()) {
+						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
 							int actualY = targetBlock.getY() + y;
 							lastY = actualY + (int) (this.voxelHeight * this.getStr(volume / brushSizeSquared));
 							Block clamp = clampY(actualX, lastY, actualZ);

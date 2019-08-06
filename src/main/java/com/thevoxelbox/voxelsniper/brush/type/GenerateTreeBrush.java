@@ -275,7 +275,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		if (this.randGenerator.nextInt(100) >= 30) {
 			// If block is Air, create a leaf block.
 			Block block = world.getBlockAt(x, y, z);
-			if (block.isEmpty()) {
+			if (block.getType().isEmpty()) {
 				// Adds block to undo function.
 				if (!Tag.LEAVES.isTagged(getBlockType(x, y, z))) {
 					this.undo.put(clampY(x, y, z));
@@ -391,7 +391,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	private void generateTrunkBlock(World world, int x, int y) {
 		Block block = world.getBlockAt(x, this.blockPositionY, y);
-		if (block.isEmpty()) {
+		if (block.getType().isEmpty()) {
 			// Adds block to undo function.
 			if (!Tag.LOGS.isTagged(getBlockType(x, this.blockPositionY, y))) {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));

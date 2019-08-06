@@ -88,7 +88,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 	protected void setBlockFill(StampBrushBlockWrapper blockWrapper) {
 		Block targetBlock = getTargetBlock();
 		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		if (block.isEmpty()) {
+		if (block.getType().isEmpty()) {
 			this.undo.put(block);
 			block.setBlockData(blockWrapper.getBlockData());
 		}

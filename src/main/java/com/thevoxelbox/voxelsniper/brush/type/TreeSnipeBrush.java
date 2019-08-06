@@ -72,8 +72,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Block targetBlock = getTargetBlock();
 		World world = targetBlock.getWorld();
 		return IntStream.range(1, (world.getMaxHeight() - 1 - targetBlock.getY()))
-			.filter(i -> targetBlock.getRelative(0, i + 1, 0)
-				.isEmpty())
+			.filter(i -> targetBlock.getRelative(0, i + 1, 0).getType().isEmpty())
 			.findFirst()
 			.orElse(0);
 	}
@@ -141,7 +140,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		@Override
 		public boolean isEmpty(int x, int y, int z) {
 			Block block = this.targetWorld.getBlockAt(x, y, z);
-			return block.isEmpty();
+			return block.getType().isEmpty();
 		}
 	}
 }
