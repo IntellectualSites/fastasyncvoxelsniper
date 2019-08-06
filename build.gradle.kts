@@ -6,8 +6,8 @@ plugins {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_11
-	targetCompatibility = JavaVersion.VERSION_11
+	sourceCompatibility = JavaVersion.VERSION_12
+	targetCompatibility = JavaVersion.VERSION_12
 }
 
 repositories {
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	compileOnly("com.destroystokyo.paper:paper-api:1.14.2-R0.1-SNAPSHOT")
+	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
 }
 
