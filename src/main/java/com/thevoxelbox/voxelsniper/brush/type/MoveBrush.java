@@ -183,7 +183,7 @@ public class MoveBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2]);
 	}
 
-	private class Selection {
+	private static class Selection {
 
 		/**
 		 * Maximum amount of Blocks allowed blockPositionY the Selection.
@@ -213,12 +213,12 @@ public class MoveBrush extends AbstractBrush {
 					int y2 = this.location2.getBlockY();
 					int z1 = this.location1.getBlockZ();
 					int z2 = this.location2.getBlockZ();
-					int lowX = x1 <= x2 ? x1 : x2;
-					int lowY = y1 <= y2 ? y1 : y2;
-					int lowZ = z1 <= z2 ? z1 : z2;
-					int highX = x1 >= x2 ? x1 : x2;
-					int highY = y1 >= y2 ? y1 : y2;
-					int highZ = z1 >= z2 ? z1 : z2;
+					int lowX = Math.min(x1, x2);
+					int lowY = Math.min(y1, y2);
+					int lowZ = Math.min(z1, z2);
+					int highX = Math.max(x1, x2);
+					int highY = Math.max(y1, y2);
+					int highZ = Math.max(z1, z2);
 					if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_BLOCK_COUNT) {
 						throw new RuntimeException(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
 					}

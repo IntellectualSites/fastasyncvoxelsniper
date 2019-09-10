@@ -311,14 +311,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 				// For the purposes of this algorithm, logs aren't considered solid.
 				// If not solid then...
 				// Save for undo function
-				if (!Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
-					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
-					// Place log block.
-					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
-				} else {
+				if (Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 					// If solid then...
 					// End loop
 					break;
+				} else {
+					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
+					// Place log block.
+					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
 				}
 				MaterialSet solids = MaterialSet.builder()
 					.with(Tag.LOGS)

@@ -78,22 +78,19 @@ public class Rotation3DBrush extends AbstractBrush {
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		//int sy = this.getTargetBlock().getY() - this.brushSize; Not used
-		int sz = targetBlock.getZ() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
 			double xSquared = Math.pow(x - this.brushSize, 2);
-			sz = targetBlock.getZ() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
 				double zSquared = Math.pow(z - this.brushSize, 2);
-				sz = targetBlock.getY() - this.brushSize;
+				int sz = targetBlock.getZ() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
-						Block block = this.clampY(sx, sz, sz);
+						Block block = clampY(sx, sz, sz);
 						this.snap[x][y][z] = block.getBlockData();
 						block.setType(Material.AIR);
 						sz++;
 					}
 				}
-				sz++;
 			}
 			sx++;
 		}

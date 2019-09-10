@@ -124,42 +124,29 @@ public class RandomErodeBrush extends AbstractBrush {
 
 	private void getMatrix() {
 		int brushSize = (this.brushSize + 1) * 2 + 1;
-		Block targetBlock = this.getTargetBlock();
+		Block targetBlock = getTargetBlock();
 		if (this.snap.length == 0) {
-			this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
-			int sx = targetBlock.getX() - (this.brushSize + 1);
-			int sy = targetBlock.getY() - (this.brushSize + 1);
-			int sz = targetBlock.getZ() - (this.brushSize + 1);
-			for (int x = 0; x < this.snap.length; x++) {
-				sz = targetBlock.getZ() - (this.brushSize + 1);
-				for (int z = 0; z < this.snap.length; z++) {
-					sy = targetBlock.getY() - (this.brushSize + 1);
-					for (int y = 0; y < this.snap.length; y++) {
-						this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
-						sy++;
-					}
-					sz++;
-				}
-				sx++;
-			}
+			setSnap(brushSize, targetBlock);
 			this.firstSnap = this.snap.clone();
 		} else {
-			this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
-			int sx = targetBlock.getX() - (this.brushSize + 1);
-			int sy = targetBlock.getY() - (this.brushSize + 1);
+			setSnap(brushSize, targetBlock);
+		}
+	}
+
+	private void setSnap(int brushSize, Block targetBlock) {
+		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
+		int sx = targetBlock.getX() - (this.brushSize + 1);
+		for (int x = 0; x < this.snap.length; x++) {
 			int sz = targetBlock.getZ() - (this.brushSize + 1);
-			for (int x = 0; x < this.snap.length; x++) {
-				sz = targetBlock.getZ() - (this.brushSize + 1);
-				for (int z = 0; z < this.snap.length; z++) {
-					sy = targetBlock.getY() - (this.brushSize + 1);
-					for (int y = 0; y < this.snap.length; y++) {
-						this.snap[x][y][z] = new BlockWrapper(this.clampY(sx, sy, sz));
-						sy++;
-					}
-					sz++;
+			for (int z = 0; z < this.snap.length; z++) {
+				int sy = targetBlock.getY() - (this.brushSize + 1);
+				for (int y = 0; y < this.snap.length; y++) {
+					this.snap[x][y][z] = new BlockWrapper(clampY(sx, sy, sz));
+					sy++;
 				}
-				sx++;
+				sz++;
 			}
+			sx++;
 		}
 	}
 

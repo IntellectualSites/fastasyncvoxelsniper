@@ -43,15 +43,10 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	private void addSnow(Snipe snipe, Block targetBlock) {
-		int brushSize;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		if (getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty()) {
-			brushSize = 0;
-		} else {
-			brushSize = blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
-		}
+		int brushSize = getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty() ? 0 : blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
 		int brushSizeDoubled = 2 * brushSize;
 		Material[][] snowCone = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
 		BlockData[][] snowConeData = new BlockData[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowCone

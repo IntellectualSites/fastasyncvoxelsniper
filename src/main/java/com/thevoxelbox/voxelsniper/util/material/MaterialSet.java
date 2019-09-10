@@ -17,7 +17,7 @@ public class MaterialSet implements Iterable<Material> {
 		return new MaterialSetBuilder();
 	}
 
-	MaterialSet(Collection<Material> materials) {
+	public MaterialSet(Collection<Material> materials) {
 		this.materials = EnumSet.copyOf(materials);
 	}
 

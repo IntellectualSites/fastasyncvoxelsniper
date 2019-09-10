@@ -62,14 +62,12 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
-		int sy = targetBlock.getY() - this.brushSize;
-		int sz = targetBlock.getZ() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
-			sz = targetBlock.getZ() - this.brushSize;
+			int sz = targetBlock.getZ() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
-				sy = targetBlock.getY() - this.brushSize;
+				int sy = targetBlock.getY() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
-					Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+					Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
 					this.snap[x][y][z] = block.getBlockData();
 					block.setType(Material.AIR);
 					sy++;

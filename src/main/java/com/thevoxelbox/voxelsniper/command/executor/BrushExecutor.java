@@ -52,7 +52,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
 				sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
 				return;
 			}
-			Brush brush = toolkit.useBrush(previousBrushProperties);
+			toolkit.useBrush(previousBrushProperties);
 			sniper.sendInfo(sender);
 			return;
 		}
@@ -61,13 +61,15 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
 		if (brushSize != null) {
 			VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
 			int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
-			if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
-				brushSize = litesniperMaxBrushSize;
-				sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
-			}
-			toolkitProperties.setBrushSize(brushSize);
 			Messenger messenger = new Messenger(sender);
-			messenger.sendBrushSizeMessage(brushSize);
+			if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
+				sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
+				toolkitProperties.setBrushSize(litesniperMaxBrushSize);
+				messenger.sendBrushSizeMessage(litesniperMaxBrushSize);
+			} else {
+				toolkitProperties.setBrushSize(brushSize);
+				messenger.sendBrushSizeMessage(brushSize);
+			}
 			return;
 		}
 		BrushRegistry brushRegistry = this.plugin.getBrushRegistry();

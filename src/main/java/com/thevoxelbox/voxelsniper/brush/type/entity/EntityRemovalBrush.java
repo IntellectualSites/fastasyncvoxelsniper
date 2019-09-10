@@ -63,7 +63,7 @@ public class EntityRemovalBrush extends AbstractBrush {
 		int chunkCount = 0;
 		try {
 			entityCount += removeEntities(targetChunk);
-			int radius = Math.round(toolkitProperties.getBrushSize() / 16);
+			int radius = Math.round(toolkitProperties.getBrushSize() / 16.0F);
 			for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++) {
 				for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++) {
 					entityCount += removeEntities(getWorld().getChunkAt(x, z));

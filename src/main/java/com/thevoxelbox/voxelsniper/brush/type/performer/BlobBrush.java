@@ -63,11 +63,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			for (int y = brushSizeDoubled; y >= 0; y--) {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
-					if ((x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
-						splat[x][y][z] = 0;
-					} else {
-						splat[x][y][z] = 1;
-					}
+					splat[x][y][z] = (x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent ? 0 : 1;
 				}
 			}
 		}

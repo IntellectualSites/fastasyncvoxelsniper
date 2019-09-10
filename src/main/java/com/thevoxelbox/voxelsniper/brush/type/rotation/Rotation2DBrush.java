@@ -55,16 +55,14 @@ public class Rotation2DBrush extends AbstractBrush {
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
-		int sy = targetBlock.getY() - this.brushSize;
-		int sz = targetBlock.getZ() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
-			sz = targetBlock.getZ() - this.brushSize;
+			int sz = targetBlock.getZ() - this.brushSize;
 			double xSquared = Math.pow(x - this.brushSize, 2);
 			for (int y = 0; y < this.snap.length; y++) {
-				sy = targetBlock.getY() - this.brushSize;
+				int sy = targetBlock.getY() - this.brushSize;
 				if (xSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
 					for (int z = 0; z < this.snap.length; z++) {
-						Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+						Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
 						this.snap[x][z][y] = block.getBlockData();
 						block.setType(Material.AIR);
 						sy++;

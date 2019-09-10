@@ -16,7 +16,7 @@ public class BlockDataSetter implements BlockSetter {
 		return new BlockDataSetterBuilder();
 	}
 
-	BlockDataSetter(World world, BlockData blockData, boolean applyPhysics) {
+	public BlockDataSetter(World world, BlockData blockData, boolean applyPhysics) {
 		this.world = world;
 		this.blockData = blockData;
 		this.applyPhysics = applyPhysics;

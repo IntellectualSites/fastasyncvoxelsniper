@@ -41,14 +41,14 @@ public class StencilListBrush extends AbstractBrush {
 			messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
 			return;
 		} else if (secondParameter.equalsIgnoreCase("full")) {
-			this.pasteOption = (byte) 0;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 0;
+			this.pasteParam = 1;
 		} else if (secondParameter.equalsIgnoreCase("fill")) {
-			this.pasteOption = (byte) 1;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 1;
+			this.pasteParam = 1;
 		} else if (secondParameter.equalsIgnoreCase("replace")) {
-			this.pasteOption = (byte) 2;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 2;
+			this.pasteParam = 1;
 		}
 		try {
 			this.filename = parameters[1 + this.pasteParam];

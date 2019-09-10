@@ -10,7 +10,7 @@ public class BlockPainter implements Painter {
 	private BlockSetter blockSetter;
 	private List<Vector3i> shifts = new ArrayList<>();
 
-	BlockPainter(Vector3i center, BlockSetter blockSetter) {
+	public BlockPainter(Vector3i center, BlockSetter blockSetter) {
 		this.center = center;
 		this.blockSetter = blockSetter;
 	}

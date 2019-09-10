@@ -207,9 +207,10 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 * with a dash -) is found.
 	 */
 	private int parseSignLineFromParam(String[] params, int lineNumber, Snipe snipe, int i) {
+		int index = i;
 		SnipeMessenger messenger = snipe.createMessenger();
 		int lineIndex = lineNumber - 1;
-		String parameter = params[i];
+		String parameter = params[index];
 		boolean statusSet = false;
 		if (parameter.contains(":")) {
 			this.signLinesEnabled[lineIndex] = parameter.substring(parameter.indexOf(':'))
@@ -217,45 +218,45 @@ public class SignOverwriteBrush extends AbstractBrush {
 			messenger.sendMessage(ChatColor.BLUE + "Line " + lineNumber + " is " + ChatColor.GREEN + (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled"));
 			statusSet = true;
 		}
-		if ((i + 1) >= params.length) {
+		if ((index + 1) >= params.length) {
 			// return if the user just wanted to set the status
 			if (statusSet) {
-				return i;
+				return index;
 			}
 			messenger.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 			this.signTextLines[lineIndex] = "";
-			return i;
+			return index;
 		}
-		StringBuilder newText = new StringBuilder();
+		StringBuilder newTextBuilder = new StringBuilder();
 		// go through the array until the next top level parameter is found
-		for (i++; i < params.length; i++) {
-			String currentParameter = params[i];
+		for (index++; index < params.length; index++) {
+			String currentParameter = params[index];
 			if (!currentParameter.isEmpty() && currentParameter.charAt(0) == '-') {
-				i--;
+				index--;
 				break;
 			} else {
-				newText.append(currentParameter)
-					.append(" ");
+				newTextBuilder.append(currentParameter).append(" ");
 			}
 		}
-		newText = new StringBuilder(ChatColor.translateAlternateColorCodes('&', newText.toString()));
+		newTextBuilder = new StringBuilder(ChatColor.translateAlternateColorCodes('&', newTextBuilder.toString()));
 		// remove last space or return if the string is empty and the user just wanted to set the status
-		if ((newText.length() > 0) && newText.toString()
-			.endsWith(" ")) {
-			newText = new StringBuilder(newText.substring(0, newText.length() - 1));
-		} else if (newText.length() == 0) {
+		String newText = newTextBuilder.toString();
+		int length = newText.length();
+		if (!newText.isEmpty() && newText.charAt(length - 1) == ' ') {
+			newTextBuilder = new StringBuilder(newTextBuilder.substring(0, length - 1));
+		} else if (newText.isEmpty()) {
 			if (statusSet) {
-				return i;
+				return index;
 			}
 			messenger.sendMessage(ChatColor.RED + "Warning: No text after -" + lineNumber + ". Setting buffer text to \"\" (empty string)");
 		}
 		// check the line length and cut the text if needed
-		if (newText.length() > MAX_SIGN_LINE_LENGTH) {
+		if (newTextBuilder.length() > MAX_SIGN_LINE_LENGTH) {
 			messenger.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
-			newText = new StringBuilder(newText.substring(0, MAX_SIGN_LINE_LENGTH));
+			newTextBuilder = new StringBuilder(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH));
 		}
-		this.signTextLines[lineIndex] = newText.toString();
-		return i;
+		this.signTextLines[lineIndex] = newTextBuilder.toString();
+		return index;
 	}
 
 	private void displayBuffer(Snipe snipe) {
@@ -307,7 +308,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 			FileReader inFile = new FileReader(store);
 			BufferedReader inStream = new BufferedReader(inFile);
 			for (int i = 0; i < this.signTextLines.length; i++) {
-				this.signLinesEnabled[i] = Boolean.valueOf(inStream.readLine());
+				this.signLinesEnabled[i] = Boolean.parseBoolean(inStream.readLine());
 				this.signTextLines[i] = inStream.readLine();
 			}
 			inStream.close();
@@ -330,9 +331,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 * Resets line enabled states to enabled.
 	 */
 	private void resetStates() {
-		for (int i = 0; i < this.signLinesEnabled.length; i++) {
-			this.signLinesEnabled[i] = true;
-		}
+		Arrays.fill(this.signLinesEnabled, true);
 	}
 
 	@Override

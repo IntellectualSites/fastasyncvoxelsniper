@@ -73,8 +73,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					if (this.fromExisting) {
 						boolean found = false;
 						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
-							Block currentBlock = this.getWorld()
-								.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+							Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
 							if (!currentBlock.getType().isEmpty()) {
 								found = true;
 								break;
@@ -86,8 +85,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						y--;
 					}
 					for (; y >= -targetBlock.getY(); --y) {
-						Block currentBlock = this.getWorld()
-							.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+						Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
 						if (currentBlock.getType().isEmpty() || (this.fillLiquid && currentBlock.isLiquid())) {
 							this.performer.perform(currentBlock);
 						} else {
