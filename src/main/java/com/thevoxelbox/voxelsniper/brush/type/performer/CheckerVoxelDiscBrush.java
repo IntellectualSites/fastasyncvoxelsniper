@@ -15,8 +15,8 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index].toLowerCase();
+		for (String param : parameters) {
+			String parameter = param.toLowerCase();
 			if (parameter.equals("info")) {
 				BrushProperties brushProperties = snipe.getBrushProperties();
 				messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");

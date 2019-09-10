@@ -32,7 +32,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private int minRoots = 1;
 	private int thickness = 1;
 	private int slopeChance = 40;
-	private int twistChance = 5; // This is a hidden value not available through Parameters. Otherwise messy.
 	private int heightMinimum = 14;
 	private int heightMaximum = 18;
 	private int branchLength = 8;
@@ -45,8 +44,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			try {
 				if (parameter.equalsIgnoreCase("info")) {
 					snipe.createMessageSender()
@@ -171,7 +169,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 					messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
 				}
 			} catch (NumberFormatException exception) {
-				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameters[index] + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
+				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! \"" + parameter + "\" is not a valid statement. Please use the 'info' parameter to display parameter info.");
 			}
 		}
 	}
@@ -276,7 +274,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		if (this.randGenerator.nextInt(100) >= 30) {
 			// If block is Air, create a leaf block.
 			Block block = world.getBlockAt(x, y, z);
-			if (block.isEmpty()) {
+			if (block.getType().isEmpty()) {
 				// Adds block to undo function.
 				if (!Tag.LEAVES.isTagged(getBlockType(x, y, z))) {
 					this.undo.put(clampY(x, y, z));
@@ -313,14 +311,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 				// For the purposes of this algorithm, logs aren't considered solid.
 				// If not solid then...
 				// Save for undo function
-				if (!Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
-					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
-					// Place log block.
-					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
-				} else {
+				if (Tag.LOGS.isTagged(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 					// If solid then...
 					// End loop
 					break;
+				} else {
+					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
+					// Place log block.
+					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
 				}
 				MaterialSet solids = MaterialSet.builder()
 					.with(Tag.LOGS)
@@ -392,7 +390,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	private void generateTrunkBlock(World world, int x, int y) {
 		Block block = world.getBlockAt(x, this.blockPositionY, y);
-		if (block.isEmpty()) {
+		if (block.getType().isEmpty()) {
 			// Adds block to undo function.
 			if (!Tag.LOGS.isTagged(getBlockType(x, this.blockPositionY, y))) {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));
@@ -424,12 +422,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 		}
 		// Generates a height for trunk.
 		int height = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
+		// This is a hidden value not available through Parameters. Otherwise messy.
+		int twistChance = 5;
 		for (int p = 0; p < height; p++) {
 			if (p > 3) {
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					xDirection *= -1;
 				}
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					zDirection *= -1;
 				}
 				if (this.randGenerator.nextInt(100) < xPreference) {
@@ -472,10 +472,10 @@ public class GenerateTreeBrush extends AbstractBrush {
 		int nextHeight = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
 		if (nextHeight > 4) {
 			for (int p = 0; p < nextHeight; p++) {
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					nextXDirection *= -1;
 				}
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					nextZDirection *= -1;
 				}
 				if (this.randGenerator.nextInt(100) < nextXPreference) {

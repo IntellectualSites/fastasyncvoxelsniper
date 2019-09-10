@@ -5,9 +5,9 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.NumericParser;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -104,7 +104,7 @@ public class OceanBrush extends AbstractBrush {
 			for (int z = minZ; z <= maxZ; z++) {
 				int currentHeight = getHeight(x, z);
 				int wLevelDiff = currentHeight - (this.waterLevel - 1);
-				int newSeaFloorLevel = ((this.waterLevel - wLevelDiff) >= LOW_CUT_LEVEL) ? this.waterLevel - wLevelDiff : LOW_CUT_LEVEL;
+				int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), LOW_CUT_LEVEL);
 				int highestY = world.getHighestBlockYAt(x, z);
 				// go down from highest Y block down to new sea floor
 				for (int y = highestY; y > newSeaFloorLevel; y--) {

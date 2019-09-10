@@ -35,20 +35,20 @@ public class StencilListBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		String secondParameter = parameters[1];
+		String secondParameter = parameters[0];
 		if (secondParameter.equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
 			messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
 			return;
 		} else if (secondParameter.equalsIgnoreCase("full")) {
-			this.pasteOption = (byte) 0;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 0;
+			this.pasteParam = 1;
 		} else if (secondParameter.equalsIgnoreCase("fill")) {
-			this.pasteOption = (byte) 1;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 1;
+			this.pasteParam = 1;
 		} else if (secondParameter.equalsIgnoreCase("replace")) {
-			this.pasteOption = (byte) 2;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 2;
+			this.pasteParam = 1;
 		}
 		try {
 			this.filename = parameters[1 + this.pasteParam];

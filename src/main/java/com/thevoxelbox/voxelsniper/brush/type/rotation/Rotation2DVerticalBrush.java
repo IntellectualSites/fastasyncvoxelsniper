@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.NumericParser;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -22,9 +22,9 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Double angle = NumericParser.parseDouble(parameters[1]);
+		Double angle = NumericParser.parseDouble(parameters[0]);
 		if (angle == null) {
-			messenger.sendMessage("Exception while parsing parameter: " + parameters[1]);
+			messenger.sendMessage("Exception while parsing parameter: " + parameters[0]);
 			return;
 		}
 		this.angle = Math.toRadians(angle);
@@ -62,14 +62,12 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		Block targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
-		int sy = targetBlock.getY() - this.brushSize;
-		int sz = targetBlock.getZ() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
-			sz = targetBlock.getZ() - this.brushSize;
+			int sz = targetBlock.getZ() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
-				sy = targetBlock.getY() - this.brushSize;
+				int sy = targetBlock.getY() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
-					Block block = this.clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
+					Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
 					this.snap[x][y][z] = block.getBlockData();
 					block.setType(Material.AIR);
 					sy++;

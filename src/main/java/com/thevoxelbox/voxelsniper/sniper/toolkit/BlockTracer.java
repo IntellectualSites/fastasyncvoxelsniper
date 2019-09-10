@@ -25,7 +25,7 @@ public class BlockTracer {
 			Block block = iterator.next();
 			this.lastBlock = this.targetBlock;
 			this.targetBlock = block;
-			if (!block.isEmpty()) {
+			if (!block.getType().isEmpty()) {
 				return;
 			}
 		}

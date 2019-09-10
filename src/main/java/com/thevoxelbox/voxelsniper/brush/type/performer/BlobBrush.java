@@ -20,8 +20,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
@@ -64,11 +63,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			for (int y = brushSizeDoubled; y >= 0; y--) {
 				for (int z = brushSizeDoubled; z >= 0; z--) {
-					if ((x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
-						splat[x][y][z] = 0;
-					} else {
-						splat[x][y][z] = 1;
-					}
+					splat[x][y][z] = (x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent ? 0 : 1;
 				}
 			}
 		}

@@ -74,7 +74,7 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 
 	private boolean findAir(int x, int y, int z) {
 		Block block = getBlockAtRelativeToTarget(x, y, z);
-		if (!block.isEmpty()) {
+		if (!block.getType().isEmpty()) {
 			return false;
 		}
 		resetBlock(block);

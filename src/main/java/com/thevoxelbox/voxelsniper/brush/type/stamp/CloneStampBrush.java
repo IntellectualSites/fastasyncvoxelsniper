@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.NumericParser;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,7 +17,7 @@ public class CloneStampBrush extends AbstractStampBrush {
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		String parameter = parameters[1];
+		String parameter = parameters[0];
 		if (parameter.equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
 			messenger.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");

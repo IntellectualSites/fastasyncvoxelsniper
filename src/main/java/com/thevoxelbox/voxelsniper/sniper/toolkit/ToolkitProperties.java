@@ -70,7 +70,7 @@ public class ToolkitProperties {
 	}
 
 	public BlockTracer createBlockTracer(Player player) {
-		int distance = this.blockTracerRange == null ? Bukkit.getViewDistance() * 16 - this.brushSize : this.blockTracerRange;
+		int distance = this.blockTracerRange == null ? Math.max(Bukkit.getViewDistance(), 3) * 16 - this.brushSize : this.blockTracerRange;
 		return new BlockTracer(player, distance);
 	}
 

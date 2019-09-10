@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,15 +24,19 @@ public class ScannerBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
 				return;
 			}
 			if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
-				this.depth = this.clamp(Integer.parseInt(parameter.substring(1)), DEPTH_MIN, DEPTH_MAX);
+				Integer depth = NumericParser.parseInteger(parameter.substring(1));
+				if (depth == null) {
+					messenger.sendMessage(ChatColor.RED + "Depth is not a number.");
+					return;
+				}
+				this.depth = depth < DEPTH_MIN ? DEPTH_MIN : Math.min(depth, DEPTH_MAX);
 				messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
 			} else {
 				messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
@@ -62,17 +67,7 @@ public class ScannerBrush extends AbstractBrush {
 		if (face == null) {
 			return;
 		}
-		this.scan(snipe, face);
-	}
-
-	private int clamp(int value, int min, int max) {
-		if (value < min) {
-			return min;
-		} else if (value > max) {
-			return max;
-		} else {
-			return value;
-		}
+		scan(snipe, face);
 	}
 
 	private void scan(Snipe snipe, BlockFace blockFace) {

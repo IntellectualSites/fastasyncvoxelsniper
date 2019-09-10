@@ -29,8 +29,7 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				snipe.createMessageSender()
 					.message(ChatColor.GOLD + "Splatter Ball brush Parameters:")

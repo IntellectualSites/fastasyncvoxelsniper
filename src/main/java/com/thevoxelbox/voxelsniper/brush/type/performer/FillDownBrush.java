@@ -16,8 +16,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				snipe.createMessageSender()
 					.message(ChatColor.GOLD + "Fill Down Parameters:")
@@ -74,9 +73,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					if (this.fromExisting) {
 						boolean found = false;
 						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
-							Block currentBlock = this.getWorld()
-								.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-							if (!currentBlock.isEmpty()) {
+							Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+							if (!currentBlock.getType().isEmpty()) {
 								found = true;
 								break;
 							}
@@ -87,9 +85,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						y--;
 					}
 					for (; y >= -targetBlock.getY(); --y) {
-						Block currentBlock = this.getWorld()
-							.getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-						if (currentBlock.isEmpty() || (this.fillLiquid && currentBlock.isLiquid())) {
+						Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+						if (currentBlock.getType().isEmpty() || (this.fillLiquid && currentBlock.isLiquid())) {
 							this.performer.perform(currentBlock);
 						} else {
 							break;

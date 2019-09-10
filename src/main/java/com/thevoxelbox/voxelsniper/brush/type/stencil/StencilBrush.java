@@ -49,21 +49,21 @@ public class StencilBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		String firstParameter = parameters[1];
+		String firstParameter = parameters[0];
 		if (firstParameter.equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
 			messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
 			messenger.sendMessage(ChatColor.BLUE + "Size of the stencils you are allowed to paste depends on rank (member / lite, sniper, curator, admin)");
 			return;
 		} else if (firstParameter.equalsIgnoreCase("full")) {
-			this.pasteOption = (byte) 0;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 0;
+			this.pasteParam = 1;
 		} else if (firstParameter.equalsIgnoreCase("fill")) {
-			this.pasteOption = (byte) 1;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 1;
+			this.pasteParam = 1;
 		} else if (firstParameter.equalsIgnoreCase("replace")) {
-			this.pasteOption = (byte) 2;
-			this.pasteParam = (byte) 1;
+			this.pasteOption = 2;
+			this.pasteParam = 1;
 		}
 		try {
 			this.filename = parameters[1 + this.pasteParam];
@@ -88,18 +88,18 @@ public class StencilBrush extends AbstractBrush {
 			this.firstPoint[2] = targetBlock.getY();
 			messenger.sendMessage(ChatColor.GRAY + "First point");
 			messenger.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
-			this.point = (byte) 2;
+			this.point = 2;
 		} else if (this.point == 2) {
 			this.secondPoint[0] = targetBlock.getX();
 			this.secondPoint[1] = targetBlock.getZ();
 			this.secondPoint[2] = targetBlock.getY();
 			if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(this.firstPoint[2] - this.secondPoint[2])) > 5000000) {
 				messenger.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
-				this.point = (byte) 1;
+				this.point = 1;
 			} else {
 				messenger.sendMessage(ChatColor.GRAY + "Second point");
 				messenger.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
-				this.point = (byte) 3;
+				this.point = 3;
 			}
 		} else if (this.point == 3) {
 			this.pastePoint[0] = targetBlock.getX();
@@ -107,7 +107,7 @@ public class StencilBrush extends AbstractBrush {
 			this.pastePoint[2] = targetBlock.getY();
 			messenger.sendMessage(ChatColor.GRAY + "Paste Reference point");
 			messenger.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
-			this.point = (byte) 1;
+			this.point = 1;
 			this.stencilSave(snipe);
 		}
 	}
@@ -292,9 +292,9 @@ public class StencilBrush extends AbstractBrush {
 			createParentDirs(file);
 			file.createNewFile();
 			DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-			int blockPositionX = (this.firstPoint[0] > this.secondPoint[0]) ? this.secondPoint[0] : this.firstPoint[0];
-			int blockPositionZ = (this.firstPoint[1] > this.secondPoint[1]) ? this.secondPoint[1] : this.firstPoint[1];
-			int blockPositionY = (this.firstPoint[2] > this.secondPoint[2]) ? this.secondPoint[2] : this.firstPoint[2];
+			int blockPositionX = Math.min(this.firstPoint[0], this.secondPoint[0]);
+			int blockPositionZ = Math.min(this.firstPoint[1], this.secondPoint[1]);
+			int blockPositionY = Math.min(this.firstPoint[2], this.secondPoint[2]);
 			out.writeShort(this.x);
 			out.writeShort(this.z);
 			out.writeShort(this.y);

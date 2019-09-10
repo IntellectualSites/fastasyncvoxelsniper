@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -26,15 +26,14 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		if (parameters[1].equalsIgnoreCase("info")) {
+		if (parameters[0].equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
 			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
 			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
 			messenger.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
 			return;
 		}
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (String parameter : parameters) {
 			if (Stream.of("block", "step", "woodstair", "cobblestair")
 				.anyMatch(parameter::equalsIgnoreCase)) {
 				this.stairType = parameter;

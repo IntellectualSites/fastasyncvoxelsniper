@@ -8,9 +8,10 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.math.MathHelper;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
+import net.mcparkour.common.math.MathHelper;
+import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,7 +21,7 @@ public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		if (parameters[1].equalsIgnoreCase("info")) {
+		if (parameters[0].equalsIgnoreCase("info")) {
 			messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
 			messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
 			return;
@@ -57,7 +58,7 @@ public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 			})
 			.paint();
 		for (Block smallSquareBlock : smallSquare.values()) {
-			Vector3i blockPosition = new Vector3i(smallSquareBlock);
+			Vector3i blockPosition = Vectors.of(smallSquareBlock);
 			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
 			Painters.square()
 				.center(smallSquareBlock)

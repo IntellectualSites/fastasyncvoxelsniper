@@ -37,7 +37,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
+		for (int i = 0; i < parameters.length; i++) {
 			String parameter = parameters[i].toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
 				snipe.createMessageSender()
@@ -62,10 +62,10 @@ public class PunishBrush extends AbstractPerformerBrush {
 			} else if (parameter.equalsIgnoreCase("-toggleSM")) {
 				this.specificPlayer = !this.specificPlayer;
 				if (this.specificPlayer) {
-					try {
-						this.punishPlayerName = parameters[++i];
-					} catch (IndexOutOfBoundsException exception) {
+					if (i + 1 >= parameters.length) {
 						messenger.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+					} else {
+						this.punishPlayerName = parameters[++i];
 					}
 				}
 			} else if (parameter.equalsIgnoreCase("-toggleSelf")) {
@@ -261,11 +261,8 @@ public class PunishBrush extends AbstractPerformerBrush {
 				addEffect(entity, PotionEffectType.JUMP);
 				break;
 			case FORCE:
-				Vector playerVector = getTargetBlock().getLocation()
-					.toVector();
-				Vector direction = entity.getLocation()
-					.toVector()
-					.clone();
+				Vector playerVector = getTargetBlock().getLocation().toVector();
+				Vector direction = entity.getLocation().toVector().clone();
 				direction.subtract(playerVector);
 				double length = direction.length();
 				double strength = (1 - (length / toolkitProperties.getBrushSize())) * this.punishLevel;

@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.util.painter;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import net.mcparkour.common.math.vector.Vector3i;
 
 public class BlockPainter implements Painter {
 
@@ -10,7 +10,7 @@ public class BlockPainter implements Painter {
 	private BlockSetter blockSetter;
 	private List<Vector3i> shifts = new ArrayList<>();
 
-	BlockPainter(Vector3i center, BlockSetter blockSetter) {
+	public BlockPainter(Vector3i center, BlockSetter blockSetter) {
 		this.center = center;
 		this.blockSetter = blockSetter;
 	}
@@ -31,7 +31,7 @@ public class BlockPainter implements Painter {
 	}
 
 	private void paintBlock(Vector3i shift) {
-		Vector3i position = this.center.add(shift);
+		Vector3i position = this.center.plus(shift);
 		this.blockSetter.setBlockAt(position);
 	}
 

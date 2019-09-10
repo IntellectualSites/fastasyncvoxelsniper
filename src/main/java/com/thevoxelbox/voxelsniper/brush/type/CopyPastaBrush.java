@@ -31,7 +31,7 @@ public class CopyPastaBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		String parameter = parameters[1];
+		String parameter = parameters[0];
 		if (parameter.equalsIgnoreCase("info")) {
 			snipe.createMessageSender()
 				.message(ChatColor.GOLD + "CopyPasta Parameters:")

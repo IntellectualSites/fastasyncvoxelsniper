@@ -15,21 +15,21 @@ public class RingBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			if (parameters[index].equalsIgnoreCase("info")) {
+		for (String parameter : parameters) {
+			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
 				messenger.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
 				return;
-			} else if (parameters[index].startsWith("true")) {
+			} else if (parameter.startsWith("true")) {
 				this.trueCircle = 0.5;
 				messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-			} else if (parameters[index].startsWith("false")) {
+			} else if (parameter.startsWith("false")) {
 				this.trueCircle = 0;
 				messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-			} else if (parameters[index].startsWith("ir")) {
+			} else if (parameter.startsWith("ir")) {
 				try {
-					this.innerSize = Double.parseDouble(parameters[index].replace("ir", ""));
+					this.innerSize = Double.parseDouble(parameter.replace("ir", ""));
 					messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
 				} catch (NumberFormatException exception) {
 					messenger.sendMessage(ChatColor.RED + "The parameters included are invalid.");

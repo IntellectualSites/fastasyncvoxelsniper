@@ -5,7 +5,7 @@ import java.util.Set;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.NumericParser;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -21,8 +21,8 @@ public class PullBrush extends AbstractBrush {
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
-		Double pinch = NumericParser.parseDouble(parameters[1]);
-		Double bubble = NumericParser.parseDouble(parameters[2]);
+		Double pinch = NumericParser.parseDouble(parameters[0]);
+		Double bubble = NumericParser.parseDouble(parameters[1]);
 		if (pinch == null || bubble == null) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.RED + "Invalid brush parameters!");
@@ -72,8 +72,7 @@ public class PullBrush extends AbstractBrush {
 					for (int y = brushSize; y >= -brushSize; y--) {
 						double volume = zSquared + xSquared + (y * y);
 						// Is this in the range of the brush?
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ)
-							.isEmpty()) {
+						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
 							int actualY = targetBlock.getY() + y;
 							// Starting strength and new Position
 							double str = this.getStr(volume / brushSizeSquared);
@@ -113,8 +112,7 @@ public class PullBrush extends AbstractBrush {
 					int actualX = targetBlock.getX() + x;
 					for (int y = -brushSize; y <= brushSize; y++) {
 						double volume = (xSquared + Math.pow(y, 2) + zSquared);
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ)
-							.isEmpty()) {
+						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
 							int actualY = targetBlock.getY() + y;
 							lastY = actualY + (int) (this.voxelHeight * this.getStr(volume / brushSizeSquared));
 							Block clamp = clampY(actualX, lastY, actualZ);

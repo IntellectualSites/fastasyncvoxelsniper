@@ -54,8 +54,8 @@ public class HeatRayBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index].toLowerCase();
+		for (String s : parameters) {
+			String parameter = s.toLowerCase();
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
 				messenger.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
@@ -63,13 +63,13 @@ public class HeatRayBrush extends AbstractBrush {
 				messenger.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
 			}
 			if (parameter.startsWith("oct")) {
-				this.octaves = Integer.valueOf(parameter.replace("oct", ""));
+				this.octaves = Integer.parseInt(parameter.replace("oct", ""));
 				messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
 			} else if (parameter.startsWith("amp")) {
-				this.amplitude = Double.valueOf(parameter.replace("amp", ""));
+				this.amplitude = Double.parseDouble(parameter.replace("amp", ""));
 				messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
 			} else if (parameter.startsWith("freq")) {
-				this.frequency = Double.valueOf(parameter.replace("freq", ""));
+				this.frequency = Double.parseDouble(parameter.replace("freq", ""));
 				messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
 			}
 		}

@@ -26,8 +26,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int i = 1; i < parameters.length; i++) {
-			String parameter = parameters[i];
+		for (String parameter : parameters) {
 			if (parameter.equalsIgnoreCase("info")) {
 				messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
 				messenger.sendMessage(ChatColor.AQUA + "/b t treetype");
@@ -73,8 +72,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Block targetBlock = getTargetBlock();
 		World world = targetBlock.getWorld();
 		return IntStream.range(1, (world.getMaxHeight() - 1 - targetBlock.getY()))
-			.filter(i -> targetBlock.getRelative(0, i + 1, 0)
-				.isEmpty())
+			.filter(i -> targetBlock.getRelative(0, i + 1, 0).getType().isEmpty())
 			.findFirst()
 			.orElse(0);
 	}
@@ -142,7 +140,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		@Override
 		public boolean isEmpty(int x, int y, int z) {
 			Block block = this.targetWorld.getBlockAt(x, y, z);
-			return block.isEmpty();
+			return block.getType().isEmpty();
 		}
 	}
 }

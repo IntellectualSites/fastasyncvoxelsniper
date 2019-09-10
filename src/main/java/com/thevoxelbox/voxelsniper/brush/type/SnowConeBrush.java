@@ -15,7 +15,7 @@ public class SnowConeBrush extends AbstractBrush {
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
-		String firstParameter = parameters[1];
+		String firstParameter = parameters[0];
 		if (firstParameter.equalsIgnoreCase("info")) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
@@ -43,15 +43,10 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	private void addSnow(Snipe snipe, Block targetBlock) {
-		int brushSize;
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		if (getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty()) {
-			brushSize = 0;
-		} else {
-			brushSize = blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
-		}
+		int brushSize = getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty() ? 0 : blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
 		int brushSizeDoubled = 2 * brushSize;
 		Material[][] snowCone = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
 		BlockData[][] snowConeData = new BlockData[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowCone

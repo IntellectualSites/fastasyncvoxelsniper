@@ -20,7 +20,7 @@ public class LineBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
-		if (parameters[1].equalsIgnoreCase("info")) {
+		if (parameters[0].equalsIgnoreCase("info")) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
 		}

@@ -12,8 +12,9 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.NumericParser;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.Vectors;
+import net.mcparkour.common.math.vector.Vector3i;
+import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,8 +33,7 @@ public class ErodeBrush extends AbstractBrush {
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		for (int index = 1; index < parameters.length; index++) {
-			String parameter = parameters[index];
+		for (String parameter : parameters) {
 			Preset preset = Preset.getPreset(parameter);
 			if (preset != null) {
 				try {
@@ -143,8 +143,7 @@ public class ErodeBrush extends AbstractBrush {
 						int count = 0;
 						Map<BlockWrapper, Integer> blockCount = new HashMap<>();
 						for (Vector3i vector : FACES_TO_CHECK) {
-							Vector relativePosition = new Vector3i(currentPosition).add(vector)
-								.toBukkit();
+							Vector relativePosition = Vectors.toBukkit(Vectors.of(currentPosition).plus(vector));
 							BlockWrapper relativeBlock = blockChangeTracker.get(relativePosition, currentIteration);
 							if (!(relativeBlock.isEmpty() || relativeBlock.isLiquid())) {
 								count++;
@@ -188,8 +187,8 @@ public class ErodeBrush extends AbstractBrush {
 							continue;
 						}
 						int count = (int) FACES_TO_CHECK.stream()
-							.map(vector -> new Vector3i(currentPosition).add(vector))
-							.map(Vector3i::toBukkit)
+							.map(vector -> Vectors.of(currentPosition).plus(vector))
+							.map(Vectors::toBukkit)
 							.map(relativePosition -> blockChangeTracker.get(relativePosition, currentIteration))
 							.filter(relativeBlock -> relativeBlock.isEmpty() || relativeBlock.isLiquid())
 							.count();

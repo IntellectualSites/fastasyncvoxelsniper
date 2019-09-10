@@ -1,2 +1,1 @@
-val artifact: String by settings
-rootProject.name = artifact
+rootProject.name = extra.properties["name"] as String
