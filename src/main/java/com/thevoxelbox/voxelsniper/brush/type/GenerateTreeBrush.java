@@ -32,7 +32,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private int minRoots = 1;
 	private int thickness = 1;
 	private int slopeChance = 40;
-	private int twistChance = 5; // This is a hidden value not available through Parameters. Otherwise messy.
 	private int heightMinimum = 14;
 	private int heightMaximum = 18;
 	private int branchLength = 8;
@@ -423,12 +422,14 @@ public class GenerateTreeBrush extends AbstractBrush {
 		}
 		// Generates a height for trunk.
 		int height = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
+		// This is a hidden value not available through Parameters. Otherwise messy.
+		int twistChance = 5;
 		for (int p = 0; p < height; p++) {
 			if (p > 3) {
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					xDirection *= -1;
 				}
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					zDirection *= -1;
 				}
 				if (this.randGenerator.nextInt(100) < xPreference) {
@@ -471,10 +472,10 @@ public class GenerateTreeBrush extends AbstractBrush {
 		int nextHeight = this.randGenerator.nextInt(this.heightMaximum - this.heightMinimum + 1) + this.heightMinimum;
 		if (nextHeight > 4) {
 			for (int p = 0; p < nextHeight; p++) {
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					nextXDirection *= -1;
 				}
-				if (this.randGenerator.nextInt(100) <= this.twistChance) {
+				if (this.randGenerator.nextInt(100) <= twistChance) {
 					nextZDirection *= -1;
 				}
 				if (this.randGenerator.nextInt(100) < nextXPreference) {
