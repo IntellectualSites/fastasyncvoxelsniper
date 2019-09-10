@@ -39,7 +39,6 @@ public class MoveBrush extends AbstractBrush {
 		.with(MaterialTags.PRESSURE_PLATES)
 		.with(MaterialTags.SIGNS)
 		.with(MaterialTags.BEDS)
-		.with(MaterialTags.SIGNS)
 		.with(MaterialSets.REDSTONE_TORCHES)
 		.with(MaterialSets.TORCHES)
 		.with(MaterialSets.FLORA)
