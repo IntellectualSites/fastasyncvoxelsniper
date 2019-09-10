@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.util.painter.setter;
 
-import com.thevoxelbox.voxelsniper.util.Builder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-public class BlockDataSetterBuilder implements Builder<BlockDataSetter> {
+public class BlockDataSetterBuilder {
 
 	private World world;
 	private BlockData blockData;
@@ -43,7 +42,6 @@ public class BlockDataSetterBuilder implements Builder<BlockDataSetter> {
 		return this;
 	}
 
-	@Override
 	public BlockDataSetter build() {
 		if (this.world == null) {
 			throw new RuntimeException("World must be specified");

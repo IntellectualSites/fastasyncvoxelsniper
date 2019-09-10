@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
-import com.thevoxelbox.voxelsniper.util.math.MathHelper;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.Vectors;
+import net.mcparkour.common.math.MathHelper;
+import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -15,12 +16,12 @@ public class SpherePainter implements Painter {
 	private BlockSetter blockSetter;
 
 	public SpherePainter center(Block block) {
-		Vector3i center = new Vector3i(block);
+		Vector3i center = Vectors.of(block);
 		return center(center);
 	}
 
 	public SpherePainter center(Location location) {
-		Vector3i center = new Vector3i(location);
+		Vector3i center = Vectors.of(location);
 		return center(center);
 	}
 

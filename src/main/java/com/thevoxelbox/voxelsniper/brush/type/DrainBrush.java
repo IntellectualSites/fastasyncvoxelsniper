@@ -5,8 +5,9 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.math.MathHelper;
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
+import com.thevoxelbox.voxelsniper.util.Vectors;
+import net.mcparkour.common.math.MathHelper;
+import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -64,17 +65,17 @@ public class DrainBrush extends AbstractBrush {
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
-		Vector3i position = new Vector3i(targetBlock);
+		Vector3i position = Vectors.of(targetBlock);
 		if (this.disc) {
 			for (int x = brushSize; x >= 0; x--) {
 				double xSquared = MathHelper.square(x);
 				for (int y = brushSize; y >= 0; y--) {
 					double ySquared = MathHelper.square(y);
 					if (xSquared + ySquared <= brushSizeSquared) {
-						Material typePlusPlus = getBlockType(position.add(x, 0, y));
+						Material typePlusPlus = getBlockType(position.plus(x, 0, y));
 						if (typePlusPlus == Material.WATER || typePlusPlus == Material.LAVA) {
-							undo.put(clampY(position.add(x, 0, y)));
-							setBlockType(position.add(x, 0, y), Material.AIR);
+							undo.put(clampY(position.plus(x, 0, y)));
+							setBlockType(position.plus(x, 0, y), Material.AIR);
 						}
 						Material typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
 						if (typePlusMinus == Material.WATER || typePlusMinus == Material.LAVA) {

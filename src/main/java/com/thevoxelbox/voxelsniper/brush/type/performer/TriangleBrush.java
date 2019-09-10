@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import net.mcparkour.common.math.MathHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 

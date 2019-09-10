@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.util.painter.setter;
 
-import com.thevoxelbox.voxelsniper.util.math.Vector3i;
 import com.thevoxelbox.voxelsniper.util.painter.BlockSetter;
+import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
