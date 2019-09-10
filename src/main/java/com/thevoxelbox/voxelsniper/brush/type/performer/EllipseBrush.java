@@ -4,7 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import net.mcparkour.common.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

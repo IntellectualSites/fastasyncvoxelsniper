@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
 import com.thevoxelbox.voxelsniper.util.Vectors;
-import net.mcparkour.common.math.MathHelper;
-import net.mcparkour.common.math.vector.Vector3i;
+import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 

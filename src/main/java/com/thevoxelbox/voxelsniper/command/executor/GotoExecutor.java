@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import net.mcparkour.common.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;

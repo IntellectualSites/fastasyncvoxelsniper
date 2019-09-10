@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
-import net.mcparkour.common.math.vector.Vector3i;
+import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 
 public interface BlockSetter {
 

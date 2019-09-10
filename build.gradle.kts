@@ -3,7 +3,6 @@ import net.mcparkour.migle.attributes.ApiVersion
 plugins {
 	java
 	id("net.mcparkour.migle.migle-paper") version "1.1.0"
-	id("com.github.johnrengelman.shadow") version "5.1.0"
 }
 
 java {
@@ -22,9 +21,6 @@ repositories {
 }
 
 dependencies {
-	implementation("net.mcparkour:common-math:1.0.0")
-	implementation("net.mcparkour:common-text:1.0.0")
-	implementation("net.mcparkour:common-reflection:1.0.0")
 	compileOnly("org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
 }

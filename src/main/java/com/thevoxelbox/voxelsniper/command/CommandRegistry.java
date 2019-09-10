@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
-import net.mcparkour.common.reflection.Reflections;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
@@ -22,8 +22,17 @@ public class CommandRegistry {
 
 	public void register(Command command) {
 		Server server = this.plugin.getServer();
-		Method method = Reflections.getMethod(Server.class, "getCommandMap");
-		CommandMap commandMap = (CommandMap) Reflections.invokeMethod(method, server);
+		CommandMap commandMap = getCommandMap(server);
 		commandMap.register("voxel_sniper", command);
+	}
+
+	@SuppressWarnings("JavaReflectionMemberAccess")
+	private CommandMap getCommandMap(Server server) {
+		try {
+			Method method = Server.class.getDeclaredMethod("getCommandMap");
+			return (CommandMap) method.invoke(server);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
+			throw new RuntimeException(exception);
+		}
 	}
 }

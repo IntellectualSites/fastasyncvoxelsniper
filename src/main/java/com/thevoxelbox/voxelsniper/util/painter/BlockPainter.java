@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.util.painter;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.mcparkour.common.math.vector.Vector3i;
+import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 
 public class BlockPainter implements Painter {
 

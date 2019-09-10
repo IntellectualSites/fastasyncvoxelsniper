@@ -3,7 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import net.mcparkour.common.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;

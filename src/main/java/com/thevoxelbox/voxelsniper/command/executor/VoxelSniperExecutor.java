@@ -13,7 +13,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import net.mcparkour.common.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
