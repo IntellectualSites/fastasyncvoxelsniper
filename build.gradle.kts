@@ -2,7 +2,7 @@ import net.mcparkour.migle.attributes.ApiVersion
 
 plugins {
 	java
-	id("net.mcparkour.migle.migle-paper") version "1.1.0"
+	id("net.mcparkour.migle.migle-bukkit") version "1.1.0"
 	id("com.github.johnrengelman.shadow") version "5.1.0"
 }
 
@@ -28,7 +28,7 @@ dependencies {
 	compileOnly("org.jetbrains:annotations:17.0.0")
 }
 
-miglePaper {
+migleBukkit {
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
 	name = "VoxelSniper"
 	apiVersion = ApiVersion.VERSION_1_14
