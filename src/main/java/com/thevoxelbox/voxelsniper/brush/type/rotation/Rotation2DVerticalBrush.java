@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -100,7 +101,7 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 						int yy = y - this.brushSize;
 						BlockData blockData = this.snap[y][x][z];
 						Material type = blockData.getMaterial();
-						if (type.isEmpty()) {
+						if (Materials.isEmpty(type)) {
 							continue;
 						}
 						setBlockData(targetBlock.getX() + yy, targetBlock.getY() + (int) newX, targetBlock.getZ() + (int) newZ, blockData);

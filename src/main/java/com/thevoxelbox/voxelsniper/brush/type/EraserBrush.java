@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -17,8 +16,8 @@ public class EraserBrush extends AbstractBrush {
 
 	private static final MaterialSet EXCLUSIVE_MATERIALS = MaterialSet.builder()
 		.with(Tag.SAND)
-		.with(MaterialTags.SANDSTONES)
-		.with(MaterialTags.RED_SANDSTONES)
+		.with(MaterialSets.SANDSTONES)
+		.with(MaterialSets.RED_SANDSTONES)
 		.with(MaterialSets.AIRS)
 		.with(MaterialSets.STONES)
 		.with(MaterialSets.GRASSES)

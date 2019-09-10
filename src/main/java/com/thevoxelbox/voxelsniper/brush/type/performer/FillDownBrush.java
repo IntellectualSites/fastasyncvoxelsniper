@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -74,7 +75,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						boolean found = false;
 						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
 							Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-							if (!currentBlock.getType().isEmpty()) {
+							if (!Materials.isEmpty(currentBlock.getType())) {
 								found = true;
 								break;
 							}
@@ -86,7 +87,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					}
 					for (; y >= -targetBlock.getY(); --y) {
 						Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-						if (currentBlock.getType().isEmpty() || (this.fillLiquid && currentBlock.isLiquid())) {
+						if (Materials.isEmpty(currentBlock.getType()) || (this.fillLiquid && currentBlock.isLiquid())) {
 							this.performer.perform(currentBlock);
 						} else {
 							break;

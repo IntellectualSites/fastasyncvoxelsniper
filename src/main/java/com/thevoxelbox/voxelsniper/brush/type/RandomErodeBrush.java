@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -279,7 +280,7 @@ public class RandomErodeBrush extends AbstractBrush {
 		private BlockWrapper(Block block) {
 			this.nativeBlock = block;
 			this.nativeType = block.getType();
-			this.solid = !this.nativeType.isEmpty() && this.nativeType != Material.WATER && this.nativeType != Material.LAVA;
+			this.solid = !Materials.isEmpty(this.nativeType) && this.nativeType != Material.WATER && this.nativeType != Material.LAVA;
 		}
 
 		public Block getNativeBlock() {

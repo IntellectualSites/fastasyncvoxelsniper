@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -274,7 +275,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 		if (this.randGenerator.nextInt(100) >= 30) {
 			// If block is Air, create a leaf block.
 			Block block = world.getBlockAt(x, y, z);
-			if (block.getType().isEmpty()) {
+			if (Materials.isEmpty(block.getType())) {
 				// Adds block to undo function.
 				if (!Tag.LEAVES.isTagged(getBlockType(x, y, z))) {
 					this.undo.put(clampY(x, y, z));
@@ -390,7 +391,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	private void generateTrunkBlock(World world, int x, int y) {
 		Block block = world.getBlockAt(x, this.blockPositionY, y);
-		if (block.getType().isEmpty()) {
+		if (Materials.isEmpty(block.getType())) {
 			// Adds block to undo function.
 			if (!Tag.LOGS.isTagged(getBlockType(x, this.blockPositionY, y))) {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));

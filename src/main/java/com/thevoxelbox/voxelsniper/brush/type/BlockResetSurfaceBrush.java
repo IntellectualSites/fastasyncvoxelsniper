@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
@@ -30,7 +30,7 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
 		.with(Tag.DOORS)
 		.with(Tag.TRAPDOORS)
-		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.SIGNS)
 		.with(MaterialSets.CHESTS)
 		.with(MaterialSets.FENCE_GATES)
 		.with(MaterialSets.AIRS)
@@ -74,7 +74,7 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 
 	private boolean findAir(int x, int y, int z) {
 		Block block = getBlockAtRelativeToTarget(x, y, z);
-		if (!block.getType().isEmpty()) {
+		if (!Materials.isEmpty(block.getType())) {
 			return false;
 		}
 		resetBlock(block);

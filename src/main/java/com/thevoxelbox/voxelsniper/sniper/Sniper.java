@@ -14,6 +14,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -65,7 +66,7 @@ public class Sniper {
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemInHand = inventory.getItemInMainHand();
 		Material itemType = itemInHand.getType();
-		if (itemType.isEmpty()) {
+		if (Materials.isEmpty(itemType)) {
 			return getToolkit(DEFAULT_TOOLKIT_NAME);
 		}
 		return getToolkit(itemType);
@@ -126,7 +127,7 @@ public class Sniper {
 			SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
 			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 				if (toolAction == ToolAction.ARROW) {
-					if (targetBlock.getType().isEmpty()) {
+					if (Materials.isEmpty(targetBlock.getType())) {
 						toolkitProperties.resetBlockData();
 					} else {
 						Material type = targetBlock.getType();
@@ -135,7 +136,7 @@ public class Sniper {
 					messenger.sendBlockTypeMessage();
 					return true;
 				} else if (toolAction == ToolAction.GUNPOWDER) {
-					if (targetBlock.getType().isEmpty()) {
+					if (Materials.isEmpty(targetBlock.getType())) {
 						toolkitProperties.resetBlockData();
 					} else {
 						BlockData blockData = targetBlock.getBlockData();
@@ -170,7 +171,7 @@ public class Sniper {
 			return false;
 		} else {
 			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-				if (targetBlock.getType().isEmpty()) {
+				if (Materials.isEmpty(targetBlock.getType())) {
 					player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
 					return true;
 				}

@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -70,7 +71,7 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	}
 
 	private boolean checkExclusions(Material material) {
-		return (!this.airExcluded || !material.isEmpty()) && (!this.waterExcluded || material != Material.WATER);
+		return (!this.airExcluded || !Materials.isEmpty(material)) && (!this.waterExcluded || material != Material.WATER);
 	}
 
 	@Override

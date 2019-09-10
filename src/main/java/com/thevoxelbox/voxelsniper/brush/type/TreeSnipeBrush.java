@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.BlockChangeDelegate;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -72,7 +73,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		Block targetBlock = getTargetBlock();
 		World world = targetBlock.getWorld();
 		return IntStream.range(1, (world.getMaxHeight() - 1 - targetBlock.getY()))
-			.filter(i -> targetBlock.getRelative(0, i + 1, 0).getType().isEmpty())
+			.filter(i -> Materials.isEmpty(targetBlock.getRelative(0, i + 1, 0).getType()))
 			.findFirst()
 			.orElse(0);
 	}
@@ -140,7 +141,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		@Override
 		public boolean isEmpty(int x, int y, int z) {
 			Block block = this.targetWorld.getBlockAt(x, y, z);
-			return block.getType().isEmpty();
+			return Materials.isEmpty(block.getType());
 		}
 	}
 }

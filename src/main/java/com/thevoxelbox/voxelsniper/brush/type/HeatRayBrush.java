@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.Random;
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -35,7 +34,7 @@ public class HeatRayBrush extends AbstractBrush {
 		.with(Tag.WOODEN_TRAPDOORS)
 		.with(Tag.WOODEN_PRESSURE_PLATES)
 		.with(Tag.ICE)
-		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.SIGNS)
 		.with(MaterialSets.WOODEN_FENCES)
 		.with(MaterialSets.FENCE_GATES)
 		.with(MaterialSets.SNOWS)

@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import java.util.HashSet;
 import java.util.Set;
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -10,6 +9,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -59,8 +59,8 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			.with(Tag.DOORS)
 			.with(Tag.RAILS)
 			.with(Tag.BUTTONS)
-			.with(MaterialTags.SIGNS)
-			.with(MaterialTags.PRESSURE_PLATES)
+			.with(MaterialSets.SIGNS)
+			.with(MaterialSets.PRESSURE_PLATES)
 			.with(MaterialSets.FLOWERS)
 			.with(MaterialSets.MUSHROOMS)
 			.with(MaterialSets.TORCHES)
@@ -88,7 +88,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 	protected void setBlockFill(StampBrushBlockWrapper blockWrapper) {
 		Block targetBlock = getTargetBlock();
 		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		if (block.getType().isEmpty()) {
+		if (Materials.isEmpty(block.getType())) {
 			this.undo.put(block);
 			block.setBlockData(blockWrapper.getBlockData());
 		}
@@ -157,7 +157,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 					this.fall.add(block);
 				} else if (falling(material)) {
 					this.drop.add(block);
-				} else if (!material.isEmpty()) {
+				} else if (!Materials.isEmpty(material)) {
 					this.solid.add(block);
 					this.setBlockFill(block);
 				}
@@ -197,7 +197,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 					this.fall.add(block);
 				} else if (this.falling(material)) {
 					this.drop.add(block);
-				} else if (!material.isEmpty()) {
+				} else if (!Materials.isEmpty(material)) {
 					this.solid.add(block);
 					this.setBlock(block);
 				}

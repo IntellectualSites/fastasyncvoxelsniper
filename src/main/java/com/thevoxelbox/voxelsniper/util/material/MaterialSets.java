@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
-import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 
@@ -124,13 +123,27 @@ public final class MaterialSets {
 		.add(Material.GRAVEL)
 		.build();
 
+	public static final MaterialSet SANDSTONES = MaterialSet.builder()
+		.add(Material.SANDSTONE)
+		.add(Material.CHISELED_SANDSTONE)
+		.add(Material.CUT_SANDSTONE)
+		.add(Material.SMOOTH_SANDSTONE)
+		.build();
+
+	public static final MaterialSet RED_SANDSTONES = MaterialSet.builder()
+		.add(Material.RED_SANDSTONE)
+		.add(Material.CHISELED_RED_SANDSTONE)
+		.add(Material.CUT_RED_SANDSTONE)
+		.add(Material.SMOOTH_RED_SANDSTONE)
+		.build();
+
 	public static final MaterialSet OVERRIDEABLE = MaterialSet.builder()
 		.with(STONES)
 		.with(GRASSES)
 		.with(DIRT)
+		.with(SANDSTONES)
+		.with(RED_SANDSTONES)
 		.with(Tag.SAND)
-		.with(MaterialTags.SANDSTONES)
-		.with(MaterialTags.RED_SANDSTONES)
 		.add(Material.GRAVEL)
 		.add(Material.MOSSY_COBBLESTONE)
 		.add(Material.OBSIDIAN)
@@ -138,9 +151,63 @@ public final class MaterialSets {
 		.add(Material.CLAY)
 		.build();
 
+	public static final MaterialSet ORES = MaterialSet.builder()
+		.add(Material.COAL_ORE)
+		.add(Material.DIAMOND_ORE)
+		.add(Material.EMERALD_ORE)
+		.add(Material.GOLD_ORE)
+		.add(Material.IRON_ORE)
+		.add(Material.LAPIS_ORE)
+		.add(Material.NETHER_QUARTZ_ORE)
+		.add(Material.REDSTONE_ORE)
+		.build();
+
 	public static final MaterialSet OVERRIDEABLE_WITH_ORES = MaterialSet.builder()
 		.with(OVERRIDEABLE)
-		.with(MaterialTags.ORES)
+		.with(ORES)
+		.build();
+
+	public static final MaterialSet PISTONS = MaterialSet.builder()
+		.add(Material.MOVING_PISTON)
+		.add(Material.PISTON)
+		.add(Material.PISTON_HEAD)
+		.add(Material.STICKY_PISTON)
+		.build();
+
+	public static final MaterialSet PRESSURE_PLATES = MaterialSet.builder()
+		.add(Material.ACACIA_PRESSURE_PLATE)
+		.add(Material.BIRCH_PRESSURE_PLATE)
+		.add(Material.DARK_OAK_PRESSURE_PLATE)
+		.add(Material.JUNGLE_PRESSURE_PLATE)
+		.add(Material.OAK_PRESSURE_PLATE)
+		.add(Material.SPRUCE_PRESSURE_PLATE)
+		.add(Material.STONE_PRESSURE_PLATE)
+		.add(Material.LIGHT_WEIGHTED_PRESSURE_PLATE)
+		.add(Material.HEAVY_WEIGHTED_PRESSURE_PLATE)
+		.build();
+
+	public static final MaterialSet SIGNS = MaterialSet.builder()
+		.add(Material.SIGN)
+		.add(Material.WALL_SIGN)
+		.build();
+
+	public static final MaterialSet BEDS = MaterialSet.builder()
+		.add(Material.BLACK_BED)
+		.add(Material.BLUE_BED)
+		.add(Material.BROWN_BED)
+		.add(Material.CYAN_BED)
+		.add(Material.GRAY_BED)
+		.add(Material.GREEN_BED)
+		.add(Material.LIGHT_GRAY_BED)
+		.add(Material.LIGHT_BLUE_BED)
+		.add(Material.LIME_BED)
+		.add(Material.MAGENTA_BED)
+		.add(Material.ORANGE_BED)
+		.add(Material.PINK_BED)
+		.add(Material.PURPLE_BED)
+		.add(Material.RED_BED)
+		.add(Material.WHITE_BED)
+		.add(Material.YELLOW_BED)
 		.build();
 
 	private MaterialSets() {

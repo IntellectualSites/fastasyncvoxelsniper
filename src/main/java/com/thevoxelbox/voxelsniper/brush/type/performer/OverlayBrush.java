@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -97,7 +98,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 	}
 
 	private boolean isOverrideableMaterial(Material material) {
-		if (this.allBlocks && !material.isEmpty()) {
+		if (this.allBlocks && !Materials.isEmpty(material)) {
 			return true;
 		}
 		return MaterialSets.OVERRIDEABLE.contains(material);
@@ -117,8 +118,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							int targetBlockX = targetBlock.getX();
 							int targetBlockZ = targetBlock.getZ();
-							if (!getBlockType(targetBlockX + x, y - 1, targetBlockZ + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
-								if (getBlockType(targetBlockX + x, y + 1, targetBlockZ + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
+							if (!Materials.isEmpty(getBlockType(targetBlockX + x, y - 1, targetBlockZ + z))) { // if not a floating block (like one of Notch'world pools)
+								if (Materials.isEmpty(getBlockType(targetBlockX + x, y + 1, targetBlockZ + z))) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
 									if (this.allBlocks) {
 										for (int index = 1; (index < this.depth + 1); index++) {

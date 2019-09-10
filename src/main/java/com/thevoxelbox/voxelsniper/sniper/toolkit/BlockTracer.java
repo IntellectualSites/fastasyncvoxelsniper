@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import java.util.Iterator;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class BlockTracer {
 			Block block = iterator.next();
 			this.lastBlock = this.targetBlock;
 			this.targetBlock = block;
-			if (!block.getType().isEmpty()) {
+			if (!Materials.isEmpty(block.getType())) {
 				return;
 			}
 		}

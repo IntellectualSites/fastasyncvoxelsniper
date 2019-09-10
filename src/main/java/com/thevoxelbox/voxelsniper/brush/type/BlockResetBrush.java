@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -15,7 +14,7 @@ public class BlockResetBrush extends AbstractBrush {
 
 	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
 		.with(Tag.DOORS)
-		.with(MaterialTags.SIGNS)
+		.with(MaterialSets.SIGNS)
 		.with(MaterialSets.CHESTS)
 		.with(MaterialSets.REDSTONE_TORCHES)
 		.with(MaterialSets.FENCE_GATES)

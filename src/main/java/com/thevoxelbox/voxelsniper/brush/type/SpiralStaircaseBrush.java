@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import net.mcparkour.common.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -243,13 +244,13 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					Material blockType = getBlockType(position);
 					if (spiral[x][i][z] == 0) {
 						if (i == voxelHeight - 1) {
-							if (!blockType.isEmpty()) {
+							if (!Materials.isEmpty(blockType)) {
 								undo.put(clampY(position));
 							}
 							setBlockType(position, Material.AIR);
 						} else {
 							if (!((this.stairType.equalsIgnoreCase("woodstair") || this.stairType.equalsIgnoreCase("cobblestair")) && spiral[x][i + 1][z] == 1)) {
-								if (!blockType.isEmpty()) {
+								if (!Materials.isEmpty(blockType)) {
 									undo.put(clampY(position));
 								}
 								setBlockType(position, Material.AIR);
@@ -496,7 +497,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					Vector3i position = new Vector3i(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z);
 					Material blockType = getBlockType(position);
 					if (spiral[x][i][z] == 0) {
-						if (!blockType.isEmpty()) {
+						if (!Materials.isEmpty(blockType)) {
 							undo.put(clampY(position));
 						}
 						setBlockType(position, Material.AIR);

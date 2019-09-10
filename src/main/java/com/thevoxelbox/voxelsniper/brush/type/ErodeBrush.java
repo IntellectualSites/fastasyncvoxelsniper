@@ -13,6 +13,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import net.mcparkour.common.math.vector.Vector3i;
 import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
@@ -316,7 +317,7 @@ public class ErodeBrush extends AbstractBrush {
 
 		public boolean isEmpty() {
 			Material material = this.blockData.getMaterial();
-			return material.isEmpty();
+			return Materials.isEmpty(material);
 		}
 
 		public boolean isLiquid() {

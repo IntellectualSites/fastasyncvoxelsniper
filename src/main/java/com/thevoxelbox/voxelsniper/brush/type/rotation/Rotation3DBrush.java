@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -137,7 +138,7 @@ public class Rotation3DBrush extends AbstractBrush {
 						// after all three, though.
 						BlockData blockData = this.snap[x][y][z];
 						Material type = blockData.getMaterial();
-						if (type.isEmpty()) {
+						if (Materials.isEmpty(type)) {
 							continue;
 						}
 						this.setBlockData(targetBlock.getX() + (int) newxyX, targetBlock.getY() + (int) newyzY, targetBlock.getZ() + (int) newyzZ, blockData);

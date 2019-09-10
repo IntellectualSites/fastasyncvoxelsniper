@@ -5,6 +5,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -149,7 +150,7 @@ public class CopyPastaBrush extends AbstractBrush {
 							block = clampY(this.pastePoint[0] + this.offsetPoint[0] + i, this.pastePoint[1] + this.offsetPoint[1] + j, this.pastePoint[2] + this.offsetPoint[2] + k);
 							break;
 					}
-					if (!(this.blockArray[currentPosition].isEmpty() && !this.pasteAir)) {
+					if (!(Materials.isEmpty(this.blockArray[currentPosition]) && !this.pasteAir)) {
 						BlockData blockData = block.getBlockData();
 						if (block.getType() != this.blockArray[currentPosition] || !blockData.equals(this.dataArray[currentPosition])) {
 							undo.put(block);

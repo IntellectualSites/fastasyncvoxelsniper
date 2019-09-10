@@ -4,6 +4,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -33,7 +34,7 @@ public class SnowConeBrush extends AbstractBrush {
 		} else {
 			Block blockAbove = targetBlock.getRelative(BlockFace.UP);
 			Material type = blockAbove.getType();
-			if (type.isEmpty()) {
+			if (Materials.isEmpty(type)) {
 				addSnow(snipe, blockAbove);
 			} else {
 				SnipeMessenger messenger = snipe.createMessenger();
@@ -46,7 +47,7 @@ public class SnowConeBrush extends AbstractBrush {
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		int brushSize = getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty() ? 0 : blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
+		int brushSize = Materials.isEmpty(getBlockType(blockPositionX, blockPositionY, blockPositionZ)) ? 0 : blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
 		int brushSizeDoubled = 2 * brushSize;
 		Material[][] snowCone = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
 		BlockData[][] snowConeData = new BlockData[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowCone
@@ -57,7 +58,7 @@ public class SnowConeBrush extends AbstractBrush {
 				boolean flag = true;
 				for (int i = 0; i < 10; i++) { // overlay
 					if (flag) {
-						if ((getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty() || getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.SNOW) && !getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z).isEmpty() && getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.SNOW) {
+						if ((Materials.isEmpty(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) || getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.SNOW) && !Materials.isEmpty(getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z)) && getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.SNOW) {
 							flag = false;
 							yOffset[x][z] = i;
 						}
@@ -77,7 +78,7 @@ public class SnowConeBrush extends AbstractBrush {
 				if (snowData >= 0) { // no funny business
 					// Increase snowtile size, if smaller than target
 					if (snowData == 0) {
-						if (snowCone[x][z].isEmpty()) {
+						if (Materials.isEmpty(snowCone[x][z])) {
 							snowCone[x][z] = Material.SNOW;
 							snowConeData[x][z] = Material.SNOW.createBlockData();
 						}
@@ -88,7 +89,7 @@ public class SnowConeBrush extends AbstractBrush {
 						}
 					} else {
 						if (snowData > blockDataToSnowLayers(snowConeData[x][z])) {
-							if (snowCone[x][z].isEmpty()) {
+							if (Materials.isEmpty(snowCone[x][z])) {
 								setSnowLayers(snowConeData[x][z], snowData);
 								snowCone[x][z] = Material.SNOW;
 							} else if (snowCone[x][z] == Material.SNOW) {

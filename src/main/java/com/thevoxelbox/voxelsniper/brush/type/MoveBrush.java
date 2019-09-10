@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.destroystokyo.paper.MaterialTags;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -35,10 +34,10 @@ public class MoveBrush extends AbstractBrush {
 		.with(Tag.TRAPDOORS)
 		.with(Tag.DOORS)
 		.with(Tag.BUTTONS)
-		.with(MaterialTags.PISTONS)
-		.with(MaterialTags.PRESSURE_PLATES)
-		.with(MaterialTags.SIGNS)
-		.with(MaterialTags.BEDS)
+		.with(MaterialSets.PISTONS)
+		.with(MaterialSets.PRESSURE_PLATES)
+		.with(MaterialSets.SIGNS)
+		.with(MaterialSets.BEDS)
 		.with(MaterialSets.REDSTONE_TORCHES)
 		.with(MaterialSets.TORCHES)
 		.with(MaterialSets.FLORA)

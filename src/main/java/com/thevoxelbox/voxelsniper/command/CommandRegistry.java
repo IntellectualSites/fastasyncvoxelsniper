@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.command;
 
+import java.lang.reflect.Method;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
+import net.mcparkour.common.reflection.Reflections;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +22,8 @@ public class CommandRegistry {
 
 	public void register(Command command) {
 		Server server = this.plugin.getServer();
-		CommandMap commandMap = server.getCommandMap();
+		Method method = Reflections.getMethod(Server.class, "getCommandMap");
+		CommandMap commandMap = (CommandMap) Reflections.invokeMethod(method, server);
 		commandMap.register("voxel_sniper", command);
 	}
 }

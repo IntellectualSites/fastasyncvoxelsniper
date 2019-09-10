@@ -5,6 +5,7 @@ import java.util.Set;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import net.mcparkour.common.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -72,7 +73,7 @@ public class PullBrush extends AbstractBrush {
 					for (int y = brushSize; y >= -brushSize; y--) {
 						double volume = zSquared + xSquared + (y * y);
 						// Is this in the range of the brush?
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
+						if (volume <= brushSizeSquared && !Materials.isEmpty(world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType())) {
 							int actualY = targetBlock.getY() + y;
 							// Starting strength and new Position
 							double str = this.getStr(volume / brushSizeSquared);
@@ -112,7 +113,7 @@ public class PullBrush extends AbstractBrush {
 					int actualX = targetBlock.getX() + x;
 					for (int y = -brushSize; y <= brushSize; y++) {
 						double volume = (xSquared + Math.pow(y, 2) + zSquared);
-						if (volume <= brushSizeSquared && !world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType().isEmpty()) {
+						if (volume <= brushSizeSquared && !Materials.isEmpty(world.getBlockAt(actualX, targetBlock.getY() + y, actualZ).getType())) {
 							int actualY = targetBlock.getY() + y;
 							lastY = actualY + (int) (this.voxelHeight * this.getStr(volume / brushSizeSquared));
 							Block clamp = clampY(actualX, lastY, actualZ);
@@ -173,12 +174,12 @@ public class PullBrush extends AbstractBrush {
 
 	private boolean isEmpty(int x, int y, int i) {
 		Material type = getBlockType(x, y, i);
-		return type.isEmpty();
+		return Materials.isEmpty(type);
 	}
 
 	private void setBlock(PullBrushBlockWrapper block) {
 		Block currentBlock = this.clampY(block.getX(), block.getY() + (int) (this.voxelHeight * block.getStr()), block.getZ());
-		if (getBlockType(block.getX(), block.getY() - 1, block.getZ()).isEmpty()) {
+		if (Materials.isEmpty(getBlockType(block.getX(), block.getY() - 1, block.getZ()))) {
 			currentBlock.setBlockData(block.getBlockData());
 			for (int y = block.getY(); y < currentBlock.getY(); y++) {
 				setBlockType(block.getX(), y, block.getZ(), Material.AIR);

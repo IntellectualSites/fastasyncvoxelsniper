@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -41,7 +42,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemInHand = inventory.getItemInMainHand();
 			Material itemType = itemInHand.getType();
-			if (itemType.isEmpty()) {
+			if (Materials.isEmpty(itemType)) {
 				sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
 				return;
 			}
@@ -68,7 +69,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemInHand = inventory.getItemInMainHand();
 			Material material = itemInHand.getType();
-			if (material.isEmpty()) {
+			if (Materials.isEmpty(material)) {
 				sender.sendMessage("Can't unassign empty hands.");
 				return;
 			}
