@@ -272,14 +272,6 @@ public class Sniper {
 		}
 	}
 
-	//FAWE
-
-	//FAWE Added
-	private AsyncWorld permanentWorld;
-	public AsyncWorld getWorld() {//FAWE added
-		return permanentWorld;
-	}
-
 	//FAWE Modified
 	public void storeUndo(Undo undo) {
 		/* //FAWE removed
