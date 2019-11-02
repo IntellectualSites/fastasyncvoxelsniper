@@ -23,8 +23,10 @@ import org.bukkit.util.Vector;
  */
 public class Undo {
 
-	private Set<Vector> positions = new HashSet<>();
-	private List<BlockState> blockStates = new LinkedList<>();
+//	private Set<Vector> positions = new HashSet<>(); //FAWE REMOVE
+//	private List<BlockState> blockStates = new LinkedList<>(); //FAWE REMOVE
+
+	private int size = 0; //FAWE add
 
 	/**
 	 * Adds a Block to the collection.
@@ -32,6 +34,8 @@ public class Undo {
 	 * @param block Block to be added
 	 */
 	public void put(Block block) {
+		size++; //FAWE ADD
+		/* //FAWE REMOVE
 		Location location = block.getLocation();
 		Vector position = location.toVector();
 		if (this.positions.contains(position)) {
@@ -40,10 +44,12 @@ public class Undo {
 		this.positions.add(position);
 		BlockState state = block.getState();
 		this.blockStates.add(state);
+		*/
 	}
 
 	public boolean isEmpty() {
-		return this.positions.isEmpty();
+//		return this.positions.isEmpty(); //FAWE REMOVE
+		return size == 0; //FAWE ADD
 	}
 
 	/**
@@ -52,7 +58,8 @@ public class Undo {
 	 * @return size of the Undo collection
 	 */
 	public int getSize() {
-		return this.positions.size();
+		return size;//FAWE
+//		return this.positions.size();//FAWE REMOVE
 	}
 
 	/**
@@ -60,10 +67,12 @@ public class Undo {
 	 * were inserted.
 	 */
 	public void undo() {
+		/*//FAWE
 		for (BlockState blockState : this.blockStates) {
 			blockState.update(true, false);
 			updateSpecialBlocks(blockState);
 		}
+		*/
 	}
 
 	private void updateSpecialBlocks(BlockState previousState) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
@@ -33,6 +34,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		this.sniperRegistry = new SniperRegistry();
 		loadCommands();
 		loadListeners();
+		new Favs(this).initFavs();//FAWE add
 	}
 
 	private VoxelSniperConfig loadConfig() {

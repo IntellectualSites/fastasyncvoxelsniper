@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe;
 
+import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -16,6 +17,7 @@ public class Snipe {
 	private ToolkitProperties toolkitProperties;
 	private BrushProperties brushProperties;
 	private Brush brush;
+
 
 	public Snipe(Sniper sniper, Toolkit toolkit, ToolkitProperties toolkitProperties, BrushProperties brushProperties, Brush brush) {
 		this.sniper = sniper;

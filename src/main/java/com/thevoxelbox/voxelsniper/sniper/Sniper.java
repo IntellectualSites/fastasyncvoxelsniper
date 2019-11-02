@@ -5,6 +5,21 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
+import com.boydti.fawe.Fawe;
+import com.boydti.fawe.beta.implementation.queue.QueueHandler;
+import com.boydti.fawe.bukkit.adapter.mc1_14.BukkitAdapter_1_14;
+import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
+import com.boydti.fawe.config.BBC;
+import com.boydti.fawe.config.Settings;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.extension.platform.Actor;
+import com.sk89q.worldedit.session.request.Request;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -16,7 +31,9 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -25,6 +42,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.util.BlockIterator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Sniper {
@@ -34,7 +53,7 @@ public class Sniper {
 	private UUID uuid;
 	private boolean enabled = true;
 	private int undoCacheSize;
-	private Deque<Undo> undoList = new LinkedList<>();
+//	private Deque<Undo> undoList = new LinkedList<>(); //FAWE Removed
 	private List<Toolkit> toolkits = new ArrayList<>();
 
 	public Sniper(UUID uuid, int undoCacheSize) {
@@ -104,7 +123,22 @@ public class Sniper {
 	 * @param clickedBlockFace Face of that targeted Block
 	 * @return true if command visibly processed, false otherwise.
 	 */
+	//FAWE MODIFIED
 	public boolean snipe(Player player, Action action, Material usedItem, @Nullable Block clickedBlock, BlockFace clickedBlockFace) {
+		{ //FAWE ADDED
+			switch (action) {
+				case LEFT_CLICK_AIR:
+				case LEFT_CLICK_BLOCK:
+				case RIGHT_CLICK_AIR:
+				case RIGHT_CLICK_BLOCK:
+					break;
+				default:
+					return false;
+			}
+			if (toolkits.isEmpty()) {
+				return false;
+			}
+		}
 		Toolkit toolkit = getToolkit(usedItem);
 		if (toolkit == null) {
 			return false;
@@ -119,8 +153,48 @@ public class Sniper {
 			player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + permission + "'");
 			return false;
 		}
+		{ //FAWE ADDED
+			BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
+			LocalSession session = wePlayer.getSession();
+			QueueHandler queue = Fawe.get().getQueueHandler();
+			queue.async(() -> {
+				synchronized (session) {
+					if (!player.isValid()) return;
+					snipeOnCurrentThread(wePlayer, player, action, usedItem, clickedBlock, clickedBlockFace, toolkit, toolAction, currentBrushProperties);
+				}
+			});
+		}
+		return true;
+	}
+
+	public synchronized boolean snipeOnCurrentThread(com.sk89q.worldedit.entity.Player fp, Player player, Action action, Material usedItem, @Nullable Block clickedBlock, BlockFace clickedBlockFace, Toolkit toolkit, ToolAction toolAction, BrushProperties currentBrushProperties) {
+		LocalSession session = fp.getSession(); //FAWE add
+		synchronized (session) {//FAWE add
+		EditSession editSession = session.createEditSession(fp); //FAWE add
+		World world = BukkitAdapter.adapt(editSession.getWorld()); //FAWE add
+		AsyncWorld asyncWorld = new AsyncWorld(world, editSession); //FAWE add
+
+		if (clickedBlock != null) {
+			clickedBlock = asyncWorld.getBlockAt(clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ());
+		}
+		try {//FAWE ADD
 		ToolkitProperties toolkitProperties = toolkit.getProperties();
 		BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+		{//FAWE add
+			Request.reset();
+			Request.request().setExtent(editSession);
+			if (clickedBlock == null) {
+				@NotNull Location loc = player.getLocation();
+				int distance = toolkitProperties.getBlockTracerRange() == null ? Math.max(Bukkit.getViewDistance(), 3) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
+				BlockIterator iterator = new BlockIterator(asyncWorld, loc.toVector(), loc.getDirection(), player.getEyeHeight(), distance);
+				while (iterator.hasNext()) {
+					clickedBlock = iterator.next();
+					if (!clickedBlock.getType().isEmpty()) {
+						break;
+					}
+				}
+			}
+		}
 		Block targetBlock = clickedBlock == null ? blockTracer.getTargetBlock() : clickedBlock;
 		if (player.isSneaking()) {
 			SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
@@ -189,9 +263,26 @@ public class Sniper {
 			}
 		}
 		return false;
+		}
+		finally { //FAWE ADD
+			session.remember(editSession);
+			editSession.flushQueue();
+			WorldEdit.getInstance().flushBlockBag(fp, editSession);
+		}
+		}
 	}
 
+	//FAWE
+
+	//FAWE Added
+	private AsyncWorld permanentWorld;
+	public AsyncWorld getWorld() {//FAWE added
+		return permanentWorld;
+	}
+
+	//FAWE Modified
 	public void storeUndo(Undo undo) {
+		/* //FAWE removed
 		if (this.undoCacheSize <= 0) {
 			return;
 		}
@@ -202,9 +293,35 @@ public class Sniper {
 			this.undoList.pollLast();
 		}
 		this.undoList.push(undo);
+		*/
 	}
 
+	//FAWE  Modified
 	public void undo(CommandSender sender, int amount) {
+		{ //FAWE add
+			Actor actor = WorldEditPlugin.getInstance().wrapCommandSender(sender);
+			LocalSession session = actor.getSession();
+			Fawe.get().getQueueHandler().async(() -> {
+				synchronized (session) {
+					int count = 0;
+					for (int i = 0; i < amount; i++) {
+						EditSession es = session.undo(null, actor);
+						if (es == null) {
+							break;
+						} else {
+							es.flushQueue();
+						}
+						count++;
+					}
+					if (count > 0) {
+						BBC.COMMAND_UNDO_SUCCESS.send(actor);
+					} else {
+						BBC.COMMAND_UNDO_ERROR.send(actor);
+					}
+				}
+			});
+		}
+		/* //FAWE modified
 		if (this.undoList.isEmpty()) {
 			sender.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
 			return;
@@ -216,6 +333,7 @@ public class Sniper {
 			sum += undo.getSize();
 		}
 		sender.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
+		*/
 	}
 
 	public void sendInfo(CommandSender sender) {

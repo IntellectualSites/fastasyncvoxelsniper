@@ -11,7 +11,7 @@ public class BlockTracer {
 	private Block targetBlock;
 	private Block lastBlock;
 
-	BlockTracer(Player player, int distance) {
+	public BlockTracer(Player player, int distance) {//FAWE modify (make public)
 		Location eyeLocation = player.getEyeLocation();
 		Block block = eyeLocation.getBlock();
 		this.targetBlock = block;
