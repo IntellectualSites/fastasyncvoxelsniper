@@ -11,7 +11,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
 import net.mcparkour.common.math.MathHelper;
-import net.mcparkour.common.math.vector.Vector3i;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,7 +35,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 		int brushSize = toolkitProperties.getBrushSize();
 		int cubeEdge = 2 * brushSize + 1;
 		int largeCubeVolume = MathHelper.cube(cubeEdge + 2);
-		Map<Vector3i, Block> largeCube = new HashMap<>(largeCubeVolume);
+		Map<BlockVector3, Block> largeCube = new HashMap<>(largeCubeVolume);
 		Block targetBlock = getTargetBlock();
 		Painters.cube()
 			.center(targetBlock)
@@ -46,8 +46,8 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 			})
 			.paint();
 		int smallCubeVolume = MathHelper.cube(cubeEdge);
-		Map<Vector3i, Block> smallCube = new HashMap<>(smallCubeVolume);
-		Map<Vector3i, Material> smallCubeMaterials = new HashMap<>(smallCubeVolume);
+		Map<BlockVector3, Block> smallCube = new HashMap<>(smallCubeVolume);
+		Map<BlockVector3, Material> smallCubeMaterials = new HashMap<>(smallCubeVolume);
 		Painters.cube()
 			.center(targetBlock)
 			.radius(brushSize)
@@ -58,7 +58,7 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 			})
 			.paint();
 		for (Block smallCubeBlock : smallCube.values()) {
-			Vector3i blockPosition = Vectors.of(smallCubeBlock);
+			BlockVector3 blockPosition = Vectors.of(smallCubeBlock);
 			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
 			Painters.cube()
 				.center(smallCubeBlock)

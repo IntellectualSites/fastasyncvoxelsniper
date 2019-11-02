@@ -4,3 +4,4 @@ build/
 out/
 *.iml
 .gradletasknamecache
+*.bat

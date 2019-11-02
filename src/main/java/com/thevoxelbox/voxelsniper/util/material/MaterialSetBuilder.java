@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 
@@ -20,7 +22,7 @@ public class MaterialSetBuilder {
 	}
 
 	public MaterialSetBuilder with(Material... materials) {
-		List<Material> list = List.of(materials);
+		List<Material> list = Lists.newArrayList(materials);
 		this.materials.addAll(list);
 		return this;
 	}

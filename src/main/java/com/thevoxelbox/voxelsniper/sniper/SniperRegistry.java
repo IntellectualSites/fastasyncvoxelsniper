@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.sniper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.google.common.collect.Maps;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +29,6 @@ public class SniperRegistry {
 	}
 
 	public Map<UUID, Sniper> getSnipers() {
-		return Map.copyOf(this.snipers);
+		return Maps.newHashMap(this.snipers);
 	}
 }

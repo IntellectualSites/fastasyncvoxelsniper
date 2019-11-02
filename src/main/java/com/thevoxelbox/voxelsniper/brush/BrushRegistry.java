@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.brush;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +25,6 @@ public class BrushRegistry {
 	}
 
 	public Map<String, BrushProperties> getBrushesProperties() {
-		return Map.copyOf(this.brushesProperties);
+		return Maps.newHashMap(this.brushesProperties);
 	}
 }

@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.sniper.toolkit;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 import com.thevoxelbox.voxelsniper.BrushRegistrar;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushCreator;
@@ -93,7 +95,7 @@ public class Toolkit {
 	}
 
 	public Map<Material, ToolAction> getToolActions() {
-		return Map.copyOf(this.toolActions);
+		return Maps.newHashMap(this.toolActions);
 	}
 
 	public ToolkitProperties getProperties() {

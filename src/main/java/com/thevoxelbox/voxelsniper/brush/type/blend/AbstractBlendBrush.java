@@ -6,7 +6,7 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import net.mcparkour.common.math.vector.Vector3i;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -41,9 +41,9 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 
 	public abstract void blend(Snipe snipe);
 
-	protected void setBlocks(Map<Vector3i, Material> materials, Undo undo) {
-		for (Entry<Vector3i, Material> entry : materials.entrySet()) {
-			Vector3i position = entry.getKey();
+	protected void setBlocks(Map<BlockVector3, Material> materials, Undo undo) {
+		for (Entry<BlockVector3, Material> entry : materials.entrySet()) {
+			BlockVector3 position = entry.getKey();
 			Material material = entry.getValue();
 			if (checkExclusions(material)) {
 				Material currentBlockType = getBlockType(position);

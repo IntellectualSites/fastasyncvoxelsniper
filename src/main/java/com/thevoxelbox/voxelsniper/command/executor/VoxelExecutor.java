@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
@@ -25,7 +26,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 	private static final List<NamespacedKey> BLOCK_KEYS = Arrays.stream(Material.values())
 		.filter(Material::isBlock)
 		.map(Material::getKey)
-		.collect(Collectors.toUnmodifiableList());
+		.collect(Collectors.toList());
 
 	private VoxelSniperPlugin plugin;
 
@@ -90,8 +91,8 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 					return key.startsWith(argumentLowered);
 				})
 				.map(NamespacedKey::toString)
-				.collect(Collectors.toUnmodifiableList());
+				.collect(Collectors.toList());
 		}
-		return List.of();
+		return Collections.emptyList();
 	}
 }

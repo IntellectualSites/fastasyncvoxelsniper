@@ -34,7 +34,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		this.sniperRegistry = new SniperRegistry();
 		loadCommands();
 		loadListeners();
-		new Favs(this).initFavs();//FAWE add
+		new Favs(this);//FAWE add
 	}
 
 	private VoxelSniperConfig loadConfig() {

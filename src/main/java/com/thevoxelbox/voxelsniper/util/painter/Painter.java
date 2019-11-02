@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
-import net.mcparkour.common.math.vector.Vector3i;
+import com.sk89q.worldedit.math.BlockVector3;
 
 public interface Painter {
 
 	void paint();
 
-	Vector3i getCenter();
+	BlockVector3 getCenter();
 
 	BlockSetter getBlockSetter();
 }

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.util.painter.setter;
 
 import com.thevoxelbox.voxelsniper.util.painter.BlockSetter;
-import net.mcparkour.common.math.vector.Vector3i;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -23,7 +23,7 @@ public class BlockDataSetter implements BlockSetter {
 	}
 
 	@Override
-	public void setBlockAt(Vector3i position) {
+	public void setBlockAt(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
