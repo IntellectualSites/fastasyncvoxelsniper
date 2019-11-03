@@ -1,4 +1,5 @@
 import net.mcparkour.migle.attributes.ApiVersion
+import java.net.URL;
 
 plugins {
 	java
@@ -19,6 +20,9 @@ repositories {
 			includeGroup("net.md-5")
 		}
 	}
+	flatDir {
+		dirs("libs")
+	}
 }
 
 dependencies {
@@ -26,7 +30,7 @@ dependencies {
 //	implementation("net.mcparkour:common-text:1.0.0")
 	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
-	implementation(files("../FastAsyncWorldEdit-1.13/worldedit-bukkit/build/libs/FastAsyncWorldEdit-unspecified.jar"))
+	"implementation"("name:FastAsyncWorldEdit-unspecified")
 }
 
 migleBukkit {

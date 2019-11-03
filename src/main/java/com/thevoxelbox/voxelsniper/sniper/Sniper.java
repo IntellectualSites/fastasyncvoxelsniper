@@ -167,12 +167,19 @@ public class Sniper {
 		return true;
 	}
 
+	private AsyncWorld tmpWorld;
+
+	public AsyncWorld getWorld() {
+		return tmpWorld;
+	}
+
 	public synchronized boolean snipeOnCurrentThread(com.sk89q.worldedit.entity.Player fp, Player player, Action action, Material usedItem, @Nullable Block clickedBlock, BlockFace clickedBlockFace, Toolkit toolkit, ToolAction toolAction, BrushProperties currentBrushProperties) {
 		LocalSession session = fp.getSession(); //FAWE add
 		synchronized (session) {//FAWE add
 		EditSession editSession = session.createEditSession(fp); //FAWE add
 		World world = BukkitAdapter.adapt(editSession.getWorld()); //FAWE add
 		AsyncWorld asyncWorld = new AsyncWorld(world, editSession); //FAWE add
+		this.tmpWorld = asyncWorld;
 
 		if (clickedBlock != null) {
 			clickedBlock = asyncWorld.getBlockAt(clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ());
@@ -265,6 +272,7 @@ public class Sniper {
 		return false;
 		}
 		finally { //FAWE ADD
+			tmpWorld = null;
 			session.remember(editSession);
 			editSession.flushQueue();
 			WorldEdit.getInstance().flushBlockBag(fp, editSession);
