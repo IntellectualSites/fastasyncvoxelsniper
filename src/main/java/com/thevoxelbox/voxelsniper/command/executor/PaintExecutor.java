@@ -1,10 +1,5 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
 import com.thevoxelbox.voxelsniper.util.ArtHelper;
@@ -12,6 +7,11 @@ import org.bukkit.Art;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PaintExecutor implements CommandExecutor, TabCompleter {
 

@@ -13,9 +13,9 @@ java {
 
 repositories {
 	jcenter()
-	maven("https://papermc.io/repo/repository/maven-public") {
+	maven("https://hub.spigotmc.org/nexus/content/repositories/public") {
 		content {
-			includeGroup("com.destroystokyo.paper")
+			includeGroup("org.spigotmc")
 			includeGroup("net.md-5")
 		}
 	}
@@ -27,7 +27,8 @@ repositories {
 dependencies {
 //	implementation("net.mcparkour:common-math:1.0.0")
 //	implementation("net.mcparkour:common-text:1.0.0")
-	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
+//	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
+	compileOnly("org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
 	"implementation"("name:FastAsyncWorldEdit-unspecified")
 }

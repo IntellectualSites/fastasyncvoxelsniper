@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import java.util.List;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public final class Command extends org.bukkit.command.Command {
 

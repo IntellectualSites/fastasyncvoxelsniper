@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import com.google.common.collect.Maps;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class SniperRegistry {
 

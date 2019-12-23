@@ -1,8 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -19,6 +16,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TreeSnipeBrush extends AbstractBrush {
 

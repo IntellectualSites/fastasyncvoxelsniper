@@ -1,8 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.PatternSyntaxException;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -10,6 +7,10 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public class EntityRemovalBrush extends AbstractBrush {
 

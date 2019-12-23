@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe;
 
-import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;

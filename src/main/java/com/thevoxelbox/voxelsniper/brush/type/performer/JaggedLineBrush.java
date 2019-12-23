@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import java.util.Random;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -12,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+
+import java.util.Random;
 
 public class JaggedLineBrush extends AbstractPerformerBrush {
 

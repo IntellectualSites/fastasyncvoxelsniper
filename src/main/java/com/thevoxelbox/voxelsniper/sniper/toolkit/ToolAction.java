@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
-import java.util.Arrays;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 public enum ToolAction {
 

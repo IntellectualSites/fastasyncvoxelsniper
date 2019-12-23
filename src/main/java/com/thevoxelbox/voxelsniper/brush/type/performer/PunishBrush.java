@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import java.util.List;
-import java.util.Random;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -17,6 +15,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
+import java.util.List;
+import java.util.Random;
 
 public class PunishBrush extends AbstractPerformerBrush {
 

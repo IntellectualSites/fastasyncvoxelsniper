@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.io.File;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.brush.type.BiomeBrush;
@@ -80,6 +79,8 @@ import com.thevoxelbox.voxelsniper.brush.type.shell.ShellVoxelBrush;
 import com.thevoxelbox.voxelsniper.brush.type.stamp.CloneStampBrush;
 import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilBrush;
 import com.thevoxelbox.voxelsniper.brush.type.stencil.StencilListBrush;
+
+import java.io.File;
 
 public class BrushRegistrar {
 

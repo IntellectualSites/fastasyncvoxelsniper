@@ -1,8 +1,5 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -17,6 +14,10 @@ import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class VoxelSniperExecutor implements CommandExecutor {
 

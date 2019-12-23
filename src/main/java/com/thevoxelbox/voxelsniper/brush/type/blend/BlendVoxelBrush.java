@@ -1,8 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -10,12 +8,14 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
-import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
-import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BlendVoxelBrush extends AbstractBlendBrush {
 

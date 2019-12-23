@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -13,6 +11,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DomeBrush extends AbstractBrush {
 

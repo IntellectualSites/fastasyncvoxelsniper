@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import java.util.List;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -14,6 +13,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class VoxelListExecutor implements CommandExecutor {
 

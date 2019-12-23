@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
-import java.util.Random;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -11,6 +10,8 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import java.util.Random;
 
 public class SplatterOverlayBrush extends AbstractPerformerBrush {
 

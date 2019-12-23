@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.config;
 
-import java.util.List;
 import org.bukkit.Material;
+
+import java.util.List;
 
 public class VoxelSniperConfig {
 

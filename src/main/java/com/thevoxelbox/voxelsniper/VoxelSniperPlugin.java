@@ -1,10 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
@@ -18,6 +13,11 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 

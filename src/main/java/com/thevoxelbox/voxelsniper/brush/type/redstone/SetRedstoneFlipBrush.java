@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
-import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -12,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 public class SetRedstoneFlipBrush extends AbstractBrush {
 

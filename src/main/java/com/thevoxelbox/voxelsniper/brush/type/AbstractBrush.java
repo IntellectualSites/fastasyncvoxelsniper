@@ -1,12 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
-
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
-import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;

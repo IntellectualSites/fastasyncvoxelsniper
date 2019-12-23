@@ -1,8 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -15,6 +12,10 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 public class GenerateTreeBrush extends AbstractBrush {

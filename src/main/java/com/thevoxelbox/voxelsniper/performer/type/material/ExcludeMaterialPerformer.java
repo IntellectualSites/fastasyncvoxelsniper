@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.performer.type.material;
 
-import java.util.List;
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
@@ -8,6 +7,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+
+import java.util.List;
 
 public class ExcludeMaterialPerformer extends AbstractPerformer {
 

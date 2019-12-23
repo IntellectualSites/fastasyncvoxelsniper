@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.Random;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -15,6 +14,8 @@ import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
+
+import java.util.Random;
 
 public class HeatRayBrush extends AbstractBrush {
 

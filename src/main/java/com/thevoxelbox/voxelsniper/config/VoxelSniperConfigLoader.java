@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.config;
 
-import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.List;
 
 /**
  * Configuration storage defining global configurations for VoxelSniper.

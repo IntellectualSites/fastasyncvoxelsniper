@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.stream.Stream;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -11,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+
+import java.util.stream.Stream;
 
 public class CopyPastaBrush extends AbstractBrush {
 

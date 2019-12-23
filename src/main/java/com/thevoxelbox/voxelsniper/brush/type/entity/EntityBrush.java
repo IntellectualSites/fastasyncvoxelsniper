@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -11,6 +9,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class EntityBrush extends AbstractBrush {
 

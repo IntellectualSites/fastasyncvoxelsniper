@@ -1,14 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.stream.Stream;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -18,6 +16,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.block.data.type.Slab.Type;
+
+import java.util.stream.Stream;
 
 public class SpiralStaircaseBrush extends AbstractBrush {
 

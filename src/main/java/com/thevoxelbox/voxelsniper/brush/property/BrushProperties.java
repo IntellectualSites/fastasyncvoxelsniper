@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.property;
 
-import java.util.List;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BrushProperties {
 

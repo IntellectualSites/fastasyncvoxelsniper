@@ -1,17 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class AbstractBlendBrush extends AbstractBrush {
 

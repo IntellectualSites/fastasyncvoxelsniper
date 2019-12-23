@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class CommandRegistry {
 

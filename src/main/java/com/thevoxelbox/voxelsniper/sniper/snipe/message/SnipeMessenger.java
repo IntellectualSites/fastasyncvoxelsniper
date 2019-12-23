@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
-import java.util.List;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class SnipeMessenger {
 

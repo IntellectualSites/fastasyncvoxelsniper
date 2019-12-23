@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -13,6 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShellSetBrush extends AbstractBrush {
 

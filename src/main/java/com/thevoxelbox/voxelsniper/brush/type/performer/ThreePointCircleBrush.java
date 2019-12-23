@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
@@ -11,6 +9,9 @@ import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 

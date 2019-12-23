@@ -1,7 +1,8 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import java.util.List;
 import org.bukkit.command.CommandSender;
+
+import java.util.List;
 
 public interface TabCompleter {
 

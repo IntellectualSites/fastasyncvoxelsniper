@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.List;
-
 import com.boydti.fawe.Fawe;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -18,6 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class JockeyBrush extends AbstractBrush {
 

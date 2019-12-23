@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
-import java.util.Iterator;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
+
+import java.util.Iterator;
 
 public class BlockTracer {
 

@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
-import java.util.HashSet;
-import java.util.Set;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -15,6 +13,9 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractStampBrush extends AbstractBrush {
 

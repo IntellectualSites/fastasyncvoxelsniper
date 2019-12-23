@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Messenger {
 

@@ -1,16 +1,8 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-
 import com.boydti.fawe.Fawe;
 import com.boydti.fawe.beta.implementation.queue.QueueHandler;
-import com.boydti.fawe.bukkit.adapter.mc1_14.BukkitAdapter_1_14;
 import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
-import com.boydti.fawe.config.Settings;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -46,6 +38,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.BlockIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Sniper {
 
@@ -195,10 +191,17 @@ public class Sniper {
 				@NotNull Location loc = player.getLocation();
 				int distance = toolkitProperties.getBlockTracerRange() == null ? Math.max(Bukkit.getViewDistance(), 3) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
 				BlockIterator iterator = new BlockIterator(asyncWorld, loc.toVector(), loc.getDirection(), player.getEyeHeight(), distance);
+				outer:
 				while (iterator.hasNext()) {
 					clickedBlock = iterator.next();
-					if (!clickedBlock.getType().isEmpty()) {
-						break;
+					@NotNull Material type = clickedBlock.getType();
+					switch (type) {
+						case AIR:
+						case CAVE_AIR:
+						case VOID_AIR:
+							break;
+						default:
+							break outer;
 					}
 				}
 			}

@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.util.HashSet;
-import java.util.Set;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -12,6 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PullBrush extends AbstractBrush {
 

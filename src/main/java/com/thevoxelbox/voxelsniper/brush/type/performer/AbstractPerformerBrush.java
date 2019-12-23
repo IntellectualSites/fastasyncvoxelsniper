@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import java.util.Arrays;
 import com.thevoxelbox.voxelsniper.PerformerRegistrar;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
@@ -10,6 +9,8 @@ import com.thevoxelbox.voxelsniper.performer.property.PerformerCreator;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
+
+import java.util.Arrays;
 
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
 

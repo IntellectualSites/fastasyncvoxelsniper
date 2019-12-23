@@ -1,14 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import com.google.common.collect.Lists;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -16,8 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,9 +18,17 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 public class ErodeBrush extends AbstractBrush {
 
-	private static final List<BlockVector3> FACES_TO_CHECK = Arrays.asList((BlockVector3.at(0, 0, 1), BlockVector3.at(0, 0, -1), BlockVector3.at(0, 1, 0), BlockVector3.at(0, -1, 0), BlockVector3.at(1, 0, 0), BlockVector3.at(-1, 0, 0));
+	private static final List<BlockVector3> FACES_TO_CHECK = Arrays.asList(BlockVector3.at(0, 0, 1), BlockVector3.at(0, 0, -1), BlockVector3.at(0, 1, 0), BlockVector3.at(0, -1, 0), BlockVector3.at(1, 0, 0), BlockVector3.at(-1, 0, 0));
 
 	private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 

@@ -1,16 +1,15 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
 
 public class MaterialSet implements Iterable<Material> {
 
