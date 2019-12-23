@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import java.util.List;
+
+import com.boydti.fawe.Fawe;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -109,18 +111,21 @@ public class JockeyBrush extends AbstractBrush {
 			}
 		}
 		if (closest != null) {
-			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), closest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+			Entity finalClosest = closest;//FAWE ADDED
+			Fawe.get().getQueueHandler().sync(() -> {
+			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), finalClosest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
 			PluginManager pluginManager = Bukkit.getPluginManager();
 			pluginManager.callEvent(playerTeleportEvent);
 			if (!playerTeleportEvent.isCancelled()) {
-				if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-					player.addPassenger(closest);
+				if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
+					player.addPassenger(finalClosest);
 				} else {
-					closest.addPassenger(player);
-					this.jockeyedEntity = closest;
+					finalClosest.addPassenger(player);
+					jockeyedEntity = finalClosest;
 				}
-				player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + closest.getEntityId());
+				player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + finalClosest.getEntityId());
 			}
+			});
 		} else {
 			player.sendMessage(ChatColor.RED + "Could not find any entities");
 		}

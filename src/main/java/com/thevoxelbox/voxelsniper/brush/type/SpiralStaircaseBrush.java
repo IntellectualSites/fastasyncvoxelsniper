@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.ChatColor;
@@ -240,7 +241,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
-					Vector3i position = new Vector3i(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z);
+					BlockVector3 position = BlockVector3.at(blockPositionX - brushSize + x, blockPositionY + i, blockPositionZ - brushSize + z);
 					Material blockType = getBlockType(position);
 					if (spiral[x][i][z] == 0) {
 						if (i == voxelHeight - 1) {
@@ -494,7 +495,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 					int blockPositionX = targetBlock.getX();
 					int blockPositionY = targetBlock.getY();
 					int blockPositionZ = targetBlock.getZ();
-					Vector3i position = new Vector3i(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z);
+					BlockVector3 position = BlockVector3.at(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z);
 					Material blockType = getBlockType(position);
 					if (spiral[x][i][z] == 0) {
 						if (!Materials.isEmpty(blockType)) {
@@ -562,7 +563,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 		sniper.storeUndo(undo);
 	}
 
-	private void setStairsDirection(Vector3i position, int data) {
+	private void setStairsDirection(BlockVector3 position, int data) {
 		Block block = clampY(position);
 		BlockData blockData = block.getBlockData();
 		if (!(blockData instanceof Directional)) {

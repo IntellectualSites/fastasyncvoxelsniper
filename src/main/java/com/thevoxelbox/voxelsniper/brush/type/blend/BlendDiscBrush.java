@@ -12,6 +12,8 @@ import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
+import com.sk89q.worldedit.math.BlockVector3;
+import net.mcparkour.common.math.MathHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,7 +36,7 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		int largeCircleArea = (int) MathHelper.circleArea(brushSize + 2);
-		Map<Vector3i, Block> largeCircle = new HashMap<>(largeCircleArea);
+		Map<BlockVector3, Block> largeCircle = new HashMap<>(largeCircleArea);
 		Block targetBlock = getTargetBlock();
 		Painters.circle()
 			.center(targetBlock)
@@ -45,8 +47,8 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 			})
 			.paint();
 		int smallCircleArea = (int) MathHelper.circleArea(brushSize);
-		Map<Vector3i, Block> smallCircle = new HashMap<>(smallCircleArea);
-		Map<Vector3i, Material> smallCircleMaterials = new HashMap<>(smallCircleArea);
+		Map<BlockVector3, Block> smallCircle = new HashMap<>(smallCircleArea);
+		Map<BlockVector3, Material> smallCircleMaterials = new HashMap<>(smallCircleArea);
 		Painters.circle()
 			.center(targetBlock)
 			.radius(brushSize)
@@ -57,7 +59,7 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 			})
 			.paint();
 		for (Block smallCircleBlock : smallCircle.values()) {
-			Vector3i blockPosition = Vectors.of(smallCircleBlock);
+			BlockVector3 blockPosition = Vectors.of(smallCircleBlock);
 			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
 			Painters.square()
 				.center(smallCircleBlock)

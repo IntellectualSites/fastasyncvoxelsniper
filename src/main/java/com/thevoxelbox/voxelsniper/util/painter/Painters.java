@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
+import com.sk89q.worldedit.math.BlockVector3;
+
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 
 public final class Painters {
@@ -25,7 +27,7 @@ public final class Painters {
 	}
 
 	public static BlockPainter block(Painter painter) {
-		Vector3i center = painter.getCenter();
+		BlockVector3 center = painter.getCenter();
 		BlockSetter blockSetter = painter.getBlockSetter();
 		return new BlockPainter(center, blockSetter);
 	}

@@ -113,7 +113,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeSquare = brushSize * brushSize;
 		Block targetBlock = getTargetBlock();
-		World world = player.getWorld();
+		World world = targetBlock/*player*/.getWorld();//FAWE modified
 		Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 		List<LivingEntity> entities = world.getLivingEntities();
 		int numPunishApps = 0;
@@ -152,7 +152,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 		}
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeSquare = brushSize * brushSize;
-		World world = player.getWorld();
+		World world = sniper/*player*/.getWorld();//FAWE modified
 		Block targetBlock = getTargetBlock();
 		Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 		List<LivingEntity> entities = world.getLivingEntities();

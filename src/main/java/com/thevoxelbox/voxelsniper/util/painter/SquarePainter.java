@@ -1,27 +1,28 @@
 package com.thevoxelbox.voxelsniper.util.painter;
 
 import com.thevoxelbox.voxelsniper.util.Vectors;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 public class SquarePainter implements Painter {
 
-	private Vector3i center;
+	private BlockVector3 center;
 	private int radius;
 	private BlockSetter blockSetter;
 
 	public SquarePainter center(Block block) {
-		Vector3i center = Vectors.of(block);
+		BlockVector3 center = Vectors.of(block);
 		return center(center);
 	}
 
 	public SquarePainter center(Location location) {
-		Vector3i center = Vectors.of(location);
+		BlockVector3 center = Vectors.of(location);
 		return center(center);
 	}
 
-	public SquarePainter center(Vector3i center) {
+	public SquarePainter center(BlockVector3 center) {
 		this.center = center;
 		return this;
 	}
@@ -70,7 +71,7 @@ public class SquarePainter implements Painter {
 	}
 
 	@Override
-	public Vector3i getCenter() {
+	public BlockVector3 getCenter() {
 		return this.center;
 	}
 

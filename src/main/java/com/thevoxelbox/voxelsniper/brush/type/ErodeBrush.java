@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import com.google.common.collect.Lists;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -15,6 +17,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ErodeBrush extends AbstractBrush {
 
-	private static final List<Vector3i> FACES_TO_CHECK = Arrays.asList(new Vector3i(0, 0, 1), new Vector3i(0, 0, -1), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0));
+	private static final List<BlockVector3> FACES_TO_CHECK = Arrays.asList((BlockVector3.at(0, 0, 1), BlockVector3.at(0, 0, -1), BlockVector3.at(0, 1, 0), BlockVector3.at(0, -1, 0), BlockVector3.at(1, 0, 0), BlockVector3.at(-1, 0, 0));
 
 	private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
 
@@ -143,8 +146,8 @@ public class ErodeBrush extends AbstractBrush {
 						}
 						int count = 0;
 						Map<BlockWrapper, Integer> blockCount = new HashMap<>();
-						for (Vector3i vector : FACES_TO_CHECK) {
-							Vector relativePosition = Vectors.toBukkit(Vectors.of(currentPosition).plus(vector));
+						for (BlockVector3 vector : FACES_TO_CHECK) {
+							Vector relativePosition = Vectors.toBukkit(Vectors.of(currentPosition).add(vector));
 							BlockWrapper relativeBlock = blockChangeTracker.get(relativePosition, currentIteration);
 							if (!(relativeBlock.isEmpty() || relativeBlock.isLiquid())) {
 								count++;
@@ -188,7 +191,7 @@ public class ErodeBrush extends AbstractBrush {
 							continue;
 						}
 						int count = (int) FACES_TO_CHECK.stream()
-							.map(vector -> Vectors.of(currentPosition).plus(vector))
+							.map(vector -> Vectors.of(currentPosition).add(vector))
 							.map(Vectors::toBukkit)
 							.map(relativePosition -> blockChangeTracker.get(relativePosition, currentIteration))
 							.filter(relativeBlock -> relativeBlock.isEmpty() || relativeBlock.isLiquid())

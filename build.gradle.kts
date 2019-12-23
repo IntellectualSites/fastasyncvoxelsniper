@@ -1,4 +1,5 @@
 import net.mcparkour.migle.attributes.ApiVersion
+import java.net.URL;
 
 plugins {
 	java
@@ -18,18 +19,24 @@ repositories {
 			includeGroup("net.md-5")
 		}
 	}
+	flatDir {
+		dirs("libs")
+	}
 }
 
 dependencies {
-	compileOnly("org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT")
+//	implementation("net.mcparkour:common-math:1.0.0")
+//	implementation("net.mcparkour:common-text:1.0.0")
+	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:17.0.0")
+	"implementation"("name:FastAsyncWorldEdit-unspecified")
 }
 
 migleBukkit {
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
 	name = "VoxelSniper"
 	apiVersion = ApiVersion.VERSION_1_13
-	authors = listOf("przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
+	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
 	website = "https://github.com/mcparkournet/voxel-sniper-flattened"
 	softDepend = listOf("VoxelModPackPlugin")
 }

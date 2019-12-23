@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.boydti.fawe.Fawe;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -21,7 +22,9 @@ public class WarpBrush extends AbstractBrush {
 		Location playerLocation = player.getLocation();
 		location.setPitch(playerLocation.getPitch());
 		location.setYaw(playerLocation.getYaw());
+		Fawe.get().getQueueHandler().sync(() -> {//FAWE Add
 		player.teleport(location);
+		});
 	}
 
 	@Override
@@ -36,9 +39,11 @@ public class WarpBrush extends AbstractBrush {
 		Location playerLocation = player.getLocation();
 		location.setPitch(playerLocation.getPitch());
 		location.setYaw(playerLocation.getYaw());
+		Fawe.get().getQueueHandler().sync(() -> {//FAWE add
 		getWorld().strikeLightning(location);
 		player.teleport(location);
 		getWorld().strikeLightning(location);
+		});
 	}
 
 	@Override

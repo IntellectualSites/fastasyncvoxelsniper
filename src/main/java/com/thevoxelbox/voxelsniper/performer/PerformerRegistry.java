@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import org.jetbrains.annotations.Nullable;
 

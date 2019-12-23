@@ -2,25 +2,26 @@ package com.thevoxelbox.voxelsniper.util.painter;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.util.math.vector.Vector3i;
 
 public class BlockPainter implements Painter {
 
-	private Vector3i center;
+	private BlockVector3 center;
 	private BlockSetter blockSetter;
-	private List<Vector3i> shifts = new ArrayList<>();
+	private List<BlockVector3> shifts = new ArrayList<>();
 
-	public BlockPainter(Vector3i center, BlockSetter blockSetter) {
+	public BlockPainter(BlockVector3 center, BlockSetter blockSetter) {
 		this.center = center;
 		this.blockSetter = blockSetter;
 	}
 
 	public BlockPainter at(int xShift, int yShift, int zShift) {
-		Vector3i shift = new Vector3i(xShift, yShift, zShift);
+		BlockVector3 shift = BlockVector3.at(xShift, yShift, zShift);
 		return at(shift);
 	}
 
-	public BlockPainter at(Vector3i shift) {
+	public BlockPainter at(BlockVector3 shift) {
 		this.shifts.add(shift);
 		return this;
 	}
@@ -30,13 +31,13 @@ public class BlockPainter implements Painter {
 		this.shifts.forEach(this::paintBlock);
 	}
 
-	private void paintBlock(Vector3i shift) {
-		Vector3i position = this.center.plus(shift);
+	private void paintBlock(BlockVector3 shift) {
+		BlockVector3 position = this.center.add(shift);
 		this.blockSetter.setBlockAt(position);
 	}
 
 	@Override
-	public Vector3i getCenter() {
+	public BlockVector3 getCenter() {
 		return this.center;
 	}
 

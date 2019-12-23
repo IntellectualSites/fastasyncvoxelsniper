@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
+
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -37,7 +39,7 @@ public abstract class AbstractBrush implements Brush {
 		}
 	}
 
-	public Block clampY(Vector3i position) {
+	public Block clampY(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
@@ -58,7 +60,7 @@ public abstract class AbstractBrush implements Brush {
 		return getBlock(x, clampedY, z);
 	}
 
-	public Material getBlockType(Vector3i position) {
+	public Material getBlockType(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
@@ -70,7 +72,7 @@ public abstract class AbstractBrush implements Brush {
 		return block.getType();
 	}
 
-	public BlockData getBlockData(Vector3i position) {
+	public BlockData getBlockData(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
@@ -82,7 +84,7 @@ public abstract class AbstractBrush implements Brush {
 		return block.getBlockData();
 	}
 
-	public void setBlockType(Vector3i position, Material type) {
+	public void setBlockType(BlockVector3 position, Material type) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
@@ -94,7 +96,7 @@ public abstract class AbstractBrush implements Brush {
 		block.setType(type);
 	}
 
-	public void setBlockData(Vector3i position, BlockData blockData) {
+	public void setBlockData(BlockVector3 position, BlockData blockData) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
@@ -106,7 +108,7 @@ public abstract class AbstractBrush implements Brush {
 		block.setBlockData(blockData);
 	}
 
-	public Block getBlock(Vector3i position) {
+	public Block getBlock(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
