@@ -13,9 +13,9 @@ java {
 
 repositories {
 	jcenter()
-	maven("https://hub.spigotmc.org/nexus/content/repositories/public") {
+	maven("https://papermc.io/repo/repository/maven-public") {
 		content {
-			includeGroup("org.spigotmc")
+			includeGroup("com.destroystokyo.paper")
 			includeGroup("net.md-5")
 		}
 	}
