@@ -36,7 +36,7 @@ dependencies {
 migleBukkit {
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
 	name = "VoxelSniper"
-	apiVersion = ApiVersion.VERSION_1_14
+	apiVersion = ApiVersion.VERSION_1_13
 	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
 	website = "https://github.com/mcparkournet/voxel-sniper-flattened"
 	softDepend = listOf("VoxelModPackPlugin")

@@ -10,7 +10,6 @@ import com.boydti.fawe.Fawe;
 import com.boydti.fawe.beta.implementation.queue.QueueHandler;
 import com.boydti.fawe.bukkit.adapter.mc1_14.BukkitAdapter_1_14;
 import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
-import com.boydti.fawe.config.BBC;
 import com.boydti.fawe.config.Settings;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
@@ -18,6 +17,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.command.HistoryCommands;
 import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.session.request.Request;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -301,25 +301,7 @@ public class Sniper {
 		{ //FAWE add
 			Actor actor = WorldEditPlugin.getInstance().wrapCommandSender(sender);
 			LocalSession session = actor.getSession();
-			Fawe.get().getQueueHandler().async(() -> {
-				synchronized (session) {
-					int count = 0;
-					for (int i = 0; i < amount; i++) {
-						EditSession es = session.undo(null, actor);
-						if (es == null) {
-							break;
-						} else {
-							es.flushQueue();
-						}
-						count++;
-					}
-					if (count > 0) {
-						BBC.COMMAND_UNDO_SUCCESS.send(actor);
-					} else {
-						BBC.COMMAND_UNDO_ERROR.send(actor);
-					}
-				}
-			});
+			new HistoryCommands(WorldEdit.getInstance()).undo(actor, session, amount, null);
 		}
 		/* //FAWE modified
 		if (this.undoList.isEmpty()) {
