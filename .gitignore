@@ -1,3 +1,4 @@
+*.sh
 .idea/
 .gradle/
 build/
