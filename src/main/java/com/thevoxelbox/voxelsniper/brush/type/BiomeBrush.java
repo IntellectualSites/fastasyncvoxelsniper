@@ -59,6 +59,7 @@ public class BiomeBrush extends AbstractBrush {
 		biome(snipe);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void biome(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();

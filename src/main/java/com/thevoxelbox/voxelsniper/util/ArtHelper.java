@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public final class ArtHelper {
 
 	private ArtHelper() {
-		throw new UnsupportedOperationException("Cannot create instance of utility class");
+		throw new UnsupportedOperationException("Cannot create an instance of this class");
 	}
 
 	/**
