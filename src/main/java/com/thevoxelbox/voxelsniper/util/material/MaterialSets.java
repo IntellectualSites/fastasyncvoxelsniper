@@ -40,11 +40,6 @@ public final class MaterialSets {
 		.add(Material.SPRUCE_FENCE)
 		.build();
 
-	public static final MaterialSet FENCES = MaterialSet.builder()
-		.with(WOODEN_FENCES)
-		.add(Material.NETHER_BRICK_FENCE)
-		.build();
-
 	public static final MaterialSet TORCHES = MaterialSet.builder()
 		.add(Material.TORCH)
 		.add(Material.WALL_TORCH)
@@ -187,8 +182,18 @@ public final class MaterialSets {
 		.build();
 
 	public static final MaterialSet SIGNS = MaterialSet.builder()
-		.add(Material.SIGN)
-		.add(Material.WALL_SIGN)
+		.add(Material.ACACIA_SIGN)
+		.add(Material.ACACIA_WALL_SIGN)
+		.add(Material.BIRCH_SIGN)
+		.add(Material.BIRCH_WALL_SIGN)
+		.add(Material.DARK_OAK_SIGN)
+		.add(Material.DARK_OAK_WALL_SIGN)
+		.add(Material.JUNGLE_SIGN)
+		.add(Material.JUNGLE_WALL_SIGN)
+		.add(Material.OAK_SIGN)
+		.add(Material.OAK_WALL_SIGN)
+		.add(Material.SPRUCE_SIGN)
+		.add(Material.SPRUCE_WALL_SIGN)
 		.build();
 
 	public static final MaterialSet BEDS = MaterialSet.builder()
