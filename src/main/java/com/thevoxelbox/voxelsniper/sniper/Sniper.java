@@ -303,7 +303,7 @@ public class Sniper {
 	//FAWE  Modified
 	public void undo(CommandSender sender, int amount) {
 		{ //FAWE add
-			Actor actor = WorldEditPlugin.getInstance().wrapCommandSender(sender);
+			com.sk89q.worldedit.entity.Player actor = (com.sk89q.worldedit.entity.Player) WorldEditPlugin.getInstance().wrapCommandSender(sender);
 			LocalSession session = actor.getSession();
 			new HistoryCommands(WorldEdit.getInstance()).undo(actor, session, amount, null);
 		}
