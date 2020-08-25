@@ -23,7 +23,7 @@ public class BiomeBrush extends AbstractBrush {
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		String firstParameter = parameters[0];
+		String firstParameter = parameters[1];
 		if (firstParameter.equalsIgnoreCase("info")) {
 			player.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
 			StringBuilder availableBiomes = new StringBuilder();
