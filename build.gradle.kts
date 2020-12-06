@@ -28,8 +28,8 @@ dependencies {
 //	implementation("net.mcparkour:common-math:1.0.0")
 //	implementation("net.mcparkour:common-text:1.0.0")
 //	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
-	compileOnly("org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT")
-	compileOnly("org.jetbrains:annotations:18.0.0")
+	compileOnly("org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT")
+	compileOnly("org.jetbrains:annotations:20.1.0")
 	"implementation"("name:FastAsyncWorldEdit-unspecified")
 }
 
