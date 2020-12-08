@@ -1,5 +1,4 @@
 import net.mcparkour.migle.attributes.ApiVersion
-import java.net.URL;
 
 plugins {
 	java
@@ -8,7 +7,7 @@ plugins {
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = sourceCompatibility
 }
 
 repositories {
@@ -19,18 +18,15 @@ repositories {
 			includeGroup("net.md-5")
 		}
 	}
-	flatDir {
-		dirs("libs")
-	}
+	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
 }
 
 dependencies {
 //	implementation("net.mcparkour:common-math:1.0.0")
 //	implementation("net.mcparkour:common-text:1.0.0")
-//	compileOnly("com.destroystokyo.paper:paper-api:1.14.4-R0.1-SNAPSHOT")
-	compileOnly("org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT")
-	compileOnly("org.jetbrains:annotations:18.0.0")
-	"implementation"("name:FastAsyncWorldEdit-unspecified")
+	compileOnly("org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT")
+	compileOnly("org.jetbrains:annotations:20.1.0")
+	implementation("com.intellectualsites.fawe:FAWE-Bukkit:1.16-448")
 }
 
 migleBukkit {
