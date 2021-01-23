@@ -8,7 +8,8 @@ import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.util.Metrics;
+import de.notmyfault.serverlib.ServerLib;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +27,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 	private BrushRegistry brushRegistry;
 	private PerformerRegistry performerRegistry;
 	private SniperRegistry sniperRegistry;
-	private static final int BSTATS_ID = 6405;
 
 	@Override
 	public void onEnable() {
@@ -38,7 +38,9 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		loadListeners();
 		new Favs(this);//FAWE add
 		// Enable metrics
-		new Metrics(this, BSTATS_ID);
+		Metrics metrics = new Metrics(this, 6405);
+		// Check if we are in a safe environment
+		ServerLib.checkUnsafeForks();
 	}
 
 	private VoxelSniperConfig loadConfig() {

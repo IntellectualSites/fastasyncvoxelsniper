@@ -1,8 +1,11 @@
-import net.mcparkour.migle.attributes.ApiVersion
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
-	java
-	id("net.mcparkour.migle.migle-bukkit") version "1.1.1"
+	id("java")
+	id("java-library")
+	id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
+	id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 java {
@@ -19,21 +22,42 @@ repositories {
 		}
 	}
 	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
+	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty") }
+	maven { url = uri("https://repo.codemc.org/repository/maven-public") }
 }
 
 dependencies {
-//	implementation("net.mcparkour:common-math:1.0.0")
-//	implementation("net.mcparkour:common-text:1.0.0")
-	compileOnly("org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT")
+	compileOnlyApi("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
-	implementation("com.intellectualsites.fawe:FAWE-Bukkit:1.16-448")
+	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-555")
+	implementation("de.notmyfault:serverlib:1.0.0")
+	implementation("org.bstats:bstats-bukkit:1.8")
 }
 
-migleBukkit {
-	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
+group = "com.thevoxelbox"
+version = "1.0.3-backward"
+
+bukkit {
 	name = "VoxelSniper"
-	apiVersion = ApiVersion.VERSION_1_13
+	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
 	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
-	website = "https://github.com/IntellectualSites/voxel-sniper-flattened"
+	apiVersion = "1.13"
+	version = rootProject.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
+	website = "https://github.com/IntellectualSites/voxel-sniper-flattened"
+	description = "World editing from ingame using 3D brushes"
+}
+
+tasks.named<ShadowJar>("shadowJar") {
+	archiveClassifier.set(null as String?)
+	dependencies {
+		include(dependency("de.notmyfault:serverlib:1.0.0"))
+		include(dependency("org.bstats:bstats-bukkit:1.8"))
+		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
+	}
+	minimize()
+}
+
+tasks.named("build").configure {
+	dependsOn("shadowJar")
 }
