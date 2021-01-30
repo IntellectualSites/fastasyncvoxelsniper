@@ -30,7 +30,7 @@ dependencies {
 	compileOnlyApi("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
 	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-555")
-	implementation("de.notmyfault:serverlib:1.0.0")
+	implementation("de.notmyfault:serverlib:1.0.1")
 	implementation("org.bstats:bstats-bukkit:1.8")
 }
 
@@ -51,7 +51,7 @@ bukkit {
 tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
-		include(dependency("de.notmyfault:serverlib:1.0.0"))
+		include(dependency("de.notmyfault:serverlib:1.0.1"))
 		include(dependency("org.bstats:bstats-bukkit:1.8"))
 		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
 	}
