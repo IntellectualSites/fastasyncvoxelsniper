@@ -53,7 +53,7 @@ tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
 		include(dependency("de.notmyfault:serverlib:1.0.1"))
-		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper.serverlib")
+		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper")
 		include(dependency("org.bstats:bstats-bukkit:2.1.0"))
 		include(dependency("org.bstats:bstats-base:2.1.0"))
 		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
