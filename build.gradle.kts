@@ -15,6 +15,7 @@ java {
 
 repositories {
 	jcenter()
+	mavenCentral()
 	maven("https://hub.spigotmc.org/nexus/content/repositories/public") {
 		content {
 			includeGroup("org.spigotmc")
@@ -22,8 +23,7 @@ repositories {
 		}
 	}
 	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
-	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty") }
-	maven { url = uri("https://repo.codemc.org/repository/maven-public") }
+	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/") }
 }
 
 dependencies {
@@ -31,7 +31,8 @@ dependencies {
 	compileOnly("org.jetbrains:annotations:20.1.0")
 	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-583")
 	implementation("de.notmyfault:serverlib:1.0.1")
-	implementation("org.bstats:bstats-bukkit:1.8")
+	implementation("org.bstats:bstats-bukkit:2.1.0")
+	implementation("org.bstats:bstats-base:2.1.0")
 }
 
 group = "com.thevoxelbox"
@@ -52,7 +53,9 @@ tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
 		include(dependency("de.notmyfault:serverlib:1.0.1"))
-		include(dependency("org.bstats:bstats-bukkit:1.8"))
+		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper.serverlib")
+		include(dependency("org.bstats:bstats-bukkit:2.1.0"))
+		include(dependency("org.bstats:bstats-base:2.1.0"))
 		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
 	}
 	minimize()
