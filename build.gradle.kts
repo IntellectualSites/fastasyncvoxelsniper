@@ -29,7 +29,7 @@ repositories {
 dependencies {
 	compileOnlyApi("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
-	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-555")
+	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-583")
 	implementation("de.notmyfault:serverlib:1.0.1")
 	implementation("org.bstats:bstats-bukkit:1.8")
 }
