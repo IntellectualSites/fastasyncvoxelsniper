@@ -32,7 +32,7 @@ dependencies {
 	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-583")
 	implementation("de.notmyfault:serverlib:1.0.1")
 	implementation("org.bstats:bstats-bukkit:2.1.0")
-	implementation("org.bstats:bstats-base:2.1.0")
+	implementation("org.bstats:bstats-base:2.2.1")
 }
 
 group = "com.thevoxelbox"
