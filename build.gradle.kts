@@ -31,8 +31,8 @@ dependencies {
 	compileOnly("org.jetbrains:annotations:20.1.0")
 	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-583")
 	implementation("de.notmyfault:serverlib:1.0.1")
-	implementation("org.bstats:bstats-bukkit:2.1.0")
-	implementation("org.bstats:bstats-base:2.1.0")
+	implementation("org.bstats:bstats-bukkit:2.2.1")
+	implementation("org.bstats:bstats-base:2.2.1")
 }
 
 group = "com.thevoxelbox"
@@ -52,11 +52,13 @@ bukkit {
 tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
-		include(dependency("de.notmyfault:serverlib:1.0.1"))
-		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper")
-		include(dependency("org.bstats:bstats-bukkit:2.1.0"))
-		include(dependency("org.bstats:bstats-base:2.1.0"))
-		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
+		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper") {
+			include(dependency("de.notmyfault:serverlib:1.0.1"))
+		}
+		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics") {
+			include(dependency("org.bstats:bstats-bukkit:2.2.1"))
+			include(dependency("org.bstats:bstats-base:2.2.1"))
+		}
 	}
 	minimize()
 }
