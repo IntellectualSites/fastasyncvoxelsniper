@@ -2,7 +2,7 @@ package com.thevoxelbox.voxelsniper.sniper;
 
 import com.boydti.fawe.Fawe;
 import com.boydti.fawe.beta.implementation.queue.QueueHandler;
-import com.boydti.fawe.bukkit.wrapper.AsyncWorld;
+import com.thevoxelbox.voxelsniper.wrapper.AsyncWorld;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
