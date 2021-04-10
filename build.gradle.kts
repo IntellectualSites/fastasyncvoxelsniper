@@ -14,7 +14,6 @@ java {
 }
 
 repositories {
-	jcenter()
 	mavenCentral()
 	maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
 	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
