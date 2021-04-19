@@ -84,6 +84,7 @@ public class StencilListBrush extends AbstractBrush {
 	}
 
 	private void readStencilList() {
+		stencilList.clear();
 		File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
 		if (file.exists()) {
 			try {
