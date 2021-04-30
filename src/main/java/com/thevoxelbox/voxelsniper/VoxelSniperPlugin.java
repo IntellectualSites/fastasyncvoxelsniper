@@ -8,13 +8,13 @@ import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import de.notmyfault.serverlib.ServerLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.incendo.serverlib.ServerLib;
 
 import java.io.File;
 import java.util.List;
@@ -41,6 +41,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		Metrics metrics = new Metrics(this, 6405);
 		// Check if we are in a safe environment
 		ServerLib.checkUnsafeForks();
+		ServerLib.checkJavaLTS();
 	}
 
 	private VoxelSniperConfig loadConfig() {

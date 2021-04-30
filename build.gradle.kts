@@ -5,7 +5,7 @@ plugins {
 	id("java")
 	id("java-library")
 	id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
-	id("com.github.johnrengelman.shadow") version "6.1.0"
+	id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 java {
@@ -24,7 +24,7 @@ dependencies {
 	compileOnlyApi("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
 	compileOnlyApi("com.intellectualsites.fawe:FAWE-Bukkit:1.16-637")
-	implementation("de.notmyfault:serverlib:1.0.1")
+	implementation("org.incendo.serverlib:ServerLib:2.1.0")
 	implementation("org.bstats:bstats-bukkit:2.2.1")
 	implementation("org.bstats:bstats-base:2.2.1")
 }
@@ -47,8 +47,8 @@ bukkit {
 tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
-		relocate("de.notmyfault", "com.thevoxelbox.voxelsniper") {
-			include(dependency("de.notmyfault:serverlib:1.0.1"))
+		relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper") {
+			include(dependency("org.incendo.serverlib:ServerLib:2.1.0"))
 		}
 		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics") {
 			include(dependency("org.bstats:bstats-bukkit:2.2.1"))
