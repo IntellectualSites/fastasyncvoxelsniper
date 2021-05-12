@@ -4,7 +4,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 plugins {
 	id("java")
 	id("java-library")
-	id("net.minecrell.plugin-yml.bukkit") version "0.3.0"
+	id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
 	id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
