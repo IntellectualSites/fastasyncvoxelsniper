@@ -243,7 +243,10 @@ public class AsyncBlock implements Block {
 	public AsyncBlockState getState() {
 		BaseBlock state = world.getFullBlock(x, y, z);
 		return switch (state.getBlockType().getInternalId()) {
-			case BlockID.ACACIA_SIGN, BlockID.SPRUCE_SIGN, BlockID.ACACIA_WALL_SIGN, BlockID.BIRCH_SIGN, BlockID.SPRUCE_WALL_SIGN, BlockID.BIRCH_WALL_SIGN, BlockID.DARK_OAK_SIGN, BlockID.DARK_OAK_WALL_SIGN, BlockID.JUNGLE_SIGN, BlockID.JUNGLE_WALL_SIGN, BlockID.OAK_SIGN, BlockID.OAK_WALL_SIGN -> new AsyncSign(this, state);
+			case BlockID.ACACIA_SIGN, BlockID.SPRUCE_SIGN, BlockID.ACACIA_WALL_SIGN, BlockID.BIRCH_SIGN,
+				BlockID.SPRUCE_WALL_SIGN, BlockID.BIRCH_WALL_SIGN, BlockID.DARK_OAK_SIGN,
+				BlockID.DARK_OAK_WALL_SIGN, BlockID.JUNGLE_SIGN, BlockID.JUNGLE_WALL_SIGN, BlockID.OAK_SIGN,
+				BlockID.OAK_WALL_SIGN -> new AsyncSign(this, state);
 			default -> new AsyncBlockState(this, state);
 		};
 	}
@@ -382,7 +385,7 @@ public class AsyncBlock implements Block {
 
 	@Override
 	public float getBreakSpeed(@NotNull Player player) {
-		return TaskManager.IMP.sync(() -> this.getUnsafeBlock().getBreakSpeed(player));
+		return this.getUnsafeBlock().getBreakSpeed(player);
 	}
 
 	@Override
@@ -445,7 +448,7 @@ public class AsyncBlock implements Block {
 
 	@Override
 	public @NotNull VoxelShape getCollisionShape() {
-		return null;
+		return this.getUnsafeBlock().getCollisionShape();
 	}
 
 	@Override
