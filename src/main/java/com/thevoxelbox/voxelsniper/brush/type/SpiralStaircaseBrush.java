@@ -576,17 +576,12 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 	}
 
 	private BlockFace dataToDirection(int data) {
-		switch (data) {
-			case 3:
-				return BlockFace.NORTH;
-			case 2:
-				return BlockFace.SOUTH;
-			case 1:
-				return BlockFace.WEST;
-			case 0:
-			default:
-				return BlockFace.EAST;
-		}
+		return switch (data) {
+			case 3 -> BlockFace.NORTH;
+			case 2 -> BlockFace.SOUTH;
+			case 1 -> BlockFace.WEST;
+			default -> BlockFace.EAST;
+		};
 	}
 
 	@Override

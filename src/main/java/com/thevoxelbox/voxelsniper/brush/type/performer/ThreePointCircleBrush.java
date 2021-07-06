@@ -152,18 +152,10 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 		SnipeMessageSender messageSender = snipe.createMessageSender()
 			.brushNameMessage();
 		switch (this.tolerance) {
-			case ACCURATE:
-				messageSender.message(ChatColor.GOLD + "Mode: Accurate");
-				break;
-			case DEFAULT:
-				messageSender.message(ChatColor.GOLD + "Mode: Default");
-				break;
-			case SMOOTH:
-				messageSender.message(ChatColor.GOLD + "Mode: Smooth");
-				break;
-			default:
-				messageSender.message(ChatColor.GOLD + "Mode: Unknown");
-				break;
+			case ACCURATE -> messageSender.message(ChatColor.GOLD + "Mode: Accurate");
+			case DEFAULT -> messageSender.message(ChatColor.GOLD + "Mode: Default");
+			case SMOOTH -> messageSender.message(ChatColor.GOLD + "Mode: Smooth");
+			default -> messageSender.message(ChatColor.GOLD + "Mode: Unknown");
 		}
 		messageSender.send();
 	}

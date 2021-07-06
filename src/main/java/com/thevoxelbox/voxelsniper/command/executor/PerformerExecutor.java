@@ -45,7 +45,7 @@ public class PerformerExecutor implements CommandExecutor {
 			return;
 		}
 		PerformerBrush performer = (PerformerBrush) brush;
-		String[] parameters = arguments.length == 0 ? new String[] {"m"} : arguments;
+		String[] parameters = arguments.length == 0 ? new String[]{"m"} : arguments;
 		Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
 		PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
 		performer.handlePerformerCommand(parameters, snipe, performerRegistry);

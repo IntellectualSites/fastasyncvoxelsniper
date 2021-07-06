@@ -1,8 +1,7 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
-import com.boydti.fawe.Fawe;
-import com.boydti.fawe.beta.implementation.queue.QueueHandler;
-import com.thevoxelbox.voxelsniper.wrapper.AsyncWorld;
+import com.fastasyncworldedit.core.Fawe;
+import com.fastasyncworldedit.core.beta.implementation.queue.QueueHandler;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -10,7 +9,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.command.HistoryCommands;
-import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.session.request.Request;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
@@ -22,6 +20,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.wrapper.AsyncWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -50,7 +49,7 @@ public class Sniper {
 	private UUID uuid;
 	private boolean enabled = true;
 	private int undoCacheSize;
-//	private Deque<Undo> undoList = new LinkedList<>(); //FAWE Removed
+	//	private Deque<Undo> undoList = new LinkedList<>(); //FAWE Removed
 	private List<Toolkit> toolkits = new ArrayList<>();
 
 	public Sniper(UUID uuid, int undoCacheSize) {
@@ -114,9 +113,9 @@ public class Sniper {
 	/**
 	 * Sniper execution call.
 	 *
-	 * @param action Action player performed
-	 * @param usedItem Item in hand of player
-	 * @param clickedBlock Block that the player targeted/interacted with
+	 * @param action           Action player performed
+	 * @param usedItem         Item in hand of player
+	 * @param clickedBlock     Block that the player targeted/interacted with
 	 * @param clickedBlockFace Face of that targeted Block
 	 * @return true if command visibly processed, false otherwise.
 	 */
@@ -173,114 +172,113 @@ public class Sniper {
 	public synchronized boolean snipeOnCurrentThread(com.sk89q.worldedit.entity.Player fp, Player player, Action action, Material usedItem, @Nullable Block clickedBlock, BlockFace clickedBlockFace, Toolkit toolkit, ToolAction toolAction, BrushProperties currentBrushProperties) {
 		LocalSession session = fp.getSession(); //FAWE add
 		synchronized (session) {//FAWE add
-		EditSession editSession = session.createEditSession(fp); //FAWE add
-		World world = BukkitAdapter.adapt(editSession.getWorld()); //FAWE add
-		AsyncWorld asyncWorld = new AsyncWorld(world, editSession); //FAWE add
-		this.tmpWorld = asyncWorld;
+			EditSession editSession = session.createEditSession(fp); //FAWE add
+			World world = BukkitAdapter.adapt(editSession.getWorld()); //FAWE add
+			AsyncWorld asyncWorld = new AsyncWorld(world, editSession); //FAWE add
+			this.tmpWorld = asyncWorld;
 
-		if (clickedBlock != null) {
-			clickedBlock = asyncWorld.getBlockAt(clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ());
-		}
-		try {//FAWE ADD
-		ToolkitProperties toolkitProperties = toolkit.getProperties();
-		BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
-		{//FAWE add
-			Request.reset();
-			Request.request().setExtent(editSession);
-			if (clickedBlock == null) {
-				@NotNull Location loc = player.getLocation();
-				int distance = toolkitProperties.getBlockTracerRange() == null ? Math.max(Bukkit.getViewDistance(), 3) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
-				BlockIterator iterator = new BlockIterator(asyncWorld, loc.toVector(), loc.getDirection(), player.getEyeHeight(), distance);
-				outer:
-				while (iterator.hasNext()) {
-					clickedBlock = iterator.next();
-					@NotNull Material type = clickedBlock.getType();
-					switch (type) {
-						case AIR:
-						case CAVE_AIR:
-						case VOID_AIR:
-							break;
-						default:
-							break outer;
-					}
-				}
+			if (clickedBlock != null) {
+				clickedBlock = asyncWorld.getBlockAt(clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ());
 			}
-		}
-		Block targetBlock = clickedBlock == null ? blockTracer.getTargetBlock() : clickedBlock;
-		if (player.isSneaking()) {
-			SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
-			if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
-				if (toolAction == ToolAction.ARROW) {
-					if (Materials.isEmpty(targetBlock.getType())) {
-						toolkitProperties.resetBlockData();
-					} else {
-						Material type = targetBlock.getType();
-						toolkitProperties.setBlockType(type);
+			try {//FAWE ADD
+				ToolkitProperties toolkitProperties = toolkit.getProperties();
+				BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+				{//FAWE add
+					Request.reset();
+					Request.request().setExtent(editSession);
+					if (clickedBlock == null) {
+						@NotNull Location loc = player.getLocation();
+						int distance = toolkitProperties.getBlockTracerRange() == null ? Math.max(Bukkit.getViewDistance(), 3) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
+						BlockIterator iterator = new BlockIterator(asyncWorld, loc.toVector(), loc.getDirection(), player.getEyeHeight(), distance);
+						outer:
+						while (iterator.hasNext()) {
+							clickedBlock = iterator.next();
+							@NotNull Material type = clickedBlock.getType();
+							switch (type) {
+								case AIR:
+								case CAVE_AIR:
+								case VOID_AIR:
+									break;
+								default:
+									break outer;
+							}
+						}
 					}
-					messenger.sendBlockTypeMessage();
-					return true;
-				} else if (toolAction == ToolAction.GUNPOWDER) {
-					if (Materials.isEmpty(targetBlock.getType())) {
-						toolkitProperties.resetBlockData();
-					} else {
-						BlockData blockData = targetBlock.getBlockData();
-						toolkitProperties.setBlockData(blockData);
-					}
-					messenger.sendBlockDataMessage();
-					return true;
 				}
-				return false;
-			} else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-				if (toolAction == ToolAction.ARROW) {
-					if (targetBlock == null) {
-						toolkitProperties.resetReplaceBlockData();
-					} else {
-						Material type = targetBlock.getType();
-						toolkitProperties.setReplaceBlockType(type);
+				Block targetBlock = clickedBlock == null ? blockTracer.getTargetBlock() : clickedBlock;
+				if (player.isSneaking()) {
+					SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
+					if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+						if (toolAction == ToolAction.ARROW) {
+							if (Materials.isEmpty(targetBlock.getType())) {
+								toolkitProperties.resetBlockData();
+							} else {
+								Material type = targetBlock.getType();
+								toolkitProperties.setBlockType(type);
+							}
+							messenger.sendBlockTypeMessage();
+							return true;
+						} else if (toolAction == ToolAction.GUNPOWDER) {
+							if (Materials.isEmpty(targetBlock.getType())) {
+								toolkitProperties.resetBlockData();
+							} else {
+								BlockData blockData = targetBlock.getBlockData();
+								toolkitProperties.setBlockData(blockData);
+							}
+							messenger.sendBlockDataMessage();
+							return true;
+						}
+						return false;
+					} else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+						if (toolAction == ToolAction.ARROW) {
+							if (targetBlock == null) {
+								toolkitProperties.resetReplaceBlockData();
+							} else {
+								Material type = targetBlock.getType();
+								toolkitProperties.setReplaceBlockType(type);
+							}
+							messenger.sendReplaceBlockTypeMessage();
+							return true;
+						} else if (toolAction == ToolAction.GUNPOWDER) {
+							if (targetBlock == null) {
+								toolkitProperties.resetReplaceBlockData();
+							} else {
+								BlockData blockData = targetBlock.getBlockData();
+								toolkitProperties.setReplaceBlockData(blockData);
+							}
+							messenger.sendReplaceBlockDataMessage();
+							return true;
+						}
+						return false;
 					}
-					messenger.sendReplaceBlockTypeMessage();
-					return true;
-				} else if (toolAction == ToolAction.GUNPOWDER) {
-					if (targetBlock == null) {
-						toolkitProperties.resetReplaceBlockData();
-					} else {
-						BlockData blockData = targetBlock.getBlockData();
-						toolkitProperties.setReplaceBlockData(blockData);
-					}
-					messenger.sendReplaceBlockDataMessage();
-					return true;
-				}
-				return false;
-			}
-			return false;
-		} else {
-			if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-				if (Materials.isEmpty(targetBlock.getType())) {
-					player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
-					return true;
-				}
-				Brush currentBrush = toolkit.getCurrentBrush();
-				if (currentBrush == null) {
 					return false;
+				} else {
+					if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+						if (Materials.isEmpty(targetBlock.getType())) {
+							player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+							return true;
+						}
+						Brush currentBrush = toolkit.getCurrentBrush();
+						if (currentBrush == null) {
+							return false;
+						}
+						Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
+						if (currentBrush instanceof PerformerBrush) {
+							PerformerBrush performerBrush = (PerformerBrush) currentBrush;
+							performerBrush.initialize(snipe);
+						}
+						Block lastBlock = clickedBlock == null ? blockTracer.getLastBlock() : clickedBlock.getRelative(clickedBlockFace);
+						currentBrush.perform(snipe, toolAction, targetBlock, lastBlock);
+						return true;
+					}
 				}
-				Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
-				if (currentBrush instanceof PerformerBrush) {
-					PerformerBrush performerBrush = (PerformerBrush) currentBrush;
-					performerBrush.initialize(snipe);
-				}
-				Block lastBlock = clickedBlock == null ? blockTracer.getLastBlock() : clickedBlock.getRelative(clickedBlockFace);
-				currentBrush.perform(snipe, toolAction, targetBlock, lastBlock);
-				return true;
+				return false;
+			} finally { //FAWE ADD
+				tmpWorld = null;
+				session.remember(editSession);
+				editSession.flushQueue();
+				WorldEdit.getInstance().flushBlockBag(fp, editSession);
 			}
-		}
-		return false;
-		}
-		finally { //FAWE ADD
-			tmpWorld = null;
-			session.remember(editSession);
-			editSession.flushQueue();
-			WorldEdit.getInstance().flushBlockBag(fp, editSession);
-		}
 		}
 	}
 

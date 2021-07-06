@@ -25,9 +25,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- *
  * @deprecated In the future Fawe will need to handle that internally properly,
- *     deprecated for removal without replacement
+ * deprecated for removal without replacement
  */
 @Deprecated
 public class AsyncBlockState implements BlockState {

@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        java: ["8", "11"]
+        java: ["16"]
         os: ["ubuntu-latest"]
     runs-on: "${{ matrix.os }}"
     steps:

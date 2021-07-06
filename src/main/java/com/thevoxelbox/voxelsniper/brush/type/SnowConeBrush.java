@@ -24,7 +24,8 @@ public class SnowConeBrush extends AbstractBrush {
 	}
 
 	@Override
-	public void handleArrowAction(Snipe snipe) {}
+	public void handleArrowAction(Snipe snipe) {
+	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {

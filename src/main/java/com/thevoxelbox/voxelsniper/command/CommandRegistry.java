@@ -27,7 +27,6 @@ public class CommandRegistry {
 		commandMap.register("voxel_sniper", command);
 	}
 
-	@SuppressWarnings("JavaReflectionMemberAccess")
 	private CommandMap getCommandMap(Server server) {
 		try {
 			Method method = server.getClass().getDeclaredMethod("getCommandMap"); // FAWE modify

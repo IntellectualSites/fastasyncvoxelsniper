@@ -10,7 +10,7 @@ public interface Brush {
 	 * Handles parameters passed to brushes.
 	 *
 	 * @param parameters Array of string containing parameters
-	 * @param snipe Snipe
+	 * @param snipe      Snipe
 	 */
 	void handleCommand(String[] parameters, Snipe snipe);
 

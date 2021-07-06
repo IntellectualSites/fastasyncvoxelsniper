@@ -1,8 +1,7 @@
 package com.thevoxelbox.voxelsniper.wrapper;
 
+import com.sk89q.jnbt.ByteTag;
 import com.sk89q.jnbt.CompoundTag;
-import com.thevoxelbox.voxelsniper.wrapper.AsyncBlock;
-import com.thevoxelbox.voxelsniper.wrapper.AsyncBlockState;
 import com.sk89q.jnbt.StringTag;
 import com.sk89q.jnbt.Tag;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -20,9 +19,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- *
  * @deprecated In the future Fawe will need to handle that internally properly,
- *     deprecated for removal without replacement
+ * deprecated for removal without replacement
  */
 @Deprecated
 public class AsyncSign extends AsyncBlockState implements Sign {
@@ -98,6 +96,22 @@ public class AsyncSign extends AsyncBlockState implements Sign {
 	@Override
 	public void setEditable(boolean arg0) {
 		this.isEditable = arg0;
+	}
+
+	@Override
+	public boolean isGlowingText() {
+		CompoundTag nbt = getNbtData();
+		return nbt != null && nbt.getByte("GlowingText") != 0;
+	}
+
+	@Override
+	public void setGlowingText(boolean glowing) {
+		final Map<String, Tag> map = this.cloneNbtMap();
+		if (map.isEmpty()) {
+			return;
+		}
+		map.put("GlowingText", new ByteTag((byte) (glowing ? 1 : 0)));
+		this.setNbtData(map);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.wrapper;
 
-import com.boydti.fawe.FaweCache;
+import com.fastasyncworldedit.core.FaweCache;
 import com.sk89q.jnbt.CompoundTag;
 import com.sk89q.jnbt.Tag;
 import org.apache.commons.lang.Validate;
@@ -20,9 +20,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- *
  * @deprecated In the future Fawe will need to handle that internally properly,
- *     deprecated for removal without replacement
+ * deprecated for removal without replacement
  */
 @Deprecated
 public final class AsyncDataContainer implements PersistentDataContainer {

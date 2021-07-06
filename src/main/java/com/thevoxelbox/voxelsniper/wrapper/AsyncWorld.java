@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.wrapper;
 
-import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.object.RunnableVal;
-import com.boydti.fawe.util.StringMan;
-import com.boydti.fawe.util.TaskManager;
 import com.destroystokyo.paper.HeightmapType;
+import com.fastasyncworldedit.core.FaweAPI;
+import com.fastasyncworldedit.core.object.RunnableVal;
+import com.fastasyncworldedit.core.util.StringMan;
+import com.fastasyncworldedit.core.util.TaskManager;
 import com.google.common.annotations.Beta;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -431,9 +431,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@NotNull
 	public Item dropItem(
-		@NotNull
-		final Location location, @NotNull
-		final ItemStack item) {
+		@NotNull final Location location, @NotNull final ItemStack item) {
 		return TaskManager.IMP.sync(() -> parent.dropItem(location, item));
 	}
 
@@ -449,10 +447,8 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@NotNull
 	public Item dropItemNaturally(
-		@NotNull
-		final Location location,
-		@NotNull
-		final ItemStack item) {
+		@NotNull final Location location,
+		@NotNull final ItemStack item) {
 		return TaskManager.IMP.sync(() -> parent.dropItemNaturally(location, item));
 	}
 
@@ -469,10 +465,8 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@NotNull
 	public Arrow spawnArrow(
-		@NotNull
-		final Location location,
-		@NotNull
-		final Vector direction, final float speed, final float spread) {
+		@NotNull final Location location,
+		@NotNull final Vector direction, final float speed, final float spread) {
 		return TaskManager.IMP.sync(() -> parent.spawnArrow(location, direction, speed, spread));
 	}
 
@@ -485,19 +479,14 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public boolean generateTree(
-		@NotNull
-		final Location location, @NotNull
-		final TreeType type) {
+		@NotNull final Location location, @NotNull final TreeType type) {
 		return TaskManager.IMP.sync(() -> parent.generateTree(location, type));
 	}
 
 	@Override
 	public boolean generateTree(
-		@NotNull
-		final Location loc, @NotNull
-		final TreeType type,
-		@NotNull
-		final BlockChangeDelegate delegate) {
+		@NotNull final Location loc, @NotNull final TreeType type,
+		@NotNull final BlockChangeDelegate delegate) {
 		return TaskManager.IMP.sync(() -> parent.generateTree(loc, type, delegate));
 	}
 
@@ -510,16 +499,14 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@NotNull
 	public LightningStrike strikeLightning(
-		@NotNull
-		final Location loc) {
+		@NotNull final Location loc) {
 		return TaskManager.IMP.sync(() -> parent.strikeLightning(loc));
 	}
 
 	@Override
 	@NotNull
 	public LightningStrike strikeLightningEffect(
-		@NotNull
-		final Location loc) {
+		@NotNull final Location loc) {
 		return TaskManager.IMP.sync(() -> parent.strikeLightningEffect(loc));
 	}
 
@@ -539,24 +526,21 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@Deprecated
 	public <T extends Entity> Collection<T> getEntitiesByClass(
-		@NotNull
-		final Class<T>... classes) {
+		@NotNull final Class<T>... classes) {
 		return TaskManager.IMP.sync(() -> parent.getEntitiesByClass(classes));
 	}
 
 	@NotNull
 	@Override
 	public <T extends Entity> Collection<T> getEntitiesByClass(
-		@NotNull
-		final Class<T> cls) {
+		@NotNull final Class<T> cls) {
 		return TaskManager.IMP.sync(() -> parent.getEntitiesByClass(cls));
 	}
 
 	@Override
 	@NotNull
 	public Collection<Entity> getEntitiesByClasses(
-		@NotNull
-		final Class<?>... classes) {
+		@NotNull final Class<?>... classes) {
 		return TaskManager.IMP.sync(() -> parent.getEntitiesByClasses(classes));
 	}
 
@@ -569,8 +553,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@Override
 	@NotNull
 	public Collection<Entity> getNearbyEntities(
-		@NotNull
-		final Location location,
+		@NotNull final Location location,
 		final double x, final double y, final double z) {
 		return TaskManager.IMP.sync(() -> parent.getNearbyEntities(location, x, y, z));
 	}
@@ -607,6 +590,11 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	@NotNull
 	public MoonPhase getMoonPhase() {
 		return parent.getMoonPhase();
+	}
+
+	@Override
+	public boolean lineOfSightExists(@NotNull Location from, @NotNull Location to) {
+		return false;
 	}
 
 	@Override
@@ -811,9 +799,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public void playEffect(
-		@NotNull
-		final Location location, @NotNull
-		final Effect effect,
+		@NotNull final Location location, @NotNull final Effect effect,
 		final int data, final int radius) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
@@ -830,9 +816,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public <T> void playEffect(
-		@NotNull
-		final Location location, @NotNull
-		final Effect effect,
+		@NotNull final Location location, @NotNull final Effect effect,
 		final T data, final int radius) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
@@ -1061,9 +1045,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public void playSound(
-		@NotNull
-		final Location location, @NotNull
-		final Sound sound,
+		@NotNull final Location location, @NotNull final Sound sound,
 		final float volume, final float pitch) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
@@ -1075,9 +1057,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public void playSound(
-		@NotNull
-		final Location location, @NotNull
-		final String sound,
+		@NotNull final Location location, @NotNull final String sound,
 		final float volume, final float pitch) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
@@ -1168,9 +1148,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public void setMetadata(
-		@NotNull
-		final String key, @NotNull
-		final MetadataValue meta) {
+		@NotNull final String key, @NotNull final MetadataValue meta) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
 			public void run(Object value) {
@@ -1192,9 +1170,7 @@ public class AsyncWorld extends PassthroughExtent implements World {
 
 	@Override
 	public void removeMetadata(
-		@NotNull
-		final String key, @NotNull
-		final Plugin plugin) {
+		@NotNull final String key, @NotNull final Plugin plugin) {
 		TaskManager.IMP.sync(new RunnableVal<Object>() {
 			@Override
 			public void run(Object value) {
@@ -1248,6 +1224,71 @@ public class AsyncWorld extends PassthroughExtent implements World {
 	public Location locateNearestStructure(@NotNull Location arg0, @NotNull StructureType arg1,
 										   int arg2, boolean arg3) {
 		return parent.locateNearestStructure(arg0, arg1, arg2, arg3);
+	}
+
+	@Override
+	public @Nullable Location locateNearestBiome(@NotNull Location origin, @NotNull Biome biome, int radius) {
+		return parent.locateNearestBiome(origin, biome, radius);
+	}
+
+	@Override
+	public @Nullable Location locateNearestBiome(@NotNull Location origin, @NotNull Biome biome, int radius, int step) {
+		return parent.locateNearestBiome(origin, biome, radius, step);
+	}
+
+	@Override
+	public boolean isUltrawarm() {
+		return parent.isUltrawarm();
+	}
+
+	@Override
+	public boolean isNatural() {
+		return parent.isNatural();
+	}
+
+	@Override
+	public double getCoordinateScale() {
+		return parent.getCoordinateScale();
+	}
+
+	@Override
+	public boolean hasSkylight() {
+		return parent.hasSkylight();
+	}
+
+	@Override
+	public boolean hasBedrockCeiling() {
+		return parent.hasBedrockCeiling();
+	}
+
+	@Override
+	public boolean isPiglinSafe() {
+		return parent.isPiglinSafe();
+	}
+
+	@Override
+	public boolean doesBedWork() {
+		return parent.doesBedWork();
+	}
+
+	@Override
+	public boolean doesRespawnAnchorWork() {
+		return parent.doesRespawnAnchorWork();
+	}
+
+	@Override
+	public boolean hasRaids() {
+		return parent.hasRaids();
+	}
+
+	@Override
+	public boolean isFixedTime() {
+		return parent.isFixedTime();
+	}
+
+	@Override
+	public @NotNull Collection<Material> getInfiniburn() {
+		return parent.getInfiniburn();
 	}
 
 	@Override

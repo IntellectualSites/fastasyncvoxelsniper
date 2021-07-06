@@ -1,8 +1,7 @@
 package com.thevoxelbox.voxelsniper.wrapper;
 
-import com.thevoxelbox.voxelsniper.wrapper.AsyncSign;
-import com.boydti.fawe.util.TaskManager;
 import com.destroystokyo.paper.block.BlockSoundGroup;
+import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.biome.BiomeType;
@@ -20,12 +19,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+import org.bukkit.util.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -33,9 +35,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @deprecated In the future Fawe will need to handle that internally properly,
- *     deprecated for removal without replacement
+ * deprecated for removal without replacement
  */
 @Deprecated
 public class AsyncBlock implements Block {
@@ -170,7 +171,7 @@ public class AsyncBlock implements Block {
 
 	@Override
 	public boolean isValidTool(@Nonnull ItemStack itemStack) {
-		return getDrops(itemStack).size() !=0;
+		return getDrops(itemStack).size() != 0;
 	}
 
 	@Nonnull
@@ -241,23 +242,10 @@ public class AsyncBlock implements Block {
 	@Override
 	public AsyncBlockState getState() {
 		BaseBlock state = world.getFullBlock(x, y, z);
-		switch (state.getBlockType().getInternalId()) {
-			case BlockID.ACACIA_SIGN:
-			case BlockID.SPRUCE_SIGN:
-			case BlockID.ACACIA_WALL_SIGN:
-			case BlockID.BIRCH_SIGN:
-			case BlockID.SPRUCE_WALL_SIGN:
-			case BlockID.BIRCH_WALL_SIGN:
-			case BlockID.DARK_OAK_SIGN:
-			case BlockID.DARK_OAK_WALL_SIGN:
-			case BlockID.JUNGLE_SIGN:
-			case BlockID.JUNGLE_WALL_SIGN:
-			case BlockID.OAK_SIGN:
-			case BlockID.OAK_WALL_SIGN:
-				return new AsyncSign(this, state);
-			default:
-				return new AsyncBlockState(this, state);
-		}
+		return switch (state.getBlockType().getInternalId()) {
+			case BlockID.ACACIA_SIGN, BlockID.SPRUCE_SIGN, BlockID.ACACIA_WALL_SIGN, BlockID.BIRCH_SIGN, BlockID.SPRUCE_WALL_SIGN, BlockID.BIRCH_WALL_SIGN, BlockID.DARK_OAK_SIGN, BlockID.DARK_OAK_WALL_SIGN, BlockID.JUNGLE_SIGN, BlockID.JUNGLE_WALL_SIGN, BlockID.OAK_SIGN, BlockID.OAK_WALL_SIGN -> new AsyncSign(this, state);
+			default -> new AsyncBlockState(this, state);
+		};
 	}
 
 	@Override
@@ -310,14 +298,10 @@ public class AsyncBlock implements Block {
 
 	@Override
 	public boolean isEmpty() {
-		switch (getType()) {
-			case AIR:
-			case CAVE_AIR:
-			case VOID_AIR:
-				return true;
-			default:
-				return false;
-		}
+		return switch (getType()) {
+			case AIR, CAVE_AIR, VOID_AIR -> true;
+			default -> false;
+		};
 	}
 
 	@Override
@@ -392,6 +376,16 @@ public class AsyncBlock implements Block {
 	}
 
 	@Override
+	public boolean isPreferredTool(@NotNull ItemStack tool) {
+		return this.getUnsafeBlock().isPreferredTool(tool);
+	}
+
+	@Override
+	public float getBreakSpeed(@NotNull Player player) {
+		return TaskManager.IMP.sync(() -> this.getUnsafeBlock().getBreakSpeed(player));
+	}
+
+	@Override
 	public void setMetadata(@Nonnull String metadataKey, @Nonnull MetadataValue newMetadataValue) {
 		this.getUnsafeBlock().setMetadata(metadataKey, newMetadataValue);
 	}
@@ -447,6 +441,11 @@ public class AsyncBlock implements Block {
 	@Override
 	public BoundingBox getBoundingBox() {
 		return this.getUnsafeBlock().getBoundingBox();
+	}
+
+	@Override
+	public @NotNull VoxelShape getCollisionShape() {
+		return null;
 	}
 
 	@Override

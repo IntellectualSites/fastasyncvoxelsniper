@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.wrapper;
 
-import com.boydti.fawe.Fawe;
-import com.boydti.fawe.util.MathMan;
-import com.boydti.fawe.util.TaskManager;
+import com.fastasyncworldedit.core.Fawe;
+import com.fastasyncworldedit.core.util.MathMan;
+import com.fastasyncworldedit.core.util.TaskManager;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
@@ -20,9 +20,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- *
  * @deprecated In the future Fawe will need to handle that internally properly,
- *     deprecated for removal without replacement
+ * deprecated for removal without replacement
  */
 @Deprecated
 public class AsyncChunk implements Chunk {
@@ -129,7 +128,8 @@ public class AsyncChunk implements Chunk {
 		return TaskManager.IMP.sync(() -> world.getChunkAt(x, z).getTileEntities(useSnapshot));
 	}
 
-	@NotNull @Override
+	@NotNull
+	@Override
 	public Collection<BlockState> getTileEntities(@NotNull Predicate<Block> blockPredicate,
 												  boolean useSnapshot) {
 		if (!isLoaded()) {

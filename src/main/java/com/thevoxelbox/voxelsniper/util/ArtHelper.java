@@ -21,7 +21,7 @@ public final class ArtHelper {
 	 * The paint method used to scroll or set a painting to a specific type.
 	 *
 	 * @param player The player executing the method
-	 * @param art Chosen art to set the painting to
+	 * @param art    Chosen art to set the painting to
 	 */
 	public static void paint(Player player, Art art) {
 		Painting bestMatch = matchPainting(player);
