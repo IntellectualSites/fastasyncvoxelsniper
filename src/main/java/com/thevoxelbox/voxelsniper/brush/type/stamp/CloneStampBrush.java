@@ -118,10 +118,18 @@ public class CloneStampBrush extends AbstractStampBrush {
 		messenger.sendVoxelHeightMessage();
 		messenger.sendCylinderCenterMessage();
 		switch (this.stamp) {
-			case DEFAULT -> messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Default Stamp");
-			case NO_AIR -> messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No-Air Stamp");
-			case FILL -> messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Fill Stamp");
-			default -> messenger.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+			case DEFAULT:
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Default Stamp");
+				break;
+			case NO_AIR:
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No-Air Stamp");
+				break;
+			case FILL:
+				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Fill Stamp");
+				break;
+			default:
+				messenger.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+				break;
 		}
 	}
 }

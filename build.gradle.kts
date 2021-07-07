@@ -8,28 +8,34 @@ plugins {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_16
-	targetCompatibility = sourceCompatibility
+	toolchain.languageVersion.set(JavaLanguageVersion.of(16))
 }
 
 repositories {
 	mavenCentral()
 	maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
-	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
-	maven { url = uri("https://mvn.intellectualsites.com/content/repositories/thirdparty/") }
+	maven { url = uri("https://mvn.intellectualsites.com/content/groups/public/") }
 }
 
 dependencies {
-	compileOnlyApi("io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT")
+	compileOnlyApi("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
-	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-23")
+	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-44")
 	implementation("org.incendo.serverlib:ServerLib:2.2.0")
 	implementation("org.bstats:bstats-bukkit:2.2.1")
 	implementation("org.bstats:bstats-base:2.2.1")
 }
 
+tasks.compileJava.configure {
+	options.release.set(11)
+}
+
+configurations.all {
+	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
+}
+
 group = "com.thevoxelbox"
-version = "1.0.5-backward"
+version = "1.1.0-backward"
 
 bukkit {
 	name = "VoxelSniper"

@@ -242,13 +242,23 @@ public class AsyncBlock implements Block {
 	@Override
 	public AsyncBlockState getState() {
 		BaseBlock state = world.getFullBlock(x, y, z);
-		return switch (state.getBlockType().getInternalId()) {
-			case BlockID.ACACIA_SIGN, BlockID.SPRUCE_SIGN, BlockID.ACACIA_WALL_SIGN, BlockID.BIRCH_SIGN,
-				BlockID.SPRUCE_WALL_SIGN, BlockID.BIRCH_WALL_SIGN, BlockID.DARK_OAK_SIGN,
-				BlockID.DARK_OAK_WALL_SIGN, BlockID.JUNGLE_SIGN, BlockID.JUNGLE_WALL_SIGN, BlockID.OAK_SIGN,
-				BlockID.OAK_WALL_SIGN -> new AsyncSign(this, state);
-			default -> new AsyncBlockState(this, state);
-		};
+		switch (state.getBlockType().getInternalId()) {
+			case BlockID.ACACIA_SIGN:
+			case BlockID.SPRUCE_SIGN:
+			case BlockID.ACACIA_WALL_SIGN:
+			case BlockID.BIRCH_SIGN:
+			case BlockID.SPRUCE_WALL_SIGN:
+			case BlockID.BIRCH_WALL_SIGN:
+			case BlockID.DARK_OAK_SIGN:
+			case BlockID.DARK_OAK_WALL_SIGN:
+			case BlockID.JUNGLE_SIGN:
+			case BlockID.JUNGLE_WALL_SIGN:
+			case BlockID.OAK_SIGN:
+			case BlockID.OAK_WALL_SIGN:
+				return new AsyncSign(this, state);
+			default:
+				return new AsyncBlockState(this, state);
+		}
 	}
 
 	@Override
@@ -301,10 +311,14 @@ public class AsyncBlock implements Block {
 
 	@Override
 	public boolean isEmpty() {
-		return switch (getType()) {
-			case AIR, CAVE_AIR, VOID_AIR -> true;
-			default -> false;
-		};
+		switch (getType()) {
+			case AIR:
+			case CAVE_AIR:
+			case VOID_AIR:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	@Override
