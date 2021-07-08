@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
@@ -88,17 +89,17 @@ public class EllipseBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		execute(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		execute(snipe, lastBlock);
 	}
 
-	private void execute(Snipe snipe, Block targetBlock) {
+	private void execute(Snipe snipe, BlockVector3 targetBlock) {
 		this.stepSize = TWO_PI / this.steps;
 		if (this.fill) {
 			ellipseFill(snipe, targetBlock);
@@ -107,26 +108,29 @@ public class EllipseBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	private void ellipse(Snipe snipe, Block targetBlock) {
+	private void ellipse(Snipe snipe, BlockVector3 targetBlock) {
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		try {
 			for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
 				int y = (int) Math.round(this.yscl * Math.sin(steps));
-				Block lastBlock = getLastBlock();
-				BlockFace face = getTargetBlock().getFace(lastBlock);
+				BlockVector3 lastBlock = getLastBlock();
+				BlockFace face = getFace(getTargetBlock(), lastBlock);
 				if (face != null) {
 					switch (face) {
 						case NORTH:
 						case SOUTH:
-							this.performer.perform(targetBlock.getRelative(0, x, y));
+							this.performer.perform(getEditSession(), blockX, blockY + x, blockZ + y, getBlock(blockX, blockY + x, blockZ + y));
 							break;
 						case EAST:
 						case WEST:
-							this.performer.perform(targetBlock.getRelative(x, y, 0));
+							this.performer.perform(getEditSession(), blockX + x, blockY + y, blockZ, getBlock(blockX + x, blockY + y, blockZ));
 							break;
 						case UP:
 						case DOWN:
-							this.performer.perform(targetBlock.getRelative(x, 0, y));
+							this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + y, getBlock(blockX + x, blockY, blockZ + y));
 							break;
 						default:
 							break;
@@ -144,31 +148,34 @@ public class EllipseBrush extends AbstractPerformerBrush {
 		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void ellipseFill(Snipe snipe, Block targetBlock) {
+	private void ellipseFill(Snipe snipe, BlockVector3 targetBlock) {
 		int ix = this.xscl;
 		int iy = this.yscl;
-		this.performer.perform(targetBlock);
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
+		this.performer.perform(getEditSession(), blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
 		try {
 			if (ix >= iy) { // Need this unless you want weird holes
 				for (iy = this.yscl; iy > 0; iy--) {
 					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
-						Block lastBlock = getLastBlock();
-						BlockFace face = getTargetBlock().getFace(lastBlock);
+						BlockVector3 lastBlock = getLastBlock();
+						BlockFace face = getFace(getTargetBlock(), lastBlock);
 						if (face != null) {
 							switch (face) {
 								case NORTH:
 								case SOUTH:
-									this.performer.perform(targetBlock.getRelative(0, x, y));
+									this.performer.perform(getEditSession(), blockX, blockY + x, blockZ + y, getBlock(blockX, blockY + x, blockZ + y));
 									break;
 								case EAST:
 								case WEST:
-									this.performer.perform(targetBlock.getRelative(x, y, 0));
+									this.performer.perform(getEditSession(), blockX + x, blockY + y, blockZ, getBlock(blockX + x, blockY + y, blockZ));
 									break;
 								case UP:
 								case DOWN:
-									this.performer.perform(targetBlock.getRelative(x, 0, y));
+									this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + y, getBlock(blockX + x, blockY, blockZ + y));
 									break;
 								default:
 									break;
@@ -185,21 +192,21 @@ public class EllipseBrush extends AbstractPerformerBrush {
 					for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
-						Block lastBlock = getLastBlock();
-						BlockFace face = getTargetBlock().getFace(lastBlock);
+						BlockVector3 lastBlock = getLastBlock();
+						BlockFace face = getFace(getTargetBlock(), lastBlock);
 						if (face != null) {
 							switch (face) {
 								case NORTH:
 								case SOUTH:
-									this.performer.perform(targetBlock.getRelative(0, x, y));
+									this.performer.perform(getEditSession(), blockX, blockY + x, blockZ + y, getBlock(blockX, blockY + x, blockZ + y));
 									break;
 								case EAST:
 								case WEST:
-									this.performer.perform(targetBlock.getRelative(x, y, 0));
+									this.performer.perform(getEditSession(), blockX + x, blockY + y, blockZ, getBlock(blockX + x, blockY + y, blockZ));
 									break;
 								case UP:
 								case DOWN:
-									this.performer.perform(targetBlock.getRelative(x, 0, y));
+									this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + y, getBlock(blockX + x, blockY, blockZ + y));
 									break;
 								default:
 									break;

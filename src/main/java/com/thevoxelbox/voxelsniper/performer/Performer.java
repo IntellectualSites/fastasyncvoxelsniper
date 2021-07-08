@@ -1,14 +1,16 @@
 package com.thevoxelbox.voxelsniper.performer;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
-import org.bukkit.block.Block;
 
 public interface Performer {
 
 	void initialize(PerformerSnipe snipe);
 
-	void perform(Block block);
+	void perform(EditSession editSession, int x, int y, int z, BlockState block);
 
 	void sendInfo(PerformerSnipe snipe);
 

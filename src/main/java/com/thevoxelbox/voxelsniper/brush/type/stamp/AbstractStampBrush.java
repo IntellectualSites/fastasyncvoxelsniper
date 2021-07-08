@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -80,18 +82,18 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 	}
 
 	protected void setBlock(StampBrushBlockWrapper blockWrapper) {
-		Block targetBlock = getTargetBlock();
-		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
+		BlockVector3 targetBlock = getTargetBlock();
+		BlockState block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
 		this.undo.put(block);
-		block.setBlockData(blockWrapper.getBlockData());
+		setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 	}
 
 	protected void setBlockFill(StampBrushBlockWrapper blockWrapper) {
-		Block targetBlock = getTargetBlock();
-		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		if (Materials.isEmpty(block.getType())) {
+		BlockVector3 targetBlock = getTargetBlock();
+		BlockState block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
+		if (block.isAir()) {
 			this.undo.put(block);
-			block.setBlockData(blockWrapper.getBlockData());
+			setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 		}
 	}
 
@@ -158,7 +160,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 					this.fall.add(block);
 				} else if (falling(material)) {
 					this.drop.add(block);
-				} else if (!Materials.isEmpty(material)) {
+				} else if (!material.isEmpty()) {
 					this.solid.add(block);
 					this.setBlockFill(block);
 				}
@@ -198,7 +200,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 					this.fall.add(block);
 				} else if (this.falling(material)) {
 					this.drop.add(block);
-				} else if (!Materials.isEmpty(material)) {
+				} else if (!material.isEmpty()) {
 					this.solid.add(block);
 					this.setBlock(block);
 				}

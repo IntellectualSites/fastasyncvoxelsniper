@@ -1,9 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.util.NumberConversions;
@@ -51,22 +53,18 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 	@Override
 	public void handleArrowAction(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (this.coordinatesOne == null) {
-			this.coordinatesOne = targetBlock.getLocation()
-				.toVector();
+			this.coordinatesOne = Vectors.toBukkit(targetBlock);
 			messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
 		} else if (this.coordinatesTwo == null) {
-			this.coordinatesTwo = targetBlock.getLocation()
-				.toVector();
+			this.coordinatesTwo = Vectors.toBukkit(targetBlock);
 			messenger.sendMessage(ChatColor.GRAY + "Second Corner set.");
 		} else if (this.coordinatesThree == null) {
-			this.coordinatesThree = targetBlock.getLocation()
-				.toVector();
+			this.coordinatesThree = Vectors.toBukkit(targetBlock);
 			messenger.sendMessage(ChatColor.GRAY + "Third Corner set.");
 		} else {
-			this.coordinatesOne = targetBlock.getLocation()
-				.toVector();
+			this.coordinatesOne = Vectors.toBukkit(targetBlock);
 			this.coordinatesTwo = null;
 			this.coordinatesThree = null;
 			messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
@@ -133,7 +131,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 					double centerConstant = normalVector.getX() * (circumcenter.getX() + x + 0.5) + normalVector.getY() * (circumcenter.getY() + y + 0.5) + normalVector.getZ() * (circumcenter.getZ() + z + 0.5);
 					// Check if point is within sphere and on plane (some tolerance given)
 					if (tempDistance <= radius && (Math.abs(cornerConstant - planeConstant) < this.tolerance.getValue() || Math.abs(centerConstant - planeConstant) < this.tolerance.getValue())) {
-						this.performer.perform(this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
+						this.performer.perform(getEditSession(), brushCenter.getBlockX() + x, clampY(brushCenter.getBlockY() + y), brushCenter.getBlockZ() + z, this.clampY(brushCenter.getBlockX() + x, brushCenter.getBlockY() + y, brushCenter.getBlockZ() + z));
 					}
 				}
 			}

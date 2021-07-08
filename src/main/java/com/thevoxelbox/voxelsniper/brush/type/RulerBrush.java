@@ -1,10 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,9 +54,8 @@ public class RulerBrush extends AbstractBrush {
 	public void handleArrowAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		Material blockDataType = toolkitProperties.getBlockType();
-		Block targetBlock = getTargetBlock();
-		Location location = targetBlock.getLocation();
-		this.coordinates = location.toVector();
+		BlockVector3 targetBlock = getTargetBlock();
+		this.coordinates = Vectors.toBukkit(targetBlock);
 		if (this.offsetX == 0 && this.offsetY == 0 && this.offsetZ == 0) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
@@ -79,12 +80,11 @@ public class RulerBrush extends AbstractBrush {
 			return;
 		}
 		messenger.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		messenger.sendMessage(ChatColor.AQUA + "X change: " + (targetBlock.getX() - this.coordinates.getX()));
 		messenger.sendMessage(ChatColor.AQUA + "Y change: " + (targetBlock.getY() - this.coordinates.getY()));
 		messenger.sendMessage(ChatColor.AQUA + "Z change: " + (targetBlock.getZ() - this.coordinates.getZ()));
-		Location location = targetBlock.getLocation();
-		double distance = Math.round(location.toVector()
+		double distance = Math.round(Vectors.toBukkit(targetBlock)
 			.subtract(this.coordinates)
 			.length() * 100) / 100.0;
 		double blockDistance = Math.round((Math.abs(Math.max(Math.max(Math.abs(targetBlock.getX() - this.coordinates.getX()), Math.abs(targetBlock.getY() - this.coordinates.getY())), Math.abs(targetBlock.getZ() - this.coordinates.getZ()))) + 1) * 100) / 100.0;

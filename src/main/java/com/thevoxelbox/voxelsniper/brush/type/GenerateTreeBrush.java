@@ -1,16 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
@@ -22,7 +22,8 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	// Tree Variables.
 	private Random randGenerator = new Random();
-	private List<Block> branchBlocks = new ArrayList<>();
+	private List<BlockState> branchBlocks = new ArrayList<>();
+	private List<Integer[]> branchBlocksLocation = new ArrayList<>();
 	private Undo undo;
 	// If these default values are edited. Remember to change default values in the default preset.
 	private Material leafType = Material.OAK_LEAVES;
@@ -180,8 +181,9 @@ public class GenerateTreeBrush extends AbstractBrush {
 	public void handleArrowAction(Snipe snipe) {
 		this.undo = new Undo();
 		this.branchBlocks.clear();
+		this.branchBlocksLocation.clear();
 		// Sets the location variables.
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		this.blockPositionX = targetBlock.getX();
 		this.blockPositionY = targetBlock.getY() + this.startHeight;
 		this.blockPositionZ = targetBlock.getZ();
@@ -191,10 +193,10 @@ public class GenerateTreeBrush extends AbstractBrush {
 		generateTrunk();
 		// Each branch block was saved in an array. This is now fed through an array.
 		// This array takes each branch block and constructs a leaf node around it.
-		for (Block block : this.branchBlocks) {
-			this.blockPositionX = block.getX();
-			this.blockPositionY = block.getY();
-			this.blockPositionZ = block.getZ();
+		for (Integer[] blockLocation : this.branchBlocksLocation) {
+			this.blockPositionX = blockLocation[0];
+			this.blockPositionY = blockLocation[1];
+			this.blockPositionZ = blockLocation[2];
 			this.createLeafNode();
 		}
 		// Ends the undo function and mos on.
@@ -235,8 +237,9 @@ public class GenerateTreeBrush extends AbstractBrush {
 				this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 			}
 			// Creates a branch block.
-			clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
+			setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, woodType);
 			this.branchBlocks.add(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
+			this.branchBlocksLocation.add(new Integer[]{this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ});
 		}
 		// Resets the origin
 		this.blockPositionX = originX;
@@ -272,17 +275,16 @@ public class GenerateTreeBrush extends AbstractBrush {
 	}
 
 	private void generateLeafNodeBlock(int x, int y, int z) {
-		World world = getWorld();
 		if (this.randGenerator.nextInt(100) >= 30) {
 			// If block is Air, create a leaf block.
-			Block block = world.getBlockAt(x, y, z);
-			if (Materials.isEmpty(block.getType())) {
+			BlockState block = getBlock(x, y, z);
+			if (block.isAir()) {
 				// Adds block to undo function.
 				if (!Tag.LEAVES.isTagged(getBlockType(x, y, z))) {
 					this.undo.put(clampY(x, y, z));
 				}
 				// Creates block.
-				clampY(x, y, z).setType(this.leafType, false);
+				setBlockType(x, clampY(y), z, this.leafType);
 			}
 		}
 	}
@@ -320,7 +322,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 				} else {
 					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 					// Place log block.
-					clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ).setType(this.woodType, false);
+					setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, this.woodType);
 				}
 				MaterialSet solids = MaterialSet.builder()
 					.with(Tag.LOGS)
@@ -380,25 +382,24 @@ public class GenerateTreeBrush extends AbstractBrush {
 			for (int z = this.thickness; z >= 0; z--) {
 				if ((xSquared + Math.pow(z, 2)) <= bSquared) {
 					// If block is air, then create a block.
-					World world = this.getWorld();
-					generateTrunkBlock(world, this.blockPositionX + x, this.blockPositionZ + z);
-					generateTrunkBlock(world, this.blockPositionX + x, this.blockPositionZ - z);
-					generateTrunkBlock(world, this.blockPositionX - x, this.blockPositionZ + z);
-					generateTrunkBlock(world, this.blockPositionX - x, this.blockPositionZ - z);
+					generateTrunkBlock(this.blockPositionX + x, this.blockPositionZ + z);
+					generateTrunkBlock(this.blockPositionX + x, this.blockPositionZ - z);
+					generateTrunkBlock(this.blockPositionX - x, this.blockPositionZ + z);
+					generateTrunkBlock(this.blockPositionX - x, this.blockPositionZ - z);
 				}
 			}
 		}
 	}
 
-	private void generateTrunkBlock(World world, int x, int y) {
-		Block block = world.getBlockAt(x, this.blockPositionY, y);
-		if (Materials.isEmpty(block.getType())) {
+	private void generateTrunkBlock(int x, int y) {
+		BlockState block = getBlock(x, this.blockPositionY, y);
+		if (block.isAir()) {
 			// Adds block to undo function.
 			if (!Tag.LOGS.isTagged(getBlockType(x, this.blockPositionY, y))) {
 				this.undo.put(this.clampY(x, this.blockPositionY, y));
 			}
 			// Creates block.
-			clampY(x, this.blockPositionY, y).setType(this.woodType, false);
+			setBlockType(x, clampY(this.blockPositionY), y, this.woodType);
 		}
 	}
 

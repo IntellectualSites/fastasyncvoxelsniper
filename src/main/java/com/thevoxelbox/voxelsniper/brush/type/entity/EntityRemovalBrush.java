@@ -1,11 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
+import com.fastasyncworldedit.core.util.TaskManager;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
@@ -59,15 +62,16 @@ public class EntityRemovalBrush extends AbstractBrush {
 	private void radialRemoval(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		Chunk targetChunk = getTargetBlock().getChunk();
+		BlockVector3 targetBlock = getTargetBlock();
+		int chunkX = targetBlock.getX() >> 4;
+		int chunkZ = targetBlock.getZ() >> 4;
 		int entityCount = 0;
 		int chunkCount = 0;
 		try {
-			entityCount += removeEntities(targetChunk);
 			int radius = Math.round(toolkitProperties.getBrushSize() / 16.0F);
-			for (int x = targetChunk.getX() - radius; x <= targetChunk.getX() + radius; x++) {
-				for (int z = targetChunk.getZ() - radius; z <= targetChunk.getZ() + radius; z++) {
-					entityCount += removeEntities(getWorld().getChunkAt(x, z));
+			for (int x = chunkX - radius; x <= chunkX + radius; x++) {
+				for (int z = chunkZ - radius; z <= chunkZ + radius; z++) {
+					entityCount += removeEntities(x, z);
 					chunkCount++;
 				}
 			}
@@ -79,15 +83,20 @@ public class EntityRemovalBrush extends AbstractBrush {
 		messenger.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (chunkCount == 1 ? " chunk." : " chunks."));
 	}
 
-	private int removeEntities(Chunk chunk) {
-		int entityCount = 0;
-		for (Entity entity : chunk.getEntities()) {
-			if (!isClassInExemptionList(entity.getClass())) {
-				entity.remove();
-				entityCount++;
+	private int removeEntities(int chunkX, int chunkZ) {
+		return TaskManager.IMP.sync(() -> {
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			int entityCount = 0;
+			if (!world.isChunkLoaded(chunkX, chunkZ)) return entityCount;
+
+			for (Entity entity : world.getChunkAt(chunkX, chunkZ).getEntities()) {
+				if (!isClassInExemptionList(entity.getClass())) {
+					entity.remove();
+					entityCount++;
+				}
 			}
-		}
-		return entityCount;
+			return entityCount;
+		});
 	}
 
 	private boolean isClassInExemptionList(Class<? extends Entity> entityClass) {

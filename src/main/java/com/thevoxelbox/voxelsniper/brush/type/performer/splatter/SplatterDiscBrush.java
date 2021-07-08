@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -71,17 +72,17 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		splatterDisc(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		splatterDisc(snipe, lastBlock);
 	}
 
-	private void splatterDisc(Snipe snipe, Block targetBlock) {
+	private void splatterDisc(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		SnipeMessenger messenger = snipe.createMessenger();
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
@@ -151,12 +152,14 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
 			}
 		}
 		// Make the changes
+		int blockX = targetBlock.getX();
+		int blockZ = targetBlock.getZ();
 		double rSquared = Math.pow(brushSize + 1, 2);
 		for (int x = 2 * brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x - brushSize - 1, 2);
 			for (int y = 2 * brushSize; y >= 0; y--) {
 				if (splat[x][y] == 1 && xSquared + Math.pow(y - brushSize - 1, 2) <= rSquared) {
-					this.performer.perform(targetBlock.getRelative(x - brushSize, 0, y - brushSize));
+					this.performer.perform(getEditSession(), blockX + x - brushSize, 0, blockZ + y - brushSize, getBlock(blockX + x - brushSize, 0, blockZ + y - brushSize));
 				}
 			}
 		}

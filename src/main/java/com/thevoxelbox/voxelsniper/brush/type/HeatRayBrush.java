@@ -1,12 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -91,10 +96,9 @@ public class HeatRayBrush extends AbstractBrush {
 	public void heatRay(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		PerlinNoiseGenerator generator = new PerlinNoiseGenerator(new Random());
-		Block targetBlock = getTargetBlock();
-		Location targetBlockLocation = targetBlock.getLocation();
-		Vector targetBlockVector = targetBlockLocation.toVector();
-		Location currentLocation = new Location(targetBlock.getWorld(), 0, 0, 0);
+		BlockVector3 targetBlock = getTargetBlock();
+		Vector targetBlockVector = Vectors.toBukkit(targetBlock);
+		Vector currentLocation = new Vector();
 		Undo undo = new Undo();
 		int brushSize = toolkitProperties.getBrushSize();
 		for (int z = brushSize; z >= -brushSize; z--) {
@@ -103,24 +107,24 @@ public class HeatRayBrush extends AbstractBrush {
 					currentLocation.setX(targetBlock.getX() + x);
 					currentLocation.setY(targetBlock.getY() + y);
 					currentLocation.setZ(targetBlock.getZ() + z);
-					Vector currentLocationVector = currentLocation.toVector();
+					Vector currentLocationVector = currentLocation.clone();
 					if (currentLocationVector.isInSphere(targetBlockVector, brushSize)) {
-						Block currentBlock = currentLocation.getBlock();
-						Material currentBlockType = currentBlock.getType();
+						BlockState currentBlock = getBlock(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ());
+						Material currentBlockType = BukkitAdapter.adapt(currentBlock.getBlockType());
 						if (currentBlockType == Material.CHEST) {
 							continue;
 						}
-						if (currentBlock.isLiquid()) {
+						if (Materials.isLiquid(currentBlockType)) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.AIR);
+							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.AIR);
 							continue;
 						}
 						if (FLAMEABLE_BLOCKS.contains(currentBlockType)) {
 							undo.put(currentBlock);
-							currentBlock.setType(Material.FIRE);
+							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.FIRE);
 							continue;
 						}
-						if (currentBlockType != Material.AIR) {
+						if (!currentBlockType.isAir()) {
 							double airDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double fireDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
@@ -128,21 +132,21 @@ public class HeatRayBrush extends AbstractBrush {
 							if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
 								undo.put(currentBlock);
 								if (currentBlockType != Material.OBSIDIAN) {
-									currentBlock.setType(Material.OBSIDIAN);
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.OBSIDIAN);
 								}
 							} else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
 								undo.put(currentBlock);
 								if (currentBlockType != Material.COBBLESTONE) {
-									currentBlock.setType(Material.COBBLESTONE);
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.COBBLESTONE);
 								}
 							} else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
 								undo.put(currentBlock);
 								if (currentBlockType != Material.FIRE) {
-									currentBlock.setType(Material.FIRE);
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.FIRE);
 								}
 							} else if (airDensity >= REQUIRED_AIR_DENSITY) {
 								undo.put(currentBlock);
-								currentBlock.setType(Material.AIR);
+								setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.AIR);
 							}
 						}
 					}

@@ -61,21 +61,20 @@ public class DrainBrush extends AbstractBrush {
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
 		Undo undo = new Undo();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
-		BlockVector3 position = Vectors.of(targetBlock);
 		if (this.disc) {
 			for (int x = brushSize; x >= 0; x--) {
 				double xSquared = MathHelper.square(x);
 				for (int y = brushSize; y >= 0; y--) {
 					double ySquared = MathHelper.square(y);
 					if (xSquared + ySquared <= brushSizeSquared) {
-						Material typePlusPlus = getBlockType(position.add(x, 0, y));
+						Material typePlusPlus = getBlockType(targetBlock.add(x, 0, y));
 						if (typePlusPlus == Material.WATER || typePlusPlus == Material.LAVA) {
-							undo.put(clampY(position.add(x, 0, y)));
-							setBlockType(position.add(x, 0, y), Material.AIR);
+							undo.put(clampY(targetBlock.add(x, 0, y)));
+							setBlockType(targetBlock.add(x, 0, y), Material.AIR);
 						}
 						Material typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
 						if (typePlusMinus == Material.WATER || typePlusMinus == Material.LAVA) {

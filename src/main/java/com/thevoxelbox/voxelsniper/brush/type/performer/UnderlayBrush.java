@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 
@@ -63,23 +63,26 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
-				Block targetBlock = getTargetBlock();
-				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
+				BlockVector3 targetBlock = getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockY = targetBlock.getY();
+				int blockZ = targetBlock.getZ();
+				for (int y = blockY; y < blockY + this.depth; y++) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) { // if inside of the column...
 							if (this.allBlocks) {
 								for (int i = 0; i < this.depth; i++) {
-									if (!Materials.isEmpty(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType())) {
-										this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+									if (!clampY(blockX + x, y + i, blockZ + z).isAir()) {
+										this.performer.perform(getEditSession(), blockX + x, clampY(y + i), blockZ + z, clampY(blockX + x, y + i, blockZ + z)); // fills down as many layers as you specify in
 										// parameters
 										memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 									}
 								}
 							} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								if (MaterialSets.OVERRIDEABLE.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+								if (MaterialSets.OVERRIDEABLE.contains(getBlockType(blockX + x, y, blockZ + z))) {
 									for (int i = 0; (i < this.depth); i++) {
-										if (!Materials.isEmpty(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z).getType())) {
-											this.performer.perform(clampY(targetBlock.getX() + x, y + i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+										if (!clampY(blockX + x, y + i, blockZ + z).isAir()) {
+											this.performer.perform(getEditSession(), blockX + x, clampY(y + i), blockZ + z, clampY(blockX + x, y + i, blockZ + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
@@ -102,21 +105,24 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
-				Block targetBlock = getTargetBlock();
-				for (int y = targetBlock.getY(); y < targetBlock.getY() + this.depth; y++) { // start scanning from the height you clicked at
+				BlockVector3 targetBlock = getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockY = targetBlock.getY();
+				int blockZ = targetBlock.getZ();
+				for (int y = blockY; y < blockY + this.depth; y++) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
 							if (this.allBlocks) {
 								for (int i = -1; i < this.depth - 1; i++) {
-									this.performer.perform(clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+									this.performer.perform(getEditSession(), blockX + x, clampY(y - i), blockZ + z, clampY(blockX + x, y - i, blockZ + z)); // fills down as many layers as you specify in
 									// parameters
 									memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 								}
 							} else {
 								// if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-								if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+								if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(blockX + x, y, blockZ + z))) {
 									for (int i = -1; i < this.depth - 1; i++) {
-										this.performer.perform(clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+										this.performer.perform(getEditSession(), blockX + x, clampY(y - i), blockZ + z, clampY(blockX + x, y - i, blockZ + z)); // fills down as many layers as you specify in
 										// parameters
 										memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 									}

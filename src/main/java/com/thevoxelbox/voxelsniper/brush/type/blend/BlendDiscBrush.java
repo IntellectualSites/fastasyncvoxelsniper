@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -15,7 +17,9 @@ import org.bukkit.block.Block;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class BlendDiscBrush extends AbstractBlendBrush {
 
@@ -34,48 +38,36 @@ public class BlendDiscBrush extends AbstractBlendBrush {
 	public void blend(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		int largeCircleArea = (int) MathHelper.circleArea(brushSize + 2);
-		Map<BlockVector3, Block> largeCircle = new HashMap<>(largeCircleArea);
-		Block targetBlock = getTargetBlock();
-		Painters.circle()
-			.center(targetBlock)
-			.radius(brushSize + 2)
-			.blockSetter(position -> {
-				Block block = getBlock(position);
-				largeCircle.put(position, block);
-			})
-			.paint();
+		BlockVector3 targetBlock = getTargetBlock();
 		int smallCircleArea = (int) MathHelper.circleArea(brushSize);
-		Map<BlockVector3, Block> smallCircle = new HashMap<>(smallCircleArea);
+		Set<BlockVector3> smallCircle = new HashSet<>(smallCircleArea);
 		Map<BlockVector3, Material> smallCircleMaterials = new HashMap<>(smallCircleArea);
 		Painters.circle()
 			.center(targetBlock)
 			.radius(brushSize)
 			.blockSetter(position -> {
-				Block block = largeCircle.get(position);
-				smallCircle.put(position, block);
-				smallCircleMaterials.put(position, block.getType());
+				Material material = getBlockType(position);
+				smallCircle.add(position);
+				smallCircleMaterials.put(position, material);
 			})
 			.paint();
-		for (Block smallCircleBlock : smallCircle.values()) {
-			BlockVector3 blockPosition = Vectors.of(smallCircleBlock);
+		for (BlockVector3 smallCircleBlock : smallCircle) {
 			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
 			Painters.square()
 				.center(smallCircleBlock)
 				.radius(1)
 				.blockSetter(position -> {
-					if (position.equals(blockPosition)) {
+					if (position.equals(smallCircleBlock)) {
 						return;
 					}
-					Block block = largeCircle.get(position);
-					Material material = block.getType();
+					Material material = getBlockType(position);
 					materialsFrequencies.merge(material, 1, Integer::sum);
 				})
 				.paint();
 			CommonMaterial commonMaterial = findCommonMaterial(materialsFrequencies);
 			Material material = commonMaterial.getMaterial();
 			if (material != null) {
-				smallCircleMaterials.put(blockPosition, material);
+				smallCircleMaterials.put(smallCircleBlock, material);
 			}
 		}
 		Undo undo = new Undo();

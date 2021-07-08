@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -54,7 +55,7 @@ public class Rotation2DBrush extends AbstractBrush {
 		int brushSize = (this.brushSize * 2) + 1;
 		this.snap = new BlockData[brushSize][brushSize][brushSize];
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
 			int sz = targetBlock.getZ() - this.brushSize;
@@ -63,9 +64,9 @@ public class Rotation2DBrush extends AbstractBrush {
 				int sy = targetBlock.getY() - this.brushSize;
 				if (xSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
 					for (int z = 0; z < this.snap.length; z++) {
-						Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-						this.snap[x][z][y] = block.getBlockData();
-						block.setType(Material.AIR);
+						// why is this not sx + x, sy + y sz + z?
+						this.snap[x][z][y] = getBlockData(sx, clampY(sy), sz);
+						setBlockType(sx, clampY(sy), sz, Material.AIR);
 						sy++;
 					}
 				}
@@ -83,7 +84,7 @@ public class Rotation2DBrush extends AbstractBrush {
 		// I put y in the inside loop, since it doesn't have any power functions, should be much faster.
 		// Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
 		// do a targeted filling of only those columns later that were left out.
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
@@ -97,7 +98,7 @@ public class Rotation2DBrush extends AbstractBrush {
 						int yy = currentY - this.brushSize;
 						BlockData blockData = this.snap[x][currentY][y];
 						Material type = blockData.getMaterial();
-						if (Materials.isEmpty(type)) {
+						if (type.isEmpty()) {
 							continue;
 						}
 						setBlockData(targetBlock.getX() + (int) newX, targetBlock.getY() + yy, targetBlock.getZ() + (int) newZ, blockData);

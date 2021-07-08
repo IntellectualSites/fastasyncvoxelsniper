@@ -1,5 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
+import com.fastasyncworldedit.core.util.TaskManager;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -51,15 +55,19 @@ public class EntityBrush extends AbstractBrush {
 	private void spawn(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		SnipeMessenger messenger = snipe.createMessenger();
+		EditSession editSession = getEditSession();
 		for (int x = 0; x < toolkitProperties.getBrushSize(); x++) {
 			try {
-				World world = getWorld();
-				Block lastBlock = getLastBlock();
+				BlockVector3 lastBlock = getLastBlock();
 				Class<? extends Entity> entityClass = this.entityType.getEntityClass();
 				if (entityClass == null) {
 					return;
 				}
-				world.spawn(lastBlock.getLocation(), entityClass);
+				TaskManager.IMP.sync(() -> {
+					World world = BukkitAdapter.adapt(editSession.getWorld());
+					world.spawn(BukkitAdapter.adapt(world, lastBlock), entityClass);
+					return null;
+				});
 			} catch (IllegalArgumentException exception) {
 				messenger.sendMessage(ChatColor.RED + "Cannot spawn entity!");
 			}

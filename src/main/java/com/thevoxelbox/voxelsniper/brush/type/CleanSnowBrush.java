@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -55,11 +57,11 @@ public class CleanSnowBrush extends AbstractBrush {
 				double xSquared = MathHelper.square(x - brushSize);
 				for (int z = (brushSize + 1) * 2; z >= 0; z--) {
 					if (xSquared + MathHelper.square(z - brushSize) + ySquared <= brushSizeSquared) {
-						Block targetBlock = getTargetBlock();
+						BlockVector3 targetBlock = getTargetBlock();
 						int targetBlockX = targetBlock.getX();
 						int targetBlockY = targetBlock.getY();
 						int targetBlockZ = targetBlock.getZ();
-						if (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getType() == Material.SNOW && (clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.SNOW || clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getType() == Material.AIR)) {
+						if (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW && (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW || clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).isAir())) {
 							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
 							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR.createBlockData());
 						}

@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 
 /**
  * Regenerates the target chunk.
@@ -26,23 +25,25 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
 	@SuppressWarnings("deprecation")
 	private void generateChunk(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		Chunk chunk = targetBlock.getChunk();
+		BlockVector3 targetBlock = getTargetBlock();
 		Undo undo = new Undo();
-		World world = getWorld();
+		EditSession editSession = getEditSession();
+		int chunkX = targetBlock.getX() >> 4;
+		int chunkZ = targetBlock.getZ() >> 4;
+		int blockX = chunkX << 4;
+		int blockZ = chunkZ << 4;
 		for (int z = CHUNK_SIZE; z >= 0; z--) {
 			for (int x = CHUNK_SIZE; x >= 0; x--) {
-				for (int y = world.getMaxHeight(); y >= 0; y--) {
-					undo.put(chunk.getBlock(x, y, z));
+				for (int y = editSession.getMaxY() + 1; y >= 0; y--) {
+					undo.put(getBlock(blockX + x, y, blockZ + z));
 				}
 			}
 		}
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 		SnipeMessenger messenger = snipe.createMessenger();
-		messenger.sendMessage("Generate that chunk! " + chunk.getX() + " " + chunk.getZ());
-		world.regenerateChunk(chunk.getX(), chunk.getZ());
-		world.refreshChunk(chunk.getX(), chunk.getZ());
+		messenger.sendMessage("Generate that chunk! " + chunkX + " " + chunkZ);
+		regenerateChunk(chunkX, chunkZ);
 	}
 
 	@Override

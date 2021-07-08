@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
 import org.bukkit.ChatColor;
@@ -15,7 +14,9 @@ import org.bukkit.block.Block;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class BlendBallBrush extends AbstractBlendBrush {
 
@@ -34,48 +35,36 @@ public class BlendBallBrush extends AbstractBlendBrush {
 	public void blend(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		int largeSphereVolume = (int) MathHelper.sphereVolume(brushSize + 2);
-		Map<BlockVector3, Block> largeSphere = new HashMap<>(largeSphereVolume);
-		Block targetBlock = getTargetBlock();
-		Painters.sphere()
-			.center(targetBlock)
-			.radius(brushSize + 2)
-			.blockSetter(position -> {
-				Block block = getBlock(position);
-				largeSphere.put(position, block);
-			})
-			.paint();
+		BlockVector3 targetBlock = getTargetBlock();
 		int smallSphereVolume = (int) MathHelper.sphereVolume(brushSize);
-		Map<BlockVector3, Block> smallSphere = new HashMap<>(smallSphereVolume);
+		Set<BlockVector3> smallSphere = new HashSet<>(smallSphereVolume);
 		Map<BlockVector3, Material> smallSphereMaterials = new HashMap<>(smallSphereVolume);
 		Painters.sphere()
 			.center(targetBlock)
 			.radius(brushSize)
 			.blockSetter(position -> {
-				Block block = largeSphere.get(position);
-				smallSphere.put(position, block);
-				smallSphereMaterials.put(position, block.getType());
+				Material material = getBlockType(position);
+				smallSphere.add(position);
+				smallSphereMaterials.put(position, material);
 			})
 			.paint();
-		for (Block smallSphereBlock : smallSphere.values()) {
-			BlockVector3 blockPosition = Vectors.of(smallSphereBlock);
+		for (BlockVector3 smallSphereBlock : smallSphere) {
 			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
 			Painters.cube()
 				.center(smallSphereBlock)
 				.radius(1)
 				.blockSetter(position -> {
-					if (position.equals(blockPosition)) {
+					if (position.equals(smallSphereBlock)) {
 						return;
 					}
-					Block block = largeSphere.get(position);
-					Material material = block.getType();
+					Material material = getBlockType(position);
 					materialsFrequencies.merge(material, 1, Integer::sum);
 				})
 				.paint();
 			CommonMaterial commonMaterial = findCommonMaterial(materialsFrequencies);
 			Material material = commonMaterial.getMaterial();
 			if (material != null) {
-				smallSphereMaterials.put(blockPosition, material);
+				smallSphereMaterials.put(smallSphereBlock, material);
 			}
 		}
 		Undo undo = new Undo();

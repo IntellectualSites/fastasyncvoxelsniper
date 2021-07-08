@@ -42,7 +42,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemInHand = inventory.getItemInMainHand();
 			Material itemType = itemInHand.getType();
-			if (Materials.isEmpty(itemType)) {
+			if (itemType.isEmpty()) {
 				sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
 				return;
 			}
@@ -69,7 +69,7 @@ public class BrushToolkitExecutor implements CommandExecutor {
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemInHand = inventory.getItemInMainHand();
 			Material material = itemInHand.getType();
-			if (Materials.isEmpty(material)) {
+			if (material.isEmpty()) {
 				sender.sendMessage("Can't unassign empty hands.");
 				return;
 			}

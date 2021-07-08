@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -61,16 +62,17 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 	private void getMatrix() {
 		int brushSize = (this.brushSize * 2) + 1;
 		this.snap = new BlockData[brushSize][brushSize][brushSize];
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
 			int sz = targetBlock.getZ() - this.brushSize;
 			for (int z = 0; z < this.snap.length; z++) {
 				int sy = targetBlock.getY() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
-					Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-					this.snap[x][y][z] = block.getBlockData();
-					block.setType(Material.AIR);
+					// why is this not sx + x, sy + y sz + z?
+					this.snap[x][z][y] = getBlockData(sx, clampY(sy), sz);
+					setBlockType(sx, clampY(sy), sz, Material.AIR);
+					sy++;
 					sy++;
 				}
 				sz++;
@@ -87,7 +89,7 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 		// I put y in the inside loop, since it doesn't have any power functions, should be much faster.
 		// Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
 		// do a targeted filling of only those columns later that were left out.
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
@@ -101,7 +103,7 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 						int yy = y - this.brushSize;
 						BlockData blockData = this.snap[y][x][z];
 						Material type = blockData.getMaterial();
-						if (Materials.isEmpty(type)) {
+						if (type.isEmpty()) {
 							continue;
 						}
 						setBlockData(targetBlock.getX() + yy, targetBlock.getY() + (int) newX, targetBlock.getZ() + (int) newZ, blockData);

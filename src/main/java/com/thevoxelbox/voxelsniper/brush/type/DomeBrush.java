@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.util.NumberConversions;
@@ -19,17 +20,17 @@ public class DomeBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		generateDome(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		generateDome(snipe, lastBlock);
 	}
 
-	private void generateDome(Snipe snipe, Block block) {
+	private void generateDome(Snipe snipe, BlockVector3 block) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int voxelHeight = toolkitProperties.getVoxelHeight();
 		if (voxelHeight == 0) {
@@ -63,15 +64,13 @@ public class DomeBrush extends AbstractBrush {
 				changeablePositions.add(new Vector(currentBlockXSubtract, targetY, currentBlockZSubtract));
 			}
 		}
-		World world = getWorld();
 		for (Vector vector : changeablePositions) {
-			Location location = vector.toLocation(world);
-			Block currentTargetBlock = location.getBlock();
-			BlockData currentTargetBlockBlockData = currentTargetBlock.getBlockData();
+			BlockState currentTargetBlock = getBlock(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
+			BlockData currentTargetBlockBlockData = BukkitAdapter.adapt(currentTargetBlock);
 			BlockData snipeBlockData = toolkitProperties.getBlockData();
 			if (!currentTargetBlockBlockData.equals(snipeBlockData)) {
 				undo.put(currentTargetBlock);
-				currentTargetBlock.setBlockData(snipeBlockData);
+				setBlockData(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), snipeBlockData);
 			}
 		}
 		Sniper sniper = snipe.getSniper();

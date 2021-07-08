@@ -1,11 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.fastasyncworldedit.core.Fawe;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class WarpBrush extends AbstractBrush {
@@ -14,15 +16,16 @@ public class WarpBrush extends AbstractBrush {
 	public void handleArrowAction(Snipe snipe) {
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		Block lastBlock = this.getLastBlock();
+		BlockVector3 lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		Location location = lastBlock.getLocation();
-		Location playerLocation = player.getLocation();
-		location.setPitch(playerLocation.getPitch());
-		location.setYaw(playerLocation.getYaw());
 		Fawe.get().getQueueHandler().sync(() -> {//FAWE Add
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			Location location = BukkitAdapter.adapt(world, lastBlock);
+			Location playerLocation = player.getLocation();
+			location.setPitch(playerLocation.getPitch());
+			location.setYaw(playerLocation.getYaw());
 			player.teleport(location);
 		});
 	}
@@ -31,18 +34,19 @@ public class WarpBrush extends AbstractBrush {
 	public void handleGunpowderAction(Snipe snipe) {
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		Block lastBlock = this.getLastBlock();
+		BlockVector3 lastBlock = this.getLastBlock();
 		if (lastBlock == null) {
 			return;
 		}
-		Location location = lastBlock.getLocation();
-		Location playerLocation = player.getLocation();
-		location.setPitch(playerLocation.getPitch());
-		location.setYaw(playerLocation.getYaw());
 		Fawe.get().getQueueHandler().sync(() -> {//FAWE add
-			getWorld().strikeLightning(location);
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			Location location = BukkitAdapter.adapt(world, lastBlock);
+			Location playerLocation = player.getLocation();
+			location.setPitch(playerLocation.getPitch());
+			location.setYaw(playerLocation.getYaw());
+			world.strikeLightning(location);
 			player.teleport(location);
-			getWorld().strikeLightning(location);
+			world.strikeLightning(location);
 		});
 	}
 

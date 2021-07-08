@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -168,35 +169,37 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
-				Block targetBlock = this.getTargetBlock();
+				BlockVector3 targetBlock = this.getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockZ = targetBlock.getZ();
 				for (int y = targetBlock.getY(); y > 0; y--) {
 					// start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) {
 						// if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) {
 							// if inside of the column && if to be splattered
-							Material check = this.getBlockType(targetBlock.getX() + x, y + 1, targetBlock.getZ() + z);
-							if (Materials.isEmpty(check) || check == Material.WATER) {
+							Material check = this.getBlockType(blockX + x, y + 1, blockZ + z);
+							if (check.isEmpty() || check == Material.WATER) {
 								// must start at surface... this prevents it filling stuff in if you click in a wall
 								// and it starts out below surface.
 								if (this.allBlocks) {
 									int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 									for (int i = this.depth - 1; ((this.depth - i) <= depth); i--) {
-										if (!Materials.isEmpty(this.clampY(targetBlock.getX() + x, y - i, targetBlock.getZ() + z).getType())) {
+										if (!this.clampY(blockX + x, y - i, blockZ + z).isAir()) {
 											// fills down as many layers as you specify in parameters
-											this.performer.perform(this.clampY(targetBlock.getX() + x, y - i + this.yOffset, targetBlock.getZ() + z));
+											this.performer.perform(getEditSession(), blockX + x, clampY(y - i + this.yOffset), blockZ + z, clampY(blockX + x, y - i + this.yOffset, blockZ + z));
 											// stop it from checking any other blocks in this vertical 1x1 column.
 											memory[x + brushSize][z + brushSize] = 1;
 										}
 									}
 								} else {
 									// if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-									if (MaterialSets.OVERRIDEABLE.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+									if (MaterialSets.OVERRIDEABLE.contains(getBlockType(blockX + x, y, blockZ + z))) {
 										int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 										for (int d = this.depth - 1; ((this.depth - d) <= depth); d--) {
-											if (!Materials.isEmpty(this.clampY(targetBlock.getX() + x, y - d, targetBlock.getZ() + z).getType())) {
+											if (!this.clampY(blockX + x, y - d, blockZ + z).isAir()) {
 												// fills down as many layers as you specify in parameters
-												this.performer.perform(this.clampY(targetBlock.getX() + x, y - d + this.yOffset, targetBlock.getZ() + z));
+												this.performer.perform(getEditSession(), blockX + x, clampY(y - d + this.yOffset), blockZ + z, clampY(blockX + x, y - d + this.yOffset, blockZ + z));
 												// stop it from checking any other blocks in this vertical 1x1 column.
 												memory[x + brushSize][z + brushSize] = 1;
 											}
@@ -266,25 +269,27 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 		double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
-				Block targetBlock = this.getTargetBlock();
+				BlockVector3 targetBlock = this.getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockZ = targetBlock.getZ();
 				for (int y = targetBlock.getY(); y > 0; y--) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) { // if inside of the column...&& if to be splattered
-							if (!Materials.isEmpty(getBlockType(targetBlock.getX() + x, y - 1, targetBlock.getZ() + z))) { // if not a floating block (like one of Notch'world pools)
-								if (Materials.isEmpty(getBlockType(targetBlock.getX() + x, y + 1, targetBlock.getZ() + z))) { // must start at surface... this prevents it filling stuff in if
+							if (!getBlockType(blockX + x, y - 1, blockZ + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
+								if (getBlockType(blockX + x, y + 1, targetBlock.getZ() + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
 									if (this.allBlocks) {
 										int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 										for (int i = 1; (i < depth + 1); i++) {
-											this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify in
+											this.performer.perform(getEditSession(), blockX + x, clampY(y + i + this.yOffset), blockZ + z, clampY(blockX + x, y + i + this.yOffset, blockZ + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z))) {
+										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(blockX + x, y, blockZ + z))) {
 											int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;
 											for (int i = 1; (i < depth + 1); i++) {
-												this.performer.perform(clampY(targetBlock.getX() + x, y + i + this.yOffset, targetBlock.getZ() + z)); // fills down as many layers as you specify
+												this.performer.perform(getEditSession(), blockX + x, clampY(y + i + this.yOffset), blockZ + z, clampY(blockX + x, y + i + this.yOffset, blockZ + z)); // fills down as many layers as you specify
 												// in parameters
 												memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}

@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
-import org.bukkit.block.Block;
 
 public interface Brush {
 
@@ -14,7 +15,7 @@ public interface Brush {
 	 */
 	void handleCommand(String[] parameters, Snipe snipe);
 
-	void perform(Snipe snipe, ToolAction action, Block targetBlock, Block lastBlock);
+	void perform(Snipe snipe, ToolAction action, EditSession editSession, BlockVector3 targetBlock, BlockVector3 lastBlock);
 
 	/**
 	 * The arrow action. Executed when a player RightClicks with an Arrow

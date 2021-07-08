@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -15,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
 public class SetRedstoneRotateBrush extends AbstractBrush {
 
 	@Nullable
-	private Block block;
+	private BlockVector3 block;
 	private Undo undo;
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (set(targetBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
@@ -32,7 +35,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		if (set(lastBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
@@ -42,7 +45,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 		}
 	}
 
-	private boolean set(Block block) {
+	private boolean set(BlockVector3 block) {
 		if (this.block == null) {
 			this.block = block;
 			return true;
@@ -63,7 +66,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
-						perform(clampY(x, y, z));
+						perform(x, clampY(y), z, clampY(x, y, z));
 					}
 				}
 			}
@@ -72,15 +75,14 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 		}
 	}
 
-	private void perform(Block block) {
-		Material type = block.getType();
-		if (type == Material.REPEATER) {
+	private void perform(int x, int y, int z, BlockState block) {
+		if (BukkitAdapter.adapt(block.getBlockType()) == Material.REPEATER) {
 			this.undo.put(block);
-			BlockData blockData = block.getBlockData();
+			BlockData blockData = getBlockData(x, y, z);
 			Repeater repeater = (Repeater) blockData;
 			int delay = repeater.getDelay();
 			repeater.setDelay(delay % 4 + 1 < 5 ? (byte) (delay + 1) : (byte) (delay - 4));
-			block.setBlockData(blockData);
+			setBlockData(x, y, z, blockData);
 		}
 	}
 

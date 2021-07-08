@@ -27,7 +27,7 @@ public class Undo {
 	 *
 	 * @param block Block to be added
 	 */
-	public void put(Block block) {
+	public void put(com.sk89q.worldedit.world.block.BlockState block) {
 		size++; //FAWE ADD
 		/* //FAWE REMOVE
 		Location location = block.getLocation();

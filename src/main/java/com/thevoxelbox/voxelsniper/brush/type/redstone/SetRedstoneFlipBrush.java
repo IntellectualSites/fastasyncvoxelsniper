@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -7,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +19,7 @@ import java.util.stream.Stream;
 public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Nullable
-	private Block block;
+	private BlockVector3 block;
 	private Undo undo;
 	private boolean northSouth = true;
 
@@ -46,7 +48,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (set(targetBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
@@ -58,7 +60,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		if (set(lastBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
@@ -68,7 +70,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		}
 	}
 
-	private boolean set(Block block) {
+	private boolean set(BlockVector3 block) {
 		if (this.block == null) {
 			this.block = block;
 			return true;
@@ -89,7 +91,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
-						this.perform(this.clampY(x, y, z));
+						this.perform(x, clampY(y), z, this.clampY(x, y, z));
 					}
 				}
 			}
@@ -98,9 +100,9 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		}
 	}
 
-	private void perform(Block block) {
-		if (block.getType() == Material.REPEATER) {
-			BlockData blockData = block.getBlockData();
+	private void perform(int x, int y, int z, BlockState block) {
+		if (BukkitAdapter.adapt(block.getBlockType()) == Material.REPEATER) {
+			BlockData blockData = getBlockData(x, y, z);
 			Repeater repeater = (Repeater) blockData;
 			int delay = repeater.getDelay();
 			if (this.northSouth) {
@@ -120,7 +122,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 					repeater.setDelay(delay + 2);
 				}
 			}
-			block.setBlockData(repeater);
+			setBlockData(x, y, z, blockData);
 		}
 	}
 

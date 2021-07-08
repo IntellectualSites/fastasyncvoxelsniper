@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Snow;
 
@@ -29,13 +28,13 @@ public class SnowConeBrush extends AbstractBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		if (targetBlock.getType() == Material.SNOW) {
+		BlockVector3 targetBlock = getTargetBlock();
+		if (getBlockType(targetBlock) == Material.SNOW) {
 			addSnow(snipe, targetBlock);
 		} else {
-			Block blockAbove = targetBlock.getRelative(BlockFace.UP);
-			Material type = blockAbove.getType();
-			if (Materials.isEmpty(type)) {
+			BlockVector3 blockAbove = BlockVector3.at(targetBlock.getX(), targetBlock.getY() + 1, targetBlock.getZ());
+			Material type = getBlockType(blockAbove);
+			if (type.isEmpty()) {
 				addSnow(snipe, blockAbove);
 			} else {
 				SnipeMessenger messenger = snipe.createMessenger();
@@ -44,11 +43,11 @@ public class SnowConeBrush extends AbstractBrush {
 		}
 	}
 
-	private void addSnow(Snipe snipe, Block targetBlock) {
+	private void addSnow(Snipe snipe, BlockVector3 targetBlock) {
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
-		int brushSize = Materials.isEmpty(getBlockType(blockPositionX, blockPositionY, blockPositionZ)) ? 0 : blockDataToSnowLayers(clampY(blockPositionX, blockPositionY, blockPositionZ).getBlockData()) + 1;
+		int brushSize = getBlockType(blockPositionX, blockPositionY, blockPositionZ).isEmpty() ? 0 : blockDataToSnowLayers(getBlockData(blockPositionX, clampY(blockPositionY), blockPositionZ)) + 1;
 		int brushSizeDoubled = 2 * brushSize;
 		Material[][] snowCone = new Material[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold block IDs
 		BlockData[][] snowConeData = new BlockData[brushSizeDoubled + 1][brushSizeDoubled + 1]; // Will hold data values for snowCone
@@ -59,14 +58,14 @@ public class SnowConeBrush extends AbstractBrush {
 				boolean flag = true;
 				for (int i = 0; i < 10; i++) { // overlay
 					if (flag) {
-						if ((Materials.isEmpty(getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z)) || getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.SNOW) && !Materials.isEmpty(getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z)) && getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.SNOW) {
+						if ((getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z).isEmpty() || getBlockType(blockPositionX - brushSize + x, blockPositionY - i, blockPositionZ - brushSize + z) == Material.SNOW) && !getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z).isEmpty() && getBlockType(blockPositionX - brushSize + x, blockPositionY - i - 1, blockPositionZ - brushSize + z) != Material.SNOW) {
 							flag = false;
 							yOffset[x][z] = i;
 						}
 					}
 				}
 				snowCone[x][z] = getBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z);
-				snowConeData[x][z] = clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z).getBlockData();
+				snowConeData[x][z] = getBlockData(blockPositionX - brushSize + x, clampY(blockPositionY - yOffset[x][z]), blockPositionZ - brushSize + z);
 			}
 		}
 		// figure out new snowheights
@@ -79,7 +78,7 @@ public class SnowConeBrush extends AbstractBrush {
 				if (snowData >= 0) { // no funny business
 					// Increase snowtile size, if smaller than target
 					if (snowData == 0) {
-						if (Materials.isEmpty(snowCone[x][z])) {
+						if (snowCone[x][z].isEmpty()) {
 							snowCone[x][z] = Material.SNOW;
 							snowConeData[x][z] = Material.SNOW.createBlockData();
 						}
@@ -90,7 +89,7 @@ public class SnowConeBrush extends AbstractBrush {
 						}
 					} else {
 						if (snowData > blockDataToSnowLayers(snowConeData[x][z])) {
-							if (Materials.isEmpty(snowCone[x][z])) {
+							if (snowCone[x][z].isEmpty()) {
 								setSnowLayers(snowConeData[x][z], snowData);
 								snowCone[x][z] = Material.SNOW;
 							} else if (snowCone[x][z] == Material.SNOW) {
@@ -110,12 +109,12 @@ public class SnowConeBrush extends AbstractBrush {
 		Undo undo = new Undo();
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int z = 0; z <= brushSizeDoubled; z++) {
-				if (getBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z) != snowCone[x][z] || !clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z).getBlockData()
+				if (getBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z) != snowCone[x][z] || !getBlockData(blockPositionX - brushSize + x, clampY(blockPositionY - yOffset[x][z]), blockPositionZ - brushSize + z)
 					.equals(snowConeData[x][z])) {
 					undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z));
 				}
 				setBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z, snowCone[x][z]);
-				clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z).setBlockData(snowConeData[x][z]);
+				setBlockData(blockPositionX - brushSize + x, clampY(blockPositionY - yOffset[x][z]), blockPositionZ - brushSize + z, snowConeData[x][z]);
 			}
 		}
 		Sniper sniper = snipe.getSniper();

@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -38,17 +40,17 @@ public class BallBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		ball(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		ball(snipe, lastBlock);
 	}
 
-	private void ball(Snipe snipe, Block targetBlock) {
+	private void ball(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		Painters.sphere()
@@ -56,8 +58,8 @@ public class BallBrush extends AbstractPerformerBrush {
 			.radius(brushSize)
 			.trueCircle(this.trueCircle)
 			.blockSetter(position -> {
-				Block block = clampY(position);
-				this.performer.perform(block);
+				BlockState block = clampY(position);
+				this.performer.perform(getEditSession(), position.getX(), clampY(position.getY()), position.getZ(), block);
 			})
 			.paint();
 		Sniper sniper = snipe.getSniper();

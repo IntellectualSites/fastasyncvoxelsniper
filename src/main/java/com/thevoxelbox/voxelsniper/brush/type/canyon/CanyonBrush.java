@@ -1,14 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 public class CanyonBrush extends AbstractBrush {
 
@@ -38,7 +39,8 @@ public class CanyonBrush extends AbstractBrush {
 	@Override
 	public void handleArrowAction(Snipe snipe) {
 		Undo undo = new Undo();
-		canyon(getTargetBlock().getChunk(), undo);
+		BlockVector3 targetBlock = getTargetBlock();
+		canyon(targetBlock.getX() >> 4, targetBlock.getZ() >> 4, undo);
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 	}
@@ -46,37 +48,42 @@ public class CanyonBrush extends AbstractBrush {
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
 		Undo undo = new Undo();
-		Chunk targetChunk = getTargetBlock().getChunk();
-		for (int x = targetChunk.getX() - 1; x <= targetChunk.getX() + 1; x++) {
-			for (int z = targetChunk.getX() - 1; z <= targetChunk.getX() + 1; z++) {
-				canyon(getWorld().getChunkAt(x, z), undo);
+		BlockVector3 targetBlock = getTargetBlock();
+		int chunkX = targetBlock.getX() >> 4;
+		int chunkZ = targetBlock.getZ() >> 4;
+		for (int x = chunkX - 1; x <= chunkX + 1; x++) {
+			for (int z = chunkZ - 1; z <= chunkX + 1; z++) {
+				canyon(x, z, undo);
 			}
 		}
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 	}
 
-	protected void canyon(Chunk chunk, Undo undo) {
+	protected void canyon(int chunkX, int chunkZ, Undo undo) {
+		EditSession editSession = getEditSession();
+		int blockX = chunkX << 4;
+		int blockZ = chunkZ << 4;
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				int currentYLevel = this.yLevel;
-				for (int y = 63; y < this.getWorld()
-					.getMaxHeight(); y++) {
-					Block block = chunk.getBlock(x, y, z);
-					Block currentYLevelBlock = chunk.getBlock(x, currentYLevel, z);
+				for (int y = 63; y < editSession.getMaxY() + 1; y++) {
+					BlockState block = getBlock(blockX + x, y, blockZ + z);
+					Material blockType = getBlockType(blockX + x, y, blockZ + z);
+					BlockState currentYLevelBlock = getBlock(blockX + x, currentYLevel, blockZ + z);
 					undo.put(block);
 					undo.put(currentYLevelBlock);
-					currentYLevelBlock.setType(block.getType(), false);
-					block.setType(Material.AIR);
+					setBlockType(blockX + x, currentYLevel, blockZ + z, blockType);
+					setBlockType(blockX + x, y, blockZ + z, Material.AIR);
 					currentYLevel++;
 				}
-				Block block = chunk.getBlock(x, 0, z);
+				BlockState block = getBlock(blockX + x, 0, blockZ + z);
 				undo.put(block);
-				block.setType(Material.BEDROCK);
+				setBlockType(blockX + x, 0, blockZ + z, Material.BEDROCK);
 				for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
-					Block currentBlock = chunk.getBlock(x, y, z);
+					BlockState currentBlock = getBlock(blockX + x, y, blockZ + z);
 					undo.put(currentBlock);
-					currentBlock.setType(Material.STONE);
+					setBlockType(blockX + x, y, blockZ + z, Material.STONE);
 				}
 			}
 		}

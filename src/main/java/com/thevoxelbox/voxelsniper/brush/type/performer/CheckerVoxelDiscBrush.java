@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -39,24 +40,24 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		applyBrush(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		applyBrush(snipe, lastBlock);
 	}
 
-	private void applyBrush(Snipe snipe, Block target) {
+	private void applyBrush(Snipe snipe, BlockVector3 target) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		for (int x = brushSize; x >= -brushSize; x--) {
 			for (int y = brushSize; y >= -brushSize; y--) {
 				int sum = this.useWorldCoordinates ? target.getX() + x + target.getZ() + y : x + y;
 				if (sum % 2 != 0) {
-					this.performer.perform(this.clampY(target.getX() + x, target.getY(), target.getZ() + y));
+					this.performer.perform(getEditSession(), target.getX() + x, clampY(target.getY()), target.getZ() + y, this.clampY(target.getX() + x, target.getY(), target.getZ() + y));
 				}
 			}
 		}

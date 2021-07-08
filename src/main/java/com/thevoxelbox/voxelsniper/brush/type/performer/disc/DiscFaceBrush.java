@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 public class DiscFaceBrush extends AbstractPerformerBrush {
@@ -36,28 +36,31 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		pre(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		pre(snipe, lastBlock);
 	}
 
-	private void discUpDown(Snipe snipe, Block targetBlock) {
+	private void discUpDown(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
 			for (int z = brushSize; z >= 0; z--) {
 				if ((xSquared + Math.pow(z, 2)) <= brushSizeSquared) {
-					this.performer.perform(targetBlock.getRelative(x, 0, z));
-					this.performer.perform(targetBlock.getRelative(x, 0, -z));
-					this.performer.perform(targetBlock.getRelative(-x, 0, z));
-					this.performer.perform(targetBlock.getRelative(-x, 0, -z));
+					this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + z, getBlock(blockX + x, blockY, blockZ + z));
+					this.performer.perform(getEditSession(), blockX + x, blockY, blockZ - z, getBlock(blockX + x, blockY, blockZ - z));
+					this.performer.perform(getEditSession(), blockX - x, blockY, blockZ + z, getBlock(blockX - x, blockY, blockZ + z));
+					this.performer.perform(getEditSession(), blockX - x, blockY, blockZ - z, getBlock(blockX - x, blockY, blockZ - z));
 				}
 			}
 		}
@@ -65,18 +68,21 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void discNorthSouth(Snipe snipe, Block targetBlock) {
+	private void discNorthSouth(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					this.performer.perform(targetBlock.getRelative(x, y, 0));
-					this.performer.perform(targetBlock.getRelative(x, -y, 0));
-					this.performer.perform(targetBlock.getRelative(-x, y, 0));
-					this.performer.perform(targetBlock.getRelative(-x, -y, 0));
+					this.performer.perform(getEditSession(), blockX + x, blockY + y, blockZ, getBlock(blockX + x, blockY + y, blockZ));
+					this.performer.perform(getEditSession(), blockX + x, blockY - y, blockZ, getBlock(blockX + x, blockY - y, blockZ));
+					this.performer.perform(getEditSession(), blockX - x, blockY + y, blockZ, getBlock(blockX - x, blockY + y, blockZ));
+					this.performer.perform(getEditSession(), blockX - x, blockY - y, blockZ, getBlock(blockX - x, blockY - y, blockZ));
 				}
 			}
 		}
@@ -84,18 +90,21 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void discEastWest(Snipe snipe, Block targetBlock) {
+	private void discEastWest(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
 			for (int y = brushSize; y >= 0; y--) {
 				if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-					this.performer.perform(targetBlock.getRelative(0, x, y));
-					this.performer.perform(targetBlock.getRelative(0, x, -y));
-					this.performer.perform(targetBlock.getRelative(0, -x, y));
-					this.performer.perform(targetBlock.getRelative(0, -x, -y));
+					this.performer.perform(getEditSession(), blockX, blockY + x, blockZ + y, getBlock(blockX, blockY + x, blockZ + y));
+					this.performer.perform(getEditSession(), blockX, blockY + x, blockZ - y, getBlock(blockX, blockY + x, blockZ - y));
+					this.performer.perform(getEditSession(), blockX, blockY - x, blockZ + y, getBlock(blockX, blockY - x, blockZ + y));
+					this.performer.perform(getEditSession(), blockX, blockY - x, blockZ - y, getBlock(blockX, blockY - x, blockZ - y));
 				}
 			}
 		}
@@ -103,9 +112,9 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
 		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void pre(Snipe snipe, Block targetBlock) {
-		Block lastBlock = getLastBlock();
-		BlockFace blockFace = getTargetBlock().getFace(lastBlock);
+	private void pre(Snipe snipe, BlockVector3 targetBlock) {
+		BlockVector3 lastBlock = getLastBlock();
+		BlockFace blockFace = getFace(getTargetBlock(), lastBlock);
 		if (blockFace == null) {
 			return;
 		}

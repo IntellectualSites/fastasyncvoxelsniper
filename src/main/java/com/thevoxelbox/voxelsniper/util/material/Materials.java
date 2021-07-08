@@ -8,7 +8,8 @@ public final class Materials {
 		throw new UnsupportedOperationException("Cannot create instance of this class");
 	}
 
-	public static boolean isEmpty(Material material) {
-		return material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR;
+	public static boolean isLiquid(Material material) {
+		return material == Material.WATER || material == Material.LAVA;
 	}
+
 }

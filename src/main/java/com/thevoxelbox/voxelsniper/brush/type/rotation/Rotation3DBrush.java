@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -76,7 +77,7 @@ public class Rotation3DBrush extends AbstractBrush {
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		int brushSize = (this.brushSize * 2) + 1;
 		this.snap = new BlockData[brushSize][brushSize][brushSize];
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		//int sy = this.getTargetBlock().getY() - this.brushSize; Not used
 		for (int x = 0; x < this.snap.length; x++) {
@@ -86,9 +87,8 @@ public class Rotation3DBrush extends AbstractBrush {
 				int sz = targetBlock.getZ() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
-						Block block = clampY(sx, sz, sz);
-						this.snap[x][y][z] = block.getBlockData();
-						block.setType(Material.AIR);
+						this.snap[x][y][z] = getBlockData(sx, clampY(sz), sz);
+						setBlockType(sx, clampY(sz), sz, Material.AIR);
 						sz++;
 					}
 				}
@@ -115,7 +115,7 @@ public class Rotation3DBrush extends AbstractBrush {
 		double sinRoll = Math.sin(this.seRoll);
 		boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
 		Undo undo = new Undo();
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
@@ -138,7 +138,7 @@ public class Rotation3DBrush extends AbstractBrush {
 						// after all three, though.
 						BlockData blockData = this.snap[x][y][z];
 						Material type = blockData.getMaterial();
-						if (Materials.isEmpty(type)) {
+						if (type.isEmpty()) {
 							continue;
 						}
 						this.setBlockData(targetBlock.getX() + (int) newxyX, targetBlock.getY() + (int) newyzY, targetBlock.getZ() + (int) newyzZ, blockData);

@@ -1,14 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
@@ -58,10 +59,9 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 		for (int x = -size; x <= size; x++) {
 			for (int y = -size; y <= size; y++) {
 				for (int z = -size; z <= size; z++) {
-					Block block = getBlockAtRelativeToTarget(x, y, z);
-					Material type = block.getType();
-					if (!DENIED_UPDATES.contains(type) && isAirAround(x, y, z)) {
-						resetBlock(block);
+					BlockState block = getBlockAtRelativeToTarget(x, y, z);
+					if (!DENIED_UPDATES.contains(block) && isAirAround(x, y, z)) {
+						resetBlock(x, y, z, block);
 					}
 				}
 			}
@@ -73,29 +73,28 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 	}
 
 	private boolean findAir(int x, int y, int z) {
-		Block block = getBlockAtRelativeToTarget(x, y, z);
-		if (!Materials.isEmpty(block.getType())) {
+		BlockState block = getBlockAtRelativeToTarget(x, y, z);
+		if (!block.isAir()) {
 			return false;
 		}
-		resetBlock(block);
+		resetBlock(x, y, z, block);
 		return true;
 	}
 
-	private Block getBlockAtRelativeToTarget(int x, int y, int z) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
+	private BlockState getBlockAtRelativeToTarget(int x, int y, int z) {
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
-		return world.getBlockAt(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
+		return getBlock(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
 	}
 
-	private void resetBlock(Block block) {
-		BlockData oldData = block.getBlockData();
-		Material type = block.getType();
+	private void resetBlock(int x, int y, int z, BlockState block) {
+		BlockData oldData = BukkitAdapter.adapt(block);
+		Material type = BukkitAdapter.adapt(block.getBlockType());
 		BlockData defaultData = type.createBlockData();
-		block.setBlockData(defaultData);
-		block.setBlockData(oldData);
+		setBlockData(x, y, z, defaultData);
+		setBlockData(x, y, z, oldData);
 	}
 
 	@Override

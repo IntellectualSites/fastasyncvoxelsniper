@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.fastasyncworldedit.core.Fawe;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -82,17 +84,17 @@ public class JockeyBrush extends AbstractBrush {
 	private void sitOn(Snipe snipe) {
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		Block targetBlock = getTargetBlock();
-		World world = getWorld();
-		Chunk targetChunk = world.getChunkAt(targetBlock.getLocation());
-		int targetChunkX = targetChunk.getX();
-		int targetChunkZ = targetChunk.getZ();
+		BlockVector3 targetBlock = getTargetBlock();
+		World world = BukkitAdapter.adapt(getEditSession().getWorld());
+		int targetChunkX = targetBlock.getX() >> 4;
+		int targetChunkZ = targetBlock.getZ() >> 4;
 		double range = Double.MAX_VALUE;
 		Entity closest = null;
 		for (int x = targetChunkX - 1; x <= targetChunkX + 1; x++) {
 			for (int y = targetChunkZ - 1; y <= targetChunkZ + 1; y++) {
-				Chunk chunk = world.getChunkAt(x, y);
-				for (Entity entity : chunk.getEntities()) {
+				if (!world.isChunkLoaded(x, y)) continue;
+
+				for (Entity entity : world.getChunkAt(x, y).getEntities()) {
 					if (entity.getEntityId() == player.getEntityId()) {
 						continue;
 					}

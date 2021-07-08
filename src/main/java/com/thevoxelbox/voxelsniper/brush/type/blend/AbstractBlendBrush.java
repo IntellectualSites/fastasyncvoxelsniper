@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -50,7 +51,7 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 			if (checkExclusions(material)) {
 				Material currentBlockType = getBlockType(position);
 				if (currentBlockType != material) {
-					Block clamped = clampY(position);
+					BlockState clamped = clampY(position);
 					undo.put(clamped);
 				}
 				setBlockType(position, material);
@@ -72,7 +73,7 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 	}
 
 	private boolean checkExclusions(Material material) {
-		return (!this.airExcluded || !Materials.isEmpty(material)) && (!this.waterExcluded || material != Material.WATER);
+		return (!this.airExcluded || !material.isEmpty()) && (!this.waterExcluded || material != Material.WATER);
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -11,7 +15,6 @@ import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class OceanBrush extends AbstractBrush {
@@ -91,8 +94,8 @@ public class OceanBrush extends AbstractBrush {
 	}
 
 	private void oceanator(ToolkitProperties toolkitProperties, Undo undo) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
+		EditSession editSession = getEditSession();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockZ = targetBlock.getZ();
 		int brushSize = toolkitProperties.getBrushSize();
@@ -105,32 +108,34 @@ public class OceanBrush extends AbstractBrush {
 				int currentHeight = getHeight(x, z);
 				int wLevelDiff = currentHeight - (this.waterLevel - 1);
 				int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), LOW_CUT_LEVEL);
-				int highestY = world.getHighestBlockYAt(x, z);
+				int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY() + 1);
 				// go down from highest Y block down to new sea floor
 				for (int y = highestY; y > newSeaFloorLevel; y--) {
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.AIR) {
+					BlockState block = getBlock(x, y, z);
+					if (!block.isAir()) {
 						undo.put(block);
-						block.setType(Material.AIR);
+						setBlockType(x, y, z, Material.AIR);
 					}
 				}
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.WATER) {
+					BlockState block = getBlock(x, y, z);
+					Material blockType = BukkitAdapter.adapt(block.getBlockType());
+					if (blockType != Material.WATER) {
 						// do not put blocks into the undo we already put into
-						if (block.getType() != Material.AIR) {
+						if (blockType != Material.AIR) {
 							undo.put(block);
 						}
-						block.setType(Material.WATER);
+						setBlockType(x, y, z, Material.WATER);
 					}
 				}
 				// cover the sea floor of required
 				if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
-					Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-					if (block.getType() != toolkitProperties.getBlockType()) {
+					BlockState block = getBlock(x, newSeaFloorLevel, z);
+					Material blockType = BukkitAdapter.adapt(block.getBlockType());
+					if (blockType != toolkitProperties.getBlockType()) {
 						undo.put(block);
-						block.setType(toolkitProperties.getBlockType());
+						setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
 					}
 				}
 			}
@@ -138,11 +143,10 @@ public class OceanBrush extends AbstractBrush {
 	}
 
 	private int getHeight(int bx, int bz) {
-		World world = getWorld();
-		for (int y = world.getHighestBlockYAt(bx, bz); y > 0; y--) {
-			Block clamp = this.clampY(bx, y, bz);
-			Material material = clamp.getType();
-			if (!EXCLUDED_MATERIALS.contains(material)) {
+		EditSession editSession = getEditSession();
+		for (int y = getHighestTerrainBlock(bx, bz, editSession.getMinY(), editSession.getMaxY() + 1); y > 0; y--) {
+			BlockState clamp = this.clampY(bx, y, bz);
+			if (!EXCLUDED_MATERIALS.contains(clamp)) {
 				return y;
 			}
 		}

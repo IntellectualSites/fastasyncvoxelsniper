@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.util.TaskManager;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
@@ -10,16 +13,22 @@ public class LightningBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
-		world.strikeLightning(targetBlock.getLocation());
+		BlockVector3 targetBlock = getTargetBlock();
+		TaskManager.IMP.sync(() -> {
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
+			return null;
+		});
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
-		world.strikeLightning(targetBlock.getLocation());
+		BlockVector3 targetBlock = getTargetBlock();
+		TaskManager.IMP.sync(() -> {
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
+			return null;
+		});
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class FillDownBrush extends AbstractPerformerBrush {
@@ -65,7 +67,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double currentXSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
@@ -74,8 +76,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					if (this.fromExisting) {
 						boolean found = false;
 						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
-							Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-							if (!Materials.isEmpty(currentBlock.getType())) {
+							Material currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+							if (!currentBlockType.isEmpty()) {
 								found = true;
 								break;
 							}
@@ -86,9 +88,9 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						y--;
 					}
 					for (; y >= -targetBlock.getY(); --y) {
-						Block currentBlock = getWorld().getBlockAt(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-						if (Materials.isEmpty(currentBlock.getType()) || (this.fillLiquid && currentBlock.isLiquid())) {
-							this.performer.perform(currentBlock);
+						Material currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+						if (currentBlockType.isEmpty() || (this.fillLiquid && Materials.isLiquid(currentBlockType))) {
+							this.performer.perform(getEditSession(), targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z, getBlock(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z));
 						} else {
 							break;
 						}

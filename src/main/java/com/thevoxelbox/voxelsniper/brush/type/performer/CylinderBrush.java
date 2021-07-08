@@ -1,12 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.World;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class CylinderBrush extends AbstractPerformerBrush {
@@ -53,17 +55,17 @@ public class CylinderBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		cylinder(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		cylinder(snipe, lastBlock);
 	}
 
-	private void cylinder(Snipe snipe, Block targetBlock) {
+	private void cylinder(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		SnipeMessenger messenger = snipe.createMessenger();
 		int brushSize = toolkitProperties.getBrushSize();
@@ -72,31 +74,33 @@ public class CylinderBrush extends AbstractPerformerBrush {
 		if (yEndPoint < yStartingPoint) {
 			yEndPoint = yStartingPoint;
 		}
-		World world = getWorld();
+		EditSession editSession = getEditSession();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-		} else if (yStartingPoint > world.getMaxHeight() - 1) {
-			yStartingPoint = world.getMaxHeight() - 1;
+		} else if (yStartingPoint > editSession.getMaxY()) {
+			yStartingPoint = editSession.getMaxY();
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-		} else if (yEndPoint > world.getMaxHeight() - 1) {
-			yEndPoint = world.getMaxHeight() - 1;
+		} else if (yEndPoint > editSession.getMaxY()) {
+			yEndPoint = editSession.getMaxY();
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
+		int blockX = targetBlock.getX();
+		int blockZ = targetBlock.getZ();
 		double bSquared = Math.pow(brushSize + this.trueCircle, 2);
 		for (int y = yEndPoint; y >= yStartingPoint; y--) {
 			for (int x = brushSize; x >= 0; x--) {
 				double xSquared = Math.pow(x, 2);
 				for (int z = brushSize; z >= 0; z--) {
 					if ((xSquared + Math.pow(z, 2)) <= bSquared) {
-						this.performer.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() + z));
-						this.performer.perform(this.clampY(targetBlock.getX() + x, y, targetBlock.getZ() - z));
-						this.performer.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() + z));
-						this.performer.perform(this.clampY(targetBlock.getX() - x, y, targetBlock.getZ() - z));
+						this.performer.perform(getEditSession(), blockX + x, clampY(y), blockZ + z, this.clampY(blockX + x, y, blockZ + z));
+						this.performer.perform(getEditSession(), blockX + x, clampY(y), blockZ - z, this.clampY(blockX + x, y, blockZ - z));
+						this.performer.perform(getEditSession(), blockX - x, clampY(y), blockZ + z, this.clampY(blockX - x, y, blockZ + z));
+						this.performer.perform(getEditSession(), blockX - x, clampY(y), blockZ - z, this.clampY(blockX - x, y, blockZ - z));
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -42,7 +43,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 
 	private void triangleA(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
@@ -154,7 +155,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 				double heronThree = calculateHeron(cVectorOne, cVectorTwo, cVectorThree, this.coordinatesThree, this.coordinatesOne);
 				double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 				if (barycentric <= 1.1) {
-					this.performer.perform(clampY((int) this.currentCoordinates[0], (int) this.currentCoordinates[1], (int) this.currentCoordinates[2]));
+					this.performer.perform(getEditSession(), (int) this.currentCoordinates[0], clampY((int) this.currentCoordinates[1]), (int) this.currentCoordinates[2], clampY((int) this.currentCoordinates[0], (int) this.currentCoordinates[1], (int) this.currentCoordinates[2]));
 				}
 			}
 		}

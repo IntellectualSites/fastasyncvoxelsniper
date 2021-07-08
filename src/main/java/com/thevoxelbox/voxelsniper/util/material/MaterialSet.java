@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -23,8 +24,8 @@ public class MaterialSet implements Iterable<Material> {
 		this.materials = EnumSet.copyOf(materials);
 	}
 
-	public boolean contains(Block block) {
-		Material type = block.getType();
+	public boolean contains(com.sk89q.worldedit.world.block.BlockState block) {
+		Material type = BukkitAdapter.adapt(block.getBlockType());
 		return contains(type);
 	}
 

@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -9,7 +11,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 
 public class EraserBrush extends AbstractBrush {
@@ -43,8 +44,7 @@ public class EraserBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeDoubled = 2 * brushSize;
-		Block targetBlock = getTargetBlock();
-		World world = targetBlock.getWorld();
+		BlockVector3 targetBlock = getTargetBlock();
 		Undo undo = new Undo();
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			int currentX = targetBlock.getX() - brushSize + x;
@@ -52,10 +52,10 @@ public class EraserBrush extends AbstractBrush {
 				int currentY = targetBlock.getY() - brushSize + y;
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					int currentZ = targetBlock.getZ() - brushSize + z;
-					Block currentBlock = world.getBlockAt(currentX, currentY, currentZ);
+					BlockState currentBlock = getBlock(currentX, currentY, currentZ);
 					if (!EXCLUSIVE_MATERIALS.contains(currentBlock) && (!keepWater || !EXCLUSIVE_LIQUIDS.contains(currentBlock))) {
 						undo.put(currentBlock);
-						currentBlock.setType(Material.AIR);
+						setBlockType(currentX, currentY, currentZ, Material.AIR);
 					}
 				}
 			}
