@@ -21,7 +21,7 @@ dependencies {
 	compileOnlyApi("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
 	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-44")
-	implementation("org.incendo.serverlib:ServerLib:2.2.0")
+	implementation("org.incendo.serverlib:ServerLib:2.2.1")
 	implementation("org.bstats:bstats-bukkit:2.2.1")
 	implementation("org.bstats:bstats-base:2.2.1")
 }
@@ -53,7 +53,7 @@ tasks.named<ShadowJar>("shadowJar") {
 	archiveClassifier.set(null as String?)
 	dependencies {
 		relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper") {
-			include(dependency("org.incendo.serverlib:ServerLib:2.2.0"))
+			include(dependency("org.incendo.serverlib:ServerLib:2.2.1"))
 		}
 		relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics") {
 			include(dependency("org.bstats:bstats-bukkit:2.2.1"))
