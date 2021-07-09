@@ -1,13 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.internal.util.DeprecationUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -135,7 +133,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	public void handleGunpowderAction(Snipe snipe) {
 		BlockVector3 targetBlock = getTargetBlock();
 		BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
-		if (isSign(block.getBlockType())) {
+		if (DeprecationUtil.isSign(block.getBlockType())) {
 			CompoundBinaryTag tag = block.getNbt();
 			if (tag == null) {
 				return;
@@ -176,7 +174,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private void setSingle(Snipe snipe) {
 		BlockVector3 targetBlock = getTargetBlock();
 		BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
-		if (isSign(block.getBlockType())) {
+		if (DeprecationUtil.isSign(block.getBlockType())) {
 			setSignText(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), block);
 		} else {
 			SnipeMessenger messenger = snipe.createMessenger();
@@ -203,7 +201,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 			for (int y = minY; y <= maxY; y++) {
 				for (int z = minZ; z <= maxZ; z++) {
 					BaseBlock block = getFullBlock(x, y, z);
-					if (isSign(block.getBlockType())) {
+					if (DeprecationUtil.isSign(block.getBlockType())) {
 						setSignText(x, y, z, block);
 						signFound = true;
 					}
@@ -347,13 +345,6 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 */
 	private void resetStates() {
 		Arrays.fill(this.signLinesEnabled, true);
-	}
-
-	private boolean isSign(BlockType blockType) {
-		BlockType sign = BlockTypes.SIGN;
-		BlockType wallSign = BlockTypes.WALL_SIGN;
-		return blockType == sign || blockType == wallSign
-			|| BlockCategories.SIGNS.contains(blockType);
 	}
 
 	private String toJson(String oldInput) {
