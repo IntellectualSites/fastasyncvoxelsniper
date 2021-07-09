@@ -143,7 +143,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 			}
 			for (int i = 0; i < this.signTextLines.length; i++) {
 				if (this.signLinesEnabled[i]) {
-					this.signTextLines[i] = fromJson(tag.getString("Text" + (i + 1)));
+					this.signTextLines[i] = tag.getString("Text" + (i + 1));
 				}
 			}
 			displayBuffer(snipe);
@@ -362,13 +362,6 @@ public class SignOverwriteBrush extends AbstractBrush {
 			return "";
 		}
 		return LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of(oldInput));
-	}
-
-	private String fromJson(String jsonInput) {
-		if (jsonInput == null || jsonInput.isEmpty()) {
-			return "";
-		}
-		return GsonComponentSerializer.INSTANCE.deserialize(jsonInput).toString();
 	}
 
 	@Override
