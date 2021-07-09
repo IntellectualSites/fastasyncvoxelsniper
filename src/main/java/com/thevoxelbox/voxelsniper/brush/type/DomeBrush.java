@@ -2,8 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -38,7 +36,6 @@ public class DomeBrush extends AbstractBrush {
 		int absoluteHeight = Math.abs(voxelHeight);
 		boolean negative = voxelHeight < 0;
 		List<Vector> changeablePositions = new ArrayList<>();
-		Undo undo = new Undo();
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeTimesVoxelHeight = brushSize * absoluteHeight;
 		double stepScale = (brushSize * brushSize + brushSizeTimesVoxelHeight + brushSizeTimesVoxelHeight) / 5.0;
@@ -65,12 +62,9 @@ public class DomeBrush extends AbstractBrush {
 			BlockState currentTargetBlock = getBlock(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
 			BlockState snipeBlockData = toolkitProperties.getBlockData();
 			if (!currentTargetBlock.equals(snipeBlockData)) {
-				undo.put(currentTargetBlock);
 				setBlockData(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), snipeBlockData);
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -159,8 +158,6 @@ public class SplineBrush extends AbstractPerformerBrush {
 		for (Point point : this.spline) {
 			this.performer.perform(getEditSession(), point.getX(), clampY(point.getY()), point.getZ(), clampY(point.getX(), point.getY(), point.getZ()));
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private void clear(Snipe snipe) {

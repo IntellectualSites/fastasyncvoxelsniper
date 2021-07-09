@@ -2,8 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -61,9 +59,6 @@ public class BallBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), position.getX(), clampY(position.getY()), position.getZ(), block);
 			})
 			.paint();
-		Sniper sniper = snipe.getSniper();
-		Undo undo = this.performer.getUndo();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

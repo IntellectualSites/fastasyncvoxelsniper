@@ -6,8 +6,6 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
@@ -17,7 +15,6 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 
 	@Nullable
 	private BlockVector3 block;
-	private Undo undo;
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
@@ -25,9 +22,6 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 		if (set(targetBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.undo);
 		}
 	}
 
@@ -37,9 +31,6 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 		if (set(lastBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.undo);
 		}
 	}
 
@@ -48,7 +39,6 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 			this.block = block;
 			return true;
 		} else {
-			this.undo = new Undo();
 			int x1 = this.block.getX();
 			int x2 = block.getX();
 			int y1 = this.block.getY();
@@ -80,7 +70,6 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 			if (delayProperty == null) {
 				return;
 			}
-			this.undo.put(block);
 			int delay = block.getState(delayProperty);
 			block = block.with(delayProperty, -delay % 4 + 1 < 5 ? (delay + 1) : (delay - 4));
 			setBlockData(x, y, z, block);

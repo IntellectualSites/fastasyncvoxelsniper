@@ -2,8 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -66,9 +64,6 @@ public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 				smallSquareBlockTypes.put(smallSquareBlock, type);
 			}
 		}
-		Undo undo = new Undo();
-		setBlocks(smallSquareBlockTypes, undo);
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
+		setBlocks(smallSquareBlockTypes);
 	}
 }

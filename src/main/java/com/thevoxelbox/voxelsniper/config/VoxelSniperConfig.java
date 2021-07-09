@@ -6,20 +6,14 @@ import java.util.List;
 
 public class VoxelSniperConfig {
 
-	private int undoCacheSize;
 	private boolean messageOnLoginEnabled;
 	private int litesniperMaxBrushSize;
 	private List<Material> litesniperRestrictedMaterials;
 
-	public VoxelSniperConfig(int undoCacheSize, boolean messageOnLoginEnabled, int litesniperMaxBrushSize, List<Material> litesniperRestrictedMaterials) {
-		this.undoCacheSize = undoCacheSize;
+	public VoxelSniperConfig(boolean messageOnLoginEnabled, int litesniperMaxBrushSize, List<Material> litesniperRestrictedMaterials) {
 		this.messageOnLoginEnabled = messageOnLoginEnabled;
 		this.litesniperMaxBrushSize = litesniperMaxBrushSize;
 		this.litesniperRestrictedMaterials = litesniperRestrictedMaterials;
-	}
-
-	public int getUndoCacheSize() {
-		return this.undoCacheSize;
 	}
 
 	public boolean isMessageOnLoginEnabled() {

@@ -7,8 +7,6 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.command.HistoryCommands;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -45,13 +43,10 @@ public class Sniper {
 
 	private UUID uuid;
 	private boolean enabled = true;
-	private int undoCacheSize;
-	//	private Deque<Undo> undoList = new LinkedList<>(); //FAWE Removed
 	private List<Toolkit> toolkits = new ArrayList<>();
 
-	public Sniper(UUID uuid, int undoCacheSize) {
+	public Sniper(UUID uuid) {
 		this.uuid = uuid;
-		this.undoCacheSize = undoCacheSize;
 		Toolkit defaultToolkit = createDefaultToolkit();
 		this.toolkits.add(defaultToolkit);
 	}
@@ -253,44 +248,6 @@ public class Sniper {
 				WorldEdit.getInstance().flushBlockBag(fp, editSession);
 			}
 		}
-	}
-
-	//FAWE Modified
-	public void storeUndo(Undo undo) {
-		/* //FAWE removed
-		if (this.undoCacheSize <= 0) {
-			return;
-		}
-		if (undo.isEmpty()) {
-			return;
-		}
-		while (this.undoList.size() >= this.undoCacheSize) {
-			this.undoList.pollLast();
-		}
-		this.undoList.push(undo);
-		*/
-	}
-
-	//FAWE  Modified
-	public void undo(CommandSender sender, int amount) {
-		{ //FAWE add
-			com.sk89q.worldedit.entity.Player actor = (com.sk89q.worldedit.entity.Player) WorldEditPlugin.getInstance().wrapCommandSender(sender);
-			LocalSession session = actor.getSession();
-			new HistoryCommands(WorldEdit.getInstance()).undo(actor, session, amount, null);
-		}
-		/* //FAWE modified
-		if (this.undoList.isEmpty()) {
-			sender.sendMessage(ChatColor.GREEN + "There's nothing to undo.");
-			return;
-		}
-		int sum = 0;
-		for (int index = 0; index < amount && !this.undoList.isEmpty(); index++) {
-			Undo undo = this.undoList.pop();
-			undo.undo();
-			sum += undo.getSize();
-		}
-		sender.sendMessage(ChatColor.GREEN + "Undo successful:  " + ChatColor.RED + sum + ChatColor.GREEN + " blocks have been replaced.");
-		*/
 	}
 
 	public void sendInfo(CommandSender sender) {

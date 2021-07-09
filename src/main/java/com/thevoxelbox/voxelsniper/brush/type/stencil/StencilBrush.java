@@ -5,8 +5,6 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
@@ -125,7 +123,6 @@ public class StencilBrush extends AbstractBrush {
 			messenger.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
 			return;
 		}
-		Undo undo = new Undo();
 		File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
 		if (file.exists()) {
 			try {
@@ -152,7 +149,6 @@ public class StencilBrush extends AbstractBrush {
 							int numLoops = in.readByte() + 128;
 							blockData = readBlockData(in);
 							for (int j = 0; j < numLoops; j++) {
-								undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 								setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 								currX++;
 								if (currX == this.x - this.xRef) {
@@ -165,7 +161,6 @@ public class StencilBrush extends AbstractBrush {
 								}
 							}
 						} else {
-							undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 							setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, readBlockData(in));
 							currX++;
 							if (currX == this.x - this.xRef) {
@@ -186,7 +181,6 @@ public class StencilBrush extends AbstractBrush {
 							for (int j = 0; j < numLoops; j++) {
 								BlockType type = blockData.getBlockType();
 								if (!Materials.isEmpty(type) && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
-									undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 									setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 								}
 								currX++;
@@ -203,7 +197,6 @@ public class StencilBrush extends AbstractBrush {
 							blockData = readBlockData(in);
 							BlockType type = blockData.getBlockType();
 							if (!Materials.isEmpty(type) && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
-								undo.put(clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 								// v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
 								setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 							}
@@ -226,7 +219,6 @@ public class StencilBrush extends AbstractBrush {
 							for (int j = 0; j < (numLoops); j++) {
 								BlockType type = blockData.getBlockType();
 								if (!Materials.isEmpty(type)) {
-									undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 									setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 								}
 								currX++;
@@ -243,7 +235,6 @@ public class StencilBrush extends AbstractBrush {
 							blockData = readBlockData(in);
 							BlockType type = blockData.getBlockType();
 							if (!Materials.isEmpty(type)) {
-								undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 								setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 							}
 							currX++;
@@ -259,8 +250,6 @@ public class StencilBrush extends AbstractBrush {
 					}
 				}
 				in.close();
-				Sniper sniper = snipe.getSniper();
-				sniper.storeUndo(undo);
 			} catch (IOException exception) {
 				messenger.sendMessage(ChatColor.RED + "Something went wrong.");
 				exception.printStackTrace();

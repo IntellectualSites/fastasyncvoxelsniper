@@ -5,8 +5,6 @@ import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
@@ -107,19 +105,12 @@ public class SnowConeBrush extends AbstractBrush {
 				}
 			}
 		}
-		Undo undo = new Undo();
 		for (int x = 0; x <= brushSizeDoubled; x++) {
 			for (int z = 0; z <= brushSizeDoubled; z++) {
-				if (getBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z) != snowCone[x][z] || !getBlock(blockPositionX - brushSize + x, clampY(blockPositionY - yOffset[x][z]), blockPositionZ - brushSize + z)
-					.equals(snowConeData[x][z])) {
-					undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z));
-				}
 				setBlockType(blockPositionX - brushSize + x, blockPositionY - yOffset[x][z], blockPositionZ - brushSize + z, snowCone[x][z]);
 				setBlockData(blockPositionX - brushSize + x, clampY(blockPositionY - yOffset[x][z]), blockPositionZ - brushSize + z, snowConeData[x][z]);
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	private int blockDataToSnowLayers(BlockState blockData) {

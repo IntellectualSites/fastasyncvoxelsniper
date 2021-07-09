@@ -6,8 +6,6 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
@@ -24,7 +22,6 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 	protected Set<StampBrushBlockWrapper> fall = new HashSet<>();
 	protected Set<StampBrushBlockWrapper> drop = new HashSet<>();
 	protected Set<StampBrushBlockWrapper> solid = new HashSet<>();
-	protected Undo undo;
 	protected boolean sorted;
 	protected StampType stamp = StampType.DEFAULT;
 
@@ -82,8 +79,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 
 	protected void setBlock(StampBrushBlockWrapper blockWrapper) {
 		BlockVector3 targetBlock = getTargetBlock();
-		BlockState block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		this.undo.put(block);
+		clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
 		setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 	}
 
@@ -91,13 +87,11 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 		BlockVector3 targetBlock = getTargetBlock();
 		BlockState block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
 		if (block.isAir()) {
-			this.undo.put(block);
 			setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 		}
 	}
 
 	protected void stamp(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				setBlock(block);
@@ -132,12 +126,9 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	protected void stampFill(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				this.setBlockFill(block);
@@ -172,12 +163,9 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	protected void stampNoAir(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				this.setBlock(block);
@@ -212,8 +200,6 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	public StampType getStamp() {

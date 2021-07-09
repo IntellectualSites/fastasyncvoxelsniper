@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -50,7 +48,6 @@ public class CleanSnowBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Undo undo = new Undo();
 		for (int y = (brushSize + 1) * 2; y >= 0; y--) {
 			double ySquared = MathHelper.square(y - brushSize);
 			for (int x = (brushSize + 1) * 2; x >= 0; x--) {
@@ -62,15 +59,12 @@ public class CleanSnowBrush extends AbstractBrush {
 						int targetBlockY = targetBlock.getY();
 						int targetBlockZ = targetBlock.getZ();
 						if (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW && (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW || clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).isAir())) {
-							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
 							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, BlockTypes.AIR.getDefaultState());
 						}
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

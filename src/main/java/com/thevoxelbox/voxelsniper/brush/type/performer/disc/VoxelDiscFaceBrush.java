@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
@@ -61,8 +60,6 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), blockX + x, clampY(blockY + y), blockZ, getBlock(blockX + x, clampY(blockY + y), blockZ));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private void discEastWest(Snipe snipe, BlockVector3 targetBlock) {
@@ -76,8 +73,6 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), blockX, clampY(blockY + x), blockZ + y, clampY(blockX, blockY + y, blockZ));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private void disc(Snipe snipe, BlockVector3 targetBlock) {
@@ -91,8 +86,6 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), blockX + x, clampY(blockY), blockZ + y, getBlock(blockX + x, clampY(blockY), blockZ + y));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

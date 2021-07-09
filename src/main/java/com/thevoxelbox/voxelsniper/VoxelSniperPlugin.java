@@ -48,7 +48,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
 		VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(config);
-		int undoCacheSize = voxelSniperConfigLoader.getUndoCacheSize();
 		boolean messageOnLoginEnabled = voxelSniperConfigLoader.isMessageOnLoginEnabled();
 		int litesniperMaxBrushSize = voxelSniperConfigLoader.getLitesniperMaxBrushSize();
 		List<Material> litesniperRestrictedMaterials = voxelSniperConfigLoader.getLitesniperRestrictedMaterials()
@@ -56,7 +55,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 			.map(Material::matchMaterial)
 			.filter(Objects::nonNull)
 			.collect(Collectors.toList());
-		return new VoxelSniperConfig(undoCacheSize, messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
+		return new VoxelSniperConfig(messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
 	}
 
 	private BrushRegistry loadBrushRegistry() {

@@ -9,11 +9,9 @@ import java.util.List;
  */
 public class VoxelSniperConfigLoader {
 
-	private static final String UNDO_CACHE_SIZE = "undo-cache-size";
 	private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
 	private static final String LITESNIPER_MAX_BRUSH_SIZE = "litesniper-max-brush-size";
 	private static final String LITESNIPER_RESTRICTED_MATERIALS = "litesniper-restricted-materials";
-	private static final int DEFAULT_UNDO_CACHE_SIZE = 20;
 	private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
 	private static final int DEFAULT_LITESNIPER_MAX_BRUSH_SIZE = 5;
 
@@ -24,24 +22,6 @@ public class VoxelSniperConfigLoader {
 	 */
 	public VoxelSniperConfigLoader(FileConfiguration config) {
 		this.config = config;
-	}
-
-	/**
-	 * Returns the maximum amount of snipes stored in the undo cache of snipers.
-	 *
-	 * @return the maximum amount of snipes stored in the undo cache of snipers
-	 */
-	public int getUndoCacheSize() {
-		return this.config.getInt(UNDO_CACHE_SIZE, DEFAULT_UNDO_CACHE_SIZE);
-	}
-
-	/**
-	 * Set the maximum amount of snipes stored in the undo cache of snipers.
-	 *
-	 * @param size size of undo cache
-	 */
-	public void setUndoCacheSize(int size) {
-		this.config.set(UNDO_CACHE_SIZE, size);
 	}
 
 	/**

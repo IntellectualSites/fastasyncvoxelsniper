@@ -6,8 +6,6 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
@@ -26,7 +24,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private Random randGenerator = new Random();
 	private List<BlockState> branchBlocks = new ArrayList<>();
 	private List<Integer[]> branchBlocksLocation = new ArrayList<>();
-	private Undo undo;
 	// If these default values are edited. Remember to change default values in the default preset.
 	private BlockType leafType = BlockTypes.OAK_LEAVES;
 	private BlockType woodType = BlockTypes.OAK_LOG;
@@ -181,7 +178,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		this.undo = new Undo();
 		this.branchBlocks.clear();
 		this.branchBlocksLocation.clear();
 		// Sets the location variables.
@@ -201,9 +197,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 			this.blockPositionZ = blockLocation[2];
 			this.createLeafNode();
 		}
-		// Ends the undo function and mos on.
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 	// The Powder currently does nothing extra.
 
@@ -233,10 +226,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 			// 50% chance to increase elevation every second block.
 			if (Math.abs(r % 2) == 1) {
 				this.blockPositionY += this.randGenerator.nextInt(2);
-			}
-			// Add block to undo function.
-			if (!BlockCategories.LOGS.contains(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
-				this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 			}
 			// Creates a branch block.
 			setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, woodType);
@@ -281,10 +270,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 			// If block is Air, create a leaf block.
 			BlockState block = getBlock(x, y, z);
 			if (block.isAir()) {
-				// Adds block to undo function.
-				if (!BlockCategories.LEAVES.contains(getBlockType(x, y, z))) {
-					this.undo.put(clampY(x, y, z));
-				}
 				// Creates block.
 				setBlockType(x, clampY(y), z, this.leafType);
 			}
@@ -316,13 +301,11 @@ public class GenerateTreeBrush extends AbstractBrush {
 			for (int j = 0; j < this.rootLength; j++) {
 				// For the purposes of this algorithm, logs aren't considered solid.
 				// If not solid then...
-				// Save for undo function
 				if (BlockCategories.LOGS.contains(getBlockType(this.blockPositionX, this.blockPositionY, this.blockPositionZ))) {
 					// If solid then...
 					// End loop
 					break;
 				} else {
-					this.undo.put(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
 					// Place log block.
 					setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, this.woodType);
 				}
@@ -396,10 +379,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 	private void generateTrunkBlock(int x, int y) {
 		BlockState block = getBlock(x, this.blockPositionY, y);
 		if (block.isAir()) {
-			// Adds block to undo function.
-			if (!BlockCategories.LOGS.contains(getBlockType(x, this.blockPositionY, y))) {
-				this.undo.put(this.clampY(x, this.blockPositionY, y));
-			}
 			// Creates block.
 			setBlockType(x, clampY(this.blockPositionY), y, this.woodType);
 		}

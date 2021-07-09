@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -60,7 +58,6 @@ public class DrainBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Undo undo = new Undo();
 		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
@@ -73,22 +70,18 @@ public class DrainBrush extends AbstractBrush {
 					if (xSquared + ySquared <= brushSizeSquared) {
 						BlockType typePlusPlus = getBlockType(targetBlock.add(x, 0, y));
 						if (Materials.isLiquid(typePlusPlus)) {
-							undo.put(clampY(targetBlock.add(x, 0, y)));
 							setBlockType(targetBlock.add(x, 0, y), BlockTypes.AIR);
 						}
 						BlockType typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
 						if (Materials.isLiquid(typePlusMinus)) {
-							undo.put(clampY(targetBlockX + x, targetBlockY, targetBlockZ - y));
 							setBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
 						}
 						BlockType typeMinusPlus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y);
 						if (Materials.isLiquid(typeMinusPlus)) {
-							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ + y));
 							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y, BlockTypes.AIR);
 						}
 						BlockType typeMinusMinus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y);
 						if (Materials.isLiquid(typeMinusMinus)) {
-							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ - y));
 							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
 						}
 					}
@@ -103,7 +96,6 @@ public class DrainBrush extends AbstractBrush {
 						if ((xSquared + MathHelper.square(z - brushSize) + ySquared) <= brushSizeSquared) {
 							BlockType type = getBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize);
 							if (Materials.isLiquid(type)) {
-								undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
 								setBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize, BlockTypes.AIR);
 							}
 						}
@@ -111,8 +103,6 @@ public class DrainBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

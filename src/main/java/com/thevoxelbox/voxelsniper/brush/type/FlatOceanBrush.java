@@ -98,7 +98,6 @@ public class FlatOceanBrush extends AbstractBrush {
 	public void sendInfo(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendBrushNameMessage();
-		messenger.sendMessage(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
 		messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
 		messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
 	}

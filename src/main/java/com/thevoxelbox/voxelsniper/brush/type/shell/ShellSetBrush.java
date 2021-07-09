@@ -4,8 +4,6 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -81,17 +79,13 @@ public class ShellSetBrush extends AbstractBrush {
 						}
 					}
 				}
-				Undo undo = new Undo();
 				for (BlockVector3 currentBlock : blocks) {
 					BlockType currentBlockType = getBlockType(currentBlock);
 					BlockType blockType = toolkitProperties.getBlockType();
 					if (currentBlockType != blockType) {
-						undo.put(getBlock(currentBlock));
 						setBlockType(currentBlock, blockType);
 					}
 				}
-				Sniper sniper = snipe.getSniper();
-				sniper.storeUndo(undo);
 				messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
 			}
 			this.block = null;

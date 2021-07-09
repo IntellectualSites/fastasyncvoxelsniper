@@ -5,8 +5,6 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -97,7 +95,6 @@ public class HeatRayBrush extends AbstractBrush {
 		BlockVector3 targetBlock = getTargetBlock();
 		Vector targetBlockVector = Vectors.toBukkit(targetBlock);
 		Vector currentLocation = new Vector();
-		Undo undo = new Undo();
 		int brushSize = toolkitProperties.getBrushSize();
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
@@ -113,12 +110,10 @@ public class HeatRayBrush extends AbstractBrush {
 							continue;
 						}
 						if (Materials.isLiquid(currentBlockType)) {
-							undo.put(currentBlock);
 							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.AIR);
 							continue;
 						}
 						if (FLAMEABLE_BLOCKS.contains(currentBlockType)) {
-							undo.put(currentBlock);
 							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.FIRE);
 							continue;
 						}
@@ -128,22 +123,18 @@ public class HeatRayBrush extends AbstractBrush {
 							double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double obsidianDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
-								undo.put(currentBlock);
 								if (currentBlockType != BlockTypes.OBSIDIAN) {
 									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.OBSIDIAN);
 								}
 							} else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
-								undo.put(currentBlock);
 								if (currentBlockType != BlockTypes.COBBLESTONE) {
 									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.COBBLESTONE);
 								}
 							} else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
-								undo.put(currentBlock);
 								if (currentBlockType != BlockTypes.FIRE) {
 									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.FIRE);
 								}
 							} else if (airDensity >= REQUIRED_AIR_DENSITY) {
-								undo.put(currentBlock);
 								setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.AIR);
 							}
 						}
@@ -151,8 +142,6 @@ public class HeatRayBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

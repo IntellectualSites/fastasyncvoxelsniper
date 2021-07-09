@@ -9,7 +9,6 @@ import com.thevoxelbox.voxelsniper.performer.type.combo.ComboInkPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.ComboMaterialNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.ComboMaterialPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.ComboNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.performer.type.combo.ComboNoUndoPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.ComboPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.ExcludeComboPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.combo.IncludeComboPerformer;
@@ -22,7 +21,6 @@ import com.thevoxelbox.voxelsniper.performer.type.ink.InkInkPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.ink.InkMaterialNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.ink.InkMaterialPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.ink.InkNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.performer.type.ink.InkNoUndoPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.ink.InkPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.ExcludeMaterialPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.IncludeMaterialPerformer;
@@ -33,7 +31,6 @@ import com.thevoxelbox.voxelsniper.performer.type.material.MaterialInkPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.MaterialMaterialNoPhysicsPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.MaterialMaterialPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.MaterialNoPhysicsPerformer;
-import com.thevoxelbox.voxelsniper.performer.type.material.MaterialNoUndoPerformer;
 import com.thevoxelbox.voxelsniper.performer.type.material.MaterialPerformer;
 
 public class PerformerRegistrar {
@@ -66,7 +63,6 @@ public class PerformerRegistrar {
 		registerMaterialInkNoPhysicsPerformer();
 		registerMaterialComboPerformer();
 		registerMaterialComboNoPhysicsPerformer();
-		registerMaterialNoUndoPerformer();
 		registerExcludeMaterialPerformer();
 		registerIncludeMaterialPerformer();
 	}
@@ -151,15 +147,6 @@ public class PerformerRegistrar {
 		this.registry.register(properties);
 	}
 
-	private void registerMaterialNoUndoPerformer() {
-		PerformerProperties properties = PerformerProperties.builder()
-			.name("Material No Undo")
-			.alias("noundo")
-			.creator(MaterialNoUndoPerformer::new)
-			.build();
-		this.registry.register(properties);
-	}
-
 	private void registerExcludeMaterialPerformer() {
 		PerformerProperties properties = PerformerProperties.builder()
 			.name("Exclude Material")
@@ -189,7 +176,6 @@ public class PerformerRegistrar {
 		registerInkNoPhysicsPerformer();
 		registerInkMaterialNoPhysicsPerformer();
 		registerInkComboNoPhysicsPerformer();
-		registerInkNoUndoPerformer();
 		registerExcludeInkPerformer();
 		registerIncludeInkPerformer();
 	}
@@ -280,15 +266,6 @@ public class PerformerRegistrar {
 		this.registry.register(properties);
 	}
 
-	private void registerInkNoUndoPerformer() {
-		PerformerProperties properties = PerformerProperties.builder()
-			.name("Ink No Undo")
-			.alias("inknoundo")
-			.creator(InkNoUndoPerformer::new)
-			.build();
-		this.registry.register(properties);
-	}
-
 	private void registerExcludeInkPerformer() {
 		PerformerProperties properties = PerformerProperties.builder()
 			.name("Exclude Ink")
@@ -318,7 +295,6 @@ public class PerformerRegistrar {
 		registerComboInkNoPhysicsPerformer();
 		registerComboComboPerformer();
 		registerComboComboNoPhysicsPerformer();
-		registerComboNoUndoPerformer();
 		registerExcludeComboPerformer();
 		registerIncludeComboPerformer();
 	}
@@ -405,15 +381,6 @@ public class PerformerRegistrar {
 			.alias("ccp")
 			.alias("combo-combo-nophys")
 			.creator(ComboComboNoPhysicsPerformer::new)
-			.build();
-		this.registry.register(properties);
-	}
-
-	private void registerComboNoUndoPerformer() {
-		PerformerProperties properties = PerformerProperties.builder()
-			.name("Combo No Undo")
-			.alias("combonoundo")
-			.creator(ComboNoUndoPerformer::new)
 			.build();
 		this.registry.register(properties);
 	}

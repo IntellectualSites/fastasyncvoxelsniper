@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
@@ -71,8 +70,6 @@ public class LineBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), currentBlock.getX(), currentBlock.getY(), currentBlock.getZ(), getBlock(currentBlock.getX(), currentBlock.getY(), currentBlock.getZ()));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

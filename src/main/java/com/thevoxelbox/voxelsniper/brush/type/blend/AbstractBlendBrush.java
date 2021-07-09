@@ -1,11 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
@@ -44,15 +42,14 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 
 	public abstract void blend(Snipe snipe);
 
-	protected void setBlocks(Map<BlockVector3, BlockType> blockTypes, Undo undo) {
+	protected void setBlocks(Map<BlockVector3, BlockType> blockTypes) {
 		for (Entry<BlockVector3, BlockType> entry : blockTypes.entrySet()) {
 			BlockVector3 position = entry.getKey();
 			BlockType type = entry.getValue();
 			if (checkExclusions(type)) {
 				BlockType currentBlockType = getBlockType(position);
 				if (currentBlockType != type) {
-					BlockState clamped = clampY(position);
-					undo.put(clamped);
+					clampY(position);
 				}
 				setBlockType(position, type);
 			}

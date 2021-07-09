@@ -6,8 +6,6 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -80,11 +78,8 @@ public class OceanBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Undo undo = new Undo();
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		oceanator(toolkitProperties, undo);
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
+		oceanator(toolkitProperties);
 	}
 
 	@Override
@@ -92,7 +87,7 @@ public class OceanBrush extends AbstractBrush {
 		handleArrowAction(snipe);
 	}
 
-	private void oceanator(ToolkitProperties toolkitProperties, Undo undo) {
+	private void oceanator(ToolkitProperties toolkitProperties) {
 		EditSession editSession = getEditSession();
 		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
@@ -112,7 +107,6 @@ public class OceanBrush extends AbstractBrush {
 				for (int y = highestY; y > newSeaFloorLevel; y--) {
 					BlockState block = getBlock(x, y, z);
 					if (!block.isAir()) {
-						undo.put(block);
 						setBlockType(x, y, z, BlockTypes.AIR);
 					}
 				}
@@ -121,10 +115,6 @@ public class OceanBrush extends AbstractBrush {
 					BlockState block = getBlock(x, y, z);
 					BlockType blockType = block.getBlockType();
 					if (blockType != BlockTypes.WATER) {
-						// do not put blocks into the undo we already put into
-						if (blockType != BlockTypes.AIR) {
-							undo.put(block);
-						}
 						setBlockType(x, y, z, BlockTypes.WATER);
 					}
 				}
@@ -133,7 +123,6 @@ public class OceanBrush extends AbstractBrush {
 					BlockState block = getBlock(x, newSeaFloorLevel, z);
 					BlockType blockType = block.getBlockType();
 					if (blockType != toolkitProperties.getBlockType()) {
-						undo.put(block);
 						setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
 					}
 				}

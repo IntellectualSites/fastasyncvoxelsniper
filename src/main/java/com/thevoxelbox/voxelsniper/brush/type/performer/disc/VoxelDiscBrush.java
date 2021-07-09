@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
@@ -31,8 +30,6 @@ public class VoxelDiscBrush extends AbstractPerformerBrush {
 				this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + z, getBlock(blockX + x, blockY, blockZ + z));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

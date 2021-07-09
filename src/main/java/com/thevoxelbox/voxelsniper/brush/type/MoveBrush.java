@@ -3,11 +3,9 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockCategories;
-import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
@@ -17,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Moves a selection blockPositionY a certain amount.
@@ -131,14 +127,13 @@ public class MoveBrush extends AbstractBrush {
 	}
 
 	/**
-	 * Moves the given selection blockPositionY the amount given in direction and saves an undo for the player.
+	 * Moves the given selection blockPositionY the amount given in direction.
 	 */
 	private void moveSelection(Snipe snipe, Selection selection, int[] direction) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		Sniper sniper = snipe.getSniper();
 		List<BlockVector3> locations = selection.getLocations();
 		if (!locations.isEmpty()) {
-			Undo undo = new Undo();
 			Selection newSelection = new Selection();
 			BlockVector3 movedLocation1 = selection.getLocation1();
 			movedLocation1.add(direction[0], direction[1], direction[2]);
@@ -151,15 +146,6 @@ public class MoveBrush extends AbstractBrush {
 			} catch (RuntimeException exception) {
 				messenger.sendMessage(ChatColor.LIGHT_PURPLE + "The new Selection has more blocks than the original selection. This should never happen!");
 			}
-			Set<BlockState> undoSet = locations.stream()
-				.map(blockState -> getBlock(blockState.getX(), blockState.getY(), blockState.getZ()))
-				.collect(Collectors.toSet());
-			newSelection.getLocations()
-				.stream()
-				.map(blockState -> getBlock(blockState.getX(), blockState.getY(), blockState.getZ()))
-				.forEach(undoSet::add);
-			undoSet.forEach(undo::put);
-			sniper.storeUndo(undo);
 			locations.forEach(block -> setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
 			for (BlockVector3 block : locations) {
 				setBlockData(block.getX() + direction[0], block.getY() + direction[1], block.getZ() + direction[2], getBlock(block.getX(), block.getY(), block.getZ()));

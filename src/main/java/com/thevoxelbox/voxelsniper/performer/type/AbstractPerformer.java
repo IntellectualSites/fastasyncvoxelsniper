@@ -5,11 +5,8 @@ import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.performer.Performer;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 
 public abstract class AbstractPerformer implements Performer {
-
-	private Undo undo;
 
 	public void setBlockType(EditSession editSession, int x, int y, int z, BlockType type) {
 		try {
@@ -25,15 +22,5 @@ public abstract class AbstractPerformer implements Performer {
 		} catch (WorldEditException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public void initializeUndo() {
-		this.undo = new Undo();
-	}
-
-	@Override
-	public Undo getUndo() {
-		return this.undo;
 	}
 }

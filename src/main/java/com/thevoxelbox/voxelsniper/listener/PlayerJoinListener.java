@@ -41,8 +41,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
 	private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		int undoCacheSize = config.getUndoCacheSize();
-		Sniper newSniper = new Sniper(uuid, undoCacheSize);
+		Sniper newSniper = new Sniper(uuid);
 		sniperRegistry.register(newSniper);
 		return newSniper;
 	}

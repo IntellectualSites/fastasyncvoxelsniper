@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type.shell;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -79,7 +77,6 @@ public class ShellBallBrush extends AbstractBrush {
 			}
 		}
 		// Make the changes
-		Undo undo = new Undo();
 		double rSquared = Math.pow(brushSize + 0.5, 2);
 		for (int x = brushSizeDoubled; x >= 0; x--) {
 			double xSquared = Math.pow(x - brushSize, 2);
@@ -87,16 +84,11 @@ public class ShellBallBrush extends AbstractBrush {
 				double ySquared = Math.pow(y - brushSize, 2);
 				for (int z = 2 * brushSize; z >= 0; z--) {
 					if (xSquared + ySquared + Math.pow(z - brushSize, 2) <= rSquared) {
-						if (getBlockType(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z) != newMaterials[x][y][z]) {
-							undo.put(clampY(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z));
-						}
 						setBlockType(blockPositionX - brushSize + x, blockPositionY - brushSize + y, blockPositionZ - brushSize + z, newMaterials[x][y][z]);
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 		// This is needed because most uses of this brush will not be sible to the sniper.
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendMessage(ChatColor.AQUA + "Shell complete.");

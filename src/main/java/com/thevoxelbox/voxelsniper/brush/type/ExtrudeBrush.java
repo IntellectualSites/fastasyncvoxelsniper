@@ -3,8 +3,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -44,7 +42,6 @@ public class ExtrudeBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double xSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
@@ -56,20 +53,17 @@ public class ExtrudeBrush extends AbstractBrush {
 						int targetBlockX = targetBlock.getX();
 						int targetBlockY = targetBlock.getY();
 						int targetBlockZ = targetBlock.getZ();
-						perform(targetBlockX + x, targetBlockY + tempY, targetBlockZ + z, clampY(targetBlockX + x, targetBlockY + tempY, targetBlockZ + z), targetBlockX + x, targetBlockY + tempY + direction, targetBlockZ + z, clampY(targetBlockX + x, targetBlockY + tempY + direction, targetBlockZ + z), toolkitProperties, undo);
+						perform(targetBlockX + x, targetBlockY + tempY, targetBlockZ + z, clampY(targetBlockX + x, targetBlockY + tempY, targetBlockZ + z), targetBlockX + x, targetBlockY + tempY + direction, targetBlockZ + z, clampY(targetBlockX + x, targetBlockY + tempY + direction, targetBlockZ + z), toolkitProperties);
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	private void extrudeNorthOrSouth(Snipe snipe, boolean isSouth) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Undo undo = new Undo();
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double xSquared = Math.pow(x, 2);
 			for (int y = -brushSize; y <= brushSize; y++) {
@@ -78,20 +72,17 @@ public class ExtrudeBrush extends AbstractBrush {
 					for (int z = 0; z < Math.abs(toolkitProperties.getVoxelHeight()); z++) {
 						int tempZ = z * direction;
 						BlockVector3 targetBlock = this.getTargetBlock();
-						perform(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ, clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ), targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ + direction, this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ + direction), toolkitProperties, undo);
+						perform(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ, clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ), targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ + direction, this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ + direction), toolkitProperties);
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	private void extrudeEastOrWest(Snipe snipe, boolean isEast) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
-		Undo undo = new Undo();
 		for (int y = -brushSize; y <= brushSize; y++) {
 			double ySquared = Math.pow(y, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
@@ -100,18 +91,15 @@ public class ExtrudeBrush extends AbstractBrush {
 					for (int x = 0; x < Math.abs(toolkitProperties.getVoxelHeight()); x++) {
 						int tempX = x * direction;
 						BlockVector3 targetBlock = this.getTargetBlock();
-						perform(targetBlock.getX() + tempX, targetBlock.getY() + y, targetBlock.getZ() + z, this.clampY(targetBlock.getX() + tempX, targetBlock.getY() + y, targetBlock.getZ() + z), targetBlock.getX() + tempX + direction, targetBlock.getY() + y, targetBlock.getZ() + z, this.clampY(targetBlock.getX() + tempX + direction, targetBlock.getY() + y, targetBlock.getZ() + z), toolkitProperties, undo);
+						perform(targetBlock.getX() + tempX, targetBlock.getY() + y, targetBlock.getZ() + z, this.clampY(targetBlock.getX() + tempX, targetBlock.getY() + y, targetBlock.getZ() + z), targetBlock.getX() + tempX + direction, targetBlock.getY() + y, targetBlock.getZ() + z, this.clampY(targetBlock.getX() + tempX + direction, targetBlock.getY() + y, targetBlock.getZ() + z), toolkitProperties);
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
-	private void perform(int x1, int y1, int z1, BlockState block1, int x2, int y2, int z2, BlockState block2, ToolkitProperties toolkitProperties, Undo undo) {
+	private void perform(int x1, int y1, int z1, BlockState block1, int x2, int y2, int z2, BlockState block2, ToolkitProperties toolkitProperties) {
 		if (toolkitProperties.isVoxelListContains(getBlock(x1, y1, z1))) {
-			undo.put(block2);
 			setBlockType(x2, y2, z2, getBlockType(x1, y1, z1));
 			setBlockData(x2, clampY(y2), z2, clampY(x1, y1, z1));
 		}

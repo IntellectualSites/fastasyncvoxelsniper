@@ -62,7 +62,6 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
 	public void initialize(Snipe snipe) {
 		PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
 		this.performer.initialize(performerSnipe);
-		this.performer.initializeUndo();
 	}
 
 	@Override

@@ -5,8 +5,6 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -21,9 +19,9 @@ public class Rotation3DBrush extends AbstractBrush {
 	private double sePitch;
 	private double seRoll;
 
-	// after all rotations, compare snapshot to new state of world, and store changed blocks to undo?
+	// after all rotations, compare snapshot to new state of world?
 	// --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that
-	// matrix and compare Block.getId with 'id' if different undo.add( new BlockWrapper ( Block, oldId ) )
+	// matrix and compare Block.getId with 'id'
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
@@ -114,7 +112,6 @@ public class Rotation3DBrush extends AbstractBrush {
 		double cosRoll = Math.cos(this.seRoll);
 		double sinRoll = Math.sin(this.seRoll);
 		boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-		Undo undo = new Undo();
 		BlockVector3 targetBlock = this.getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
@@ -127,8 +124,6 @@ public class Rotation3DBrush extends AbstractBrush {
 				for (int y = 0; y < this.snap.length; y++) {
 					int yy = y - this.brushSize;
 					if (xSquared + zSquared + Math.pow(yy, 2) <= brushSizeSquared) {
-						undo.put(this.clampY(targetBlock.getX() + xx, targetBlock.getY() + yy, targetBlock.getZ() + zz)); // just store
-						// whole sphere in undo, too complicated otherwise, since this brush both adds and remos things unpredictably.
 						double newxyX = (newxzX * cosPitch) - (yy * sinPitch);
 						double newxyY = (newxzX * sinPitch) + (yy * cosPitch); // calculates all three in succession in precise math space
 						double newyzY = (newxyY * cosRoll) - (newxzZ * sinRoll);
@@ -180,8 +175,6 @@ public class Rotation3DBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override
