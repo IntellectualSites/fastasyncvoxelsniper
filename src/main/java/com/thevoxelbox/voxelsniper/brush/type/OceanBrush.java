@@ -15,7 +15,6 @@ import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.block.Block;
 
 public class OceanBrush extends AbstractBrush {
 

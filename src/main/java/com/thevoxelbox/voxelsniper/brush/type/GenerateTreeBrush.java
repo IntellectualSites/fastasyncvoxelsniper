@@ -11,7 +11,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;

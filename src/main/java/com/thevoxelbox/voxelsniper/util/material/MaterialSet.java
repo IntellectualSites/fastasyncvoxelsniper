@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.util.material;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 

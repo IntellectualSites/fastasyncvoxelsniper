@@ -6,7 +6,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;

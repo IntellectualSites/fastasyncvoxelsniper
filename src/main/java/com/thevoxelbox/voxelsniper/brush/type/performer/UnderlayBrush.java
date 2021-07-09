@@ -7,7 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 public class UnderlayBrush extends AbstractPerformerBrush {
 

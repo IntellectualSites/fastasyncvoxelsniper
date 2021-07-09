@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockState;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
 public class StampBrushBlockWrapper {
