@@ -168,7 +168,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 		ACCURATE(10),
 		SMOOTH(2000);
 
-		private int value;
+		private final int value;
 
 		Tolerance(int value) {
 			this.value = value;

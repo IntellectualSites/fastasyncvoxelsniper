@@ -7,9 +7,9 @@ import java.util.List;
 
 public class BlockPainter implements Painter {
 
-	private BlockVector3 center;
-	private BlockSetter blockSetter;
-	private List<BlockVector3> shifts = new ArrayList<>();
+	private final BlockVector3 center;
+	private final BlockSetter blockSetter;
+	private final List<BlockVector3> shifts = new ArrayList<>();
 
 	public BlockPainter(BlockVector3 center, BlockSetter blockSetter) {
 		this.center = center;

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public PlayerJoinListener(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

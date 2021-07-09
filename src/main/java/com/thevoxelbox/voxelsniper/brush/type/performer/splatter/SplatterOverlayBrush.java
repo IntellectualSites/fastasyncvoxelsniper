@@ -30,7 +30,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 	private int splatterRecursions; // How many times you grow the seeds
 	private int yOffset;
 	private boolean randomizeHeight;
-	private Random generator = new Random();
+	private final Random generator = new Random();
 	private int depth = 3;
 	private boolean allBlocks;
 

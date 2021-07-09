@@ -48,7 +48,7 @@ public class MoveBrush extends AbstractBrush {
 	/**
 	 * Saved direction.
 	 */
-	private int[] moveDirections = {0, 0, 0};
+	private final int[] moveDirections = {0, 0, 0};
 	/**
 	 * Saved selection.
 	 */
@@ -169,7 +169,7 @@ public class MoveBrush extends AbstractBrush {
 		/**
 		 * Calculated Locations of the selection.
 		 */
-		private List<BlockVector3> locations = new ArrayList<>();
+		private final List<BlockVector3> locations = new ArrayList<>();
 		private BlockVector3 location1;
 		private World world1;
 		private BlockVector3 location2;

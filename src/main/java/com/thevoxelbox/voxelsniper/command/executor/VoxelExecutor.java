@@ -30,7 +30,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 		.map(Material::getKey)
 		.collect(Collectors.toList());
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

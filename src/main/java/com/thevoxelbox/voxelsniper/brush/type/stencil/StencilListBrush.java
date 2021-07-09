@@ -31,7 +31,7 @@ public class StencilListBrush extends AbstractBrush {
 	private short zRef;
 	private short yRef;
 	private byte pasteParam;
-	private Map<Integer, String> stencilList = new HashMap<>();
+	private final Map<Integer, String> stencilList = new HashMap<>();
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {

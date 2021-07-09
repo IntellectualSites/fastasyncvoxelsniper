@@ -17,7 +17,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class EntityRemovalBrush extends AbstractBrush {
 
-	private List<String> exemptions = new ArrayList<>(3);
+	private final List<String> exemptions = new ArrayList<>(3);
 
 	public EntityRemovalBrush() {
 		this.exemptions.add("org.bukkit.entity.Player");

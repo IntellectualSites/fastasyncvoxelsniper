@@ -14,8 +14,8 @@ public class MessageSender {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
-	private CommandSender sender;
-	private List<String> messages = new ArrayList<>(0);
+	private final CommandSender sender;
+	private final List<String> messages = new ArrayList<>(0);
 
 	public MessageSender(CommandSender sender) {
 		this.sender = sender;

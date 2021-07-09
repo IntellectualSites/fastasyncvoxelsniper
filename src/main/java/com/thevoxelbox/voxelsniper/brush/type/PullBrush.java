@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class PullBrush extends AbstractBrush {
 
-	private Set<PullBrushBlockWrapper> surface = new HashSet<>();
+	private final Set<PullBrushBlockWrapper> surface = new HashSet<>();
 	private int voxelHeight;
 	private double c1 = 1;
 	private double c2;
@@ -210,7 +210,7 @@ public class PullBrush extends AbstractBrush {
 		private final int x;
 		private final int y;
 		private final int z;
-		private BlockState blockData;
+		private final BlockState blockData;
 		private final double str;
 
 		private PullBrushBlockWrapper(int x, int y, int z, BlockState block, double str) {

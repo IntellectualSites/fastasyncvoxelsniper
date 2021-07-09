@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class VoxelHeightExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelHeightExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

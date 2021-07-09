@@ -20,7 +20,7 @@ import java.util.List;
 
 public class VoxelListExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelListExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

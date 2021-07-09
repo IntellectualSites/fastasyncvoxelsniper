@@ -41,9 +41,9 @@ public class Sniper {
 
 	private static final String DEFAULT_TOOLKIT_NAME = "default";
 
-	private UUID uuid;
+	private final UUID uuid;
 	private boolean enabled = true;
-	private List<Toolkit> toolkits = new ArrayList<>();
+	private final List<Toolkit> toolkits = new ArrayList<>();
 
 	public Sniper(UUID uuid) {
 		this.uuid = uuid;

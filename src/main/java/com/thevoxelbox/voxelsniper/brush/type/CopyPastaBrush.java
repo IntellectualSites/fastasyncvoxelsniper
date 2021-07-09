@@ -19,12 +19,12 @@ public class CopyPastaBrush extends AbstractBrush {
 	private int numBlocks;
 	private int[] firstPoint = new int[3];
 	private int[] secondPoint = new int[3];
-	private int[] pastePoint = new int[3];
-	private int[] minPoint = new int[3];
-	private int[] offsetPoint = new int[3];
+	private final int[] pastePoint = new int[3];
+	private final int[] minPoint = new int[3];
+	private final int[] offsetPoint = new int[3];
 	private BlockType[] blockArray;
 	private BlockState[] dataArray;
-	private int[] arraySize = new int[3];
+	private final int[] arraySize = new int[3];
 	private int pivot; // ccw degrees
 
 	@Override

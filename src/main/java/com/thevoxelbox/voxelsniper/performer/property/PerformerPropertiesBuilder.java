@@ -7,7 +7,7 @@ public class PerformerPropertiesBuilder {
 
 	private String name;
 	private boolean usingReplaceMaterial;
-	private List<String> aliases = new ArrayList<>(1);
+	private final List<String> aliases = new ArrayList<>(1);
 	private PerformerCreator creator;
 
 	public PerformerPropertiesBuilder name(String name) {

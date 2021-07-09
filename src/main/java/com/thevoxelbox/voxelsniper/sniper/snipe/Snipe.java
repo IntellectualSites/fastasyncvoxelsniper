@@ -11,11 +11,11 @@ import org.bukkit.entity.Player;
 
 public class Snipe {
 
-	private Sniper sniper;
-	private Toolkit toolkit;
-	private ToolkitProperties toolkitProperties;
-	private BrushProperties brushProperties;
-	private Brush brush;
+	private final Sniper sniper;
+	private final Toolkit toolkit;
+	private final ToolkitProperties toolkitProperties;
+	private final BrushProperties brushProperties;
+	private final Brush brush;
 
 
 	public Snipe(Sniper sniper, Toolkit toolkit, ToolkitProperties toolkitProperties, BrushProperties brushProperties, Brush brush) {

@@ -18,10 +18,10 @@ import java.util.Set;
 
 public abstract class AbstractStampBrush extends AbstractBrush {
 
-	protected Set<StampBrushBlockWrapper> clone = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> fall = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> drop = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> solid = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> clone = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> fall = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> drop = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> solid = new HashSet<>();
 	protected boolean sorted;
 	protected StampType stamp = StampType.DEFAULT;
 

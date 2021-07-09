@@ -17,7 +17,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 
 	private final List<BlockVector3> endPts = new ArrayList<>();
 	private final List<BlockVector3> ctrlPts = new ArrayList<>();
-	private List<Point> spline = new ArrayList<>();
+	private final List<Point> spline = new ArrayList<>();
 	private boolean set;
 	private boolean ctrl;
 

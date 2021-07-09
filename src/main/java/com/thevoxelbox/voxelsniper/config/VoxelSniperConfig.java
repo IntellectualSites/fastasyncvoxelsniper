@@ -6,9 +6,9 @@ import java.util.List;
 
 public class VoxelSniperConfig {
 
-	private boolean messageOnLoginEnabled;
-	private int litesniperMaxBrushSize;
-	private List<Material> litesniperRestrictedMaterials;
+	private final boolean messageOnLoginEnabled;
+	private final int litesniperMaxBrushSize;
+	private final List<Material> litesniperRestrictedMaterials;
 
 	public VoxelSniperConfig(boolean messageOnLoginEnabled, int litesniperMaxBrushSize, List<Material> litesniperRestrictedMaterials) {
 		this.messageOnLoginEnabled = messageOnLoginEnabled;

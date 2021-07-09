@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class MaterialSetBuilder {
 
-	private List<BlockType> blockTypes = new ArrayList<>(1);
+	private final List<BlockType> blockTypes = new ArrayList<>(1);
 
 	public MaterialSetBuilder add(BlockType blockType) {
 		this.blockTypes.add(blockType);

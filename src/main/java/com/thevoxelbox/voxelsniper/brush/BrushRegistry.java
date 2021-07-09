@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class BrushRegistry {
 
-	private Map<String, BrushProperties> brushesProperties = new HashMap<>();
+	private final Map<String, BrushProperties> brushesProperties = new HashMap<>();
 
 	public void register(BrushProperties properties) {
 		List<String> aliases = properties.getAliases();

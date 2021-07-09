@@ -14,7 +14,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 	private static final int GROW_PERCENT_MIN = 1;
 	private static final int GROW_PERCENT_MAX = 9999;
 
-	private Random randomGenerator = new Random();
+	private final Random randomGenerator = new Random();
 	private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
 
 	@Override

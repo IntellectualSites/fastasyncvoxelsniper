@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class PlayerInteractListener implements Listener<PlayerInteractEvent> {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public PlayerInteractListener(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

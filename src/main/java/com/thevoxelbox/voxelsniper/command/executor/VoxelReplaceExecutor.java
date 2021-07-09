@@ -29,7 +29,7 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
 		.map(Material::getKey)
 		.collect(Collectors.toList());
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelReplaceExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

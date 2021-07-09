@@ -11,9 +11,9 @@ import java.util.List;
 
 public class SnipeMessenger {
 
-	private ToolkitProperties toolkitProperties;
-	private BrushProperties brushProperties;
-	private Messenger messenger;
+	private final ToolkitProperties toolkitProperties;
+	private final BrushProperties brushProperties;
+	private final Messenger messenger;
 
 	public SnipeMessenger(ToolkitProperties toolkitProperties, BrushProperties brushProperties, Player player) {
 		this.toolkitProperties = toolkitProperties;

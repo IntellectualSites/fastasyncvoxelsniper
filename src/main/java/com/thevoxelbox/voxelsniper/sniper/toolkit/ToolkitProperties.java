@@ -27,7 +27,7 @@ public class ToolkitProperties {
 	@Nullable
 	private Integer blockTracerRange;
 	private boolean lightningEnabled;
-	private List<BlockState> voxelList = new ArrayList<>();
+	private final List<BlockState> voxelList = new ArrayList<>();
 
 	public ToolkitProperties() {
 		this.blockData = DEFAULT_BLOCK_MATERIAL.getDefaultState();

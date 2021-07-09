@@ -21,8 +21,8 @@ import org.bukkit.entity.Player;
 
 public class CommandRegistrar {
 
-	private VoxelSniperPlugin plugin;
-	private CommandRegistry registry;
+	private final VoxelSniperPlugin plugin;
+	private final CommandRegistry registry;
 
 	public CommandRegistrar(VoxelSniperPlugin plugin, CommandRegistry registry) {
 		this.plugin = plugin;

@@ -11,8 +11,8 @@ import java.util.List;
 
 public final class Command extends org.bukkit.command.Command {
 
-	private CommandProperties properties;
-	private CommandExecutor executor;
+	private final CommandProperties properties;
+	private final CommandExecutor executor;
 	private TabCompleter tabCompleter;
 
 	public Command(CommandProperties properties, CommandExecutor executor) {

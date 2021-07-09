@@ -4,7 +4,7 @@ import com.sk89q.worldedit.world.block.BlockState;
 
 public class StampBrushBlockWrapper {
 
-	private BlockState blockData;
+	private final BlockState blockData;
 	private int x;
 	private int y;
 	private int z;

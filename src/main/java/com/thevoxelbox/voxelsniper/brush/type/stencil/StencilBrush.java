@@ -41,9 +41,9 @@ public class StencilBrush extends AbstractBrush {
 	private short zRef;
 	private short yRef;
 	private byte pasteParam;
-	private int[] firstPoint = new int[3];
-	private int[] secondPoint = new int[3];
-	private int[] pastePoint = new int[3];
+	private final int[] firstPoint = new int[3];
+	private final int[] secondPoint = new int[3];
+	private final int[] pastePoint = new int[3];
 	private byte point = 1;
 
 	@Override

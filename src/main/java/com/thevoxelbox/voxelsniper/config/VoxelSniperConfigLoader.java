@@ -15,7 +15,7 @@ public class VoxelSniperConfigLoader {
 	private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
 	private static final int DEFAULT_LITESNIPER_MAX_BRUSH_SIZE = 5;
 
-	private FileConfiguration config;
+	private final FileConfiguration config;
 
 	/**
 	 * @param config Configuration that is going to be used.

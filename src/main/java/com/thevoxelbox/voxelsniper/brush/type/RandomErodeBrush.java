@@ -16,13 +16,12 @@ public class RandomErodeBrush extends AbstractBrush {
 	private static final double TRUE_CIRCLE = 0.5;
 
 	private BlockWrapper[][][] snap;
-	private BlockWrapper[][][] firstSnap;
 	private int brushSize;
 	private int erodeFace;
 	private int fillFace;
 	private int erodeRecursion = 1;
 	private int fillRecursion = 1;
-	private Random generator = new Random();
+	private final Random generator = new Random();
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
@@ -129,7 +128,7 @@ public class RandomErodeBrush extends AbstractBrush {
 		BlockVector3 targetBlock = getTargetBlock();
 		if (this.snap.length == 0) {
 			setSnap(brushSize, targetBlock);
-			this.firstSnap = this.snap.clone();
+			BlockWrapper[][][] firstSnap = this.snap.clone();
 		} else {
 			setSnap(brushSize, targetBlock);
 		}
@@ -247,12 +246,12 @@ public class RandomErodeBrush extends AbstractBrush {
 
 	private static final class BlockWrapper {
 
-		private int x;
-		private int y;
-		private int z;
-		private BlockState nativeBlock;
-		private BlockType nativeType;
-		private boolean solid;
+		private final int x;
+		private final int y;
+		private final int z;
+		private final BlockState nativeBlock;
+		private final BlockType nativeType;
+		private final boolean solid;
 		private BlockType type;
 
 		private BlockWrapper(int x, int y, int z, BlockState block) {

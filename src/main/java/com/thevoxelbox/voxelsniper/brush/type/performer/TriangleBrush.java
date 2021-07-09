@@ -11,15 +11,15 @@ import java.util.stream.IntStream;
 
 public class TriangleBrush extends AbstractPerformerBrush {
 
-	private double[] coordinatesOne = new double[3]; // Three corners
-	private double[] coordinatesTwo = new double[3];
-	private double[] coordinatesThree = new double[3];
+	private final double[] coordinatesOne = new double[3]; // Three corners
+	private final double[] coordinatesTwo = new double[3];
+	private final double[] coordinatesThree = new double[3];
 	private int cornerNumber = 1;
-	private double[] currentCoordinates = new double[3]; // For loop tracking
-	private double[] vectorOne = new double[3]; // Point 1 to 2
-	private double[] vectorTwo = new double[3]; // Point 1 to 3
-	private double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
-	private double[] normalVector = new double[3];
+	private final double[] currentCoordinates = new double[3]; // For loop tracking
+	private final double[] vectorOne = new double[3]; // Point 1 to 2
+	private final double[] vectorTwo = new double[3]; // Point 1 to 3
+	private final double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
+	private final double[] normalVector = new double[3];
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {

@@ -16,12 +16,12 @@ public class Toolkit {
 
 	private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
 
-	private String toolkitName;
+	private final String toolkitName;
 	private BrushProperties currentBrushProperties;
 	private BrushProperties previousBrushProperties;
-	private Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
-	private Map<BrushProperties, Brush> brushes = new HashMap<>();
-	private ToolkitProperties properties = new ToolkitProperties();
+	private final Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
+	private final Map<BrushProperties, Brush> brushes = new HashMap<>();
+	private final ToolkitProperties properties = new ToolkitProperties();
 
 	public Toolkit(String toolkitName) {
 		this.toolkitName = toolkitName;

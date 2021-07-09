@@ -23,7 +23,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	private static final int RECURSION_MAX = 10;
 	private static final int SPREAD_DEFAULT = 3;
 
-	private Random random = new Random();
+	private final Random random = new Random();
 	private Vector originCoordinates;
 	private Vector targetCoordinates = new Vector();
 	private int recursion = RECURSION_DEFAULT;

@@ -213,8 +213,8 @@ public class ErodeBrush extends AbstractBrush {
 		LIFT("lift", new ErosionPreset(6, 0, 1, 1)),
 		FLOAT_CLEAN("floatclean", new ErosionPreset(6, 1, 6, 1));
 
-		private String name;
-		private ErosionPreset preset;
+		private final String name;
+		private final ErosionPreset preset;
 
 		Preset(String name, ErosionPreset preset) {
 			this.name = name;
@@ -240,9 +240,9 @@ public class ErodeBrush extends AbstractBrush {
 
 	private static final class BlockChangeTracker {
 
-		private Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
-		private Map<Vector, BlockWrapper> flatChanges;
-		private EditSession editSession;
+		private final Map<Integer, Map<Vector, BlockWrapper>> blockChanges;
+		private final Map<Vector, BlockWrapper> flatChanges;
+		private final EditSession editSession;
 		private int nextIterationId;
 
 		private BlockChangeTracker(EditSession editSession) {
@@ -285,12 +285,12 @@ public class ErodeBrush extends AbstractBrush {
 
 	private static final class BlockWrapper {
 
-		private int x;
-		private int y;
-		private int z;
+		private final int x;
+		private final int y;
+		private final int z;
 		@Nullable
-		private BlockState block;
-		private BlockState blockData;
+		private final BlockState block;
+		private final BlockState blockData;
 
 		private BlockWrapper(int x, int y, int z, BlockState block) {
 			this(x, y, z, block, block);

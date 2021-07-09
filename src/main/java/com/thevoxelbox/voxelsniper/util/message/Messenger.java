@@ -13,7 +13,7 @@ public class Messenger {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
-	private CommandSender sender;
+	private final CommandSender sender;
 
 	public Messenger(CommandSender sender) {
 		this.sender = sender;

@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 
 public class PerformerExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public PerformerExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

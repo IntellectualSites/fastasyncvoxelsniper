@@ -42,7 +42,7 @@ public class PerformerRegistrar {
 		.creator(MaterialPerformer::new)
 		.build();
 
-	private PerformerRegistry registry;
+	private final PerformerRegistry registry;
 
 	public PerformerRegistrar(PerformerRegistry registry) {
 		this.registry = registry;

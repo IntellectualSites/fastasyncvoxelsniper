@@ -15,7 +15,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class BrushToolkitExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public BrushToolkitExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

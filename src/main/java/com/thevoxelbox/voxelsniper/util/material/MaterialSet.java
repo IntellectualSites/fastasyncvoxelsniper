@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class MaterialSet implements Iterable<BlockType> {
 
-	private Set<BlockType> blockTypes;
+	private final Set<BlockType> blockTypes;
 
 	public static MaterialSetBuilder builder() {
 		return new MaterialSetBuilder();

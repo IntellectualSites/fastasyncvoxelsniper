@@ -21,9 +21,8 @@ import java.util.Random;
 public class GenerateTreeBrush extends AbstractBrush {
 
 	// Tree Variables.
-	private Random randGenerator = new Random();
-	private List<BlockState> branchBlocks = new ArrayList<>();
-	private List<Integer[]> branchBlocksLocation = new ArrayList<>();
+	private final Random randGenerator = new Random();
+	private final List<BlockVector3> branchBlocksLocation = new ArrayList<>();
 	// If these default values are edited. Remember to change default values in the default preset.
 	private BlockType leafType = BlockTypes.OAK_LEAVES;
 	private BlockType woodType = BlockTypes.OAK_LOG;
@@ -178,7 +177,6 @@ public class GenerateTreeBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		this.branchBlocks.clear();
 		this.branchBlocksLocation.clear();
 		// Sets the location variables.
 		BlockVector3 targetBlock = this.getTargetBlock();
@@ -191,10 +189,10 @@ public class GenerateTreeBrush extends AbstractBrush {
 		generateTrunk();
 		// Each branch block was saved in an array. This is now fed through an array.
 		// This array takes each branch block and constructs a leaf node around it.
-		for (Integer[] blockLocation : this.branchBlocksLocation) {
-			this.blockPositionX = blockLocation[0];
-			this.blockPositionY = blockLocation[1];
-			this.blockPositionZ = blockLocation[2];
+		for (BlockVector3 blockLocation : this.branchBlocksLocation) {
+			this.blockPositionX = blockLocation.getX();
+			this.blockPositionY = blockLocation.getY();
+			this.blockPositionZ = blockLocation.getZ();
 			this.createLeafNode();
 		}
 	}
@@ -229,8 +227,7 @@ public class GenerateTreeBrush extends AbstractBrush {
 			}
 			// Creates a branch block.
 			setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, woodType);
-			this.branchBlocks.add(clampY(this.blockPositionX, this.blockPositionY, this.blockPositionZ));
-			this.branchBlocksLocation.add(new Integer[]{this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ});
+			this.branchBlocksLocation.add(BlockVector3.at(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ));
 		}
 		// Resets the origin
 		this.blockPositionX = originX;

@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
-import com.sk89q.worldedit.util.formatting.text.serializer.gson.GsonComponentSerializer;
 import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
 import com.sk89q.worldedit.world.block.BaseBlock;
@@ -32,9 +31,9 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private static final int SIGN_LINE_3 = 3;
 	private static final int SIGN_LINE_4 = 4;
 
-	private File pluginDataFolder;
-	private String[] signTextLines = new String[NUM_SIGN_LINES];
-	private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
+	private final File pluginDataFolder;
+	private final String[] signTextLines = new String[NUM_SIGN_LINES];
+	private final boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
 	private boolean rangedMode;
 
 	public SignOverwriteBrush(File pluginDataFolder) {
