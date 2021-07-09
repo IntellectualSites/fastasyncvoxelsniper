@@ -1,30 +1,28 @@
 package com.thevoxelbox.voxelsniper.performer.type.ink;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 public class InkMaterialNoPhysicsPerformer extends AbstractPerformer {
 
-	private BlockData blockData;
-	private Material replaceMaterial;
+	private BlockState blockData;
+	private BlockType replaceType;
 
 	@Override
 	public void initialize(PerformerSnipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.blockData = toolkitProperties.getBlockData();
-		this.replaceMaterial = toolkitProperties.getReplaceBlockType();
+		this.replaceType = toolkitProperties.getReplaceBlockType();
 	}
 
 	@Override
 	public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
-		if (BukkitAdapter.adapt(block.getBlockType()) == this.replaceMaterial) {
+		if (block.getBlockType() == this.replaceType) {
 			Undo undo = getUndo();
 			undo.put(block);
 			setBlockData(editSession, x, y, z, this.blockData);

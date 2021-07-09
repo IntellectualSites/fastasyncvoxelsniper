@@ -1,17 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
 public class SetRedstoneRotateBrush extends AbstractBrush {
@@ -75,13 +74,16 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
 	}
 
 	private void perform(int x, int y, int z, BlockState block) {
-		if (BukkitAdapter.adapt(block.getBlockType()) == Material.REPEATER) {
+		BlockType type = block.getBlockType();
+		if (type == BlockTypes.REPEATER) {
+			Property<Integer> delayProperty = type.getProperty("delay");
+			if (delayProperty == null) {
+				return;
+			}
 			this.undo.put(block);
-			BlockData blockData = getBlockData(x, y, z);
-			Repeater repeater = (Repeater) blockData;
-			int delay = repeater.getDelay();
-			repeater.setDelay(delay % 4 + 1 < 5 ? (byte) (delay + 1) : (byte) (delay - 4));
-			setBlockData(x, y, z, blockData);
+			int delay = block.getState(delayProperty);
+			block = block.with(delayProperty, -delay % 4 + 1 < 5 ? (delay + 1) : (delay - 4));
+			setBlockData(x, y, z, block);
 		}
 	}
 

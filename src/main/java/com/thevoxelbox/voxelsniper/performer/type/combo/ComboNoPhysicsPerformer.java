@@ -6,11 +6,10 @@ import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.block.data.BlockData;
 
 public class ComboNoPhysicsPerformer extends AbstractPerformer {
 
-	private BlockData blockData;
+	private BlockState blockData;
 
 	@Override
 	public void initialize(PerformerSnipe snipe) {

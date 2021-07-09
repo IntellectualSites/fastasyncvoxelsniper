@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -60,16 +61,19 @@ public class CometBrush extends AbstractBrush {
 		Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		Location playerLocation = player.getEyeLocation();
-		Vector slope = targetCoordinates.subtract(playerLocation.toVector());
-		Vector normalizedSlope = slope.normalize();
-		if (this.useBigBalls) {
-			LargeFireball fireball = player.launchProjectile(LargeFireball.class);
-			fireball.setVelocity(normalizedSlope);
-		} else {
-			SmallFireball fireball = player.launchProjectile(SmallFireball.class);
-			fireball.setVelocity(normalizedSlope);
-		}
+		TaskManager.IMP.sync(() -> {
+			Location playerLocation = player.getEyeLocation();
+			Vector slope = targetCoordinates.subtract(playerLocation.toVector());
+			Vector normalizedSlope = slope.normalize();
+			if (this.useBigBalls) {
+				LargeFireball fireball = player.launchProjectile(LargeFireball.class);
+				fireball.setVelocity(normalizedSlope);
+			} else {
+				SmallFireball fireball = player.launchProjectile(SmallFireball.class);
+				fireball.setVelocity(normalizedSlope);
+			}
+			return null;
+		});
 	}
 
 	@Override

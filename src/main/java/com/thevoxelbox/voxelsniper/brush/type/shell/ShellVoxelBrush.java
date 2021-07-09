@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -8,7 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class ShellVoxelBrush extends AbstractBrush {
 
@@ -37,7 +37,7 @@ public class ShellVoxelBrush extends AbstractBrush {
 	private void vShell(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
-		Material[][][] oldMaterials = new Material[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
+		BlockType[][][] oldMaterials = new BlockType[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
 		int blockPositionX = targetBlock.getX();
 		int blockPositionY = targetBlock.getY();
 		int blockPositionZ = targetBlock.getZ();
@@ -51,7 +51,7 @@ public class ShellVoxelBrush extends AbstractBrush {
 		}
 		// Log current materials into newmats
 		// Array that holds the hollowed materials
-		Material[][][] newMaterials = new Material[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
+		BlockType[][][] newMaterials = new BlockType[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
 		int brushSizeSquared = 2 * brushSize;
 		for (int x = 0; x <= brushSizeSquared; x++) {
 			for (int y = 0; y <= brushSizeSquared; y++) {

@@ -2,12 +2,14 @@ package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,36 +44,36 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 
 	public abstract void blend(Snipe snipe);
 
-	protected void setBlocks(Map<BlockVector3, Material> materials, Undo undo) {
-		for (Entry<BlockVector3, Material> entry : materials.entrySet()) {
+	protected void setBlocks(Map<BlockVector3, BlockType> blockTypes, Undo undo) {
+		for (Entry<BlockVector3, BlockType> entry : blockTypes.entrySet()) {
 			BlockVector3 position = entry.getKey();
-			Material material = entry.getValue();
-			if (checkExclusions(material)) {
-				Material currentBlockType = getBlockType(position);
-				if (currentBlockType != material) {
+			BlockType type = entry.getValue();
+			if (checkExclusions(type)) {
+				BlockType currentBlockType = getBlockType(position);
+				if (currentBlockType != type) {
 					BlockState clamped = clampY(position);
 					undo.put(clamped);
 				}
-				setBlockType(position, material);
+				setBlockType(position, type);
 			}
 		}
 	}
 
-	protected CommonMaterial findCommonMaterial(Map<Material, Integer> materialsFrequencies) {
+	protected CommonMaterial findCommonMaterial(Map<BlockType, Integer> blockTypesFrequencies) {
 		CommonMaterial commonMaterial = new CommonMaterial();
-		for (Entry<Material, Integer> entry : materialsFrequencies.entrySet()) {
-			Material material = entry.getKey();
+		for (Entry<BlockType, Integer> entry : blockTypesFrequencies.entrySet()) {
+			BlockType type = entry.getKey();
 			int frequency = entry.getValue();
-			if (frequency > commonMaterial.getFrequency() && checkExclusions(material)) {
-				commonMaterial.setMaterial(material);
+			if (frequency > commonMaterial.getFrequency() && checkExclusions(type)) {
+				commonMaterial.setBlockType(type);
 				commonMaterial.setFrequency(frequency);
 			}
 		}
 		return commonMaterial;
 	}
 
-	private boolean checkExclusions(Material material) {
-		return (!this.airExcluded || !material.isEmpty()) && (!this.waterExcluded || material != Material.WATER);
+	private boolean checkExclusions(BlockType type) {
+		return (!this.airExcluded || !Materials.isEmpty(type)) && (!this.waterExcluded || type != BlockTypes.WATER);
 	}
 
 	@Override

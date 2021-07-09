@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -13,8 +15,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
@@ -27,27 +27,27 @@ public class HeatRayBrush extends AbstractBrush {
 	private static final double REQUIRED_FIRE_DENSITY = -0.25;
 	private static final double REQUIRED_AIR_DENSITY = 0;
 	private static final MaterialSet FLAMEABLE_BLOCKS = MaterialSet.builder()
-		.with(Tag.LOGS)
-		.with(Tag.SAPLINGS)
-		.with(Tag.PLANKS)
-		.with(Tag.LEAVES)
-		.with(Tag.WOOL)
-		.with(Tag.WOODEN_SLABS)
-		.with(Tag.WOODEN_STAIRS)
-		.with(Tag.WOODEN_DOORS)
-		.with(Tag.WOODEN_TRAPDOORS)
-		.with(Tag.WOODEN_PRESSURE_PLATES)
-		.with(Tag.ICE)
-		.with(MaterialSets.SIGNS)
-		.with(MaterialSets.WOODEN_FENCES)
-		.with(MaterialSets.FENCE_GATES)
-		.with(MaterialSets.SNOWS)
+		.with(BlockCategories.LOGS)
+		.with(BlockCategories.SAPLINGS)
+		.with(BlockCategories.PLANKS)
+		.with(BlockCategories.LEAVES)
+		.with(BlockCategories.WOOL)
+		.with(BlockCategories.WOODEN_SLABS)
+		.with(BlockCategories.WOODEN_STAIRS)
+		.with(BlockCategories.WOODEN_DOORS)
+		.with(BlockCategories.WOODEN_TRAPDOORS)
+		.with(BlockCategories.WOODEN_PRESSURE_PLATES)
+		.with(BlockCategories.ICE)
+		.with(BlockCategories.SIGNS)
+		.with(BlockCategories.WOODEN_FENCES)
+		.with(BlockCategories.FENCE_GATES)
+		.with(BlockCategories.SNOW)
 		.with(MaterialSets.TORCHES)
 		.with(MaterialSets.FLORA)
-		.add(Material.SPONGE)
-		.add(Material.COBWEB)
-		.add(Material.FIRE)
-		.add(Material.LADDER)
+		.add(BlockTypes.SPONGE)
+		.add(BlockTypes.COBWEB)
+		.add(BlockTypes.FIRE)
+		.add(BlockTypes.LADDER)
 		.build();
 
 	private int octaves = 5;
@@ -108,43 +108,43 @@ public class HeatRayBrush extends AbstractBrush {
 					Vector currentLocationVector = currentLocation.clone();
 					if (currentLocationVector.isInSphere(targetBlockVector, brushSize)) {
 						BlockState currentBlock = getBlock(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ());
-						Material currentBlockType = BukkitAdapter.adapt(currentBlock.getBlockType());
-						if (currentBlockType == Material.CHEST) {
+						BlockType currentBlockType = currentBlock.getBlockType();
+						if (currentBlockType == BlockTypes.CHEST) {
 							continue;
 						}
 						if (Materials.isLiquid(currentBlockType)) {
 							undo.put(currentBlock);
-							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.AIR);
+							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.AIR);
 							continue;
 						}
 						if (FLAMEABLE_BLOCKS.contains(currentBlockType)) {
 							undo.put(currentBlock);
-							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.FIRE);
+							setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.FIRE);
 							continue;
 						}
-						if (!currentBlockType.isAir()) {
+						if (!Materials.isEmpty(currentBlockType)) {
 							double airDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double fireDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double cobbleDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							double obsidianDensity = generator.noise(currentLocation.getX(), currentLocation.getY(), currentLocation.getZ(), this.octaves, this.frequency, this.amplitude);
 							if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.OBSIDIAN) {
-									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.OBSIDIAN);
+								if (currentBlockType != BlockTypes.OBSIDIAN) {
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.OBSIDIAN);
 								}
 							} else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.COBBLESTONE) {
-									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.COBBLESTONE);
+								if (currentBlockType != BlockTypes.COBBLESTONE) {
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.COBBLESTONE);
 								}
 							} else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
 								undo.put(currentBlock);
-								if (currentBlockType != Material.FIRE) {
-									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.FIRE);
+								if (currentBlockType != BlockTypes.FIRE) {
+									setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.FIRE);
 								}
 							} else if (airDensity >= REQUIRED_AIR_DENSITY) {
 								undo.put(currentBlock);
-								setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), Material.AIR);
+								setBlockType(currentLocation.getBlockX(), currentLocation.getBlockY(), currentLocation.getBlockZ(), BlockTypes.AIR);
 							}
 						}
 					}

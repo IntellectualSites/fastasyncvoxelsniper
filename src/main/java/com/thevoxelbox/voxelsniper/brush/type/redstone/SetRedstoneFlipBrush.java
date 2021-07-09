@@ -1,17 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -101,28 +100,31 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 	}
 
 	private void perform(int x, int y, int z, BlockState block) {
-		if (BukkitAdapter.adapt(block.getBlockType()) == Material.REPEATER) {
-			BlockData blockData = getBlockData(x, y, z);
-			Repeater repeater = (Repeater) blockData;
-			int delay = repeater.getDelay();
+		BlockType type = block.getBlockType();
+		if (type == BlockTypes.REPEATER) {
+			Property<Integer> delayProperty = type.getProperty("delay");
+			if (delayProperty == null) {
+				return;
+			}
+			int delay = block.getState(delayProperty);
 			if (this.northSouth) {
 				if ((delay % 4) == 1) {
 					this.undo.put(block);
-					repeater.setDelay(delay + 2);
+					block = block.with(delayProperty, delay + 2);
 				} else if ((delay % 4) == 3) {
 					this.undo.put(block);
-					repeater.setDelay(delay - 2);
+					block = block.with(delayProperty, delay - 2);
 				}
 			} else {
 				if ((delay % 4) == 2) {
 					this.undo.put(block);
-					repeater.setDelay(delay - 2);
+					block = block.with(delayProperty, delay - 2);
 				} else if ((delay % 4) == 0) {
 					this.undo.put(block);
-					repeater.setDelay(delay + 2);
+					block = block.with(delayProperty, delay + 2);
 				}
 			}
-			setBlockData(x, y, z, blockData);
+			setBlockData(x, y, z, block);
 		}
 	}
 

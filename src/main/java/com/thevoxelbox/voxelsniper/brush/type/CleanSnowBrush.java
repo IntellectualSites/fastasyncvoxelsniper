@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -62,7 +63,7 @@ public class CleanSnowBrush extends AbstractBrush {
 						int targetBlockZ = targetBlock.getZ();
 						if (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW && (BukkitAdapter.adapt(clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).getBlockType()) == Material.SNOW || clampY(targetBlockX + x - brushSize, targetBlockY + z - brushSize - 1, targetBlockZ + y - brushSize).isAir())) {
 							undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
-							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, Material.AIR.createBlockData());
+							setBlockData(targetBlockZ + y - brushSize, targetBlockX + x - brushSize, targetBlockY + z - brushSize, BlockTypes.AIR.getDefaultState());
 						}
 					}
 				}

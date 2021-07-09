@@ -1,16 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.block.data.BlockData;
 
 /**
  * This brush only looks for solid blocks, and then changes those plus any air blocks touching them. If it works, this brush should be faster than the original
@@ -28,18 +26,18 @@ import org.bukkit.block.data.BlockData;
 public class BlockResetSurfaceBrush extends AbstractBrush {
 
 	private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
-		.with(Tag.DOORS)
-		.with(Tag.TRAPDOORS)
-		.with(MaterialSets.SIGNS)
+		.with(BlockCategories.DOORS)
+		.with(BlockCategories.TRAPDOORS)
+		.with(BlockCategories.SIGNS)
 		.with(MaterialSets.CHESTS)
-		.with(MaterialSets.FENCE_GATES)
+		.with(BlockCategories.FENCE_GATES)
 		.with(MaterialSets.AIRS)
-		.add(Material.FURNACE)
-		.add(Material.REDSTONE_TORCH)
-		.add(Material.REDSTONE_WALL_TORCH)
-		.add(Material.REDSTONE_WIRE)
-		.add(Material.REPEATER)
-		.add(Material.COMPARATOR)
+		.add(BlockTypes.FURNACE)
+		.add(BlockTypes.REDSTONE_TORCH)
+		.add(BlockTypes.REDSTONE_WALL_TORCH)
+		.add(BlockTypes.REDSTONE_WIRE)
+		.add(BlockTypes.REPEATER)
+		.add(BlockTypes.COMPARATOR)
 		.build();
 
 	@Override
@@ -89,11 +87,9 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 	}
 
 	private void resetBlock(int x, int y, int z, BlockState block) {
-		BlockData oldData = BukkitAdapter.adapt(block);
-		Material type = BukkitAdapter.adapt(block.getBlockType());
-		BlockData defaultData = type.createBlockData();
+		BlockState defaultData = block.getBlockType().getDefaultState();
 		setBlockData(x, y, z, defaultData);
-		setBlockData(x, y, z, oldData);
+		setBlockData(x, y, z, block);
 	}
 
 	@Override

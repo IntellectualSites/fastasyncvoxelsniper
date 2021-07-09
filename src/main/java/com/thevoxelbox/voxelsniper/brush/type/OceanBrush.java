@@ -1,9 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -13,8 +15,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 
 public class OceanBrush extends AbstractBrush {
 
@@ -22,21 +22,21 @@ public class OceanBrush extends AbstractBrush {
 	private static final int WATER_LEVEL_MIN = 12;
 	private static final int LOW_CUT_LEVEL = 12;
 	private static final MaterialSet EXCLUDED_MATERIALS = MaterialSet.builder()
-		.with(Tag.SAPLINGS)
-		.with(Tag.LOGS)
-		.with(Tag.LEAVES)
-		.with(Tag.ICE)
+		.with(BlockCategories.SAPLINGS)
+		.with(BlockCategories.LOGS)
+		.with(BlockCategories.LEAVES)
+		.with(BlockCategories.ICE)
 		.with(MaterialSets.AIRS)
 		.with(MaterialSets.LIQUIDS)
-		.with(MaterialSets.SNOWS)
+		.with(BlockCategories.SNOW)
 		.with(MaterialSets.STEMS)
 		.with(MaterialSets.MUSHROOMS)
-		.with(MaterialSets.FLOWERS)
-		.add(Material.MELON)
-		.add(Material.PUMPKIN)
-		.add(Material.COCOA)
-		.add(Material.SUGAR_CANE)
-		.add(Material.TALL_GRASS)
+		.with(BlockCategories.FLOWERS)
+		.add(BlockTypes.MELON)
+		.add(BlockTypes.PUMPKIN)
+		.add(BlockTypes.COCOA)
+		.add(BlockTypes.SUGAR_CANE)
+		.add(BlockTypes.TALL_GRASS)
 		.build();
 
 	private int waterLevel = WATER_LEVEL_DEFAULT;
@@ -113,25 +113,25 @@ public class OceanBrush extends AbstractBrush {
 					BlockState block = getBlock(x, y, z);
 					if (!block.isAir()) {
 						undo.put(block);
-						setBlockType(x, y, z, Material.AIR);
+						setBlockType(x, y, z, BlockTypes.AIR);
 					}
 				}
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
 					BlockState block = getBlock(x, y, z);
-					Material blockType = BukkitAdapter.adapt(block.getBlockType());
-					if (blockType != Material.WATER) {
+					BlockType blockType = block.getBlockType();
+					if (blockType != BlockTypes.WATER) {
 						// do not put blocks into the undo we already put into
-						if (blockType != Material.AIR) {
+						if (blockType != BlockTypes.AIR) {
 							undo.put(block);
 						}
-						setBlockType(x, y, z, Material.WATER);
+						setBlockType(x, y, z, BlockTypes.WATER);
 					}
 				}
 				// cover the sea floor of required
 				if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
 					BlockState block = getBlock(x, newSeaFloorLevel, z);
-					Material blockType = BukkitAdapter.adapt(block.getBlockType());
+					BlockType blockType = block.getBlockType();
 					if (blockType != toolkitProperties.getBlockType()) {
 						undo.put(block);
 						setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());

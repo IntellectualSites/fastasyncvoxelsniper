@@ -1,13 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class OverlayBrush extends AbstractPerformerBrush {
 
@@ -70,15 +72,15 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				int blockX = targetBlock.getX();
 				int blockY = targetBlock.getY();
 				int blockZ = targetBlock.getZ();
-				Material material = getBlockType(blockX + x, blockY + 1, blockZ + z);
-				if (isIgnoredBlock(material)) {
+				BlockType type = getBlockType(blockX + x, blockY + 1, blockZ + z);
+				if (isIgnoredBlock(type)) {
 					if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) {
 						for (int y = blockY; y > 0; y--) {
 							// check for surface
-							Material layerBlockType = getBlockType(blockX + x, y, blockZ + z);
+							BlockType layerBlockType = getBlockType(blockX + x, y, blockZ + z);
 							if (!isIgnoredBlock(layerBlockType)) {
 								for (int currentDepth = y; y - currentDepth < this.depth; currentDepth--) {
-									Material currentBlockType = getBlockType(blockX + x, currentDepth, blockZ + z);
+									BlockType currentBlockType = getBlockType(blockX + x, currentDepth, blockZ + z);
 									if (isOverrideableMaterial(currentBlockType)) {
 										this.performer.perform(getEditSession(), blockX + x, clampY(currentDepth), blockZ + z, clampY(blockX + x, currentDepth, blockZ + z));
 									}
@@ -95,15 +97,15 @@ public class OverlayBrush extends AbstractPerformerBrush {
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean isIgnoredBlock(Material material) {
-		return material == Material.WATER || material.isTransparent() || material == Material.CACTUS;
+	private boolean isIgnoredBlock(BlockType type) {
+		return type == BlockTypes.WATER || type.getMaterial().isTranslucent() || type == BlockTypes.CACTUS;
 	}
 
-	private boolean isOverrideableMaterial(Material material) {
-		if (this.allBlocks && !material.isEmpty()) {
+	private boolean isOverrideableMaterial(BlockType type) {
+		if (this.allBlocks && !Materials.isEmpty(type)) {
 			return true;
 		}
-		return MaterialSets.OVERRIDEABLE.contains(material);
+		return MaterialSets.OVERRIDEABLE.contains(type);
 	}
 
 	private void overlayTwo(Snipe snipe) {
@@ -121,8 +123,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				for (int y = blockY; y > 0 && !surfaceFound; y--) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
-							if (!getBlockType(blockX + x, y - 1, blockZ + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
-								if (getBlockType(blockX + x, y + 1, blockZ + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
+							if (!Materials.isEmpty(getBlockType(blockX + x, y - 1, blockZ + z))) { // if not a floating block (like one of Notch'world pools)
+								if (Materials.isEmpty(getBlockType(blockX + x, y + 1, blockZ + z))) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
 									if (this.allBlocks) {
 										for (int index = 1; (index < this.depth + 1); index++) {
@@ -132,7 +134,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 										}
 										surfaceFound = true;
 									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-										Material type = getBlockType(blockX + x, y, blockZ + z);
+										BlockType type = getBlockType(blockX + x, y, blockZ + z);
 										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
 											for (int index = 1; (index < this.depth + 1); index++) {
 												this.performer.perform(getEditSession(), blockX + x, clampY(y + index), blockZ + z, this.clampY(blockX + x, y + index, blockZ + z)); // fills down as many layers as you specify

@@ -4,19 +4,18 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 public abstract class AbstractBrush implements Brush {
@@ -112,67 +111,55 @@ public abstract class AbstractBrush implements Brush {
 		}
 	}
 
-	public BlockFace getFace(BlockVector3 first, BlockVector3 second) {
-		BlockFace[] directions = BlockFace.values();
-		for (BlockFace face : directions) {
-			if (first.getX() + face.getModX() == second.getX()
-				&& first.getY() + face.getModY() == second.getY()
-				&& first.getZ() + face.getModZ() == second.getZ()) {
-				return face;
+	public Direction getDirection(BlockVector3 first, BlockVector3 second) {
+		Direction[] directions = Direction.values();
+		for (Direction direction : directions) {
+			if (first.getX() + direction.getX() == second.getX()
+				&& first.getY() + direction.getY() == second.getY()
+				&& first.getZ() + direction.getZ() == second.getZ()) {
+				return direction;
 			}
 		}
 		return null;
 	}
 
-	public Material getBlockType(BlockVector3 position) {
+	public BlockType getBlockType(BlockVector3 position) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
 		return getBlockType(x, y, z);
 	}
 
-	public Material getBlockType(int x, int y, int z) {
+	public BlockType getBlockType(int x, int y, int z) {
 		BlockState block = getBlock(x, y, z);
-		return BukkitAdapter.adapt(block.getBlockType());
+		return block.getBlockType();
 	}
 
-	public BlockData getBlockData(BlockVector3 position) {
-		int x = position.getX();
-		int y = position.getY();
-		int z = position.getZ();
-		return getBlockData(x, y, z);
-	}
-
-	public BlockData getBlockData(int x, int y, int z) {
-		BlockState block = getBlock(x, y, z);
-		return BukkitAdapter.adapt(block);
-	}
-
-	public void setBlockType(BlockVector3 position, Material type) {
+	public void setBlockType(BlockVector3 position, BlockType type) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
 		setBlockType(x, y, z, type);
 	}
 
-	public void setBlockType(int x, int y, int z, Material type) {
+	public void setBlockType(int x, int y, int z, BlockType type) {
 		try {
-			editSession.setBlock(x, y, z, BukkitAdapter.asBlockType(type).getDefaultState());
+			editSession.setBlock(x, y, z, type.getDefaultState());
 		} catch (WorldEditException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setBlockData(BlockVector3 position, BlockData blockData) {
+	public void setBlockData(BlockVector3 position, BlockState blockState) {
 		int x = position.getX();
 		int y = position.getY();
 		int z = position.getZ();
-		setBlockData(x, y, z, blockData);
+		setBlockData(x, y, z, blockState);
 	}
 
-	public void setBlockData(int x, int y, int z, BlockData blockData) {
+	public void setBlockData(int x, int y, int z, BlockState blockState) {
 		try {
-			editSession.setBlock(x, y, z, BukkitAdapter.adapt(blockData));
+			editSession.setBlock(x, y, z, blockState);
 		} catch (WorldEditException e) {
 			throw new RuntimeException(e);
 		}

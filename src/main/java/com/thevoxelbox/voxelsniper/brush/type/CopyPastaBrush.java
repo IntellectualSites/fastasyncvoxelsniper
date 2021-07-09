@@ -1,15 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 import java.util.stream.Stream;
 
@@ -25,8 +24,8 @@ public class CopyPastaBrush extends AbstractBrush {
 	private int[] pastePoint = new int[3];
 	private int[] minPoint = new int[3];
 	private int[] offsetPoint = new int[3];
-	private Material[] blockArray;
-	private BlockData[] dataArray;
+	private BlockType[] blockArray;
+	private BlockState[] dataArray;
 	private int[] arraySize = new int[3];
 	private int pivot; // ccw degrees
 
@@ -74,8 +73,8 @@ public class CopyPastaBrush extends AbstractBrush {
 			this.firstPoint = new int[3];
 			this.secondPoint = new int[3];
 			this.numBlocks = 0;
-			this.blockArray = new Material[1];
-			this.dataArray = new BlockData[1];
+			this.blockArray = new BlockType[1];
+			this.dataArray = new BlockState[1];
 			this.points = 0;
 			messenger.sendMessage(ChatColor.GRAY + "Points cleared.");
 		}
@@ -110,16 +109,16 @@ public class CopyPastaBrush extends AbstractBrush {
 		this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
 		SnipeMessenger messenger = snipe.createMessenger();
 		if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
-			this.blockArray = new Material[this.numBlocks];
-			this.dataArray = new BlockData[this.numBlocks];
+			this.blockArray = new BlockType[this.numBlocks];
+			this.dataArray = new BlockState[this.numBlocks];
 			for (int i = 0; i < this.arraySize[0]; i++) {
 				for (int j = 0; j < this.arraySize[1]; j++) {
 					for (int k = 0; k < this.arraySize[2]; k++) {
 						int currentPosition = i + this.arraySize[0] * j + this.arraySize[0] * this.arraySize[1] * k;
 						BlockState block = getBlock(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
-						this.blockArray[currentPosition] = BukkitAdapter.adapt(block.getBlockType());
+						this.blockArray[currentPosition] = block.getBlockType();
 						BlockState clamp = this.clampY(this.minPoint[0] + i, this.minPoint[1] + j, this.minPoint[2] + k);
-						this.dataArray[currentPosition] = BukkitAdapter.adapt(clamp);
+						this.dataArray[currentPosition] = clamp;
 					}
 				}
 			}
@@ -161,9 +160,8 @@ public class CopyPastaBrush extends AbstractBrush {
 							break;
 					}
 					BlockState block = clampY(x, y, z);
-					if (!(this.blockArray[currentPosition].isEmpty() && !this.pasteAir)) {
-						BlockData blockData = BukkitAdapter.adapt(block);
-						if (BukkitAdapter.adapt(block.getBlockType()) != this.blockArray[currentPosition] || !blockData.equals(this.dataArray[currentPosition])) {
+					if (!(Materials.isEmpty(this.blockArray[currentPosition]) && !this.pasteAir)) {
+						if (block.getBlockType() != this.blockArray[currentPosition] || !block.equals(this.dataArray[currentPosition])) {
 							undo.put(block);
 						}
 						setBlockData(x, y, z, this.dataArray[currentPosition]);

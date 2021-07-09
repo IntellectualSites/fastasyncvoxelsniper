@@ -1,13 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class FillDownBrush extends AbstractPerformerBrush {
 
@@ -75,8 +75,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 					if (this.fromExisting) {
 						boolean found = false;
 						for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
-							Material currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-							if (!currentBlockType.isEmpty()) {
+							BlockType currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+							if (!Materials.isEmpty(currentBlockType)) {
 								found = true;
 								break;
 							}
@@ -87,8 +87,8 @@ public class FillDownBrush extends AbstractPerformerBrush {
 						y--;
 					}
 					for (; y >= -targetBlock.getY(); --y) {
-						Material currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
-						if (currentBlockType.isEmpty() || (this.fillLiquid && Materials.isLiquid(currentBlockType))) {
+						BlockType currentBlockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+						if (Materials.isEmpty(currentBlockType) || (this.fillLiquid && Materials.isLiquid(currentBlockType))) {
 							this.performer.perform(getEditSession(), targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z, getBlock(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z));
 						} else {
 							break;

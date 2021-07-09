@@ -11,6 +11,7 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.command.HistoryCommands;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -19,6 +20,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.FluidCollisionMode;
@@ -182,9 +184,9 @@ public class Sniper {
 					SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
 					if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
 						if (toolAction == ToolAction.ARROW) {
-							Material material = BukkitAdapter.adapt(editSession.getBlockType(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()));
+							BlockType material = editSession.getBlockType(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 
-							if (material.isEmpty()) {
+							if (Materials.isEmpty(material)) {
 								toolkitProperties.resetBlockData();
 							} else {
 								toolkitProperties.setBlockType(material);
@@ -197,7 +199,7 @@ public class Sniper {
 							if (material.isEmpty()) {
 								toolkitProperties.resetBlockData();
 							} else {
-								toolkitProperties.setBlockData(BukkitAdapter.adapt(editSession.getBlock(targetBlock)));
+								toolkitProperties.setBlockData(editSession.getBlock(targetBlock));
 							}
 							messenger.sendBlockDataMessage();
 							return true;
@@ -208,7 +210,7 @@ public class Sniper {
 							if (targetBlock == null) {
 								toolkitProperties.resetReplaceBlockData();
 							} else {
-								toolkitProperties.setReplaceBlockType(BukkitAdapter.adapt(editSession.getBlockType(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ())));
+								toolkitProperties.setReplaceBlockType(editSession.getBlockType(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()));
 							}
 							messenger.sendReplaceBlockTypeMessage();
 							return true;
@@ -216,7 +218,7 @@ public class Sniper {
 							if (targetBlock == null) {
 								toolkitProperties.resetReplaceBlockData();
 							} else {
-								toolkitProperties.setReplaceBlockData(BukkitAdapter.adapt(editSession.getBlock(targetBlock)));
+								toolkitProperties.setReplaceBlockData(editSession.getBlock(targetBlock));
 							}
 							messenger.sendReplaceBlockDataMessage();
 							return true;

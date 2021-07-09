@@ -1,15 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.Material;
 
 import java.util.Random;
 
@@ -168,7 +168,7 @@ public class RandomErodeBrush extends AbstractBrush {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= brushSizeSquared)) {
 								if (this.erode(x, y, z)) {
 									BlockWrapper block = this.snap[x][y][z];
-									setBlockType(block.getX(), block.getY(), block.getZ(), Material.AIR);
+									setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
 								}
 							}
 						}
@@ -244,7 +244,7 @@ public class RandomErodeBrush extends AbstractBrush {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= bSquared)) {
 								if (this.erode(x, y, z)) {
 									BlockWrapper block = this.snap[x][y][z];
-									setBlockType(block.getX(), block.getY(), block.getZ(), Material.AIR);
+									setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
 								}
 							}
 						}
@@ -279,17 +279,17 @@ public class RandomErodeBrush extends AbstractBrush {
 		private int y;
 		private int z;
 		private BlockState nativeBlock;
-		private Material nativeType;
+		private BlockType nativeType;
 		private boolean solid;
-		private Material type;
+		private BlockType type;
 
 		private BlockWrapper(int x, int y, int z, BlockState block) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
 			this.nativeBlock = block;
-			this.nativeType = BukkitAdapter.adapt(block.getBlockType());
-			this.solid = !this.nativeType.isEmpty() && !Materials.isLiquid(this.nativeType);
+			this.nativeType = block.getBlockType();
+			this.solid = !Materials.isEmpty(this.nativeType) && !Materials.isLiquid(this.nativeType);
 		}
 
 		public int getX() {
@@ -308,7 +308,7 @@ public class RandomErodeBrush extends AbstractBrush {
 			return this.nativeBlock;
 		}
 
-		public Material getNativeType() {
+		public BlockType getNativeType() {
 			return this.nativeType;
 		}
 
@@ -316,11 +316,11 @@ public class RandomErodeBrush extends AbstractBrush {
 			return this.solid;
 		}
 
-		public Material getType() {
+		public BlockType getType() {
 			return this.type;
 		}
 
-		public void setType(Material type) {
+		public void setType(BlockType type) {
 			this.type = type;
 		}
 	}

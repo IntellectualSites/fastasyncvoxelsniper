@@ -2,7 +2,9 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -11,8 +13,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,24 +29,24 @@ public class MoveBrush extends AbstractBrush {
 	 * Breakable Blocks to determine if no-physics should be used.
 	 */
 	private static final MaterialSet BREAKABLE_MATERIALS = MaterialSet.builder()
-		.with(Tag.SAPLINGS)
-		.with(Tag.RAILS)
-		.with(Tag.TRAPDOORS)
-		.with(Tag.DOORS)
-		.with(Tag.BUTTONS)
+		.with(BlockCategories.SAPLINGS)
+		.with(BlockCategories.RAILS)
+		.with(BlockCategories.TRAPDOORS)
+		.with(BlockCategories.DOORS)
+		.with(BlockCategories.BUTTONS)
 		.with(MaterialSets.PISTONS)
-		.with(MaterialSets.PRESSURE_PLATES)
-		.with(MaterialSets.SIGNS)
-		.with(MaterialSets.BEDS)
+		.with(BlockCategories.PRESSURE_PLATES)
+		.with(BlockCategories.SIGNS)
+		.with(BlockCategories.BEDS)
 		.with(MaterialSets.REDSTONE_TORCHES)
 		.with(MaterialSets.TORCHES)
 		.with(MaterialSets.FLORA)
-		.add(Material.FIRE)
-		.add(Material.REPEATER)
-		.add(Material.SNOW)
-		.add(Material.CAKE)
-		.add(Material.LADDER)
-		.add(Material.LEVER)
+		.add(BlockTypes.FIRE)
+		.add(BlockTypes.REPEATER)
+		.add(BlockTypes.SNOW)
+		.add(BlockTypes.CAKE)
+		.add(BlockTypes.LADDER)
+		.add(BlockTypes.LEVER)
 		.build();
 
 	/**
@@ -160,9 +160,9 @@ public class MoveBrush extends AbstractBrush {
 				.forEach(undoSet::add);
 			undoSet.forEach(undo::put);
 			sniper.storeUndo(undo);
-			locations.forEach(block -> setBlockType(block.getX(), block.getY(), block.getZ(), Material.AIR));
+			locations.forEach(block -> setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
 			for (BlockVector3 block : locations) {
-				setBlockData(block.getX() + direction[0], block.getY() + direction[1], block.getZ() + direction[2], getBlockData(block.getX(), block.getY(), block.getZ()));
+				setBlockData(block.getX() + direction[0], block.getY() + direction[1], block.getZ() + direction[2], getBlock(block.getX(), block.getY(), block.getZ()));
 			}
 		}
 	}

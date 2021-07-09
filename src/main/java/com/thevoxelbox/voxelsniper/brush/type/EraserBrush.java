@@ -1,7 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -9,20 +11,18 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 
 public class EraserBrush extends AbstractBrush {
 
 	private static final MaterialSet EXCLUSIVE_MATERIALS = MaterialSet.builder()
-		.with(Tag.SAND)
+		.with(BlockCategories.SAND)
 		.with(MaterialSets.SANDSTONES)
 		.with(MaterialSets.RED_SANDSTONES)
 		.with(MaterialSets.AIRS)
 		.with(MaterialSets.STONES)
 		.with(MaterialSets.GRASSES)
-		.with(MaterialSets.DIRT)
-		.add(Material.GRAVEL)
+		.with(BlockCategories.DIRT)
+		.add(BlockTypes.GRAVEL)
 		.build();
 
 	private static final MaterialSet EXCLUSIVE_LIQUIDS = MaterialSet.builder()
@@ -54,7 +54,7 @@ public class EraserBrush extends AbstractBrush {
 					BlockState currentBlock = getBlock(currentX, currentY, currentZ);
 					if (!EXCLUSIVE_MATERIALS.contains(currentBlock) && (!keepWater || !EXCLUSIVE_LIQUIDS.contains(currentBlock))) {
 						undo.put(currentBlock);
-						setBlockType(currentX, currentY, currentZ, Material.AIR);
+						setBlockType(currentX, currentY, currentZ, BlockTypes.AIR);
 					}
 				}
 			}

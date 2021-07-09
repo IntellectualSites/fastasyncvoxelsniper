@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.block.BlockFace;
 
 public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
@@ -13,7 +13,7 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 	public void handleArrowAction(Snipe snipe) {
 		BlockVector3 lastBlock = getLastBlock();
 		BlockVector3 targetBlock = getTargetBlock();
-		BlockFace face = getFace(targetBlock, lastBlock);
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
@@ -24,14 +24,14 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 	public void handleGunpowderAction(Snipe snipe) {
 		BlockVector3 lastBlock = getLastBlock();
 		BlockVector3 targetBlock = getTargetBlock();
-		BlockFace face = getFace(targetBlock, lastBlock);
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
 		pre(snipe, face, lastBlock);
 	}
 
-	private void pre(Snipe snipe, BlockFace blockFace, BlockVector3 targetBlock) {
+	private void pre(Snipe snipe, Direction blockFace, BlockVector3 targetBlock) {
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:

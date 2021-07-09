@@ -1,20 +1,22 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 public class Rotation3DBrush extends AbstractBrush {
 
 	private int brushSize;
-	private BlockData[][][] snap;
+	private BlockState[][][] snap;
 	private double seYaw;
 	private double sePitch;
 	private double seRoll;
@@ -74,7 +76,7 @@ public class Rotation3DBrush extends AbstractBrush {
 	private void getMatrix() { // only need to do once. But y needs to change + sphere
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockData[brushSize][brushSize][brushSize];
+		this.snap = new BlockState[brushSize][brushSize][brushSize];
 		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		//int sy = this.getTargetBlock().getY() - this.brushSize; Not used
@@ -85,8 +87,8 @@ public class Rotation3DBrush extends AbstractBrush {
 				int sz = targetBlock.getZ() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
-						this.snap[x][y][z] = getBlockData(sx, clampY(sz), sz);
-						setBlockType(sx, clampY(sz), sz, Material.AIR);
+						this.snap[x][y][z] = getBlock(sx, clampY(sz), sz);
+						setBlockType(sx, clampY(sz), sz, BlockTypes.AIR);
 						sz++;
 					}
 				}
@@ -134,9 +136,9 @@ public class Rotation3DBrush extends AbstractBrush {
 						doNotFill[(int) newxyX + this.brushSize][(int) newyzY + this.brushSize][(int) newyzZ + this.brushSize] = true; // only rounds off to nearest
 						// block
 						// after all three, though.
-						BlockData blockData = this.snap[x][y][z];
-						Material type = blockData.getMaterial();
-						if (type.isEmpty()) {
+						BlockState blockData = this.snap[x][y][z];
+						BlockType type = blockData.getBlockType();
+						if (Materials.isEmpty(type)) {
 							continue;
 						}
 						this.setBlockData(targetBlock.getX() + (int) newxyX, targetBlock.getY() + (int) newyzY, targetBlock.getZ() + (int) newyzZ, blockData);
@@ -155,14 +157,14 @@ public class Rotation3DBrush extends AbstractBrush {
 						if (!doNotFill[x][y][z]) {
 							// smart fill stuff
 							int fy = y + targetBlock.getY() - this.brushSize;
-							Material a = getBlockType(fx + 1, fy, fz);
-							Material b = getBlockType(fx, fy, fz - 1);
-							Material c = getBlockType(fx, fy, fz + 1);
-							Material d = getBlockType(fx - 1, fy, fz);
-							BlockData aData = getBlockData(fx + 1, fy, fz);
-							BlockData dData = getBlockData(fx - 1, fy, fz);
-							BlockData bData = getBlockData(fx, fy, fz - 1);
-							BlockData winner;
+							BlockType a = getBlockType(fx + 1, fy, fz);
+							BlockType b = getBlockType(fx, fy, fz - 1);
+							BlockType c = getBlockType(fx, fy, fz + 1);
+							BlockType d = getBlockType(fx - 1, fy, fz);
+							BlockState aData = getBlock(fx + 1, fy, fz);
+							BlockState dData = getBlock(fx - 1, fy, fz);
+							BlockState bData = getBlock(fx, fy, fz - 1);
+							BlockState winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
 								// be fine to do all 5 checks needed to be legit about it.

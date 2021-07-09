@@ -1,15 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -139,7 +141,7 @@ public class StencilBrush extends AbstractBrush {
 				// corner, for example.
 				int currZ = -this.zRef;
 				int currY = -this.yRef;
-				BlockData blockData;
+				BlockState blockData;
 				BlockVector3 targetBlock = getTargetBlock();
 				int blockPositionX = targetBlock.getX();
 				int blockPositionY = targetBlock.getY();
@@ -182,8 +184,8 @@ public class StencilBrush extends AbstractBrush {
 							int numLoops = in.readByte() + 128;
 							blockData = readBlockData(in);
 							for (int j = 0; j < numLoops; j++) {
-								Material material = blockData.getMaterial();
-								if (!material.isEmpty() && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
+								BlockType type = blockData.getBlockType();
+								if (!Materials.isEmpty(type) && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
 									undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 									setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 								}
@@ -199,8 +201,8 @@ public class StencilBrush extends AbstractBrush {
 							}
 						} else {
 							blockData = readBlockData(in);
-							Material material = blockData.getMaterial();
-							if (!material.isEmpty() && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
+							BlockType type = blockData.getBlockType();
+							if (!Materials.isEmpty(type) && clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ).isAir()) {
 								undo.put(clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 								// v.sendMessage("currX:" + currX + " currZ:"+currZ + " currY:" + currY + " id:" + id + " data:" + (byte)data);
 								setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
@@ -222,8 +224,8 @@ public class StencilBrush extends AbstractBrush {
 							int numLoops = in.readByte() + 128;
 							blockData = readBlockData(in);
 							for (int j = 0; j < (numLoops); j++) {
-								Material material = blockData.getMaterial();
-								if (!material.isEmpty()) {
+								BlockType type = blockData.getBlockType();
+								if (!Materials.isEmpty(type)) {
 									undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 									setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 								}
@@ -239,8 +241,8 @@ public class StencilBrush extends AbstractBrush {
 							}
 						} else {
 							blockData = readBlockData(in);
-							Material material = blockData.getMaterial();
-							if (!material.isEmpty()) {
+							BlockType type = blockData.getBlockType();
+							if (!Materials.isEmpty(type)) {
 								undo.put(this.clampY(blockPositionX + currX, blockPositionY + currY, blockPositionZ + currZ));
 								setBlockData(blockPositionX + currX, clampY(blockPositionY + currY), blockPositionZ + currZ, blockData);
 							}
@@ -268,9 +270,9 @@ public class StencilBrush extends AbstractBrush {
 		}
 	}
 
-	private BlockData readBlockData(DataInputStream in) throws IOException {
+	private BlockState readBlockData(DataInputStream in) throws IOException {
 		String blockDataString = in.readUTF();
-		return Bukkit.createBlockData(blockDataString);
+		return BukkitAdapter.adapt(Bukkit.createBlockData(blockDataString));
 	}
 
 	private void stencilSave(Snipe snipe) {
@@ -300,15 +302,15 @@ public class StencilBrush extends AbstractBrush {
 			out.writeShort(this.zRef);
 			out.writeShort(this.yRef);
 			messenger.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
-			BlockData[] blockDataArray = new BlockData[this.x * this.z * this.y];
+			BlockState[] blockDataArray = new BlockState[this.x * this.z * this.y];
 			byte[] runSizeArray = new byte[this.x * this.z * this.y];
-			BlockData lastBlockData = getBlockData(blockPositionX, blockPositionY, blockPositionZ);
+			BlockState lastBlockData = getBlock(blockPositionX, blockPositionY, blockPositionZ);
 			int counter = 0;
 			int arrayIndex = 0;
 			for (int y = 0; y < this.y; y++) {
 				for (int z = 0; z < this.z; z++) {
 					for (int x = 0; x < this.x; x++) {
-						BlockData thisBlockData = getBlockData(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
+						BlockState thisBlockData = getBlock(blockPositionX + x, blockPositionY + y, blockPositionZ + z);
 						if (!thisBlockData.equals(lastBlockData) || counter == 255) {
 							blockDataArray[arrayIndex] = lastBlockData;
 							runSizeArray[arrayIndex] = (byte) (counter - 128);

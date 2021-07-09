@@ -1,19 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +117,7 @@ public class ErodeBrush extends AbstractBrush {
 		for (BlockWrapper blockWrapper : blockChangeTracker.getAll()) {
 			BlockState block = blockWrapper.getBlock();
 			if (block != null) {
-				BlockData blockData = blockWrapper.getBlockData();
+				BlockState blockData = blockWrapper.getBlockData();
 				undo.put(block);
 				setBlockData(blockWrapper.getX(), blockWrapper.getY(), blockWrapper.getZ(), blockData);
 			}
@@ -154,7 +154,7 @@ public class ErodeBrush extends AbstractBrush {
 								}
 							}
 						}
-						BlockWrapper currentBlockWrapper = new BlockWrapper(x, y, z, null, Material.AIR.createBlockData());
+						BlockWrapper currentBlockWrapper = new BlockWrapper(x, y, z, null, BlockTypes.AIR.getDefaultState());
 						int amount = 0;
 						for (BlockWrapper wrapper : blockCount.keySet()) {
 							Integer currentCount = blockCount.get(wrapper);
@@ -192,7 +192,7 @@ public class ErodeBrush extends AbstractBrush {
 							.filter(relativeBlock -> relativeBlock.isEmpty() || relativeBlock.isLiquid())
 							.count();
 						if (count >= erosionPreset.getErosionFaces()) {
-							blockChangeTracker.put(currentPosition, new BlockWrapper(x, y, z, currentBlock.getBlock(), Material.AIR.createBlockData()), currentIteration);
+							blockChangeTracker.put(currentPosition, new BlockWrapper(x, y, z, currentBlock.getBlock(), BlockTypes.AIR.getDefaultState()), currentIteration);
 						}
 					}
 				}
@@ -296,13 +296,13 @@ public class ErodeBrush extends AbstractBrush {
 		private int z;
 		@Nullable
 		private BlockState block;
-		private BlockData blockData;
+		private BlockState blockData;
 
 		private BlockWrapper(int x, int y, int z, BlockState block) {
-			this(x, y, z, block, BukkitAdapter.adapt(block));
+			this(x, y, z, block, block);
 		}
 
-		private BlockWrapper(int x, int y, int z, @Nullable BlockState block, BlockData blockData) {
+		private BlockWrapper(int x, int y, int z, @Nullable BlockState block, BlockState blockData) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -327,18 +327,18 @@ public class ErodeBrush extends AbstractBrush {
 			return this.block;
 		}
 
-		public BlockData getBlockData() {
+		public BlockState getBlockData() {
 			return this.blockData;
 		}
 
 		public boolean isEmpty() {
-			Material material = this.blockData.getMaterial();
-			return material.isEmpty();
+			BlockType type = blockData.getBlockType();
+			return Materials.isEmpty(type);
 		}
 
 		public boolean isLiquid() {
-			Material material = this.blockData.getMaterial();
-			return material == Material.WATER || material == Material.LAVA;
+			BlockType type = blockData.getBlockType();
+			return Materials.isLiquid(type);
 		}
 	}
 

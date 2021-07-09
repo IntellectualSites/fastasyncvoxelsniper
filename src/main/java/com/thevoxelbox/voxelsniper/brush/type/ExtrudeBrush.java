@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -9,7 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.BlockFace;
 import org.jetbrains.annotations.Nullable;
 
 public class ExtrudeBrush extends AbstractBrush {
@@ -111,14 +110,14 @@ public class ExtrudeBrush extends AbstractBrush {
 	}
 
 	private void perform(int x1, int y1, int z1, BlockState block1, int x2, int y2, int z2, BlockState block2, ToolkitProperties toolkitProperties, Undo undo) {
-		if (toolkitProperties.isVoxelListContains(getBlockData(x1, y1, z1))) {
+		if (toolkitProperties.isVoxelListContains(getBlock(x1, y1, z1))) {
 			undo.put(block2);
 			setBlockType(x2, y2, z2, getBlockType(x1, y1, z1));
-			setBlockData(x2, clampY(y2), z2, BukkitAdapter.adapt(clampY(x1, y1, z1)));
+			setBlockData(x2, clampY(y2), z2, clampY(x1, y1, z1));
 		}
 	}
 
-	private void selectExtrudeMethod(Snipe snipe, @Nullable BlockFace blockFace, boolean towardsUser) {
+	private void selectExtrudeMethod(Snipe snipe, @Nullable Direction blockFace, boolean towardsUser) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		if (blockFace == null || toolkitProperties.getVoxelHeight() == 0) {
 			return;
@@ -142,14 +141,14 @@ public class ExtrudeBrush extends AbstractBrush {
 	public void handleArrowAction(Snipe snipe) {
 		BlockVector3 targetBlock = getTargetBlock();
 		BlockVector3 lastBlock = getLastBlock();
-		selectExtrudeMethod(snipe, getFace(targetBlock, lastBlock), false);
+		selectExtrudeMethod(snipe, getDirection(targetBlock, lastBlock), false);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
 		BlockVector3 targetBlock = getTargetBlock();
 		BlockVector3 lastBlock = getLastBlock();
-		selectExtrudeMethod(snipe, getFace(targetBlock, lastBlock), true);
+		selectExtrudeMethod(snipe, getDirection(targetBlock, lastBlock), true);
 	}
 
 	@Override

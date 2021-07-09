@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -8,7 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -65,9 +63,8 @@ public class DomeBrush extends AbstractBrush {
 		}
 		for (Vector vector : changeablePositions) {
 			BlockState currentTargetBlock = getBlock(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
-			BlockData currentTargetBlockBlockData = BukkitAdapter.adapt(currentTargetBlock);
-			BlockData snipeBlockData = toolkitProperties.getBlockData();
-			if (!currentTargetBlockBlockData.equals(snipeBlockData)) {
+			BlockState snipeBlockData = toolkitProperties.getBlockData();
+			if (!currentTargetBlock.equals(snipeBlockData)) {
 				undo.put(currentTargetBlock);
 				setBlockData(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), snipeBlockData);
 			}

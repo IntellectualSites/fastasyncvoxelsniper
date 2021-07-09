@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -9,9 +10,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,18 +37,18 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 		BlockVector3 targetBlock = getTargetBlock();
 		int smallCubeVolume = MathHelper.cube(cubeEdge);
 		Set<BlockVector3> smallCube = new HashSet<>(smallCubeVolume);
-		Map<BlockVector3, Material> smallCubeMaterials = new HashMap<>(smallCubeVolume);
+		Map<BlockVector3, BlockType> smallCubeBlockTypes = new HashMap<>(smallCubeVolume);
 		Painters.cube()
 			.center(targetBlock)
 			.radius(brushSize)
 			.blockSetter(position -> {
-				Material material = getBlockType(position);
+				BlockType type = getBlockType(position);
 				smallCube.add(position);
-				smallCubeMaterials.put(position, material);
+				smallCubeBlockTypes.put(position, type);
 			})
 			.paint();
 		for (BlockVector3 smallCubeBlock : smallCube) {
-			Map<Material, Integer> materialsFrequencies = new EnumMap<>(Material.class);
+			Map<BlockType, Integer> blockTypesFrequencies = new HashMap<>();
 			Painters.cube()
 				.center(smallCubeBlock)
 				.radius(1)
@@ -57,18 +56,18 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
 					if (position.equals(smallCubeBlock)) {
 						return;
 					}
-					Material material = getBlockType(position);
-					materialsFrequencies.merge(material, 1, Integer::sum);
+					BlockType type = getBlockType(position);
+					blockTypesFrequencies.merge(type, 1, Integer::sum);
 				})
 				.paint();
-			CommonMaterial commonMaterial = findCommonMaterial(materialsFrequencies);
-			Material material = commonMaterial.getMaterial();
-			if (material != null) {
-				smallCubeMaterials.put(smallCubeBlock, material);
+			CommonMaterial commonMaterial = findCommonMaterial(blockTypesFrequencies);
+			BlockType type = commonMaterial.getBlockType();
+			if (type != null) {
+				smallCubeBlockTypes.put(smallCubeBlock, type);
 			}
 		}
 		Undo undo = new Undo();
-		setBlocks(smallCubeMaterials, undo);
+		setBlocks(smallCubeBlockTypes, undo);
 		Sniper sniper = snipe.getSniper();
 		sniper.storeUndo(undo);
 	}

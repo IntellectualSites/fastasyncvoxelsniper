@@ -1,15 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -90,7 +90,7 @@ public class PullBrush extends AbstractBrush {
 								}
 								lastStr = (int) (this.voxelHeight * str);
 								int newY = actualY + lastStr;
-								Material blockType = getBlockType(actualX, actualY, actualZ);
+								BlockType blockType = getBlockType(actualX, actualY, actualZ);
 								for (int i = newY; i < lastY; i++) {
 									setBlockType(actualX, clampY(i), actualZ, blockType);
 								}
@@ -120,7 +120,7 @@ public class PullBrush extends AbstractBrush {
 							double volume2 = (xSquared + Math.pow(y, 2) + zSquared);
 							while (volume2 <= brushSizeSquared) {
 								int blockY = targetBlock.getY() + y + (int) (this.voxelHeight * this.getStr(volume2 / brushSizeSquared));
-								Material blockType = getBlockType(actualX, targetBlock.getY() + y, actualZ);
+								BlockType blockType = getBlockType(actualX, targetBlock.getY() + y, actualZ);
 								for (int i = blockY; i < lastY; i++) {
 									setBlockType(actualX, clampY(i), actualZ, blockType);
 								}
@@ -174,10 +174,10 @@ public class PullBrush extends AbstractBrush {
 
 	private void setBlock(PullBrushBlockWrapper block) {
 		int blockY = clampY(block.getY() + (int) (this.voxelHeight * block.getStr()));
-		if (getBlockType(block.getX(), block.getY() - 1, block.getZ()).isEmpty()) {
+		if (Materials.isEmpty(getBlockType(block.getX(), block.getY() - 1, block.getZ()))) {
 			setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
 			for (int y = block.getY(); y < blockY; y++) {
-				setBlockType(block.getX(), y, block.getZ(), Material.AIR);
+				setBlockType(block.getX(), y, block.getZ(), BlockTypes.AIR);
 			}
 		} else {
 			setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
@@ -191,7 +191,7 @@ public class PullBrush extends AbstractBrush {
 		int blockY = clampY(block.getY() + (int) (this.voxelHeight * block.getStr()));
 		setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
 		for (int y = block.getY(); y > blockY; y--) {
-			this.setBlockType(block.getX(), y, block.getZ(), Material.AIR);
+			this.setBlockType(block.getX(), y, block.getZ(), BlockTypes.AIR);
 		}
 	}
 
@@ -210,14 +210,14 @@ public class PullBrush extends AbstractBrush {
 		private final int x;
 		private final int y;
 		private final int z;
-		private BlockData blockData;
+		private BlockState blockData;
 		private final double str;
 
 		private PullBrushBlockWrapper(int x, int y, int z, BlockState block, double str) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
-			this.blockData = BukkitAdapter.adapt(block);
+			this.blockData = block;
 			this.str = str;
 		}
 
@@ -233,7 +233,7 @@ public class PullBrush extends AbstractBrush {
 			return this.z;
 		}
 
-		public BlockData getBlockData() {
+		public BlockState getBlockData() {
 			return this.blockData;
 		}
 

@@ -2,10 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class FlatOceanBrush extends AbstractBrush {
 
@@ -83,11 +83,11 @@ public class FlatOceanBrush extends AbstractBrush {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
 				for (int y = 0; y < editSession.getMaxY() + 1; y++) {
 					if (y <= this.floorLevel) {
-						setBlockType(blockX + x, y, blockZ + z, Material.DIRT);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.DIRT);
 					} else if (y <= this.waterLevel) {
-						setBlockType(blockX + x, y, blockZ + z, Material.WATER);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.WATER);
 					} else {
-						setBlockType(blockX + x, y, blockZ + z, Material.AIR);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.AIR);
 					}
 				}
 			}

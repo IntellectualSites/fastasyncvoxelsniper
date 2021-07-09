@@ -3,11 +3,12 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.TreeGenerator;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -48,8 +49,8 @@ public class TreeSnipeBrush extends AbstractBrush {
 	}
 
 	private void single(BlockVector3 targetBlock) {
-		BlockData currentBlockData = getBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
-		setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), Material.GRASS_BLOCK);
+		BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
+		setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
 		generateTree(this.treeType, targetBlock);
 		setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
 	}
@@ -58,7 +59,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 		BlockVector3 targetBlock = getTargetBlock();
 		EditSession editSession = getEditSession();
 		return IntStream.range(1, (editSession.getMaxY() - targetBlock.getY()))
-			.filter(i -> getBlockType(targetBlock.add(0, i + 1, 0)).isEmpty())
+			.filter(i -> Materials.isEmpty(getBlockType(targetBlock.add(0, i + 1, 0))))
 			.findFirst()
 			.orElse(0);
 	}

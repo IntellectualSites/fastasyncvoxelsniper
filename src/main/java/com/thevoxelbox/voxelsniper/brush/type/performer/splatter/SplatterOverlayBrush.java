@@ -1,14 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 import java.util.Random;
 
@@ -176,8 +178,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 						// if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) {
 							// if inside of the column && if to be splattered
-							Material check = this.getBlockType(blockX + x, y + 1, blockZ + z);
-							if (check.isEmpty() || check == Material.WATER) {
+							BlockType check = this.getBlockType(blockX + x, y + 1, blockZ + z);
+							if (Materials.isEmpty(check) || check == BlockTypes.WATER) {
 								// must start at surface... this prevents it filling stuff in if you click in a wall
 								// and it starts out below surface.
 								if (this.allBlocks) {
@@ -273,8 +275,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 				for (int y = targetBlock.getY(); y > 0; y--) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) { // if inside of the column...&& if to be splattered
-							if (!getBlockType(blockX + x, y - 1, blockZ + z).isEmpty()) { // if not a floating block (like one of Notch'world pools)
-								if (getBlockType(blockX + x, y + 1, targetBlock.getZ() + z).isEmpty()) { // must start at surface... this prevents it filling stuff in if
+							if (!Materials.isEmpty(getBlockType(blockX + x, y - 1, blockZ + z))) { // if not a floating block (like one of Notch'world pools)
+								if (Materials.isEmpty(getBlockType(blockX + x, y + 1, targetBlock.getZ() + z))) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
 									if (this.allBlocks) {
 										int depth = this.randomizeHeight ? this.generator.nextInt(this.depth) : this.depth;

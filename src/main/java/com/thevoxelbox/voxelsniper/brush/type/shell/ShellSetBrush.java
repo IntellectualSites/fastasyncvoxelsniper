@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type.shell;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -9,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public class ShellSetBrush extends AbstractBrush {
 				for (int y = lowY; y <= highY; y++) {
 					for (int x = lowX; x <= highX; x++) {
 						for (int z = lowZ; z <= highZ; z++) {
-							Material replaceBlockDataType = toolkitProperties.getReplaceBlockType();
+							BlockType replaceBlockDataType = toolkitProperties.getReplaceBlockType();
 							if (isBlockTypeNotEqual(y, x, z, replaceBlockDataType) && isBlockTypeNotEqual(y, x + 1, z, replaceBlockDataType) && isBlockTypeNotEqual(y, x - 1, z, replaceBlockDataType) && isBlockTypeNotEqual(y, x, z + 1, replaceBlockDataType) && isBlockTypeNotEqual(y, x, z - 1, replaceBlockDataType) && isBlockTypeNotEqual(y + 1, x, z, replaceBlockDataType) && isBlockTypeNotEqual(y - 1, x, z, replaceBlockDataType)) {
 								blocks.add(BlockVector3.at(x, y, z));
 							}
@@ -83,8 +83,8 @@ public class ShellSetBrush extends AbstractBrush {
 				}
 				Undo undo = new Undo();
 				for (BlockVector3 currentBlock : blocks) {
-					Material currentBlockType = getBlockType(currentBlock);
-					Material blockType = toolkitProperties.getBlockType();
+					BlockType currentBlockType = getBlockType(currentBlock);
+					BlockType blockType = toolkitProperties.getBlockType();
 					if (currentBlockType != blockType) {
 						undo.put(getBlock(currentBlock));
 						setBlockType(currentBlock, blockType);
@@ -99,8 +99,8 @@ public class ShellSetBrush extends AbstractBrush {
 		}
 	}
 
-	private boolean isBlockTypeNotEqual(int y, int x, int z, Material replaceBlockDataType) {
-		Material blockType = getBlockType(x, y, z);
+	private boolean isBlockTypeNotEqual(int y, int x, int z, BlockType replaceBlockDataType) {
+		BlockType blockType = getBlockType(x, y, z);
 		return blockType != replaceBlockDataType;
 	}
 

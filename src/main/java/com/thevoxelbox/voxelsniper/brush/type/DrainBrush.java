@@ -1,14 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class DrainBrush extends AbstractBrush {
 
@@ -69,25 +71,25 @@ public class DrainBrush extends AbstractBrush {
 				for (int y = brushSize; y >= 0; y--) {
 					double ySquared = MathHelper.square(y);
 					if (xSquared + ySquared <= brushSizeSquared) {
-						Material typePlusPlus = getBlockType(targetBlock.add(x, 0, y));
-						if (typePlusPlus == Material.WATER || typePlusPlus == Material.LAVA) {
+						BlockType typePlusPlus = getBlockType(targetBlock.add(x, 0, y));
+						if (Materials.isLiquid(typePlusPlus)) {
 							undo.put(clampY(targetBlock.add(x, 0, y)));
-							setBlockType(targetBlock.add(x, 0, y), Material.AIR);
+							setBlockType(targetBlock.add(x, 0, y), BlockTypes.AIR);
 						}
-						Material typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
-						if (typePlusMinus == Material.WATER || typePlusMinus == Material.LAVA) {
+						BlockType typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
+						if (Materials.isLiquid(typePlusMinus)) {
 							undo.put(clampY(targetBlockX + x, targetBlockY, targetBlockZ - y));
-							setBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y, Material.AIR);
+							setBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
 						}
-						Material typeMinusPlus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y);
-						if (typeMinusPlus == Material.WATER || typeMinusPlus == Material.LAVA) {
+						BlockType typeMinusPlus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y);
+						if (Materials.isLiquid(typeMinusPlus)) {
 							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ + y));
-							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y, Material.AIR);
+							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y, BlockTypes.AIR);
 						}
-						Material typeMinusMinus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y);
-						if (typeMinusMinus == Material.WATER || typeMinusMinus == Material.LAVA) {
+						BlockType typeMinusMinus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y);
+						if (Materials.isLiquid(typeMinusMinus)) {
 							undo.put(clampY(targetBlockX - x, targetBlockY, targetBlockZ - y));
-							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y, Material.AIR);
+							setBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
 						}
 					}
 				}
@@ -99,10 +101,10 @@ public class DrainBrush extends AbstractBrush {
 					double xSquared = MathHelper.square(x - brushSize);
 					for (int z = (brushSize + 1) * 2; z >= 0; z--) {
 						if ((xSquared + MathHelper.square(z - brushSize) + ySquared) <= brushSizeSquared) {
-							Material type = getBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize);
-							if (type == Material.WATER || type == Material.LAVA) {
+							BlockType type = getBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize);
+							if (Materials.isLiquid(type)) {
 								undo.put(clampY(targetBlockX + x, targetBlockY + z, targetBlockZ + y));
-								setBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize, Material.AIR);
+								setBlockType(targetBlockX + x - brushSize, targetBlockY + z - brushSize, targetBlockZ + y - brushSize, BlockTypes.AIR);
 							}
 						}
 					}

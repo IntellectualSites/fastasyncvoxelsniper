@@ -1,13 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.block.BlockFace;
 
 public class EllipseBrush extends AbstractPerformerBrush {
 
@@ -116,7 +116,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 				int x = (int) Math.round(this.xscl * Math.cos(steps));
 				int y = (int) Math.round(this.yscl * Math.sin(steps));
 				BlockVector3 lastBlock = getLastBlock();
-				BlockFace face = getFace(getTargetBlock(), lastBlock);
+				Direction face = getDirection(getTargetBlock(), lastBlock);
 				if (face != null) {
 					switch (face) {
 						case NORTH:
@@ -161,7 +161,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
 						BlockVector3 lastBlock = getLastBlock();
-						BlockFace face = getFace(getTargetBlock(), lastBlock);
+						Direction face = getDirection(getTargetBlock(), lastBlock);
 						if (face != null) {
 							switch (face) {
 								case NORTH:
@@ -192,7 +192,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 						int x = (int) Math.round(ix * Math.cos(steps));
 						int y = (int) Math.round(iy * Math.sin(steps));
 						BlockVector3 lastBlock = getLastBlock();
-						BlockFace face = getFace(getTargetBlock(), lastBlock);
+						Direction face = getDirection(getTargetBlock(), lastBlock);
 						if (face != null) {
 							switch (face) {
 								case NORTH:

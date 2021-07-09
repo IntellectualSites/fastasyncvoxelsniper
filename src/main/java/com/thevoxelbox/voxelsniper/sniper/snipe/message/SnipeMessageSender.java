@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.MessageSender;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -28,25 +28,25 @@ public class SnipeMessageSender {
 	}
 
 	public SnipeMessageSender blockTypeMessage() {
-		Material blockType = this.toolkitProperties.getBlockType();
+		BlockType blockType = this.toolkitProperties.getBlockType();
 		this.messageSender.blockTypeMessage(blockType);
 		return this;
 	}
 
 	public SnipeMessageSender blockDataMessage() {
-		BlockData blockData = this.toolkitProperties.getBlockData();
+		BlockState blockData = this.toolkitProperties.getBlockData();
 		this.messageSender.blockDataMessage(blockData);
 		return this;
 	}
 
 	public SnipeMessageSender replaceBlockTypeMessage() {
-		Material replaceBlockType = this.toolkitProperties.getReplaceBlockType();
+		BlockType replaceBlockType = this.toolkitProperties.getReplaceBlockType();
 		this.messageSender.replaceBlockTypeMessage(replaceBlockType);
 		return this;
 	}
 
 	public SnipeMessageSender replaceBlockDataMessage() {
-		BlockData replaceBlockData = this.toolkitProperties.getReplaceBlockData();
+		BlockState replaceBlockData = this.toolkitProperties.getReplaceBlockData();
 		this.messageSender.replaceBlockDataMessage(replaceBlockData);
 		return this;
 	}
@@ -70,7 +70,7 @@ public class SnipeMessageSender {
 	}
 
 	public SnipeMessageSender voxelListMessage() {
-		List<BlockData> voxelList = this.toolkitProperties.getVoxelList();
+		List<BlockState> voxelList = this.toolkitProperties.getVoxelList();
 		this.messageSender.voxelListMessage(voxelList);
 		return this;
 	}

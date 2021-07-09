@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -51,8 +52,8 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
 				return;
 			}
 		}
-		toolkitProperties.setReplaceBlockData(blockData);
+		toolkitProperties.setReplaceBlockData(BukkitAdapter.adapt(blockData));
 		Messenger messenger = new Messenger(sender);
-		messenger.sendReplaceBlockDataMessage(blockData);
+		messenger.sendReplaceBlockDataMessage(BukkitAdapter.adapt(blockData));
 	}
 }

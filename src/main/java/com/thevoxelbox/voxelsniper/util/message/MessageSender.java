@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -30,23 +31,23 @@ public class MessageSender {
 		return this;
 	}
 
-	public MessageSender blockTypeMessage(Material blockType) {
-		this.messages.add(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getKey());
+	public MessageSender blockTypeMessage(BlockType blockType) {
+		this.messages.add(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getId());
 		return this;
 	}
 
-	public MessageSender blockDataMessage(BlockData blockData) {
-		this.messages.add(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString(true));
+	public MessageSender blockDataMessage(BlockState blockData) {
+		this.messages.add(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString());
 		return this;
 	}
 
-	public MessageSender replaceBlockTypeMessage(Material replaceBlockType) {
-		this.messages.add(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getKey());
+	public MessageSender replaceBlockTypeMessage(BlockType replaceBlockType) {
+		this.messages.add(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getId());
 		return this;
 	}
 
-	public MessageSender replaceBlockDataMessage(BlockData replaceBlockData) {
-		this.messages.add(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString(true));
+	public MessageSender replaceBlockDataMessage(BlockState replaceBlockData) {
+		this.messages.add(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString());
 		return this;
 	}
 
@@ -68,12 +69,12 @@ public class MessageSender {
 		return this;
 	}
 
-	public MessageSender voxelListMessage(List<? extends BlockData> voxelList) {
+	public MessageSender voxelListMessage(List<? extends BlockState> voxelList) {
 		if (voxelList.isEmpty()) {
 			this.messages.add(ChatColor.DARK_GREEN + "No blocks selected!");
 		}
 		String message = voxelList.stream()
-			.map(blockData -> blockData.getAsString(true))
+			.map(BlockStateHolder::getAsString)
 			.map(dataAsString -> dataAsString + " ")
 			.collect(Collectors.joining("", ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA, ""));
 		this.messages.add(message);

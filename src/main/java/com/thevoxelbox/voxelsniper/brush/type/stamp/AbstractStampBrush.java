@@ -1,7 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
@@ -9,10 +12,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.block.data.BlockData;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -50,33 +51,33 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 		this.sorted = false;
 	}
 
-	protected boolean falling(Material material) {
-		return MaterialSets.FALLING.contains(material);
+	protected boolean falling(BlockType type) {
+		return MaterialSets.FALLING.contains(type);
 	}
 
-	protected boolean fallsOff(Material material) {
+	protected boolean fallsOff(BlockType type) {
 		MaterialSet fallsOff = MaterialSet.builder()
-			.with(Tag.SAPLINGS)
-			.with(Tag.DOORS)
-			.with(Tag.RAILS)
-			.with(Tag.BUTTONS)
-			.with(MaterialSets.SIGNS)
-			.with(MaterialSets.PRESSURE_PLATES)
-			.with(MaterialSets.FLOWERS)
+			.with(BlockCategories.SAPLINGS)
+			.with(BlockCategories.DOORS)
+			.with(BlockCategories.RAILS)
+			.with(BlockCategories.BUTTONS)
+			.with(BlockCategories.SIGNS)
+			.with(BlockCategories.PRESSURE_PLATES)
+			.with(BlockCategories.FLOWERS)
 			.with(MaterialSets.MUSHROOMS)
 			.with(MaterialSets.TORCHES)
 			.with(MaterialSets.REDSTONE_TORCHES)
-			.add(Material.FIRE)
-			.add(Material.REDSTONE_WIRE)
-			.add(Material.WHEAT)
-			.add(Material.LADDER)
-			.add(Material.LEVER)
-			.add(Material.SNOW)
-			.add(Material.SUGAR_CANE)
-			.add(Material.REPEATER)
-			.add(Material.COMPARATOR)
+			.add(BlockTypes.FIRE)
+			.add(BlockTypes.REDSTONE_WIRE)
+			.add(BlockTypes.WHEAT)
+			.add(BlockTypes.LADDER)
+			.add(BlockTypes.LEVER)
+			.add(BlockTypes.SNOW)
+			.add(BlockTypes.SUGAR_CANE)
+			.add(BlockTypes.REPEATER)
+			.add(BlockTypes.COMPARATOR)
 			.build();
-		return fallsOff.contains(material);
+		return fallsOff.contains(type);
 	}
 
 	protected void setBlock(StampBrushBlockWrapper blockWrapper) {
@@ -112,11 +113,11 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (this.fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (this.fallsOff(type)) {
 					this.fall.add(block);
-				} else if (this.falling(material)) {
+				} else if (this.falling(type)) {
 					this.drop.add(block);
 				} else {
 					this.solid.add(block);
@@ -152,13 +153,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (fallsOff(type)) {
 					this.fall.add(block);
-				} else if (falling(material)) {
+				} else if (falling(type)) {
 					this.drop.add(block);
-				} else if (!material.isEmpty()) {
+				} else if (!Materials.isEmpty(type)) {
 					this.solid.add(block);
 					this.setBlockFill(block);
 				}
@@ -192,13 +193,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (this.fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (this.fallsOff(type)) {
 					this.fall.add(block);
-				} else if (this.falling(material)) {
+				} else if (this.falling(type)) {
 					this.drop.add(block);
-				} else if (!material.isEmpty()) {
+				} else if (!Materials.isEmpty(type)) {
 					this.solid.add(block);
 					this.setBlock(block);
 				}

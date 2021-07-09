@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -8,7 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.util.Vector;
 
 public class RulerBrush extends AbstractBrush {
@@ -51,7 +51,7 @@ public class RulerBrush extends AbstractBrush {
 	@Override
 	public void handleArrowAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		Material blockDataType = toolkitProperties.getBlockType();
+		BlockType blockDataType = toolkitProperties.getBlockType();
 		BlockVector3 targetBlock = getTargetBlock();
 		this.coordinates = Vectors.toBukkit(targetBlock);
 		if (this.offsetX == 0 && this.offsetY == 0 && this.offsetZ == 0) {

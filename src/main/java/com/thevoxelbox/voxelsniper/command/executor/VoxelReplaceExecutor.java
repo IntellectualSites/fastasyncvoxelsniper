@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
@@ -56,16 +57,16 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
 			Block targetBlock = blockTracer.getTargetBlock();
 			if (targetBlock != null) {
 				Material type = targetBlock.getType();
-				toolkitProperties.setReplaceBlockType(type);
-				messenger.sendReplaceBlockTypeMessage(type);
+				toolkitProperties.setReplaceBlockType(BukkitAdapter.asBlockType(type));
+				messenger.sendReplaceBlockTypeMessage(BukkitAdapter.asBlockType(type));
 			}
 			return;
 		}
 		Material material = Material.matchMaterial(arguments[0]);
 		if (material != null) {
 			if (material.isBlock()) {
-				toolkitProperties.setReplaceBlockType(material);
-				messenger.sendReplaceBlockTypeMessage(material);
+				toolkitProperties.setReplaceBlockType(BukkitAdapter.asBlockType(material));
+				messenger.sendReplaceBlockTypeMessage(BukkitAdapter.asBlockType(material));
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 			}

@@ -1,53 +1,41 @@
 package com.thevoxelbox.voxelsniper.util.material;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import org.bukkit.Material;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class MaterialSet implements Iterable<Material> {
+public class MaterialSet implements Iterable<BlockType> {
 
-	private Set<Material> materials;
+	private Set<BlockType> blockTypes;
 
 	public static MaterialSetBuilder builder() {
 		return new MaterialSetBuilder();
 	}
 
-	public MaterialSet(Collection<Material> materials) {
-		this.materials = EnumSet.copyOf(materials);
+	public MaterialSet(Collection<BlockType> blockTypes) {
+		this.blockTypes = new HashSet<>(blockTypes);
 	}
 
-	public boolean contains(com.sk89q.worldedit.world.block.BlockState block) {
-		Material type = BukkitAdapter.adapt(block.getBlockType());
+	public boolean contains(BlockState block) {
+		BlockType type = block.getBlockType();
 		return contains(type);
 	}
 
-	public boolean contains(BlockData blockData) {
-		Material material = blockData.getMaterial();
-		return contains(material);
-	}
-
-	public boolean contains(BlockState blockState) {
-		Material type = blockState.getType();
-		return contains(type);
-	}
-
-	public boolean contains(Material material) {
-		return this.materials.contains(material);
+	public boolean contains(BlockType blockType) {
+		return this.blockTypes.contains(blockType);
 	}
 
 	@Override
-	public Iterator<Material> iterator() {
-		return this.materials.iterator();
+	public Iterator<BlockType> iterator() {
+		return this.blockTypes.iterator();
 	}
 
-	public Set<Material> getMaterials() {
-		return Collections.unmodifiableSet(this.materials);
+	public Set<BlockType> getBlockTypes() {
+		return Collections.unmodifiableSet(this.blockTypes);
 	}
 }
