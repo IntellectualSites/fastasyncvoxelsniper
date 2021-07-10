@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 import java.util.Random;
 
@@ -15,7 +14,7 @@ public class BlobBrush extends AbstractPerformerBrush {
 	private static final int GROW_PERCENT_MIN = 1;
 	private static final int GROW_PERCENT_MAX = 9999;
 
-	private Random randomGenerator = new Random();
+	private final Random randomGenerator = new Random();
 	private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
 
 	@Override
@@ -118,14 +117,12 @@ public class BlobBrush extends AbstractPerformerBrush {
 				double ySquared = Math.pow(y - brushSize - 1, 2);
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
-						Block targetBlock = this.getTargetBlock();
-						this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
+						BlockVector3 targetBlock = this.getTargetBlock();
+						this.performer.perform(getEditSession(), targetBlock.getX() - brushSize + x, clampY(targetBlock.getY() - brushSize + z), targetBlock.getZ() - brushSize + y, this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private void growBlob(Snipe snipe) {
@@ -189,14 +186,12 @@ public class BlobBrush extends AbstractPerformerBrush {
 				double ySquared = Math.pow(y - brushSize - 1, 2);
 				for (int z = brushSizeDoubled; z >= 0; z--) {
 					if (splat[x][y][z] == 1 && xSquared + ySquared + Math.pow(z - brushSize - 1, 2) <= rSquared) {
-						Block targetBlock = this.getTargetBlock();
-						this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
+						BlockVector3 targetBlock = this.getTargetBlock();
+						this.performer.perform(getEditSession(), targetBlock.getX() - brushSize + x, clampY(targetBlock.getY() - brushSize + z), targetBlock.getZ() - brushSize + y, this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY() - brushSize + z, targetBlock.getZ() - brushSize + y));
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private boolean checkValidGrowPercent() {

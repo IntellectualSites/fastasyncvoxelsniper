@@ -10,15 +10,15 @@ public class CommandProperties {
 	private static final String DEFAULT_DESCRIPTION = "";
 	private static final Class<? extends CommandSender> DEFAULT_SENDER_TYPE = CommandSender.class;
 
-	private String name;
+	private final String name;
 	@Nullable
-	private String description;
+	private final String description;
 	@Nullable
-	private String permission;
-	private List<String> aliases;
-	private List<String> usageLines;
+	private final String permission;
+	private final List<String> aliases;
+	private final List<String> usageLines;
 	@Nullable
-	private Class<? extends CommandSender> senderType;
+	private final Class<? extends CommandSender> senderType;
 
 	public static CommandPropertiesBuilder builder() {
 		return new CommandPropertiesBuilder();

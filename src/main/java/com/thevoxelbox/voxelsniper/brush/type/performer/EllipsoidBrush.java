@@ -1,10 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
@@ -47,22 +46,22 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		execute(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		execute(snipe, lastBlock);
 	}
 
-	private void execute(Snipe snipe, Block targetBlock) {
-		this.performer.perform(targetBlock);
+	private void execute(Snipe snipe, BlockVector3 targetBlock) {
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
+		this.performer.perform(getEditSession(), blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
 		double trueOffset = this.istrue ? 0.5 : 0;
-		int blockPositionX = targetBlock.getX();
-		int blockPositionY = targetBlock.getY();
-		int blockPositionZ = targetBlock.getZ();
 		for (double x = 0; x <= this.xRad; x++) {
 			double xSquared = (x / (this.xRad + trueOffset)) * (x / (this.xRad + trueOffset));
 			for (double z = 0; z <= this.zRad; z++) {
@@ -70,20 +69,18 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 				for (double y = 0; y <= this.yRad; y++) {
 					double ySquared = (y / (this.yRad + trueOffset)) * (y / (this.yRad + trueOffset));
 					if (xSquared + ySquared + zSquared <= 1) {
-						this.performer.perform(clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-						this.performer.perform(clampY((int) (blockPositionX + x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-						this.performer.perform(clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-						this.performer.perform(clampY((int) (blockPositionX + x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
-						this.performer.perform(clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ + z)));
-						this.performer.perform(clampY((int) (blockPositionX - x), (int) (blockPositionY + y), (int) (blockPositionZ - z)));
-						this.performer.perform(clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ + z)));
-						this.performer.perform(clampY((int) (blockPositionX - x), (int) (blockPositionY - y), (int) (blockPositionZ - z)));
+						this.performer.perform(getEditSession(), (int) (blockX + x), clampY((int) (blockY + y)), (int) (blockZ + z), clampY((int) (blockX + x), (int) (blockY + y), (int) (blockZ + z)));
+						this.performer.perform(getEditSession(), (int) (blockX + x), clampY((int) (blockY + y)), (int) (blockZ - z), clampY((int) (blockX + x), (int) (blockY + y), (int) (blockZ - z)));
+						this.performer.perform(getEditSession(), (int) (blockX + x), clampY((int) (blockY - y)), (int) (blockZ + z), clampY((int) (blockX + x), (int) (blockY - y), (int) (blockZ + z)));
+						this.performer.perform(getEditSession(), (int) (blockX + x), clampY((int) (blockY - y)), (int) (blockZ - z), clampY((int) (blockX + x), (int) (blockY - y), (int) (blockZ - z)));
+						this.performer.perform(getEditSession(), (int) (blockX - x), clampY((int) (blockY + y)), (int) (blockZ + z), clampY((int) (blockX - x), (int) (blockY + y), (int) (blockZ + z)));
+						this.performer.perform(getEditSession(), (int) (blockX - x), clampY((int) (blockY + y)), (int) (blockZ - z), clampY((int) (blockX - x), (int) (blockY + y), (int) (blockZ - z)));
+						this.performer.perform(getEditSession(), (int) (blockX - x), clampY((int) (blockY - y)), (int) (blockZ + z), clampY((int) (blockX - x), (int) (blockY - y), (int) (blockZ + z)));
+						this.performer.perform(getEditSession(), (int) (blockX - x), clampY((int) (blockY - y)), (int) (blockZ - z), clampY((int) (blockX - x), (int) (blockY - y), (int) (blockZ - z)));
 					}
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

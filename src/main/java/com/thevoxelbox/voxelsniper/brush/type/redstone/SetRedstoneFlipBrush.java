@@ -1,15 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.registry.state.Property;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Repeater;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -17,8 +16,7 @@ import java.util.stream.Stream;
 public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Nullable
-	private Block block;
-	private Undo undo;
+	private BlockVector3 block;
 	private boolean northSouth = true;
 
 	@Override
@@ -46,34 +44,27 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (set(targetBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.undo);
 		}
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		if (set(lastBlock)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.undo);
 		}
 	}
 
-	private boolean set(Block block) {
+	private boolean set(BlockVector3 block) {
 		if (this.block == null) {
 			this.block = block;
 			return true;
 		} else {
-			this.undo = new Undo();
 			int x1 = this.block.getX();
 			int x2 = block.getX();
 			int y1 = this.block.getY();
@@ -89,7 +80,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
-						this.perform(this.clampY(x, y, z));
+						this.perform(x, clampY(y), z, this.clampY(x, y, z));
 					}
 				}
 			}
@@ -98,29 +89,28 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 		}
 	}
 
-	private void perform(Block block) {
-		if (block.getType() == Material.REPEATER) {
-			BlockData blockData = block.getBlockData();
-			Repeater repeater = (Repeater) blockData;
-			int delay = repeater.getDelay();
+	private void perform(int x, int y, int z, BlockState block) {
+		BlockType type = block.getBlockType();
+		if (type == BlockTypes.REPEATER) {
+			Property<Integer> delayProperty = type.getProperty("delay");
+			if (delayProperty == null) {
+				return;
+			}
+			int delay = block.getState(delayProperty);
 			if (this.northSouth) {
 				if ((delay % 4) == 1) {
-					this.undo.put(block);
-					repeater.setDelay(delay + 2);
+					block = block.with(delayProperty, delay + 2);
 				} else if ((delay % 4) == 3) {
-					this.undo.put(block);
-					repeater.setDelay(delay - 2);
+					block = block.with(delayProperty, delay - 2);
 				}
 			} else {
 				if ((delay % 4) == 2) {
-					this.undo.put(block);
-					repeater.setDelay(delay - 2);
+					block = block.with(delayProperty, delay - 2);
 				} else if ((delay % 4) == 0) {
-					this.undo.put(block);
-					repeater.setDelay(delay + 2);
+					block = block.with(delayProperty, delay + 2);
 				}
 			}
-			block.setBlockData(repeater);
+			setBlockData(x, y, z, block);
 		}
 	}
 

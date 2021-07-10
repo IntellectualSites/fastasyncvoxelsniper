@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -64,44 +63,37 @@ public class BiomeBrush extends AbstractBrush {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double brushSizeSquared = Math.pow(brushSize, 2);
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
+		EditSession editSession = getEditSession();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockZ = targetBlock.getZ();
 		for (int x = -brushSize; x <= brushSize; x++) {
 			double xSquared = Math.pow(x, 2);
 			for (int z = -brushSize; z <= brushSize; z++) {
 				if (xSquared + Math.pow(z, 2) <= brushSizeSquared) {
-					world.setBiome(targetBlockX + x, targetBlockZ + z, this.selectedBiome);
+					for (int y = 0; y < editSession.getMaxY() + 1; ++y) {
+						setBiome(targetBlockX + x, y, targetBlockZ + z, this.selectedBiome);
+					}
 				}
 			}
 		}
-		Block block1 = world.getBlockAt(targetBlockX - brushSize, 0, targetBlockZ - brushSize);
-		Block block2 = world.getBlockAt(targetBlockX + brushSize, 0, targetBlockZ + brushSize);
-		Chunk chunk1 = block1.getChunk();
-		Chunk chunk2 = block2.getChunk();
-		int block1X = block1.getX();
-		int block2X = block2.getX();
-		int chunk1X = chunk1.getX();
-		int chunk2X = chunk2.getX();
-		int block1Z = block1.getZ();
-		int block2Z = block2.getZ();
-		int chunk1Z = chunk1.getZ();
-		int chunk2Z = chunk2.getZ();
+		int block1X = targetBlockX - brushSize;
+		int block2X = targetBlockX + brushSize;
+		int block1Z = targetBlockZ - brushSize;
+		int block2Z = targetBlockZ + brushSize;
+		int chunk1X = block1X >> 4;
+		int chunk2X = block2X >> 4;
+		int chunk1Z = block1Z >> 4;
+		int chunk2Z = block2Z >> 4;
 		int lowChunkX = block1X <= block2X ? chunk1X : chunk2X;
 		int lowChunkZ = block1Z <= block2Z ? chunk1Z : chunk2Z;
 		int highChunkX = block1X >= block2X ? chunk1X : chunk2X;
 		int highChunkZ = block1Z >= block2Z ? chunk1Z : chunk2Z;
 		for (int x = lowChunkX; x <= highChunkX; x++) {
 			for (int z = lowChunkZ; z <= highChunkZ; z++) {
-				refreshChunk(world, x, z);
+				refreshChunk(x, z);
 			}
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	private void refreshChunk(World world, int x, int z) {
-		world.refreshChunk(x, z);
 	}
 
 	@Override

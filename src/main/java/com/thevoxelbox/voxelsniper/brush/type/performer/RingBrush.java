@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 public class RingBrush extends AbstractPerformerBrush {
 
@@ -42,35 +41,36 @@ public class RingBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		ring(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		ring(snipe, lastBlock);
 	}
 
-	private void ring(Snipe snipe, Block targetBlock) {
+	private void ring(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
 		double outerSquared = Math.pow(brushSize + this.trueCircle, 2);
 		double innerSquared = Math.pow(this.innerSize, 2);
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= 0; x--) {
 			double xSquared = Math.pow(x, 2);
 			for (int z = brushSize; z >= 0; z--) {
 				double ySquared = Math.pow(z, 2);
 				if (xSquared + ySquared <= outerSquared && xSquared + ySquared >= innerSquared) {
-					this.performer.perform(targetBlock.getRelative(x, 0, z));
-					this.performer.perform(targetBlock.getRelative(x, 0, -z));
-					this.performer.perform(targetBlock.getRelative(-x, 0, z));
-					this.performer.perform(targetBlock.getRelative(-x, 0, -z));
+					this.performer.perform(getEditSession(), blockX + x, blockY, blockZ + z, getBlock(blockX + x, blockY, blockZ + z));
+					this.performer.perform(getEditSession(), blockX + x, blockY, blockZ - z, getBlock(blockX + x, blockY, blockZ - z));
+					this.performer.perform(getEditSession(), blockX - x, blockY, blockZ + z, getBlock(blockX - x, blockY, blockZ + z));
+					this.performer.perform(getEditSession(), blockX - x, blockY, blockZ - z, getBlock(blockX - x, blockY, blockZ - z));
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

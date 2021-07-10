@@ -4,10 +4,10 @@ import java.util.List;
 
 public class PerformerProperties {
 
-	private String name;
-	private boolean usingReplaceMaterial;
-	private List<String> aliases;
-	private PerformerCreator creator;
+	private final String name;
+	private final boolean usingReplaceMaterial;
+	private final List<String> aliases;
+	private final PerformerCreator creator;
 
 	public static PerformerPropertiesBuilder builder() {
 		return new PerformerPropertiesBuilder();

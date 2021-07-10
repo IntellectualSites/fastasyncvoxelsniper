@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class SniperRegistry {
 
-	private Map<UUID, Sniper> snipers = new HashMap<>();
+	private final Map<UUID, Sniper> snipers = new HashMap<>();
 
 	public void register(Sniper sniper) {
 		UUID uuid = sniper.getUuid();

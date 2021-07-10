@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class BrushExecutor implements CommandExecutor, TabCompleter {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public BrushExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

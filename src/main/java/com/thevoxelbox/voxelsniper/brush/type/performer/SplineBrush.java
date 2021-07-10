@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +15,9 @@ import java.util.List;
  */
 public class SplineBrush extends AbstractPerformerBrush {
 
-	private final List<Block> endPts = new ArrayList<>();
-	private final List<Block> ctrlPts = new ArrayList<>();
-	private List<Point> spline = new ArrayList<>();
+	private final List<BlockVector3> endPts = new ArrayList<>();
+	private final List<BlockVector3> ctrlPts = new ArrayList<>();
+	private final List<Point> spline = new ArrayList<>();
 	private boolean set;
 	private boolean ctrl;
 
@@ -67,7 +66,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (this.set) {
 			removeFromSet(snipe, true, targetBlock);
 		} else if (this.ctrl) {
@@ -77,7 +76,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		if (this.set) {
 			addToSet(snipe, true, targetBlock);
 		}
@@ -86,7 +85,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	private void addToSet(Snipe snipe, boolean ep, Block targetBlock) {
+	private void addToSet(Snipe snipe, boolean ep, BlockVector3 targetBlock) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		if (ep) {
 			if (this.endPts.contains(targetBlock) || this.endPts.size() == 2) {
@@ -103,7 +102,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 		messenger.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "to control point selection");
 	}
 
-	private void removeFromSet(Snipe snipe, boolean ep, Block targetBlock) {
+	private void removeFromSet(Snipe snipe, boolean ep, BlockVector3 targetBlock) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		if (ep) {
 			if (!this.endPts.contains(targetBlock)) {
@@ -157,10 +156,8 @@ public class SplineBrush extends AbstractPerformerBrush {
 			return;
 		}
 		for (Point point : this.spline) {
-			this.performer.perform(clampY(point.getX(), point.getY(), point.getZ()));
+			this.performer.perform(getEditSession(), point.getX(), clampY(point.getY()), point.getZ(), clampY(point.getX(), point.getY(), point.getZ()));
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	private void clear(Snipe snipe) {
@@ -192,7 +189,7 @@ public class SplineBrush extends AbstractPerformerBrush {
 		private int y;
 		private int z;
 
-		private Point(Block block) {
+		private Point(BlockVector3 block) {
 			this.x = block.getX();
 			this.y = block.getY();
 			this.z = block.getZ();

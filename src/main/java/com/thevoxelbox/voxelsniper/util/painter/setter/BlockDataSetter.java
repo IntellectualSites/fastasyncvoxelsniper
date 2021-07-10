@@ -8,9 +8,9 @@ import org.bukkit.block.data.BlockData;
 
 public class BlockDataSetter implements BlockSetter {
 
-	private World world;
-	private BlockData blockData;
-	private boolean applyPhysics;
+	private final World world;
+	private final BlockData blockData;
+	private final boolean applyPhysics;
 
 	public static BlockDataSetterBuilder builder() {
 		return new BlockDataSetterBuilder();

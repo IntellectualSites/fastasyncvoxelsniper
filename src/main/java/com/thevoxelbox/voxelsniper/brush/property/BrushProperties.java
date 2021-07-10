@@ -6,11 +6,11 @@ import java.util.List;
 
 public class BrushProperties {
 
-	private String name;
+	private final String name;
 	@Nullable
-	private String permission;
-	private List<String> aliases;
-	private BrushCreator creator;
+	private final String permission;
+	private final List<String> aliases;
+	private final BrushCreator creator;
 
 	public static BrushPropertiesBuilder builder() {
 		return new BrushPropertiesBuilder();

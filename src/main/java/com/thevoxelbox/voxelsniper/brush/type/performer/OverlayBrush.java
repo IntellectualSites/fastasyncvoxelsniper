@@ -1,14 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 public class OverlayBrush extends AbstractPerformerBrush {
 
@@ -67,18 +67,21 @@ public class OverlayBrush extends AbstractPerformerBrush {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				// check if column is valid
 				// column is valid if it has no solid block right above the clicked layer
-				Block targetBlock = getTargetBlock();
-				Material material = getBlockType(targetBlock.getX() + x, targetBlock.getY() + 1, targetBlock.getZ() + z);
-				if (isIgnoredBlock(material)) {
+				BlockVector3 targetBlock = getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockY = targetBlock.getY();
+				int blockZ = targetBlock.getZ();
+				BlockType type = getBlockType(blockX + x, blockY + 1, blockZ + z);
+				if (isIgnoredBlock(type)) {
 					if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) {
-						for (int y = targetBlock.getY(); y > 0; y--) {
+						for (int y = blockY; y > 0; y--) {
 							// check for surface
-							Material layerBlockType = getBlockType(targetBlock.getX() + x, y, targetBlock.getZ() + z);
+							BlockType layerBlockType = getBlockType(blockX + x, y, blockZ + z);
 							if (!isIgnoredBlock(layerBlockType)) {
 								for (int currentDepth = y; y - currentDepth < this.depth; currentDepth--) {
-									Material currentBlockType = getBlockType(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z);
+									BlockType currentBlockType = getBlockType(blockX + x, currentDepth, blockZ + z);
 									if (isOverrideableMaterial(currentBlockType)) {
-										this.performer.perform(clampY(targetBlock.getX() + x, currentDepth, targetBlock.getZ() + z));
+										this.performer.perform(getEditSession(), blockX + x, clampY(currentDepth), blockZ + z, clampY(blockX + x, currentDepth, blockZ + z));
 									}
 								}
 								break;
@@ -88,20 +91,18 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@SuppressWarnings("deprecation")
-	private boolean isIgnoredBlock(Material material) {
-		return material == Material.WATER || material.isTransparent() || material == Material.CACTUS;
+	private boolean isIgnoredBlock(BlockType type) {
+		return type == BlockTypes.WATER || type.getMaterial().isTranslucent() || type == BlockTypes.CACTUS;
 	}
 
-	private boolean isOverrideableMaterial(Material material) {
-		if (this.allBlocks && !Materials.isEmpty(material)) {
+	private boolean isOverrideableMaterial(BlockType type) {
+		if (this.allBlocks && !Materials.isEmpty(type)) {
 			return true;
 		}
-		return MaterialSets.OVERRIDEABLE.contains(material);
+		return MaterialSets.OVERRIDEABLE.contains(type);
 	}
 
 	private void overlayTwo(Snipe snipe) {
@@ -112,27 +113,28 @@ public class OverlayBrush extends AbstractPerformerBrush {
 		for (int z = brushSize; z >= -brushSize; z--) {
 			for (int x = brushSize; x >= -brushSize; x--) {
 				boolean surfaceFound = false;
-				Block targetBlock = this.getTargetBlock();
-				for (int y = targetBlock.getY(); y > 0 && !surfaceFound; y--) { // start scanning from the height you clicked at
+				BlockVector3 targetBlock = this.getTargetBlock();
+				int blockX = targetBlock.getX();
+				int blockY = targetBlock.getY();
+				int blockZ = targetBlock.getZ();
+				for (int y = blockY; y > 0 && !surfaceFound; y--) { // start scanning from the height you clicked at
 					if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
 						if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
-							int targetBlockX = targetBlock.getX();
-							int targetBlockZ = targetBlock.getZ();
-							if (!Materials.isEmpty(getBlockType(targetBlockX + x, y - 1, targetBlockZ + z))) { // if not a floating block (like one of Notch'world pools)
-								if (Materials.isEmpty(getBlockType(targetBlockX + x, y + 1, targetBlockZ + z))) { // must start at surface... this prevents it filling stuff in if
+							if (!Materials.isEmpty(getBlockType(blockX + x, y - 1, blockZ + z))) { // if not a floating block (like one of Notch'world pools)
+								if (Materials.isEmpty(getBlockType(blockX + x, y + 1, blockZ + z))) { // must start at surface... this prevents it filling stuff in if
 									// you click in a wall and it starts out below surface.
 									if (this.allBlocks) {
 										for (int index = 1; (index < this.depth + 1); index++) {
-											this.performer.perform(this.clampY(targetBlockX + x, y + index, targetBlockZ + z)); // fills down as many layers as you specify in
+											this.performer.perform(getEditSession(), blockX + x, clampY(y + index), blockZ + z, this.clampY(blockX + x, y + index, blockZ + z)); // fills down as many layers as you specify in
 											// parameters
 											memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 										}
 										surfaceFound = true;
 									} else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-										Material type = getBlockType(targetBlockX + x, y, targetBlockZ + z);
+										BlockType type = getBlockType(blockX + x, y, blockZ + z);
 										if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
 											for (int index = 1; (index < this.depth + 1); index++) {
-												this.performer.perform(this.clampY(targetBlockX + x, y + index, targetBlockZ + z)); // fills down as many layers as you specify
+												this.performer.perform(getEditSession(), blockX + x, clampY(y + index), blockZ + z, this.clampY(blockX + x, y + index, blockZ + z)); // fills down as many layers as you specify
 												// in parameters
 												memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
 											}
@@ -146,8 +148,6 @@ public class OverlayBrush extends AbstractPerformerBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

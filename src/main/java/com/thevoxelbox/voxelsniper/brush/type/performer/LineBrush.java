@@ -1,10 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.fastasyncworldedit.core.util.TaskManager;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
@@ -28,24 +30,22 @@ public class LineBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		Location targetBlockLocation = targetBlock.getLocation();
-		this.originCoordinates = targetBlockLocation.toVector();
-		this.targetWorld = targetBlock.getWorld();
+		BlockVector3 targetBlock = getTargetBlock();
+		this.originCoordinates = Vectors.toBukkit(targetBlock);
+		this.targetWorld = TaskManager.IMP.sync(() -> BukkitAdapter.adapt(getEditSession().getWorld()));
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		World world = getWorld();
+		BlockVector3 targetBlock = getTargetBlock();
+		World world = BukkitAdapter.adapt(getEditSession().getWorld());
 		if (this.originCoordinates == null || !world.equals(this.targetWorld)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
-			Location targetBlockLocation = targetBlock.getLocation();
-			this.targetCoordinates = targetBlockLocation.toVector();
+			this.targetCoordinates = Vectors.toBukkit(targetBlock);
 			linePowder(snipe);
 		}
 	}
@@ -62,17 +62,14 @@ public class LineBrush extends AbstractPerformerBrush {
 			.subtract(originClone);
 		double length = this.targetCoordinates.distance(this.originCoordinates);
 		if (length == 0) {
-			this.performer.perform(this.targetCoordinates.toLocation(this.targetWorld)
-				.getBlock());
+			this.performer.perform(getEditSession(), targetCoordinates.getBlockX(), targetCoordinates.getBlockY(), targetCoordinates.getBlockZ(), getBlock(targetCoordinates.getBlockX(), targetCoordinates.getBlockY(), targetCoordinates.getBlockZ()));
 		} else {
 			BlockIterator blockIterator = new BlockIterator(this.targetWorld, originClone, direction, 0, NumberConversions.round(length));
 			while (blockIterator.hasNext()) {
 				Block currentBlock = blockIterator.next();
-				this.performer.perform(currentBlock);
+				this.performer.perform(getEditSession(), currentBlock.getX(), currentBlock.getY(), currentBlock.getZ(), getBlock(currentBlock.getX(), currentBlock.getY(), currentBlock.getZ()));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

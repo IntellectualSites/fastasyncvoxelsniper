@@ -1,20 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 public class Rotation2DBrush extends AbstractBrush {
 
 	private int mode;
 	private int brushSize;
-	private BlockData[][][] snap;
+	private BlockState[][][] snap;
 	private double angle;
 
 	@Override
@@ -52,9 +53,9 @@ public class Rotation2DBrush extends AbstractBrush {
 
 	private void getMatrix() {
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockData[brushSize][brushSize][brushSize];
+		this.snap = new BlockState[brushSize][brushSize][brushSize];
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		for (int x = 0; x < this.snap.length; x++) {
 			int sz = targetBlock.getZ() - this.brushSize;
@@ -63,9 +64,9 @@ public class Rotation2DBrush extends AbstractBrush {
 				int sy = targetBlock.getY() - this.brushSize;
 				if (xSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
 					for (int z = 0; z < this.snap.length; z++) {
-						Block block = clampY(sx, sy, sz); // why is this not sx + x, sy + y sz + z?
-						this.snap[x][z][y] = block.getBlockData();
-						block.setType(Material.AIR);
+						// why is this not sx + x, sy + y sz + z?
+						this.snap[x][z][y] = getBlock(sx, clampY(sy), sz);
+						setBlockType(sx, clampY(sy), sz, BlockTypes.AIR);
 						sy++;
 					}
 				}
@@ -83,7 +84,7 @@ public class Rotation2DBrush extends AbstractBrush {
 		// I put y in the inside loop, since it doesn't have any power functions, should be much faster.
 		// Also, new array keeps track of which x and z coords are being assigned in the rotated space so that we can
 		// do a targeted filling of only those columns later that were left out.
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
@@ -95,8 +96,8 @@ public class Rotation2DBrush extends AbstractBrush {
 					doNotFill[(int) newX + this.brushSize][(int) newZ + this.brushSize] = true;
 					for (int currentY = 0; currentY < this.snap.length; currentY++) {
 						int yy = currentY - this.brushSize;
-						BlockData blockData = this.snap[x][currentY][y];
-						Material type = blockData.getMaterial();
+						BlockState blockData = this.snap[x][currentY][y];
+						BlockType type = blockData.getBlockType();
 						if (Materials.isEmpty(type)) {
 							continue;
 						}
@@ -115,14 +116,14 @@ public class Rotation2DBrush extends AbstractBrush {
 						// smart fill stuff
 						for (int y = 0; y < this.snap.length; y++) {
 							int fy = y + targetBlock.getY() - this.brushSize;
-							Material a = getBlockType(fx + 1, fy, fz);
-							Material b = getBlockType(fx, fy, fz - 1);
-							Material c = getBlockType(fx, fy, fz + 1);
-							Material d = getBlockType(fx - 1, fy, fz);
-							BlockData aData = getBlockData(fx + 1, fy, fz);
-							BlockData dData = getBlockData(fx - 1, fy, fz);
-							BlockData bData = getBlockData(fx, fy, fz - 1);
-							BlockData winner;
+							BlockType a = getBlockType(fx + 1, fy, fz);
+							BlockType b = getBlockType(fx, fy, fz - 1);
+							BlockType c = getBlockType(fx, fy, fz + 1);
+							BlockType d = getBlockType(fx - 1, fy, fz);
+							BlockState aData = getBlock(fx + 1, fy, fz);
+							BlockState dData = getBlock(fx - 1, fy, fz);
+							BlockState bData = getBlock(fx, fy, fz - 1);
+							BlockState winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
 								// be fine to do all 5 checks needed to be legit about it.

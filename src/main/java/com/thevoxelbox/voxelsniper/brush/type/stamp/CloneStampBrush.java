@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 
 /**
  * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set.
@@ -65,23 +65,23 @@ public class CloneStampBrush extends AbstractStampBrush {
 		this.drop.clear();
 		this.solid.clear();
 		this.sorted = false;
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockY = targetBlock.getY();
 		int yStartingPoint = targetBlockY + toolkitProperties.getCylinderCenter();
 		int yEndPoint = targetBlockY + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
-		World world = getWorld();
+		EditSession editSession = getEditSession();
 		if (yStartingPoint < 0) {
 			yStartingPoint = 0;
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-		} else if (yStartingPoint > world.getMaxHeight() - 1) {
-			yStartingPoint = world.getMaxHeight() - 1;
+		} else if (yStartingPoint > editSession.getMaxY()) {
+			yStartingPoint = editSession.getMaxY();
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
 		}
 		if (yEndPoint < 0) {
 			yEndPoint = 0;
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-		} else if (yEndPoint > world.getMaxHeight() - 1) {
-			yEndPoint = world.getMaxHeight() - 1;
+		} else if (yEndPoint > editSession.getMaxY()) {
+			yEndPoint = editSession.getMaxY();
 			messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
 		}
 		double bSquared = Math.pow(brushSize, 2);

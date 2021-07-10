@@ -10,8 +10,8 @@ public class CommandPropertiesBuilder {
 	private String name;
 	private String description;
 	private String permission;
-	private List<String> aliases = new ArrayList<>(0);
-	private List<String> usageMessages = new ArrayList<>(1);
+	private final List<String> aliases = new ArrayList<>(0);
+	private final List<String> usageMessages = new ArrayList<>(1);
 	private Class<? extends CommandSender> senderType;
 
 	public CommandPropertiesBuilder name(String name) {

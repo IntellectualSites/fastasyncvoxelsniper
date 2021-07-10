@@ -1,16 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.boydti.fawe.Fawe;
+import com.fastasyncworldedit.core.Fawe;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -82,17 +82,17 @@ public class JockeyBrush extends AbstractBrush {
 	private void sitOn(Snipe snipe) {
 		Sniper sniper = snipe.getSniper();
 		Player player = sniper.getPlayer();
-		Block targetBlock = getTargetBlock();
-		World world = getWorld();
-		Chunk targetChunk = world.getChunkAt(targetBlock.getLocation());
-		int targetChunkX = targetChunk.getX();
-		int targetChunkZ = targetChunk.getZ();
+		BlockVector3 targetBlock = getTargetBlock();
+		World world = BukkitAdapter.adapt(getEditSession().getWorld());
+		int targetChunkX = targetBlock.getX() >> 4;
+		int targetChunkZ = targetBlock.getZ() >> 4;
 		double range = Double.MAX_VALUE;
 		Entity closest = null;
 		for (int x = targetChunkX - 1; x <= targetChunkX + 1; x++) {
 			for (int y = targetChunkZ - 1; y <= targetChunkZ + 1; y++) {
-				Chunk chunk = world.getChunkAt(x, y);
-				for (Entity entity : chunk.getEntities()) {
+				if (!world.isChunkLoaded(x, y)) continue;
+
+				for (Entity entity : world.getChunkAt(x, y).getEntities()) {
 					if (entity.getEntityId() == player.getEntityId()) {
 						continue;
 					}
@@ -113,18 +113,18 @@ public class JockeyBrush extends AbstractBrush {
 		if (closest != null) {
 			Entity finalClosest = closest;//FAWE ADDED
 			Fawe.get().getQueueHandler().sync(() -> {
-			PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), finalClosest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-			PluginManager pluginManager = Bukkit.getPluginManager();
-			pluginManager.callEvent(playerTeleportEvent);
-			if (!playerTeleportEvent.isCancelled()) {
-				if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
-					player.addPassenger(finalClosest);
-				} else {
-					finalClosest.addPassenger(player);
-					jockeyedEntity = finalClosest;
+				PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(player, player.getLocation(), finalClosest.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+				PluginManager pluginManager = Bukkit.getPluginManager();
+				pluginManager.callEvent(playerTeleportEvent);
+				if (!playerTeleportEvent.isCancelled()) {
+					if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
+						player.addPassenger(finalClosest);
+					} else {
+						finalClosest.addPassenger(player);
+						jockeyedEntity = finalClosest;
+					}
+					player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + finalClosest.getEntityId());
 				}
-				player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + finalClosest.getEntityId());
-			}
 			});
 		} else {
 			player.sendMessage(ChatColor.RED + "Could not find any entities");
@@ -178,7 +178,7 @@ public class JockeyBrush extends AbstractBrush {
 		STACK_ALL_ENTITIES("Stack (All)"),
 		STACK_PLAYER_ONLY("Stack (Player only)");
 
-		private String name;
+		private final String name;
 
 		JockeyType(String name) {
 			this.name = name;

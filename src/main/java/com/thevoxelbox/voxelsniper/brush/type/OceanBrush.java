@@ -1,7 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -9,10 +13,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 
 public class OceanBrush extends AbstractBrush {
 
@@ -20,21 +20,21 @@ public class OceanBrush extends AbstractBrush {
 	private static final int WATER_LEVEL_MIN = 12;
 	private static final int LOW_CUT_LEVEL = 12;
 	private static final MaterialSet EXCLUDED_MATERIALS = MaterialSet.builder()
-		.with(Tag.SAPLINGS)
-		.with(Tag.LOGS)
-		.with(Tag.LEAVES)
-		.with(Tag.ICE)
+		.with(BlockCategories.SAPLINGS)
+		.with(BlockCategories.LOGS)
+		.with(BlockCategories.LEAVES)
+		.with(BlockCategories.ICE)
 		.with(MaterialSets.AIRS)
 		.with(MaterialSets.LIQUIDS)
-		.with(MaterialSets.SNOWS)
+		.with(BlockCategories.SNOW)
 		.with(MaterialSets.STEMS)
 		.with(MaterialSets.MUSHROOMS)
-		.with(MaterialSets.FLOWERS)
-		.add(Material.MELON)
-		.add(Material.PUMPKIN)
-		.add(Material.COCOA)
-		.add(Material.SUGAR_CANE)
-		.add(Material.TALL_GRASS)
+		.with(BlockCategories.FLOWERS)
+		.add(BlockTypes.MELON)
+		.add(BlockTypes.PUMPKIN)
+		.add(BlockTypes.COCOA)
+		.add(BlockTypes.SUGAR_CANE)
+		.add(BlockTypes.TALL_GRASS)
 		.build();
 
 	private int waterLevel = WATER_LEVEL_DEFAULT;
@@ -78,11 +78,8 @@ public class OceanBrush extends AbstractBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Undo undo = new Undo();
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		oceanator(toolkitProperties, undo);
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
+		oceanator(toolkitProperties);
 	}
 
 	@Override
@@ -90,9 +87,9 @@ public class OceanBrush extends AbstractBrush {
 		handleArrowAction(snipe);
 	}
 
-	private void oceanator(ToolkitProperties toolkitProperties, Undo undo) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
+	private void oceanator(ToolkitProperties toolkitProperties) {
+		EditSession editSession = getEditSession();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockZ = targetBlock.getZ();
 		int brushSize = toolkitProperties.getBrushSize();
@@ -105,32 +102,28 @@ public class OceanBrush extends AbstractBrush {
 				int currentHeight = getHeight(x, z);
 				int wLevelDiff = currentHeight - (this.waterLevel - 1);
 				int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), LOW_CUT_LEVEL);
-				int highestY = world.getHighestBlockYAt(x, z);
+				int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY() + 1);
 				// go down from highest Y block down to new sea floor
 				for (int y = highestY; y > newSeaFloorLevel; y--) {
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.AIR) {
-						undo.put(block);
-						block.setType(Material.AIR);
+					BlockState block = getBlock(x, y, z);
+					if (!block.isAir()) {
+						setBlockType(x, y, z, BlockTypes.AIR);
 					}
 				}
 				// go down from water level to new sea level
 				for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
-					Block block = world.getBlockAt(x, y, z);
-					if (block.getType() != Material.WATER) {
-						// do not put blocks into the undo we already put into
-						if (block.getType() != Material.AIR) {
-							undo.put(block);
-						}
-						block.setType(Material.WATER);
+					BlockState block = getBlock(x, y, z);
+					BlockType blockType = block.getBlockType();
+					if (blockType != BlockTypes.WATER) {
+						setBlockType(x, y, z, BlockTypes.WATER);
 					}
 				}
 				// cover the sea floor of required
 				if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
-					Block block = world.getBlockAt(x, newSeaFloorLevel, z);
-					if (block.getType() != toolkitProperties.getBlockType()) {
-						undo.put(block);
-						block.setType(toolkitProperties.getBlockType());
+					BlockState block = getBlock(x, newSeaFloorLevel, z);
+					BlockType blockType = block.getBlockType();
+					if (blockType != toolkitProperties.getBlockType()) {
+						setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
 					}
 				}
 			}
@@ -138,11 +131,10 @@ public class OceanBrush extends AbstractBrush {
 	}
 
 	private int getHeight(int bx, int bz) {
-		World world = getWorld();
-		for (int y = world.getHighestBlockYAt(bx, bz); y > 0; y--) {
-			Block clamp = this.clampY(bx, y, bz);
-			Material material = clamp.getType();
-			if (!EXCLUDED_MATERIALS.contains(material)) {
+		EditSession editSession = getEditSession();
+		for (int y = getHighestTerrainBlock(bx, bz, editSession.getMinY(), editSession.getMaxY() + 1); y > 0; y--) {
+			BlockState clamp = this.clampY(bx, y, bz);
+			if (!EXCLUDED_MATERIALS.contains(clamp)) {
 				return y;
 			}
 		}

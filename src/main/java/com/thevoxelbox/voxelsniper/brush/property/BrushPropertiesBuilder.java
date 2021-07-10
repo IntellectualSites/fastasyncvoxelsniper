@@ -7,7 +7,7 @@ public class BrushPropertiesBuilder {
 
 	private String name;
 	private String permission;
-	private List<String> aliases = new ArrayList<>(1);
+	private final List<String> aliases = new ArrayList<>(1);
 	private BrushCreator creator;
 
 	public BrushPropertiesBuilder name(String name) {

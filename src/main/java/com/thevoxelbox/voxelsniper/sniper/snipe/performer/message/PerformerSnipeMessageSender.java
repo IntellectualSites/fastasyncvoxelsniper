@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class PerformerSnipeMessageSender extends SnipeMessageSender {
 
-	private PerformerProperties performerProperties;
+	private final PerformerProperties performerProperties;
 
 	public PerformerSnipeMessageSender(ToolkitProperties toolkitProperties, BrushProperties brushProperties, PerformerProperties performerProperties, Player player) {
 		super(toolkitProperties, brushProperties, player);

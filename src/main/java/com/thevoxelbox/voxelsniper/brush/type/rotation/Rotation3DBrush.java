@@ -1,28 +1,27 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 public class Rotation3DBrush extends AbstractBrush {
 
 	private int brushSize;
-	private BlockData[][][] snap;
+	private BlockState[][][] snap;
 	private double seYaw;
 	private double sePitch;
 	private double seRoll;
 
-	// after all rotations, compare snapshot to new state of world, and store changed blocks to undo?
+	// after all rotations, compare snapshot to new state of world?
 	// --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that
-	// matrix and compare Block.getId with 'id' if different undo.add( new BlockWrapper ( Block, oldId ) )
+	// matrix and compare Block.getId with 'id'
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
@@ -75,8 +74,8 @@ public class Rotation3DBrush extends AbstractBrush {
 	private void getMatrix() { // only need to do once. But y needs to change + sphere
 		double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
 		int brushSize = (this.brushSize * 2) + 1;
-		this.snap = new BlockData[brushSize][brushSize][brushSize];
-		Block targetBlock = this.getTargetBlock();
+		this.snap = new BlockState[brushSize][brushSize][brushSize];
+		BlockVector3 targetBlock = this.getTargetBlock();
 		int sx = targetBlock.getX() - this.brushSize;
 		//int sy = this.getTargetBlock().getY() - this.brushSize; Not used
 		for (int x = 0; x < this.snap.length; x++) {
@@ -86,9 +85,8 @@ public class Rotation3DBrush extends AbstractBrush {
 				int sz = targetBlock.getZ() - this.brushSize;
 				for (int y = 0; y < this.snap.length; y++) {
 					if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
-						Block block = clampY(sx, sz, sz);
-						this.snap[x][y][z] = block.getBlockData();
-						block.setType(Material.AIR);
+						this.snap[x][y][z] = getBlock(sx, clampY(sz), sz);
+						setBlockType(sx, clampY(sz), sz, BlockTypes.AIR);
 						sz++;
 					}
 				}
@@ -114,8 +112,7 @@ public class Rotation3DBrush extends AbstractBrush {
 		double cosRoll = Math.cos(this.seRoll);
 		double sinRoll = Math.sin(this.seRoll);
 		boolean[][][] doNotFill = new boolean[this.snap.length][this.snap.length][this.snap.length];
-		Undo undo = new Undo();
-		Block targetBlock = this.getTargetBlock();
+		BlockVector3 targetBlock = this.getTargetBlock();
 		for (int x = 0; x < this.snap.length; x++) {
 			int xx = x - this.brushSize;
 			double xSquared = Math.pow(xx, 2);
@@ -127,8 +124,6 @@ public class Rotation3DBrush extends AbstractBrush {
 				for (int y = 0; y < this.snap.length; y++) {
 					int yy = y - this.brushSize;
 					if (xSquared + zSquared + Math.pow(yy, 2) <= brushSizeSquared) {
-						undo.put(this.clampY(targetBlock.getX() + xx, targetBlock.getY() + yy, targetBlock.getZ() + zz)); // just store
-						// whole sphere in undo, too complicated otherwise, since this brush both adds and remos things unpredictably.
 						double newxyX = (newxzX * cosPitch) - (yy * sinPitch);
 						double newxyY = (newxzX * sinPitch) + (yy * cosPitch); // calculates all three in succession in precise math space
 						double newyzY = (newxyY * cosRoll) - (newxzZ * sinRoll);
@@ -136,8 +131,8 @@ public class Rotation3DBrush extends AbstractBrush {
 						doNotFill[(int) newxyX + this.brushSize][(int) newyzY + this.brushSize][(int) newyzZ + this.brushSize] = true; // only rounds off to nearest
 						// block
 						// after all three, though.
-						BlockData blockData = this.snap[x][y][z];
-						Material type = blockData.getMaterial();
+						BlockState blockData = this.snap[x][y][z];
+						BlockType type = blockData.getBlockType();
 						if (Materials.isEmpty(type)) {
 							continue;
 						}
@@ -157,14 +152,14 @@ public class Rotation3DBrush extends AbstractBrush {
 						if (!doNotFill[x][y][z]) {
 							// smart fill stuff
 							int fy = y + targetBlock.getY() - this.brushSize;
-							Material a = getBlockType(fx + 1, fy, fz);
-							Material b = getBlockType(fx, fy, fz - 1);
-							Material c = getBlockType(fx, fy, fz + 1);
-							Material d = getBlockType(fx - 1, fy, fz);
-							BlockData aData = getBlockData(fx + 1, fy, fz);
-							BlockData dData = getBlockData(fx - 1, fy, fz);
-							BlockData bData = getBlockData(fx, fy, fz - 1);
-							BlockData winner;
+							BlockType a = getBlockType(fx + 1, fy, fz);
+							BlockType b = getBlockType(fx, fy, fz - 1);
+							BlockType c = getBlockType(fx, fy, fz + 1);
+							BlockType d = getBlockType(fx - 1, fy, fz);
+							BlockState aData = getBlock(fx + 1, fy, fz);
+							BlockState dData = getBlock(fx - 1, fy, fz);
+							BlockState bData = getBlock(fx, fy, fz - 1);
+							BlockState winner;
 							if (a == b || a == c || a == d) { // I figure that since we are already narrowing it down to ONLY the holes left behind, it
 								// should
 								// be fine to do all 5 checks needed to be legit about it.
@@ -180,8 +175,6 @@ public class Rotation3DBrush extends AbstractBrush {
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override

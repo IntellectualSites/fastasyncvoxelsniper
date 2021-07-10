@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 public class DefaultExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public DefaultExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

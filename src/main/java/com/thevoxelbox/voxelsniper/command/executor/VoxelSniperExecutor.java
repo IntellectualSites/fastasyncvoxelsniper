@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class VoxelSniperExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelSniperExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;

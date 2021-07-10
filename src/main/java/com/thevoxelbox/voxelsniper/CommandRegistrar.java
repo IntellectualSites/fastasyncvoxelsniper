@@ -7,8 +7,6 @@ import com.thevoxelbox.voxelsniper.command.executor.DefaultExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.GotoExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.PaintExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.PerformerExecutor;
-import com.thevoxelbox.voxelsniper.command.executor.UndoExecutor;
-import com.thevoxelbox.voxelsniper.command.executor.UndoUserExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelCenterExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelChunkExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelExecutor;
@@ -23,8 +21,8 @@ import org.bukkit.entity.Player;
 
 public class CommandRegistrar {
 
-	private VoxelSniperPlugin plugin;
-	private CommandRegistry registry;
+	private final VoxelSniperPlugin plugin;
+	private final CommandRegistry registry;
 
 	public CommandRegistrar(VoxelSniperPlugin plugin, CommandRegistry registry) {
 		this.plugin = plugin;
@@ -45,8 +43,6 @@ public class CommandRegistrar {
 		registerPerformerCommand();
 		registerVoxelReplaceCommand();
 		registerVoxelSniperCommand();
-		registerUndoCommand();
-		registerUndoUserCommand();
 		registerVoxelCommand();
 		registerVoxelChunkCommand();
 	}
@@ -231,34 +227,6 @@ public class CommandRegistrar {
 			.sender(Player.class)
 			.build();
 		VoxelSniperExecutor executor = new VoxelSniperExecutor(this.plugin);
-		this.registry.register(properties, executor);
-	}
-
-	private void registerUndoCommand() {
-		CommandProperties properties = CommandProperties.builder()
-			.name("undo")
-			.description("Undoes the last snipe.")
-			.permission("voxelsniper.sniper")
-			.alias("u")
-			.usage("/u")
-			.usage("Example: /u -- Undoes your most recent snipe.")
-			.sender(Player.class)
-			.build();
-		UndoExecutor executor = new UndoExecutor(this.plugin);
-		this.registry.register(properties, executor);
-	}
-
-	private void registerUndoUserCommand() {
-		CommandProperties properties = CommandProperties.builder()
-			.name("undo_user")
-			.description("UndoUser undoes another sniper user's snipes.")
-			.permission("voxelsniper.sniper")
-			.alias("uu")
-			.usage("/uu [playername]")
-			.usage("Example: /uu bads -- Undoes BadSniper's last snipe.  BadSniper must be online for name detection to function. Truncation allowed.")
-			.sender(Player.class)
-			.build();
-		UndoUserExecutor executor = new UndoUserExecutor(this.plugin);
 		this.registry.register(properties, executor);
 	}
 

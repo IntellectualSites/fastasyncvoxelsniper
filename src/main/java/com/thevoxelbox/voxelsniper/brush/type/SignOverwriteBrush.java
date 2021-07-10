@@ -1,12 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.internal.util.DeprecationUtil;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
+import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,9 +29,9 @@ public class SignOverwriteBrush extends AbstractBrush {
 	private static final int SIGN_LINE_3 = 3;
 	private static final int SIGN_LINE_4 = 4;
 
-	private File pluginDataFolder;
-	private String[] signTextLines = new String[NUM_SIGN_LINES];
-	private boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
+	private final File pluginDataFolder;
+	private final String[] signTextLines = new String[NUM_SIGN_LINES];
+	private final boolean[] signLinesEnabled = new boolean[NUM_SIGN_LINES];
 	private boolean rangedMode;
 
 	public SignOverwriteBrush(File pluginDataFolder) {
@@ -128,12 +131,16 @@ public class SignOverwriteBrush extends AbstractBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		if (targetBlock.getState() instanceof Sign) {
-			Sign sign = (Sign) targetBlock.getState();
+		BlockVector3 targetBlock = getTargetBlock();
+		BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+		if (DeprecationUtil.isSign(block.getBlockType())) {
+			CompoundBinaryTag tag = block.getNbt();
+			if (tag == null) {
+				return;
+			}
 			for (int i = 0; i < this.signTextLines.length; i++) {
 				if (this.signLinesEnabled[i]) {
-					this.signTextLines[i] = sign.getLine(i);
+					this.signTextLines[i] = tag.getString("Text" + (i + 1));
 				}
 			}
 			displayBuffer(snipe);
@@ -146,22 +153,29 @@ public class SignOverwriteBrush extends AbstractBrush {
 	/**
 	 * Sets the text of a given sign.
 	 */
-	private void setSignText(Sign sign) {
+	private void setSignText(int x, int y, int z, BaseBlock block) {
+		CompoundBinaryTag tag = block.getNbt();
+		if (tag == null) {
+			return;
+		}
+
 		for (int i = 0; i < this.signTextLines.length; i++) {
 			if (this.signLinesEnabled[i]) {
-				sign.setLine(i, this.signTextLines[i]);
+				tag = tag.putString("Text" + (i + 1), toJson(this.signTextLines[i]));
 			}
 		}
-		sign.update();
+		block = block.toBaseBlock(tag);
+		setBlock(x, y, z, block);
 	}
 
 	/**
 	 * Sets the text of the target sign if the target block is a sign.
 	 */
 	private void setSingle(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		if (targetBlock.getState() instanceof Sign) {
-			setSignText((Sign) targetBlock.getState());
+		BlockVector3 targetBlock = getTargetBlock();
+		BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+		if (DeprecationUtil.isSign(block.getBlockType())) {
+			setSignText(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), block);
 		} else {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.RED + "Target block is not a sign.");
@@ -173,7 +187,7 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 */
 	private void setRanged(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int brushSize = toolkitProperties.getBrushSize();
 		int voxelHeight = toolkitProperties.getVoxelHeight();
 		int minX = targetBlock.getX() - brushSize;
@@ -186,11 +200,9 @@ public class SignOverwriteBrush extends AbstractBrush {
 		for (int x = minX; x <= maxX; x++) {
 			for (int y = minY; y <= maxY; y++) {
 				for (int z = minZ; z <= maxZ; z++) {
-					BlockState blockState = this.getWorld()
-						.getBlockAt(x, y, z)
-						.getState();
-					if (blockState instanceof Sign) {
-						setSignText((Sign) blockState);
+					BaseBlock block = getFullBlock(x, y, z);
+					if (DeprecationUtil.isSign(block.getBlockType())) {
+						setSignText(x, y, z, block);
 						signFound = true;
 					}
 				}
@@ -333,6 +345,13 @@ public class SignOverwriteBrush extends AbstractBrush {
 	 */
 	private void resetStates() {
 		Arrays.fill(this.signLinesEnabled, true);
+	}
+
+	private String toJson(String oldInput) {
+		if (oldInput == null || oldInput.isEmpty()) {
+			return "";
+		}
+		return LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of(oldInput));
 	}
 
 	@Override

@@ -1,29 +1,27 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractStampBrush extends AbstractBrush {
 
-	protected Set<StampBrushBlockWrapper> clone = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> fall = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> drop = new HashSet<>();
-	protected Set<StampBrushBlockWrapper> solid = new HashSet<>();
-	protected Undo undo;
+	protected final Set<StampBrushBlockWrapper> clone = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> fall = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> drop = new HashSet<>();
+	protected final Set<StampBrushBlockWrapper> solid = new HashSet<>();
 	protected boolean sorted;
 	protected StampType stamp = StampType.DEFAULT;
 
@@ -50,53 +48,50 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 		this.sorted = false;
 	}
 
-	protected boolean falling(Material material) {
-		return MaterialSets.FALLING.contains(material);
+	protected boolean falling(BlockType type) {
+		return MaterialSets.FALLING.contains(type);
 	}
 
-	protected boolean fallsOff(Material material) {
+	protected boolean fallsOff(BlockType type) {
 		MaterialSet fallsOff = MaterialSet.builder()
-			.with(Tag.SAPLINGS)
-			.with(Tag.DOORS)
-			.with(Tag.RAILS)
-			.with(Tag.BUTTONS)
-			.with(MaterialSets.SIGNS)
-			.with(MaterialSets.PRESSURE_PLATES)
-			.with(MaterialSets.FLOWERS)
+			.with(BlockCategories.SAPLINGS)
+			.with(BlockCategories.DOORS)
+			.with(BlockCategories.RAILS)
+			.with(BlockCategories.BUTTONS)
+			.with(BlockCategories.SIGNS)
+			.with(BlockCategories.PRESSURE_PLATES)
+			.with(BlockCategories.FLOWERS)
 			.with(MaterialSets.MUSHROOMS)
 			.with(MaterialSets.TORCHES)
 			.with(MaterialSets.REDSTONE_TORCHES)
-			.add(Material.FIRE)
-			.add(Material.REDSTONE_WIRE)
-			.add(Material.WHEAT)
-			.add(Material.LADDER)
-			.add(Material.LEVER)
-			.add(Material.SNOW)
-			.add(Material.SUGAR_CANE)
-			.add(Material.REPEATER)
-			.add(Material.COMPARATOR)
+			.add(BlockTypes.FIRE)
+			.add(BlockTypes.REDSTONE_WIRE)
+			.add(BlockTypes.WHEAT)
+			.add(BlockTypes.LADDER)
+			.add(BlockTypes.LEVER)
+			.add(BlockTypes.SNOW)
+			.add(BlockTypes.SUGAR_CANE)
+			.add(BlockTypes.REPEATER)
+			.add(BlockTypes.COMPARATOR)
 			.build();
-		return fallsOff.contains(material);
+		return fallsOff.contains(type);
 	}
 
 	protected void setBlock(StampBrushBlockWrapper blockWrapper) {
-		Block targetBlock = getTargetBlock();
-		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		this.undo.put(block);
-		block.setBlockData(blockWrapper.getBlockData());
+		BlockVector3 targetBlock = getTargetBlock();
+		clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
+		setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 	}
 
 	protected void setBlockFill(StampBrushBlockWrapper blockWrapper) {
-		Block targetBlock = getTargetBlock();
-		Block block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
-		if (Materials.isEmpty(block.getType())) {
-			this.undo.put(block);
-			block.setBlockData(blockWrapper.getBlockData());
+		BlockVector3 targetBlock = getTargetBlock();
+		BlockState block = clampY(targetBlock.getX() + blockWrapper.getX(), targetBlock.getY() + blockWrapper.getY(), targetBlock.getZ() + blockWrapper.getZ());
+		if (block.isAir()) {
+			setBlockData(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), blockWrapper.getBlockData());
 		}
 	}
 
 	protected void stamp(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				setBlock(block);
@@ -112,11 +107,11 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (this.fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (this.fallsOff(type)) {
 					this.fall.add(block);
-				} else if (this.falling(material)) {
+				} else if (this.falling(type)) {
 					this.drop.add(block);
 				} else {
 					this.solid.add(block);
@@ -131,12 +126,9 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	protected void stampFill(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				this.setBlockFill(block);
@@ -152,13 +144,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (fallsOff(type)) {
 					this.fall.add(block);
-				} else if (falling(material)) {
+				} else if (falling(type)) {
 					this.drop.add(block);
-				} else if (!Materials.isEmpty(material)) {
+				} else if (!Materials.isEmpty(type)) {
 					this.solid.add(block);
 					this.setBlockFill(block);
 				}
@@ -171,12 +163,9 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	protected void stampNoAir(Snipe snipe) {
-		this.undo = new Undo();
 		if (this.sorted) {
 			for (StampBrushBlockWrapper block : this.solid) {
 				this.setBlock(block);
@@ -192,13 +181,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			this.drop.clear();
 			this.solid.clear();
 			for (StampBrushBlockWrapper block : this.clone) {
-				BlockData blockData = block.getBlockData();
-				Material material = blockData.getMaterial();
-				if (this.fallsOff(material)) {
+				BlockState blockData = block.getBlockData();
+				BlockType type = blockData.getBlockType();
+				if (this.fallsOff(type)) {
 					this.fall.add(block);
-				} else if (this.falling(material)) {
+				} else if (this.falling(type)) {
 					this.drop.add(block);
-				} else if (!Materials.isEmpty(material)) {
+				} else if (!Materials.isEmpty(type)) {
 					this.solid.add(block);
 					this.setBlock(block);
 				}
@@ -211,8 +200,6 @@ public abstract class AbstractStampBrush extends AbstractBrush {
 			}
 			this.sorted = true;
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.undo);
 	}
 
 	public StampType getStamp() {

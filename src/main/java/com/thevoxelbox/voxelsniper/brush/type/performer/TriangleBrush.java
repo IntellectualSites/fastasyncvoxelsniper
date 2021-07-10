@@ -1,26 +1,25 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class TriangleBrush extends AbstractPerformerBrush {
 
-	private double[] coordinatesOne = new double[3]; // Three corners
-	private double[] coordinatesTwo = new double[3];
-	private double[] coordinatesThree = new double[3];
+	private final double[] coordinatesOne = new double[3]; // Three corners
+	private final double[] coordinatesTwo = new double[3];
+	private final double[] coordinatesThree = new double[3];
 	private int cornerNumber = 1;
-	private double[] currentCoordinates = new double[3]; // For loop tracking
-	private double[] vectorOne = new double[3]; // Point 1 to 2
-	private double[] vectorTwo = new double[3]; // Point 1 to 3
-	private double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
-	private double[] normalVector = new double[3];
+	private final double[] currentCoordinates = new double[3]; // For loop tracking
+	private final double[] vectorOne = new double[3]; // Point 1 to 2
+	private final double[] vectorTwo = new double[3]; // Point 1 to 3
+	private final double[] vectorThree = new double[3]; // Point 2 to 3, for area calculations
+	private final double[] normalVector = new double[3];
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
@@ -42,7 +41,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 
 	private void triangleA(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int targetBlockX = targetBlock.getX();
 		int targetBlockY = targetBlock.getY();
 		int targetBlockZ = targetBlock.getZ();
@@ -124,8 +123,6 @@ public class TriangleBrush extends AbstractPerformerBrush {
 			perform(brushSize, planeConstant, heronBig, cVectorOne, cVectorTwo, cVectorThree, 1, 2, 0);
 			perform(brushSize, planeConstant, heronBig, cVectorOne, cVectorTwo, cVectorThree, 0, 2, 1);
 			perform(brushSize, planeConstant, heronBig, cVectorOne, cVectorTwo, cVectorThree, 0, 1, 2);
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.performer.getUndo());
 		}
 		// reset brush
 		this.coordinatesOne[0] = 0;
@@ -154,7 +151,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 				double heronThree = calculateHeron(cVectorOne, cVectorTwo, cVectorThree, this.coordinatesThree, this.coordinatesOne);
 				double barycentric = (heronOne + heronTwo + heronThree) / heronBig;
 				if (barycentric <= 1.1) {
-					this.performer.perform(clampY((int) this.currentCoordinates[0], (int) this.currentCoordinates[1], (int) this.currentCoordinates[2]));
+					this.performer.perform(getEditSession(), (int) this.currentCoordinates[0], clampY((int) this.currentCoordinates[1]), (int) this.currentCoordinates[2], clampY((int) this.currentCoordinates[0], (int) this.currentCoordinates[1], (int) this.currentCoordinates[2]));
 				}
 			}
 		}

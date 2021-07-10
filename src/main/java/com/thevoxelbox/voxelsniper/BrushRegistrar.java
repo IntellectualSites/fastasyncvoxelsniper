@@ -92,8 +92,8 @@ public class BrushRegistrar {
 		.creator(SnipeBrush::new)
 		.build();
 
-	private BrushRegistry registry;
-	private File pluginDataFolder;
+	private final BrushRegistry registry;
+	private final File pluginDataFolder;
 
 	public BrushRegistrar(BrushRegistry registry, File pluginDataFolder) {
 		this.registry = registry;

@@ -1,11 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.World;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 public class SetBrush extends AbstractPerformerBrush {
@@ -13,42 +12,36 @@ public class SetBrush extends AbstractPerformerBrush {
 	private static final int SELECTION_SIZE_MAX = 5000000;
 
 	@Nullable
-	private Block block;
+	private BlockVector3 block;
+	private World world;
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
-		if (set(targetBlock, snipe)) {
+		BlockVector3 targetBlock = getTargetBlock();
+		if (set(targetBlock, getEditSession().getWorld(), snipe)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.performer.getUndo());
 		}
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
-		if (set(lastBlock, snipe)) {
+		BlockVector3 lastBlock = getLastBlock();
+		if (set(lastBlock, getEditSession().getWorld(), snipe)) {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.GRAY + "Point one");
-		} else {
-			Sniper sniper = snipe.getSniper();
-			sniper.storeUndo(this.performer.getUndo());
 		}
 	}
 
-	private boolean set(Block block, Snipe snipe) {
+	private boolean set(BlockVector3 block, World world, Snipe snipe) {
 		if (this.block == null) {
 			this.block = block;
+			this.world = world;
 			return true;
 		}
 		SnipeMessenger messenger = snipe.createMessenger();
-		World thisBlockWorld = this.block.getWorld();
-		String name = thisBlockWorld.getName();
-		World parameterBlockWorld = block.getWorld();
-		String parameterBlockWorldName = parameterBlockWorld.getName();
+		String name = this.world.getName();
+		String parameterBlockWorldName = world.getName();
 		if (!name.equals(parameterBlockWorldName)) {
 			messenger.sendMessage(ChatColor.RED + "You selected points in different worlds!");
 			this.block = null;
@@ -72,7 +65,7 @@ public class SetBrush extends AbstractPerformerBrush {
 			for (int y = lowY; y <= highY; y++) {
 				for (int x = lowX; x <= highX; x++) {
 					for (int z = lowZ; z <= highZ; z++) {
-						this.performer.perform(clampY(x, y, z));
+						this.performer.perform(getEditSession(), x, clampY(y), z, clampY(x, y, z));
 					}
 				}
 			}

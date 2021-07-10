@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class Messenger {
 
 	private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
 
-	private CommandSender sender;
+	private final CommandSender sender;
 
 	public Messenger(CommandSender sender) {
 		this.sender = sender;
@@ -26,20 +27,20 @@ public class Messenger {
 		sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
 	}
 
-	public void sendBlockTypeMessage(Material blockType) {
-		sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getKey());
+	public void sendBlockTypeMessage(BlockType blockType) {
+		sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getId());
 	}
 
-	public void sendBlockDataMessage(BlockData blockData) {
-		sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString(true));
+	public void sendBlockDataMessage(BlockState blockData) {
+		sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString());
 	}
 
-	public void sendReplaceBlockTypeMessage(Material replaceBlockType) {
-		sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getKey());
+	public void sendReplaceBlockTypeMessage(BlockType replaceBlockType) {
+		sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getId());
 	}
 
-	public void sendReplaceBlockDataMessage(BlockData replaceBlockData) {
-		sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString(true));
+	public void sendReplaceBlockDataMessage(BlockState replaceBlockData) {
+		sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString());
 	}
 
 	public void sendBrushSizeMessage(int brushSize) {
@@ -57,12 +58,12 @@ public class Messenger {
 		sendMessage(ChatColor.DARK_AQUA + "Brush Height: " + ChatColor.DARK_RED + voxelHeight);
 	}
 
-	public void sendVoxelListMessage(List<? extends BlockData> voxelList) {
+	public void sendVoxelListMessage(List<? extends BlockState> voxelList) {
 		if (voxelList.isEmpty()) {
 			sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
 		}
 		String message = voxelList.stream()
-			.map(blockData -> blockData.getAsString(true))
+			.map(BlockStateHolder::getAsString)
 			.map(dataAsString -> dataAsString + " ")
 			.collect(Collectors.joining("", ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA, ""));
 		sendMessage(message);

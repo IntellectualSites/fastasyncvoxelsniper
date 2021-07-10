@@ -1,16 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 
 public class ScannerBrush extends AbstractBrush {
 
@@ -19,7 +18,7 @@ public class ScannerBrush extends AbstractBrush {
 	private static final int DEPTH_MAX = 64;
 
 	private int depth = DEPTH_DEFAULT;
-	private Material checkFor = Material.AIR;
+	private BlockType checkFor = BlockTypes.AIR;
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
@@ -48,9 +47,9 @@ public class ScannerBrush extends AbstractBrush {
 	public void handleArrowAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.checkFor = toolkitProperties.getBlockType();
-		Block targetBlock = getTargetBlock();
-		Block lastBlock = getLastBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
+		BlockVector3 targetBlock = getTargetBlock();
+		BlockVector3 lastBlock = getLastBlock();
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
@@ -61,76 +60,68 @@ public class ScannerBrush extends AbstractBrush {
 	public void handleGunpowderAction(Snipe snipe) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		this.checkFor = toolkitProperties.getBlockType();
-		Block targetBlock = getTargetBlock();
-		Block lastBlock = getLastBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
+		BlockVector3 targetBlock = getTargetBlock();
+		BlockVector3 lastBlock = getLastBlock();
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
 		scan(snipe, face);
 	}
 
-	private void scan(Snipe snipe, BlockFace blockFace) {
+	private void scan(Snipe snipe, Direction blockFace) {
 		SnipeMessenger messenger = snipe.createMessenger();
-		Block targetBlock = getTargetBlock();
-		if (blockFace == BlockFace.NORTH) {// Scan south
+		BlockVector3 targetBlock = getTargetBlock();
+		if (blockFace == Direction.NORTH) {// Scan south
 			for (int i = 1; i < this.depth + 1; i++) {
-				if (this.clampY(targetBlock.getX() + i, targetBlock.getY(), targetBlock.getZ())
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}
 			}
 			messenger.sendMessage(ChatColor.GRAY + "Nope.");
-		} else if (blockFace == BlockFace.SOUTH) {// Scan north
+		} else if (blockFace == Direction.SOUTH) {// Scan north
 			for (int i = 1; i < this.depth + 1; i++) {
-				if (this.clampY(targetBlock.getX() - i, targetBlock.getY(), targetBlock.getZ())
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}
 			}
 			messenger.sendMessage(ChatColor.GRAY + "Nope.");
-		} else if (blockFace == BlockFace.EAST) {// Scan west
+		} else if (blockFace == Direction.EAST) {// Scan west
 			for (int i = 1; i < this.depth + 1; i++) {
-				if (this.clampY(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ() + i)
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() + i) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}
 			}
 			messenger.sendMessage(ChatColor.GRAY + "Nope.");
-		} else if (blockFace == BlockFace.WEST) {// Scan east
+		} else if (blockFace == Direction.WEST) {// Scan east
 			for (int i = 1; i < this.depth + 1; i++) {
-				if (this.clampY(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ() - i)
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() - i) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}
 			}
 			messenger.sendMessage(ChatColor.GRAY + "Nope.");
-		} else if (blockFace == BlockFace.UP) {// Scan down
+		} else if (blockFace == Direction.UP) {// Scan down
 			for (int i = 1; i < this.depth + 1; i++) {
 				if ((targetBlock.getY() - i) <= 0) {
 					break;
 				}
-				if (this.clampY(targetBlock.getX(), targetBlock.getY() - i, targetBlock.getZ())
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() - i), targetBlock.getZ()) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}
 			}
 			messenger.sendMessage(ChatColor.GRAY + "Nope.");
-		} else if (blockFace == BlockFace.DOWN) {// Scan up
+		} else if (blockFace == Direction.DOWN) {// Scan up
 			for (int i = 1; i < this.depth + 1; i++) {
-				Sniper sniper = snipe.getSniper();
-				Player player = sniper.getPlayer();
-				World world = sniper/*player*/.getWorld();//FAWE modified
-				if ((targetBlock.getY() + i) >= world.getMaxHeight()) {
+				EditSession editSession = getEditSession();//FAWE modified
+				if ((targetBlock.getY() + i) >= editSession.getMaxY() + 1) {
 					break;
 				}
-				if (this.clampY(targetBlock.getX(), targetBlock.getY() + i, targetBlock.getZ())
-					.getType() == this.checkFor) {
+				if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() + i), targetBlock.getZ()) == this.checkFor) {
 					messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
 					return;
 				}

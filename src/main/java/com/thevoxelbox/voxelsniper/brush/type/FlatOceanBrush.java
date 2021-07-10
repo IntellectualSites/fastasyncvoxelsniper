@@ -1,12 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 
 public class FlatOceanBrush extends AbstractBrush {
 
@@ -65,34 +64,30 @@ public class FlatOceanBrush extends AbstractBrush {
 	}
 
 	private void flatOceanAtTarget(int additionalX, int additionalZ) {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		int blockX = targetBlock.getX();
 		int blockZ = targetBlock.getZ();
-		Block block = clampY(blockX + additionalX, 1, blockZ + additionalZ);
-		Chunk chunk = world.getChunkAt(block);
-		flatOcean(chunk);
+		flatOcean((blockX + additionalX) >> 4, (blockZ + additionalZ) >> 4);
 	}
 
 	private void flatOceanAtTarget() {
-		World world = getWorld();
-		Block targetBlock = getTargetBlock();
-		Chunk chunk = world.getChunkAt(targetBlock);
-		flatOcean(chunk);
+		BlockVector3 targetBlock = getTargetBlock();
+		flatOcean(targetBlock.getX() >> 4, targetBlock.getZ() >> 4);
 	}
 
-	private void flatOcean(Chunk chunk) {
+	private void flatOcean(int chunkX, int chunkZ) {
+		EditSession editSession = getEditSession();
+		int blockX = chunkX << 4;
+		int blockZ = chunkZ << 4;
 		for (int x = 0; x < CHUNK_SIZE; x++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
-				World world = chunk.getWorld();
-				for (int y = 0; y < world.getMaxHeight(); y++) {
-					Block block = chunk.getBlock(x, y, z);
+				for (int y = 0; y < editSession.getMaxY() + 1; y++) {
 					if (y <= this.floorLevel) {
-						block.setType(Material.DIRT);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.DIRT);
 					} else if (y <= this.waterLevel) {
-						block.setType(Material.WATER, false);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.WATER);
 					} else {
-						block.setType(Material.AIR, false);
+						setBlockType(blockX + x, y, blockZ + z, BlockTypes.AIR);
 					}
 				}
 			}
@@ -103,7 +98,6 @@ public class FlatOceanBrush extends AbstractBrush {
 	public void sendInfo(Snipe snipe) {
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendBrushNameMessage();
-		messenger.sendMessage(ChatColor.RED + "THIS BRUSH DOES NOT UNDO");
 		messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
 		messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
 	}

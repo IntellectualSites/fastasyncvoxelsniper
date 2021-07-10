@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
@@ -22,7 +23,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 	private static final int RECURSION_MAX = 10;
 	private static final int SPREAD_DEFAULT = 3;
 
-	private Random random = new Random();
+	private final Random random = new Random();
 	private Vector originCoordinates;
 	private Vector targetCoordinates = new Vector();
 	private int recursion = RECURSION_DEFAULT;
@@ -68,9 +69,8 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 		if (this.originCoordinates == null) {
 			this.originCoordinates = new Vector();
 		}
-		Block targetBlock = getTargetBlock();
-		Location targetBlockLocation = targetBlock.getLocation();
-		this.originCoordinates = targetBlockLocation.toVector();
+		BlockVector3 targetBlock = getTargetBlock();
+		this.originCoordinates = Vectors.toBukkit(targetBlock);
 		SnipeMessenger messenger = snipe.createMessenger();
 		messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
 	}
@@ -81,9 +81,8 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 			SnipeMessenger messenger = snipe.createMessenger();
 			messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
 		} else {
-			Block targetBlock = getTargetBlock();
-			Location targetBlockLocation = targetBlock.getLocation();
-			this.targetCoordinates = targetBlockLocation.toVector();
+			BlockVector3 targetBlock = getTargetBlock();
+			this.targetCoordinates = Vectors.toBukkit(targetBlock);
 			jaggedP(snipe);
 		}
 	}
@@ -99,21 +98,21 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
 			copy(targetClone)
 			.subtract(originClone);
 		double length = this.targetCoordinates.distance(this.originCoordinates);
-		World world = getWorld();
 		if (length == 0) {
-			Location location = this.targetCoordinates.toLocation(world);
-			this.performer.perform(location.getBlock());
+			this.performer.perform(getEditSession(), targetCoordinates.getBlockX(), targetCoordinates.getBlockY(), targetCoordinates.getBlockZ(), getBlock(targetCoordinates.getBlockX(), targetCoordinates.getBlockY(), targetCoordinates.getBlockZ()));
 		} else {
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
 			BlockIterator iterator = new BlockIterator(world, originClone, direction, 0, NumberConversions.round(length));
 			while (iterator.hasNext()) {
 				Block block = iterator.next();
 				for (int i = 0; i < this.recursion; i++) {
-					this.performer.perform(clampY(Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread), Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread)));
+					int x = Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread);
+					int y = Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread);
+					int z = Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread);
+					this.performer.perform(getEditSession(), x, clampY(y), z, clampY(x, y, z));
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

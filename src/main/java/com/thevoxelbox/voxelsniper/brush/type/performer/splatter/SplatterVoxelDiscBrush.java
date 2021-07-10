@@ -1,12 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 
 import java.util.Random;
 
@@ -25,7 +24,7 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 	private int seedPercent; // Chance block on first pass is made active
 	private int growPercent; // chance block on recursion pass is made active
 	private int splatterRecursions; // How many times you grow the seeds
-	private Random generator = new Random();
+	private final Random generator = new Random();
 
 	@Override
 	public void handleCommand(String[] parameters, Snipe snipe) {
@@ -71,17 +70,17 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block targetBlock = getTargetBlock();
+		BlockVector3 targetBlock = getTargetBlock();
 		vSplatterDisc(snipe, targetBlock);
 	}
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
+		BlockVector3 lastBlock = getLastBlock();
 		vSplatterDisc(snipe, lastBlock);
 	}
 
-	private void vSplatterDisc(Snipe snipe, Block targetBlock) {
+	private void vSplatterDisc(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		SnipeMessenger messenger = snipe.createMessenger();
 		if (this.seedPercent < SEED_PERCENT_MIN || this.seedPercent > SEED_PERCENT_MAX) {
@@ -151,15 +150,16 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 			}
 		}
 		// Make the changes
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = 2 * brushSize; x >= 0; x--) {
 			for (int y = 2 * brushSize; y >= 0; y--) {
 				if (splat[x][y] == 1) {
-					this.performer.perform(this.clampY(targetBlock.getX() - brushSize + x, targetBlock.getY(), targetBlock.getZ() - brushSize + y));
+					this.performer.perform(getEditSession(), blockX - brushSize + x, clampY(blockY), blockZ - brushSize + y, clampY(blockX - brushSize + x, blockY, blockZ - brushSize + y));
 				}
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

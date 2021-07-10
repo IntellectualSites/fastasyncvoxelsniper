@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class VoxelListExecutor implements CommandExecutor {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelListExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
@@ -48,14 +50,14 @@ public class VoxelListExecutor implements CommandExecutor {
 				return;
 			}
 			BlockData blockData = targetBlock.getBlockData();
-			toolkitProperties.addToVoxelList(blockData);
-			List<BlockData> voxelList = toolkitProperties.getVoxelList();
+			toolkitProperties.addToVoxelList(BukkitAdapter.adapt(blockData));
+			List<BlockState> voxelList = toolkitProperties.getVoxelList();
 			messenger.sendVoxelListMessage(voxelList);
 			return;
 		} else {
 			if (arguments[0].equalsIgnoreCase("clear")) {
 				toolkitProperties.clearVoxelList();
-				List<BlockData> voxelList = toolkitProperties.getVoxelList();
+				List<BlockState> voxelList = toolkitProperties.getVoxelList();
 				messenger.sendVoxelListMessage(voxelList);
 				return;
 			}
@@ -73,11 +75,11 @@ public class VoxelListExecutor implements CommandExecutor {
 			if (material != null && material.isBlock()) {
 				BlockData blockData = material.createBlockData();
 				if (remove) {
-					toolkitProperties.removeFromVoxelList(blockData);
+					toolkitProperties.removeFromVoxelList(BukkitAdapter.adapt(blockData));
 				} else {
-					toolkitProperties.addToVoxelList(blockData);
+					toolkitProperties.addToVoxelList(BukkitAdapter.adapt(blockData));
 				}
-				List<BlockData> voxelList = toolkitProperties.getVoxelList();
+				List<BlockState> voxelList = toolkitProperties.getVoxelList();
 				messenger.sendVoxelListMessage(voxelList);
 			}
 		}

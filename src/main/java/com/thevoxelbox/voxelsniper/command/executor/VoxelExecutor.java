@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
@@ -29,7 +30,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 		.map(Material::getKey)
 		.collect(Collectors.toList());
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public VoxelExecutor(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
@@ -63,8 +64,8 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 					sender.sendMessage("You are not allowed to use " + targetBlockType.name() + ".");
 					return;
 				}
-				toolkitProperties.setBlockType(targetBlockType);
-				messenger.sendBlockTypeMessage(targetBlockType);
+				toolkitProperties.setBlockType(BukkitAdapter.asBlockType(targetBlockType));
+				messenger.sendBlockTypeMessage(BukkitAdapter.asBlockType(targetBlockType));
 			}
 			return;
 		}
@@ -74,8 +75,8 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
 				sender.sendMessage("You are not allowed to use " + material.name() + ".");
 				return;
 			}
-			toolkitProperties.setBlockType(material);
-			messenger.sendBlockTypeMessage(material);
+			toolkitProperties.setBlockType(BukkitAdapter.asBlockType(material));
+			messenger.sendBlockTypeMessage(BukkitAdapter.asBlockType(material));
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have entered an invalid Item ID.");
 		}

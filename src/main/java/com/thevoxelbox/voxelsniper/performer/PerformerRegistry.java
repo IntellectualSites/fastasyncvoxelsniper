@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class PerformerRegistry {
 
-	private Map<String, PerformerProperties> performerProperties = new HashMap<>();
+	private final Map<String, PerformerProperties> performerProperties = new HashMap<>();
 
 	public void register(PerformerProperties properties) {
 		List<String> aliases = properties.getAliases();

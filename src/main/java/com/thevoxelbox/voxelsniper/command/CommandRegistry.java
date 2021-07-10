@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 public class CommandRegistry {
 
-	private Plugin plugin;
+	private final Plugin plugin;
 
 	public CommandRegistry(Plugin plugin) {
 		this.plugin = plugin;
@@ -27,7 +27,6 @@ public class CommandRegistry {
 		commandMap.register("voxel_sniper", command);
 	}
 
-	@SuppressWarnings("JavaReflectionMemberAccess")
 	private CommandMap getCommandMap(Server server) {
 		try {
 			Method method = server.getClass().getDeclaredMethod("getCommandMap"); // FAWE modify

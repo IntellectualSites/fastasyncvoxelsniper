@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
-	private VoxelSniperPlugin plugin;
+	private final VoxelSniperPlugin plugin;
 
 	public PlayerJoinListener(VoxelSniperPlugin plugin) {
 		this.plugin = plugin;
@@ -41,8 +41,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
 	private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
 		VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-		int undoCacheSize = config.getUndoCacheSize();
-		Sniper newSniper = new Sniper(uuid, undoCacheSize);
+		Sniper newSniper = new Sniper(uuid);
 		sniperRegistry.register(newSniper);
 		return newSniper;
 	}

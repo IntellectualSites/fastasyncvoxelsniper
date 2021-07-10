@@ -1,19 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
-		Block targetBlock = getTargetBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
+		BlockVector3 lastBlock = getLastBlock();
+		BlockVector3 targetBlock = getTargetBlock();
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
@@ -22,16 +21,16 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
 	@Override
 	public void handleGunpowderAction(Snipe snipe) {
-		Block lastBlock = getLastBlock();
-		Block targetBlock = getTargetBlock();
-		BlockFace face = targetBlock.getFace(lastBlock);
+		BlockVector3 lastBlock = getLastBlock();
+		BlockVector3 targetBlock = getTargetBlock();
+		Direction face = getDirection(targetBlock, lastBlock);
 		if (face == null) {
 			return;
 		}
 		pre(snipe, face, lastBlock);
 	}
 
-	private void pre(Snipe snipe, BlockFace blockFace, Block targetBlock) {
+	private void pre(Snipe snipe, Direction blockFace, BlockVector3 targetBlock) {
 		switch (blockFace) {
 			case NORTH:
 			case SOUTH:
@@ -50,40 +49,43 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 		}
 	}
 
-	private void discNorthSouth(Snipe snipe, Block targetBlock) {
+	private void discNorthSouth(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= -brushSize; x--) {
 			for (int y = brushSize; y >= -brushSize; y--) {
-				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ()));
+				this.performer.perform(getEditSession(), blockX + x, clampY(blockY + y), blockZ, getBlock(blockX + x, clampY(blockY + y), blockZ));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void discEastWest(Snipe snipe, Block targetBlock) {
+	private void discEastWest(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= -brushSize; x--) {
 			for (int y = brushSize; y >= -brushSize; y--) {
-				this.performer.perform(this.clampY(targetBlock.getX(), targetBlock.getY() + x, targetBlock.getZ() + y));
+				this.performer.perform(getEditSession(), blockX, clampY(blockY + x), blockZ + y, clampY(blockX, blockY + y, blockZ));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
-	private void disc(Snipe snipe, Block targetBlock) {
+	private void disc(Snipe snipe, BlockVector3 targetBlock) {
 		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
 		int brushSize = toolkitProperties.getBrushSize();
+		int blockX = targetBlock.getX();
+		int blockY = targetBlock.getY();
+		int blockZ = targetBlock.getZ();
 		for (int x = brushSize; x >= -brushSize; x--) {
 			for (int y = brushSize; y >= -brushSize; y--) {
-				this.performer.perform(this.clampY(targetBlock.getX() + x, targetBlock.getY(), targetBlock.getZ() + y));
+				this.performer.perform(getEditSession(), blockX + x, clampY(blockY), blockZ + y, getBlock(blockX + x, clampY(blockY), blockZ + y));
 			}
 		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(this.performer.getUndo());
 	}
 
 	@Override

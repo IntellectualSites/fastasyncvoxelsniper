@@ -1,15 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.util.TaskManager;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -103,42 +106,48 @@ public class PunishBrush extends AbstractPerformerBrush {
 		this.punishDuration = toolkitProperties.getVoxelHeight();
 		this.punishLevel = toolkitProperties.getCylinderCenter();
 		if (this.specificPlayer) {
-			Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
-			if (punishedPlayer == null) {
-				messenger.sendMessage("No player " + this.punishPlayerName + " found.");
-				return;
-			}
-			applyPunishment(punishedPlayer, snipe);
+			TaskManager.IMP.sync(() -> {
+				Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
+				if (punishedPlayer == null) {
+					messenger.sendMessage("No player " + this.punishPlayerName + " found.");
+					return null;
+				}
+				applyPunishment(punishedPlayer, snipe);
+				return null;
+			});
 			return;
 		}
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeSquare = brushSize * brushSize;
-		Block targetBlock = getTargetBlock();
-		World world = targetBlock/*player*/.getWorld();//FAWE modified
-		Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
-		List<LivingEntity> entities = world.getLivingEntities();
-		int numPunishApps = 0;
-		for (LivingEntity entity : entities) {
-			if (player != entity || this.hitsSelf) {
-				if (brushSize >= 0) {
-					try {
-						Location location = entity.getLocation();
-						if (location.distanceSquared(targetLocation) <= brushSizeSquare) {
-							numPunishApps++;
-							applyPunishment(entity, snipe);
+		BlockVector3 targetBlock = getTargetBlock();
+		TaskManager.IMP.sync(() -> {
+			World world = BukkitAdapter.adapt(getEditSession().getWorld());
+			Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+			List<LivingEntity> entities = world.getLivingEntities();
+			int numPunishApps = 0;
+			for (LivingEntity entity : entities) {
+				if (player != entity || this.hitsSelf) {
+					if (brushSize >= 0) {
+						try {
+							Location location = entity.getLocation();
+							if (location.distanceSquared(targetLocation) <= brushSizeSquare) {
+								numPunishApps++;
+								applyPunishment(entity, snipe);
+							}
+						} catch (RuntimeException exception) {
+							exception.printStackTrace();
+							messenger.sendMessage("An error occured.");
+							return null;
 						}
-					} catch (RuntimeException exception) {
-						exception.printStackTrace();
-						messenger.sendMessage("An error occured.");
-						return;
+					} else if (brushSize == INFINIPUNISH_SIZE) {
+						numPunishApps++;
+						applyPunishment(entity, snipe);
 					}
-				} else if (brushSize == INFINIPUNISH_SIZE) {
-					numPunishApps++;
-					applyPunishment(entity, snipe);
 				}
 			}
-		}
-		messenger.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+			messenger.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+			return null;
+		});
 	}
 
 	@Override
@@ -153,8 +162,8 @@ public class PunishBrush extends AbstractPerformerBrush {
 		}
 		int brushSize = toolkitProperties.getBrushSize();
 		int brushSizeSquare = brushSize * brushSize;
-		World world = sniper/*player*/.getWorld();//FAWE modified
-		Block targetBlock = getTargetBlock();
+		World world = BukkitAdapter.adapt(getEditSession().getWorld());//FAWE modified
+		BlockVector3 targetBlock = getTargetBlock();
 		Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
 		List<LivingEntity> entities = world.getLivingEntities();
 		for (LivingEntity entity : entities) {
@@ -262,7 +271,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 				addEffect(entity, PotionEffectType.JUMP);
 				break;
 			case FORCE:
-				Vector playerVector = getTargetBlock().getLocation().toVector();
+				Vector playerVector = Vectors.toBukkit(getTargetBlock());
 				Vector direction = entity.getLocation().toVector().clone();
 				direction.subtract(playerVector);
 				double length = direction.length();
@@ -287,7 +296,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 								}
 								target = location.clone();
 								target.add(x, y, z);
-								((Player) entity).sendBlockChange(target, toolkitProperties.getBlockData());
+								((Player) entity).sendBlockChange(target, BukkitAdapter.adapt(toolkitProperties.getBlockData()));
 							}
 						}
 					}

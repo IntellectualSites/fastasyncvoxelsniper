@@ -1,13 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.Undo;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 import java.util.Random;
 
@@ -16,13 +16,12 @@ public class RandomErodeBrush extends AbstractBrush {
 	private static final double TRUE_CIRCLE = 0.5;
 
 	private BlockWrapper[][][] snap;
-	private BlockWrapper[][][] firstSnap;
 	private int brushSize;
 	private int erodeFace;
 	private int fillFace;
 	private int erodeRecursion = 1;
 	private int fillRecursion = 1;
-	private Random generator = new Random();
+	private final Random generator = new Random();
 
 	@Override
 	public void handleArrowAction(Snipe snipe) {
@@ -91,33 +90,33 @@ public class RandomErodeBrush extends AbstractBrush {
 		} else {
 			int d = 0;
 			if (this.snap[x + 1][y][z].isSolid()) {
-				Block block = this.snap[x + 1][y][z].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x + 1][y][z];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			if (this.snap[x - 1][y][z].isSolid()) {
-				Block block = this.snap[x - 1][y][z].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x - 1][y][z];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			if (this.snap[x][y + 1][z].isSolid()) {
-				Block block = this.snap[x][y + 1][z].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x][y + 1][z];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			if (this.snap[x][y - 1][z].isSolid()) {
-				Block block = this.snap[x][y - 1][z].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x][y - 1][z];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			if (this.snap[x][y][z + 1].isSolid()) {
-				Block block = this.snap[x][y][z + 1].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x][y][z + 1];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			if (this.snap[x][y][z - 1].isSolid()) {
-				Block block = this.snap[x][y][z - 1].getNativeBlock();
-				this.snap[x][y][z].setType(block.getType());
+				BlockWrapper block = this.snap[x][y][z - 1];
+				this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
 				d++;
 			}
 			return (d >= this.fillFace);
@@ -126,16 +125,11 @@ public class RandomErodeBrush extends AbstractBrush {
 
 	private void getMatrix() {
 		int brushSize = (this.brushSize + 1) * 2 + 1;
-		Block targetBlock = getTargetBlock();
-		if (this.snap.length == 0) {
-			setSnap(brushSize, targetBlock);
-			this.firstSnap = this.snap.clone();
-		} else {
-			setSnap(brushSize, targetBlock);
-		}
+		BlockVector3 targetBlock = getTargetBlock();
+		setSnap(brushSize, targetBlock);
 	}
 
-	private void setSnap(int brushSize, Block targetBlock) {
+	private void setSnap(int brushSize, BlockVector3 targetBlock) {
 		this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
 		int sx = targetBlock.getX() - (this.brushSize + 1);
 		for (int x = 0; x < this.snap.length; x++) {
@@ -143,7 +137,7 @@ public class RandomErodeBrush extends AbstractBrush {
 			for (int z = 0; z < this.snap.length; z++) {
 				int sy = targetBlock.getY() - (this.brushSize + 1);
 				for (int y = 0; y < this.snap.length; y++) {
-					this.snap[x][y][z] = new BlockWrapper(clampY(sx, sy, sz));
+					this.snap[x][y][z] = new BlockWrapper(sx, clampY(sy), sz, clampY(sx, sy, sz));
 					sy++;
 				}
 				sz++;
@@ -153,7 +147,6 @@ public class RandomErodeBrush extends AbstractBrush {
 	}
 
 	private void randomErosion(Snipe snipe) {
-		Undo undo = new Undo();
 		if (this.erodeFace >= 0 && this.erodeFace <= 6) {
 			for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
 				getMatrix();
@@ -165,8 +158,8 @@ public class RandomErodeBrush extends AbstractBrush {
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= brushSizeSquared)) {
 								if (this.erode(x, y, z)) {
-									Block block = this.snap[x][y][z].getNativeBlock();
-									block.setType(Material.AIR);
+									BlockWrapper block = this.snap[x][y][z];
+									setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
 								}
 							}
 						}
@@ -185,8 +178,8 @@ public class RandomErodeBrush extends AbstractBrush {
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= brushSizeSquared)) {
 								if (this.fill(x, y, z)) {
-									Block block = this.snap[x][y][z].getNativeBlock();
-									block.setType(this.snap[x][y][z].getType());
+									BlockWrapper block = this.snap[x][y][z];
+									setBlockType(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
 								}
 							}
 						}
@@ -194,22 +187,9 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		for (BlockWrapper[][] firstSnapSlice : this.firstSnap) {
-			for (BlockWrapper[] firstSnapString : firstSnapSlice) {
-				for (BlockWrapper block : firstSnapString) {
-					Block nativeBlock = block.getNativeBlock();
-					if (block.getNativeType() != nativeBlock.getType()) {
-						undo.put(nativeBlock);
-					}
-				}
-			}
-		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	private void randomFilling(Snipe snipe) {
-		Undo undo = new Undo();
 		if (this.fillFace >= 0 && this.fillFace <= 6) {
 			double bSquared = Math.pow(this.brushSize + 0.5, 2);
 			for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++) {
@@ -221,8 +201,8 @@ public class RandomErodeBrush extends AbstractBrush {
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= bSquared)) {
 								if (this.fill(x, y, z)) {
-									Block block = this.snap[x][y][z].getNativeBlock();
-									block.setType(this.snap[x][y][z].getType());
+									BlockWrapper block = this.snap[x][y][z];
+									setBlockType(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
 								}
 							}
 						}
@@ -241,8 +221,8 @@ public class RandomErodeBrush extends AbstractBrush {
 						for (int y = 1; y < this.snap.length - 1; y++) {
 							if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= bSquared)) {
 								if (this.erode(x, y, z)) {
-									Block block = this.snap[x][y][z].getNativeBlock();
-									block.setType(Material.AIR);
+									BlockWrapper block = this.snap[x][y][z];
+									setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
 								}
 							}
 						}
@@ -250,18 +230,6 @@ public class RandomErodeBrush extends AbstractBrush {
 				}
 			}
 		}
-		for (BlockWrapper[][] firstSnapSlice : this.firstSnap) {
-			for (BlockWrapper[] firstSnapString : firstSnapSlice) {
-				for (BlockWrapper block : firstSnapString) {
-					Block nativeBlock = block.getNativeBlock();
-					if (block.getNativeType() != nativeBlock.getType()) {
-						undo.put(nativeBlock);
-					}
-				}
-			}
-		}
-		Sniper sniper = snipe.getSniper();
-		sniper.storeUndo(undo);
 	}
 
 	@Override
@@ -273,22 +241,40 @@ public class RandomErodeBrush extends AbstractBrush {
 
 	private static final class BlockWrapper {
 
-		private Block nativeBlock;
-		private Material nativeType;
-		private boolean solid;
-		private Material type;
+		private final int x;
+		private final int y;
+		private final int z;
+		private final BlockState nativeBlock;
+		private final BlockType nativeType;
+		private final boolean solid;
+		private BlockType type;
 
-		private BlockWrapper(Block block) {
+		private BlockWrapper(int x, int y, int z, BlockState block) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
 			this.nativeBlock = block;
-			this.nativeType = block.getType();
-			this.solid = !Materials.isEmpty(this.nativeType) && this.nativeType != Material.WATER && this.nativeType != Material.LAVA;
+			this.nativeType = block.getBlockType();
+			this.solid = !Materials.isEmpty(this.nativeType) && !Materials.isLiquid(this.nativeType);
 		}
 
-		public Block getNativeBlock() {
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public int getZ() {
+			return z;
+		}
+
+		public BlockState getNativeBlock() {
 			return this.nativeBlock;
 		}
 
-		public Material getNativeType() {
+		public BlockType getNativeType() {
 			return this.nativeType;
 		}
 
@@ -296,11 +282,11 @@ public class RandomErodeBrush extends AbstractBrush {
 			return this.solid;
 		}
 
-		public Material getType() {
+		public BlockType getType() {
 			return this.type;
 		}
 
-		public void setType(Material type) {
+		public void setType(BlockType type) {
 			this.type = type;
 		}
 	}
