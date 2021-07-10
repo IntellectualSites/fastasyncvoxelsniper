@@ -335,4 +335,8 @@ public class Sniper {
         this.enabled = enabled;
     }
 
+    public List<Toolkit> getToolkits() {
+        return toolkits;
+    }
+
 }
