@@ -51,7 +51,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
             BrushProperties previousBrushProperties = toolkit.getPreviousBrushProperties();
             String permission = previousBrushProperties.getPermission();
             if (permission != null && !player.hasPermission(permission)) {
-                sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
+                sender.sendMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
                 return;
             }
             toolkit.useBrush(previousBrushProperties);
@@ -82,7 +82,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         }
         String permission = newBrush.getPermission();
         if (permission != null && !player.hasPermission(permission)) {
-            sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
+            sender.sendMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
             return;
         }
         Brush brush = toolkit.useBrush(newBrush);
@@ -102,7 +102,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Padds an empty String to the front of the array.
+     * Pads an empty String to the front of the array.
      *
      * @param args Array to pad empty string in front of
      * @return padded array

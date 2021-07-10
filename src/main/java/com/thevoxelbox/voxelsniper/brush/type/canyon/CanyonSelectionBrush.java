@@ -36,14 +36,13 @@ public class CanyonSelectionBrush extends CanyonBrush {
                     Math.min(this.fx, chunkX),
                     Math.min(this.fz, chunkZ),
                     Math.max(this.fx, chunkX),
-                    Math.max(this.fz, chunkZ),
-                    snipe
+                    Math.max(this.fz, chunkZ)
             );
         }
         this.first = !this.first;
     }
 
-    private void selection(int lowX, int lowZ, int highX, int highZ, Snipe snipe) {
+    private void selection(int lowX, int lowZ, int highX, int highZ) {
         for (int x = lowX; x <= highX; x++) {
             for (int z = lowZ; z <= highZ; z++) {
                 canyon(x, z);

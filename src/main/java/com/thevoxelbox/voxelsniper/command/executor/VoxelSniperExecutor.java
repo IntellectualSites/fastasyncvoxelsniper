@@ -91,19 +91,19 @@ public class VoxelSniperExecutor implements CommandExecutor {
                 return;
             } else if (firstArgument.equalsIgnoreCase("enable")) {
                 sniper.setEnabled(true);
-                sender.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
+                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("disable")) {
                 sniper.setEnabled(false);
-                sender.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
+                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("toggle")) {
                 sniper.setEnabled(!sniper.isEnabled());
-                sender.sendMessage("VoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
+                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             }
         }
-        sender.sendMessage(ChatColor.DARK_RED + "VoxelSniper - Current Brush Settings:");
+        sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
         sniper.sendInfo(sender);
     }
 

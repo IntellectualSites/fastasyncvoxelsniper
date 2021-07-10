@@ -85,8 +85,4 @@ public class CanyonBrush extends AbstractBrush {
         return this.yLevel;
     }
 
-    public void setYLevel(int yLevel) {
-        this.yLevel = yLevel;
-    }
-
 }

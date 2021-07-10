@@ -4,12 +4,14 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -67,11 +69,11 @@ public class StencilBrush extends AbstractBrush {
         }
         try {
             this.filename = parameters[1 + this.pasteParam];
-            File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+            File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + this.filename + ".vstencil");
             if (file.exists()) {
-                messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded.  Make sure you are using powder if you do not want any chance of overwriting the file.");
+                messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded. Make sure you are using powder if you do not want any chance of overwriting the file.");
             } else {
-                messenger.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist.  Ready to be saved to, but cannot be pasted.");
+                messenger.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist. Ready to be saved to, but cannot be pasted.");
             }
         } catch (RuntimeException exception) {
             messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
@@ -124,7 +126,7 @@ public class StencilBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
             return;
         }
-        File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + this.filename + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -305,7 +307,7 @@ public class StencilBrush extends AbstractBrush {
 
     private void stencilSave(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File file = new File("plugins/VoxelSniper/stencils/" + this.filename + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + this.filename + ".vstencil");
         try {
             this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
             this.z = (short) (Math.abs((this.firstPoint[1] - this.secondPoint[1])) + 1);

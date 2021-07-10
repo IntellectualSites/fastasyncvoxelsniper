@@ -66,7 +66,6 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
             }
         }
         setBlocks(smallCubeBlockTypes);
-        Sniper sniper = snipe.getSniper();
     }
 
 }

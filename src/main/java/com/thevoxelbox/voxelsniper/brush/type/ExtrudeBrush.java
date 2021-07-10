@@ -90,7 +90,8 @@ public class ExtrudeBrush extends AbstractBrush {
                                 targetBlock.getX() + x,
                                 targetBlock.getY() + y,
                                 targetBlock.getZ() + tempZ + direction,
-                                this.clampY(targetBlock.getX() + x,
+                                this.clampY(
+                                        targetBlock.getX() + x,
                                         targetBlock.getY() + y,
                                         targetBlock.getZ() + tempZ + direction
                                 ),
@@ -122,7 +123,8 @@ public class ExtrudeBrush extends AbstractBrush {
                                 targetBlock.getX() + tempX + direction,
                                 targetBlock.getY() + y,
                                 targetBlock.getZ() + z,
-                                this.clampY(targetBlock.getX() + tempX + direction,
+                                this.clampY(
+                                        targetBlock.getX() + tempX + direction,
                                         targetBlock.getY() + y,
                                         targetBlock.getZ() + z
                                 ),

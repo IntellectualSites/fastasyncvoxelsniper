@@ -20,7 +20,6 @@ public class RegenerateChunkBrush extends AbstractBrush {
         generateChunk(snipe);
     }
 
-    @SuppressWarnings("deprecation")
     private void generateChunk(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         int chunkX = targetBlock.getX() >> 4;

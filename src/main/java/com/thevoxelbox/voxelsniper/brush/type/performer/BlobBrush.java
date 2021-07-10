@@ -124,7 +124,8 @@ public class BlobBrush extends AbstractPerformerBrush {
                                 targetBlock.getX() - brushSize + x,
                                 clampY(targetBlock.getY() - brushSize + z),
                                 targetBlock.getZ() - brushSize + y,
-                                this.clampY(targetBlock.getX() - brushSize + x,
+                                this.clampY(
+                                        targetBlock.getX() - brushSize + x,
                                         targetBlock.getY() - brushSize + z,
                                         targetBlock.getZ() - brushSize + y
                                 )
@@ -202,7 +203,8 @@ public class BlobBrush extends AbstractPerformerBrush {
                                 targetBlock.getX() - brushSize + x,
                                 clampY(targetBlock.getY() - brushSize + z),
                                 targetBlock.getZ() - brushSize + y,
-                                this.clampY(targetBlock.getX() - brushSize + x,
+                                this.clampY(
+                                        targetBlock.getX() - brushSize + x,
                                         targetBlock.getY() - brushSize + z,
                                         targetBlock.getZ() - brushSize + y
                                 )

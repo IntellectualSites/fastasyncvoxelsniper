@@ -92,7 +92,7 @@ public class CommandRegistrar {
     private void registerDefaultCommand() {
         CommandProperties properties = CommandProperties.builder()
                 .name("default")
-                .description("VoxelSniper Default.")
+                .description("FastAsyncVoxelSniper Default.")
                 .permission("voxelsniper.sniper")
                 .alias("d")
                 .usage("/d")
@@ -188,7 +188,7 @@ public class CommandRegistrar {
     private void registerPerformerCommand() {
         CommandProperties properties = CommandProperties.builder()
                 .name("performer")
-                .description("Voxelsniper performer.")
+                .description("FastAsyncVoxelSniper performer.")
                 .permission("voxelsniper.sniper")
                 .alias("p")
                 .alias("perf")
@@ -219,7 +219,7 @@ public class CommandRegistrar {
     private void registerVoxelSniperCommand() {
         CommandProperties properties = CommandProperties.builder()
                 .name("voxel_sniper")
-                .description("VoxelSniper Settings.")
+                .description("FastAsyncVoxelSniper Settings.")
                 .permission("voxelsniper.sniper")
                 .alias("vs")
                 .usage("/vs")

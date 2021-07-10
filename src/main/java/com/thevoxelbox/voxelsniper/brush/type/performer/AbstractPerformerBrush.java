@@ -70,10 +70,6 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
         this.performer.sendInfo(performerSnipe);
     }
 
-    public PerformerProperties getPerformerProperties() {
-        return this.performerProperties;
-    }
-
     public Performer getPerformer() {
         return this.performer;
     }

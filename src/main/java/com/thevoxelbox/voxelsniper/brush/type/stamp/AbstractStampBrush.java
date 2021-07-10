@@ -29,13 +29,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
     public void handleArrowAction(Snipe snipe) {
         switch (this.stamp) {
             case DEFAULT:
-                stamp(snipe);
+                stamp();
                 break;
             case NO_AIR:
-                stampNoAir(snipe);
+                stampNoAir();
                 break;
             case FILL:
-                stampFill(snipe);
+                stampFill();
                 break;
             default:
                 SnipeMessenger messenger = snipe.createMessenger();
@@ -99,7 +99,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
         }
     }
 
-    protected void stamp(Snipe snipe) {
+    protected void stamp() {
         if (this.sorted) {
             for (StampBrushBlockWrapper block : this.solid) {
                 setBlock(block);
@@ -136,7 +136,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
         }
     }
 
-    protected void stampFill(Snipe snipe) {
+    protected void stampFill() {
         if (this.sorted) {
             for (StampBrushBlockWrapper block : this.solid) {
                 this.setBlockFill(block);
@@ -173,7 +173,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
         }
     }
 
-    protected void stampNoAir(Snipe snipe) {
+    protected void stampNoAir() {
         if (this.sorted) {
             for (StampBrushBlockWrapper block : this.solid) {
                 this.setBlock(block);

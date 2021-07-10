@@ -28,6 +28,12 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
 
+    public static VoxelSniperPlugin plugin;
+
+    public static JavaPlugin getPlugin() {
+        return plugin;
+    }
+
     @Override
     public void onEnable() {
         this.voxelSniperConfig = loadConfig();

@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type.stencil;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -53,7 +54,7 @@ public class StencilListBrush extends AbstractBrush {
         }
         try {
             this.filename = parameters[1 + this.pasteParam];
-            File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+            File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencilLists/" + this.filename + ".txt");
             if (file.exists()) {
                 messenger.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
                 readStencilList();
@@ -84,7 +85,7 @@ public class StencilListBrush extends AbstractBrush {
 
     private void readStencilList() {
         stencilList.clear();
-        File file = new File("plugins/VoxelSniper/stencilLists/" + this.filename + ".txt");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencilLists/" + this.filename + ".txt");
         if (file.exists()) {
             try {
                 Scanner scanner = new Scanner(file);
@@ -108,7 +109,7 @@ public class StencilListBrush extends AbstractBrush {
         }
         String stencilName = this.readRandomStencil();
         messenger.sendMessage(stencilName);
-        File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -284,7 +285,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -460,7 +461,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -644,7 +645,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File("plugins/VoxelSniper/stencils/" + stencilName + ".vstencil");
+        File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));

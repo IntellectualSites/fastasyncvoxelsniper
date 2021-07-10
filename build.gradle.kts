@@ -36,7 +36,7 @@ configurations.all {
 }
 
 group = "com.thevoxelbox"
-version = "2.0.0-backward"
+version = "2.0.0"
 
 bukkit {
 	name = "FastAsyncVoxelSniper"

@@ -28,7 +28,7 @@ public final class Command extends org.bukkit.command.Command {
     private void setupPermission(CommandProperties properties) {
         String permission = properties.getPermission();
         setPermission(permission);
-        setPermissionMessage(ChatColor.RED + "Insufficient permissions.");
+        setPermissionMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
     }
 
     @Override
@@ -40,7 +40,7 @@ public final class Command extends org.bukkit.command.Command {
         }
         String permission = this.properties.getPermission();
         if (permission != null && !permission.isEmpty() && !sender.hasPermission(permission)) {
-            sender.sendMessage(ChatColor.RED + "Insufficient permissions.");
+            sender.sendMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
             return true;
         }
         this.executor.executeCommand(sender, args);

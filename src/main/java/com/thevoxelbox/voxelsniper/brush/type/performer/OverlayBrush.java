@@ -99,7 +99,6 @@ public class OverlayBrush extends AbstractPerformerBrush {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private boolean isIgnoredBlock(BlockType type) {
         return type == BlockTypes.WATER || type.getMaterial().isTranslucent() || type == BlockTypes.CACTUS;
     }

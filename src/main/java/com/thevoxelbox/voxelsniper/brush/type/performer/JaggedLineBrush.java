@@ -83,11 +83,11 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         } else {
             BlockVector3 targetBlock = getTargetBlock();
             this.targetCoordinates = Vectors.toBukkit(targetBlock);
-            jaggedP(snipe);
+            jaggedP();
         }
     }
 
-    private void jaggedP(Snipe snipe) {
+    private void jaggedP() {
         Vector originClone = new Vector().
                 copy(this.originCoordinates)
                 .add(HALF_BLOCK_OFFSET);

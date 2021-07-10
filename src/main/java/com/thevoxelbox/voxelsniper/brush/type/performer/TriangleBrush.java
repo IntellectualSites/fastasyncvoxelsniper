@@ -178,7 +178,8 @@ public class TriangleBrush extends AbstractPerformerBrush {
                             (int) this.currentCoordinates[0],
                             clampY((int) this.currentCoordinates[1]),
                             (int) this.currentCoordinates[2],
-                            clampY((int) this.currentCoordinates[0],
+                            clampY(
+                                    (int) this.currentCoordinates[0],
                                     (int) this.currentCoordinates[1],
                                     (int) this.currentCoordinates[2]
                             )

@@ -62,7 +62,7 @@ public class SplineBrush extends AbstractPerformerBrush {
                         new Point(this.ctrlPts.get(1)),
                         snipe
                 )) {
-                    render(snipe);
+                    render();
                 }
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
@@ -162,7 +162,7 @@ public class SplineBrush extends AbstractPerformerBrush {
         }
     }
 
-    private void render(Snipe snipe) {
+    private void render() {
         if (this.spline.isEmpty()) {
             return;
         }

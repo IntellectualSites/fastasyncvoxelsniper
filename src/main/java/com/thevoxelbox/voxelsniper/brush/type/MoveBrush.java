@@ -22,30 +22,6 @@ import java.util.List;
 public class MoveBrush extends AbstractBrush {
 
     /**
-     * Breakable Blocks to determine if no-physics should be used.
-     */
-    private static final MaterialSet BREAKABLE_MATERIALS = MaterialSet.builder()
-            .with(BlockCategories.SAPLINGS)
-            .with(BlockCategories.RAILS)
-            .with(BlockCategories.TRAPDOORS)
-            .with(BlockCategories.DOORS)
-            .with(BlockCategories.BUTTONS)
-            .with(MaterialSets.PISTONS)
-            .with(BlockCategories.PRESSURE_PLATES)
-            .with(BlockCategories.SIGNS)
-            .with(BlockCategories.BEDS)
-            .with(MaterialSets.REDSTONE_TORCHES)
-            .with(MaterialSets.TORCHES)
-            .with(MaterialSets.FLORA)
-            .add(BlockTypes.FIRE)
-            .add(BlockTypes.REPEATER)
-            .add(BlockTypes.SNOW)
-            .add(BlockTypes.CAKE)
-            .add(BlockTypes.LADDER)
-            .add(BlockTypes.LEVER)
-            .build();
-
-    /**
      * Saved direction.
      */
     private final int[] moveDirections = {0, 0, 0};
