@@ -10,30 +10,31 @@ import org.bukkit.World;
 
 public class LightningBrush extends AbstractBrush {
 
-	@Override
-	public void handleArrowAction(Snipe snipe) {
-		BlockVector3 targetBlock = getTargetBlock();
-		TaskManager.IMP.sync(() -> {
-			World world = BukkitAdapter.adapt(getEditSession().getWorld());
-			world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
-			return null;
-		});
-	}
+    @Override
+    public void handleArrowAction(Snipe snipe) {
+        BlockVector3 targetBlock = getTargetBlock();
+        TaskManager.IMP.sync(() -> {
+            World world = BukkitAdapter.adapt(getEditSession().getWorld());
+            world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
+            return null;
+        });
+    }
 
-	@Override
-	public void handleGunpowderAction(Snipe snipe) {
-		BlockVector3 targetBlock = getTargetBlock();
-		TaskManager.IMP.sync(() -> {
-			World world = BukkitAdapter.adapt(getEditSession().getWorld());
-			world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
-			return null;
-		});
-	}
+    @Override
+    public void handleGunpowderAction(Snipe snipe) {
+        BlockVector3 targetBlock = getTargetBlock();
+        TaskManager.IMP.sync(() -> {
+            World world = BukkitAdapter.adapt(getEditSession().getWorld());
+            world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
+            return null;
+        });
+    }
 
-	@Override
-	public void sendInfo(Snipe snipe) {
-		SnipeMessenger messenger = snipe.createMessenger();
-		messenger.sendBrushNameMessage();
-		messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Lightning Brush! Please use in moderation.");
-	}
+    @Override
+    public void sendInfo(Snipe snipe) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendBrushNameMessage();
+        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Lightning Brush! Please use in moderation.");
+    }
+
 }

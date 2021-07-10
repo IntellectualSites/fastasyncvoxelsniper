@@ -9,29 +9,30 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
 public class InkMaterialNoPhysicsPerformer extends AbstractPerformer {
 
-	private BlockState blockData;
-	private BlockType replaceType;
+    private BlockState blockData;
+    private BlockType replaceType;
 
-	@Override
-	public void initialize(PerformerSnipe snipe) {
-		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		this.blockData = toolkitProperties.getBlockData();
-		this.replaceType = toolkitProperties.getReplaceBlockType();
-	}
+    @Override
+    public void initialize(PerformerSnipe snipe) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        this.blockData = toolkitProperties.getBlockData();
+        this.replaceType = toolkitProperties.getReplaceBlockType();
+    }
 
-	@Override
-	public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
-		if (block.getBlockType() == this.replaceType) {
-			setBlockData(editSession, x, y, z, this.blockData);
-		}
-	}
+    @Override
+    public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
+        if (block.getBlockType() == this.replaceType) {
+            setBlockData(editSession, x, y, z, this.blockData);
+        }
+    }
 
-	@Override
-	public void sendInfo(PerformerSnipe snipe) {
-		snipe.createMessageSender()
-			.performerNameMessage()
-			.blockDataMessage()
-			.replaceBlockTypeMessage()
-			.send();
-	}
+    @Override
+    public void sendInfo(PerformerSnipe snipe) {
+        snipe.createMessageSender()
+                .performerNameMessage()
+                .blockDataMessage()
+                .replaceBlockTypeMessage()
+                .send();
+    }
+
 }
