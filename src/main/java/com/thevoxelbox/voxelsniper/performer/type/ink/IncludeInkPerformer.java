@@ -10,29 +10,30 @@ import java.util.List;
 
 public class IncludeInkPerformer extends AbstractPerformer {
 
-	private List<BlockState> includeList;
-	private BlockState blockData;
+    private List<BlockState> includeList;
+    private BlockState blockData;
 
-	@Override
-	public void initialize(PerformerSnipe snipe) {
-		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		this.blockData = toolkitProperties.getBlockData();
-		this.includeList = toolkitProperties.getVoxelList();
-	}
+    @Override
+    public void initialize(PerformerSnipe snipe) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        this.blockData = toolkitProperties.getBlockData();
+        this.includeList = toolkitProperties.getVoxelList();
+    }
 
-	@Override
-	public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
-		if (this.includeList.contains(block)) {
-			setBlockData(editSession, x, y, z, this.blockData);
-		}
-	}
+    @Override
+    public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
+        if (this.includeList.contains(block)) {
+            setBlockData(editSession, x, y, z, this.blockData);
+        }
+    }
 
-	@Override
-	public void sendInfo(PerformerSnipe snipe) {
-		snipe.createMessageSender()
-			.performerNameMessage()
-			.voxelListMessage()
-			.blockDataMessage()
-			.send();
-	}
+    @Override
+    public void sendInfo(PerformerSnipe snipe) {
+        snipe.createMessageSender()
+                .performerNameMessage()
+                .voxelListMessage()
+                .blockDataMessage()
+                .send();
+    }
+
 }

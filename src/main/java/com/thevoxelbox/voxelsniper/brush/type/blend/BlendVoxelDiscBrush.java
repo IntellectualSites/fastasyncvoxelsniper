@@ -16,54 +16,55 @@ import java.util.Set;
 
 public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 
-	@Override
-	public void handleCommand(String[] parameters, Snipe snipe) {
-		SnipeMessenger messenger = snipe.createMessenger();
-		if (parameters[0].equalsIgnoreCase("info")) {
-			messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
-			messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
-			return;
-		}
-		super.handleCommand(parameters, snipe);
-	}
+    @Override
+    public void handleCommand(String[] parameters, Snipe snipe) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        if (parameters[0].equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
+            return;
+        }
+        super.handleCommand(parameters, snipe);
+    }
 
-	@Override
-	public void blend(Snipe snipe) {
-		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		int brushSize = toolkitProperties.getBrushSize();
-		int squareEdge = 2 * brushSize + 1;
-		BlockVector3 targetBlock = getTargetBlock();
-		int smallSquareArea = MathHelper.square(squareEdge);
-		Set<BlockVector3> smallSquare = new HashSet<>(smallSquareArea);
-		Map<BlockVector3, BlockType> smallSquareBlockTypes = new HashMap<>(smallSquareArea);
-		Painters.square()
-			.center(targetBlock)
-			.radius(brushSize)
-			.blockSetter(position -> {
-				BlockType type = getBlockType(position);
-				smallSquare.add(position);
-				smallSquareBlockTypes.put(position, type);
-			})
-			.paint();
-		for (BlockVector3 smallSquareBlock : smallSquare) {
-			Map<BlockType, Integer> blockTypesFrequencies = new HashMap<>();
-			Painters.square()
-				.center(smallSquareBlock)
-				.radius(1)
-				.blockSetter(position -> {
-					if (position.equals(smallSquareBlock)) {
-						return;
-					}
-					BlockType type = getBlockType(position);
-					blockTypesFrequencies.merge(type, 1, Integer::sum);
-				})
-				.paint();
-			CommonMaterial commonMaterial = findCommonMaterial(blockTypesFrequencies);
-			BlockType type = commonMaterial.getBlockType();
-			if (type != null) {
-				smallSquareBlockTypes.put(smallSquareBlock, type);
-			}
-		}
-		setBlocks(smallSquareBlockTypes);
-	}
+    @Override
+    public void blend(Snipe snipe) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        int brushSize = toolkitProperties.getBrushSize();
+        int squareEdge = 2 * brushSize + 1;
+        BlockVector3 targetBlock = getTargetBlock();
+        int smallSquareArea = MathHelper.square(squareEdge);
+        Set<BlockVector3> smallSquare = new HashSet<>(smallSquareArea);
+        Map<BlockVector3, BlockType> smallSquareBlockTypes = new HashMap<>(smallSquareArea);
+        Painters.square()
+                .center(targetBlock)
+                .radius(brushSize)
+                .blockSetter(position -> {
+                    BlockType type = getBlockType(position);
+                    smallSquare.add(position);
+                    smallSquareBlockTypes.put(position, type);
+                })
+                .paint();
+        for (BlockVector3 smallSquareBlock : smallSquare) {
+            Map<BlockType, Integer> blockTypesFrequencies = new HashMap<>();
+            Painters.square()
+                    .center(smallSquareBlock)
+                    .radius(1)
+                    .blockSetter(position -> {
+                        if (position.equals(smallSquareBlock)) {
+                            return;
+                        }
+                        BlockType type = getBlockType(position);
+                        blockTypesFrequencies.merge(type, 1, Integer::sum);
+                    })
+                    .paint();
+            CommonMaterial commonMaterial = findCommonMaterial(blockTypesFrequencies);
+            BlockType type = commonMaterial.getBlockType();
+            if (type != null) {
+                smallSquareBlockTypes.put(smallSquareBlock, type);
+            }
+        }
+        setBlocks(smallSquareBlockTypes);
+    }
+
 }

@@ -8,30 +8,31 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 
 public class ComboMaterialPerformer extends AbstractPerformer {
 
-	private BlockState blockData;
-	private BlockState replaceBlockData;
+    private BlockState blockData;
+    private BlockState replaceBlockData;
 
-	@Override
-	public void initialize(PerformerSnipe snipe) {
-		ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-		this.blockData = toolkitProperties.getBlockData();
-		this.replaceBlockData = toolkitProperties.getReplaceBlockData();
-	}
+    @Override
+    public void initialize(PerformerSnipe snipe) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        this.blockData = toolkitProperties.getBlockData();
+        this.replaceBlockData = toolkitProperties.getReplaceBlockData();
+    }
 
-	@Override
-	public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
-		if (block.getBlockType() == this.replaceBlockData.getBlockType()) {
-			setBlockData(editSession, x, y, z, this.blockData);
-		}
-	}
+    @Override
+    public void perform(EditSession editSession, int x, int y, int z, BlockState block) {
+        if (block.getBlockType() == this.replaceBlockData.getBlockType()) {
+            setBlockData(editSession, x, y, z, this.blockData);
+        }
+    }
 
-	@Override
-	public void sendInfo(PerformerSnipe snipe) {
-		snipe.createMessageSender()
-			.performerNameMessage()
-			.blockTypeMessage()
-			.replaceBlockTypeMessage()
-			.blockDataMessage()
-			.send();
-	}
+    @Override
+    public void sendInfo(PerformerSnipe snipe) {
+        snipe.createMessageSender()
+                .performerNameMessage()
+                .blockTypeMessage()
+                .replaceBlockTypeMessage()
+                .blockDataMessage()
+                .send();
+    }
+
 }

@@ -6,9 +6,10 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
 public interface Performer {
 
-	void initialize(PerformerSnipe snipe);
+    void initialize(PerformerSnipe snipe);
 
-	void perform(EditSession editSession, int x, int y, int z, BlockState block);
+    void perform(EditSession editSession, int x, int y, int z, BlockState block);
 
-	void sendInfo(PerformerSnipe snipe);
+    void sendInfo(PerformerSnipe snipe);
+
 }

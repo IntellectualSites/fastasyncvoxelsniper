@@ -1,8 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-	id("java")
-	id("java-library")
+	java
+	`java-library`
+    
 	id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
 	id("com.github.johnrengelman.shadow") version "7.0.0"
 }
@@ -35,10 +36,10 @@ configurations.all {
 }
 
 group = "com.thevoxelbox"
-version = "2.0.0-backward"
+version = "2.0.0"
 
 bukkit {
-	name = "VoxelSniper"
+	name = "FastAsyncVoxelSniper"
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
 	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
 	apiVersion = "1.13"

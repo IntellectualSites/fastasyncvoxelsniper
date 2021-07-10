@@ -11,31 +11,32 @@ import java.util.Set;
 
 public class MaterialSet implements Iterable<BlockType> {
 
-	private final Set<BlockType> blockTypes;
+    private final Set<BlockType> blockTypes;
 
-	public static MaterialSetBuilder builder() {
-		return new MaterialSetBuilder();
-	}
+    public MaterialSet(Collection<BlockType> blockTypes) {
+        this.blockTypes = new HashSet<>(blockTypes);
+    }
 
-	public MaterialSet(Collection<BlockType> blockTypes) {
-		this.blockTypes = new HashSet<>(blockTypes);
-	}
+    public static MaterialSetBuilder builder() {
+        return new MaterialSetBuilder();
+    }
 
-	public boolean contains(BlockState block) {
-		BlockType type = block.getBlockType();
-		return contains(type);
-	}
+    public boolean contains(BlockState block) {
+        BlockType type = block.getBlockType();
+        return contains(type);
+    }
 
-	public boolean contains(BlockType blockType) {
-		return this.blockTypes.contains(blockType);
-	}
+    public boolean contains(BlockType blockType) {
+        return this.blockTypes.contains(blockType);
+    }
 
-	@Override
-	public Iterator<BlockType> iterator() {
-		return this.blockTypes.iterator();
-	}
+    @Override
+    public Iterator<BlockType> iterator() {
+        return this.blockTypes.iterator();
+    }
 
-	public Set<BlockType> getBlockTypes() {
-		return Collections.unmodifiableSet(this.blockTypes);
-	}
+    public Set<BlockType> getBlockTypes() {
+        return Collections.unmodifiableSet(this.blockTypes);
+    }
+
 }
