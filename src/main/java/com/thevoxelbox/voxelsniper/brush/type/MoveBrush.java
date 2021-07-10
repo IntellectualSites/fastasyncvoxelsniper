@@ -2,14 +2,10 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
-import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,7 +103,6 @@ public class MoveBrush extends AbstractBrush {
      */
     private void moveSelection(Snipe snipe, Selection selection, int[] direction) {
         SnipeMessenger messenger = snipe.createMessenger();
-        Sniper sniper = snipe.getSniper();
         List<BlockVector3> locations = selection.getLocations();
         if (!locations.isEmpty()) {
             Selection newSelection = new Selection();
