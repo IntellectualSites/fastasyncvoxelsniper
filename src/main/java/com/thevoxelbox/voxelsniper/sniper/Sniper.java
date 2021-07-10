@@ -283,4 +283,8 @@ public class Sniper {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+	public List<Toolkit> getToolkits() {
+		return toolkits;
+	}
 }
