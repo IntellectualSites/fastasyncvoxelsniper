@@ -12,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 
-public class Favs {
+public class FastAsyncVoxelSniper {
 
     private final VoxelSniperPlugin plugin;
 
-    public Favs(JavaPlugin plugin) {
+    public FastAsyncVoxelSniper(JavaPlugin plugin) {
         this.plugin = (VoxelSniperPlugin) plugin;
         try {
             this.initFavs();
