@@ -83,4 +83,8 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
                 .send();
     }
 
+    public void setAirExcluded(boolean airExcluded) {
+        this.airExcluded = airExcluded;
+    }
+
 }

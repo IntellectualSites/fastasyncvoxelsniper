@@ -217,11 +217,19 @@ public abstract class AbstractBrush implements Brush {
         return this.targetBlock;
     }
 
+    public void setTargetBlock(BlockVector3 targetBlock) {
+        this.targetBlock = targetBlock;
+    }
+
     /**
      * @return Block before target Block.
      */
     public BlockVector3 getLastBlock() {
         return this.lastBlock;
+    }
+
+    public void setLastBlock(BlockVector3 lastBlock) {
+        this.lastBlock = lastBlock;
     }
 
 }
