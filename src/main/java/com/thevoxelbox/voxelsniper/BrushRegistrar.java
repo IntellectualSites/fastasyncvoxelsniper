@@ -11,6 +11,7 @@ import com.thevoxelbox.voxelsniper.brush.type.CopyPastaBrush;
 import com.thevoxelbox.voxelsniper.brush.type.DomeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.DrainBrush;
 import com.thevoxelbox.voxelsniper.brush.type.EraserBrush;
+import com.thevoxelbox.voxelsniper.brush.type.ErodeBlendBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ErodeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.ExtrudeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.FlatOceanBrush;
@@ -127,6 +128,7 @@ public class BrushRegistrar {
         registerEntityBrush();
         registerEntityRemovalBrush();
         registerEraserBrush();
+        registerErodeBlendBrush();
         registerErodeBrush();
         registerExtrudeBrush();
         registerFillDownBrush();
@@ -474,6 +476,18 @@ public class BrushRegistrar {
                 .alias("erase")
                 .alias("eraser")
                 .creator(EraserBrush::new)
+                .build();
+        this.registry.register(properties);
+    }
+
+    private void registerErodeBlendBrush() {
+        BrushProperties properties = BrushProperties.builder()
+                .name("Erode BlendBall")
+                .permission("voxelsniper.brush.erodeblend")
+                .alias("eb")
+                .alias("erodeblend")
+                .alias("erodeblendball")
+                .creator(ErodeBlendBrush::new)
                 .build();
         this.registry.register(properties);
     }
