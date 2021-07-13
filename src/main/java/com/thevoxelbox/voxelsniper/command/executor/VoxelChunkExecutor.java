@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,7 @@ public class VoxelChunkExecutor implements CommandExecutor {
         int x = location.getBlockX();
         int z = location.getBlockZ();
         world.refreshChunk(x, z);
+        sender.sendMessage(ChatColor.BLUE + "Chunk has been refreshed.");
     }
 
 }
