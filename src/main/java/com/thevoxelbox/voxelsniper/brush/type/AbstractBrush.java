@@ -8,6 +8,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.world.RegenOptions;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -93,7 +94,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    public boolean regenerateChunk(int chunkX, int chunkZ) {
+    public boolean regenerateChunk(int chunkX, int chunkZ, BiomeType biomeType) {
         try {
             World world = BukkitAdapter.adapt(editSession.getWorld());
             int minX = chunkX << 4;
@@ -101,7 +102,7 @@ public abstract class AbstractBrush implements Brush {
             RegenOptions regenOptions = RegenOptions.builder()
                     .seed(world.getSeed())
                     .regenBiomes(true)
-                    .biomeType(null)
+                    .biomeType(biomeType)
                     .build();
             return editSession.getWorld().regenerate(
                     new CuboidRegion(
