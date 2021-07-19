@@ -36,7 +36,7 @@ public class CloneStampBrush extends AbstractStampBrush {
             setStamp(StampType.DEFAULT);
             reSort();
             messenger.sendMessage(ChatColor.AQUA + "Default stamp brush");
-        } else if (!parameter.isEmpty() && parameter.charAt(0) == 'c') {
+        } else if (parameter.charAt(0) == 'c') {
             Integer cylinderCenter = NumericParser.parseInteger(parameter.replace("c", ""));
             if (cylinderCenter == null) {
                 return;

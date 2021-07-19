@@ -21,18 +21,21 @@ public class RulerBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
                 messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
                 messenger.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
                 return;
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
+            } else if (parameter.charAt(0) == 'x') {
                 this.offsetX = Integer.parseInt(parameter.replace("x", ""));
                 messenger.sendMessage(ChatColor.AQUA + "X offset set to " + this.offsetX);
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
+            } else if (parameter.charAt(0) == 'y') {
                 this.offsetY = Integer.parseInt(parameter.replace("y", ""));
                 messenger.sendMessage(ChatColor.AQUA + "Y offset set to " + this.offsetY);
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'z') {
+            } else if (parameter.charAt(0) == 'z') {
                 this.offsetZ = Integer.parseInt(parameter.replace("z", ""));
                 messenger.sendMessage(ChatColor.AQUA + "Z offset set to " + this.offsetZ);
             } else if (parameter.startsWith("ruler")) {

@@ -19,6 +19,9 @@ public class FlatOceanBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
                 messenger.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");

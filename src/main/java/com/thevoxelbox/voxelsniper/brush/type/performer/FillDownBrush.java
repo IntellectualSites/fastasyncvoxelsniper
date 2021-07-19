@@ -18,6 +18,9 @@ public class FillDownBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 snipe.createMessageSender()
                         .message(ChatColor.GOLD + "Fill Down Parameters:")

@@ -17,6 +17,9 @@ public class CylinderBrush extends AbstractPerformerBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
                 messenger.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
@@ -30,14 +33,14 @@ public class CylinderBrush extends AbstractPerformerBrush {
             } else if (parameter.startsWith("false")) {
                 this.trueCircle = 0;
                 messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'h') {
+            } else if (parameter.charAt(0) == 'h') {
                 Integer height = NumericParser.parseInteger(parameter.replace("h", ""));
                 if (height == null) {
                     return;
                 }
                 toolkitProperties.setVoxelHeight(height);
                 messenger.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'c') {
+            } else if (parameter.charAt(0) == 'c') {
                 Integer center = NumericParser.parseInteger(parameter.replace("c", ""));
                 if (center == null) {
                     return;

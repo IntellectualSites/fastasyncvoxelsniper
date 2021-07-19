@@ -21,12 +21,15 @@ public class BlobBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
                 messenger.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + ").  Default is " + GROW_PERCENT_DEFAULT);
                 return;
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
+            if (parameter.charAt(0) == 'g') {
                 int temp = Integer.parseInt(parameter.replace("g", ""));
                 if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");

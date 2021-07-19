@@ -40,6 +40,9 @@ public class ErodeBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             Preset preset = Preset.getPreset(parameter);
             if (preset != null) {
                 try {
@@ -52,7 +55,7 @@ public class ErodeBrush extends AbstractBrush {
                 }
             }
             ErosionPreset currentPresetBackup = this.currentPreset;
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'f') {
+            if (parameter.charAt(0) == 'f') {
                 String fillFacesString = parameter.replace("f", "");
                 Integer fillFaces = NumericParser.parseInteger(fillFacesString);
                 if (fillFaces != null) {
@@ -64,7 +67,7 @@ public class ErodeBrush extends AbstractBrush {
                     );
                 }
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'e') {
+            if (parameter.charAt(0) == 'e') {
                 String erosionFacesString = parameter.replace("e", "");
                 Integer erosionFaces = NumericParser.parseInteger(erosionFacesString);
                 if (erosionFaces != null) {
@@ -76,7 +79,7 @@ public class ErodeBrush extends AbstractBrush {
                     );
                 }
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'F') {
+            if (parameter.charAt(0) == 'F') {
                 String fillRecursionString = parameter.replace("F", "");
                 Integer fillRecursion = NumericParser.parseInteger(fillRecursionString);
                 if (fillRecursion != null) {
@@ -88,7 +91,7 @@ public class ErodeBrush extends AbstractBrush {
                     );
                 }
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'E') {
+            if (parameter.charAt(0) == 'E') {
                 String erosionRecursionString = parameter.replace("E", "");
                 Integer erosionRecursion = NumericParser.parseInteger(erosionRecursionString);
                 if (erosionRecursion != null) {

@@ -32,6 +32,9 @@ public class MoveBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         BrushProperties brushProperties = snipe.getBrushProperties();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");
                 messenger.sendMessage(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");

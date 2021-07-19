@@ -29,6 +29,9 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 snipe.createMessageSender()
                         .message(ChatColor.GOLD + "Splatter Disc brush Parameters:")
@@ -37,7 +40,7 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
                         .message(ChatColor.AQUA + "/b sd r[int] -- set a recursion (1-10).  Default is 3")
                         .send();
                 return;
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
+            } else if (parameter.charAt(0) == 's') {
                 double temp = Integer.parseInt(parameter.replace("s", ""));
                 if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
@@ -45,7 +48,7 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
                 }
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
+            } else if (parameter.charAt(0) == 'g') {
                 double temp = Integer.parseInt(parameter.replace("g", ""));
                 if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
@@ -53,7 +56,7 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
+            } else if (parameter.charAt(0) == 'r') {
                 int temp = Integer.parseInt(parameter.replace("r", ""));
                 if (temp >= SPLATTER_RECURSIONS_PERCENT_MIN && temp <= SPLATTER_RECURSIONS_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);

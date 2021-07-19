@@ -37,6 +37,9 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             try {
                 if (parameter.equalsIgnoreCase("info")) {
                     snipe.createMessageSender()
@@ -48,7 +51,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                             .message(ChatColor.AQUA + "/b sover r[int] -- set a recursion (1-10).  Default is 3")
                             .send();
                     return;
-                } else if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+                } else if (parameter.charAt(0) == 'd') {
                     this.depth = Integer.parseInt(parameter.replace("d", ""));
                     messenger.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
                     if (this.depth < 1) {
@@ -60,7 +63,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 } else if (parameter.startsWith("some")) {
                     this.allBlocks = false;
                     messenger.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
-                } else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
+                } else if (parameter.charAt(0) == 's') {
                     double temp = Integer.parseInt(parameter.replace("s", ""));
                     if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
                         messenger.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
@@ -68,7 +71,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
                     }
-                } else if (!parameter.isEmpty() && parameter.charAt(0) == 'g') {
+                } else if (parameter.charAt(0) == 'g') {
                     double temp = Integer.parseInt(parameter.replace("g", ""));
                     if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
                         messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
@@ -79,7 +82,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 } else if (parameter.startsWith("randh")) {
                     this.randomizeHeight = !this.randomizeHeight;
                     messenger.sendMessage(ChatColor.RED + "RandomizeHeight set to: " + this.randomizeHeight);
-                } else if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
+                } else if (parameter.charAt(0) == 'r') {
                     int temp = Integer.parseInt(parameter.replace("r", ""));
                     if (temp >= SPLATTER_RECURSIONS_PERCENT_MIN && temp <= SPLATTER_RECURSIONS_PERCENT_MAX) {
                         messenger.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);

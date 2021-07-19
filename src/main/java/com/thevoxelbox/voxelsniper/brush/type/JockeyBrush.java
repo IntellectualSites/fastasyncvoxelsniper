@@ -33,6 +33,9 @@ public class JockeyBrush extends AbstractBrush {
         boolean playerOnly = false;
         boolean inverse = false;
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             int length = parameter.length();
             if (parameter.startsWith("-i:")) {
                 inverse = parameter.charAt(length - 1) == 'y';

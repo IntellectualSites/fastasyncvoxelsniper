@@ -31,6 +31,9 @@ public class SpiralStaircaseBrush extends AbstractBrush {
             return;
         }
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (Stream.of("block", "step", "woodstair", "cobblestair")
                     .anyMatch(parameter::equalsIgnoreCase)) {
                 this.stairType = parameter;

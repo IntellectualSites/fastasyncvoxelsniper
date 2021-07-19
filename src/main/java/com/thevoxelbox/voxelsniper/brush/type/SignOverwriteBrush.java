@@ -358,7 +358,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         if (oldInput == null || oldInput.isEmpty()) {
             return "";
         }
-        return LegacyComponentSerializer.INSTANCE.serialize(TextComponent.of(oldInput));
+        return LegacyComponentSerializer.legacy().serialize(TextComponent.of(oldInput));
     }
 
     @Override

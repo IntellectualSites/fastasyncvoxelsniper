@@ -24,12 +24,15 @@ public class ScannerBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
                 messenger.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
                 return;
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+            if (parameter.charAt(0) == 'd') {
                 Integer depth = NumericParser.parseInteger(parameter.substring(1));
                 if (depth == null) {
                     messenger.sendMessage(ChatColor.RED + "Depth is not a number.");

@@ -31,7 +31,7 @@ public class BiomeBrush extends AbstractBrush {
                     availableBiomes = new StringBuilder(ChatColor.DARK_GREEN + biome.name());
                     continue;
                 }
-                availableBiomes.append(ChatColor.RED + ", " + ChatColor.DARK_GREEN)
+                availableBiomes.append(ChatColor.RED).append(", ").append(ChatColor.DARK_GREEN)
                         .append(biome.name());
             }
             player.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);

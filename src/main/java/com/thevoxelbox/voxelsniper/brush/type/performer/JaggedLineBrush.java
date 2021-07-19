@@ -33,13 +33,16 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
                 messenger.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
                 messenger.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
                 return;
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
+            if (parameter.charAt(0) == 'r') {
                 Integer temp = NumericParser.parseInteger(parameter.substring(1));
                 if (temp == null) {
                     messenger.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
@@ -52,7 +55,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
                     messenger.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
                 }
                 return;
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 's') {
+            } else if (parameter.charAt(0) == 's') {
                 Integer spread = NumericParser.parseInteger(parameter.substring(1));
                 if (spread == null) {
                     messenger.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
