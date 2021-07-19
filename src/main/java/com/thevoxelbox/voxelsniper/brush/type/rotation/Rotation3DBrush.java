@@ -26,6 +26,9 @@ public class Rotation3DBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
@@ -33,19 +36,19 @@ public class Rotation3DBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
                 messenger.sendMessage(ChatColor.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
                 return;
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'p') {
+            } else if (parameter.charAt(0) == 'p') {
                 this.sePitch = Math.toRadians(Double.parseDouble(parameter.replace("p", "")));
                 messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch);
                 if (this.sePitch < 0 || this.sePitch > 359) {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'r') {
+            } else if (parameter.charAt(0) == 'r') {
                 this.seRoll = Math.toRadians(Double.parseDouble(parameter.replace("r", "")));
                 messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll);
                 if (this.seRoll < 0 || this.seRoll > 359) {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
                 }
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
+            } else if (parameter.charAt(0) == 'y') {
                 this.seYaw = Math.toRadians(Double.parseDouble(parameter.replace("y", "")));
                 messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw);
                 if (this.seYaw < 0 || this.seYaw > 359) {

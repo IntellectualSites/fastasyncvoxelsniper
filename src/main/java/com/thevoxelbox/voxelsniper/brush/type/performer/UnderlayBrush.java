@@ -18,6 +18,9 @@ public class UnderlayBrush extends AbstractPerformerBrush {
     public final void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             if (parameter.equalsIgnoreCase("info")) {
                 snipe.createMessageSender()
                         .message(ChatColor.GOLD + "Reverse Overlay brush parameters:")
@@ -29,7 +32,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
                 }
                 return;
             }
-            if (!parameter.isEmpty() && parameter.charAt(0) == 'd') {
+            if (parameter.charAt(0) == 'd') {
                 this.depth = Integer.parseInt(parameter.replace("d", ""));
                 messenger.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
             } else if (parameter.startsWith("all")) {

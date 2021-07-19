@@ -46,6 +46,9 @@ public class GenerateTreeBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String parameter : parameters) {
+            if (parameter.isEmpty()) {
+                continue;
+            }
             try {
                 if (parameter.equalsIgnoreCase("info")) {
                     snipe.createMessageSender()

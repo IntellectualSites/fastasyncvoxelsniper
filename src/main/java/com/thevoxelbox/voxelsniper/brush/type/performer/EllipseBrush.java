@@ -35,7 +35,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.AQUA + "t[n]: Set the amount of time steps");
                 messenger.sendMessage(ChatColor.AQUA + "fill: Toggles fill mode");
                 return;
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'x') {
+            } else if (parameter.charAt(0) == 'x') {
                 Integer tempXScale = NumericParser.parseInteger(parameter.replace("x", ""));
                 if (tempXScale == null) {
                     messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
@@ -47,7 +47,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                 }
                 this.xscl = tempXScale;
                 messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 'y') {
+            } else if (parameter.charAt(0) == 'y') {
                 Integer tempYScale = NumericParser.parseInteger(parameter.replace("y", ""));
                 if (tempYScale == null) {
                     messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
@@ -59,7 +59,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                 }
                 this.yscl = tempYScale;
                 messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
-            } else if (!parameter.isEmpty() && parameter.charAt(0) == 't') {
+            } else if (parameter.charAt(0) == 't') {
                 Integer tempSteps = NumericParser.parseInteger(parameter.replace("t", ""));
                 if (tempSteps == null) {
                     messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
