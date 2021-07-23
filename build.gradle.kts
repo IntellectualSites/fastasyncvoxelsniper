@@ -42,7 +42,7 @@ version = "2.1.1-SNAPSHOT"
 bukkit {
 	name = "FastAsyncVoxelSniper"
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
-	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb")
+	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
 	apiVersion = "1.13"
 	version = rootProject.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
@@ -135,6 +135,10 @@ publishing {
                     developer {
                         id.set("NotMyFault")
                         name.set("NotMyFault")
+                    }
+                    developer {
+                        id.set("Aurelien30000")
+                        name.set("Aurelien30000")
                     }
                 }
 
