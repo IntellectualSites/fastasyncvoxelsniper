@@ -65,10 +65,6 @@ tasks.named<ShadowJar>("shadowJar") {
 	minimize()
 }
 
-tasks.named("build").configure {
-	dependsOn("shadowJar")
-}
-
 val javadocDir = rootDir.resolve("docs").resolve("javadoc")
 tasks {
     val assembleTargetDir = create<Copy>("assembleTargetDirectory") {
@@ -106,6 +102,20 @@ tasks {
         )
         opt.destinationDirectory = javadocDir
         opt.addBooleanOption("html5", true)
+    }
+
+    jar {
+        this.archiveClassifier.set("jar")
+    }
+
+    shadowJar {
+        this.archiveClassifier.set(null as String?)
+        this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
+        this.destinationDirectory.set(rootProject.tasks.shadowJar.get().destinationDirectory.get())
+    }
+
+    named("build") {
+        dependsOn(named("shadowJar"))
     }
 }
 
