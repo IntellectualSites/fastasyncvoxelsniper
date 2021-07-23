@@ -6,3 +6,5 @@ out/
 *.iml
 .gradletasknamecache
 *.bat
+target/
+docs/

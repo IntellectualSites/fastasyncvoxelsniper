@@ -2,11 +2,47 @@
 
 This is a fork of [Voxel Sniper](https://github.com/TVPT/VoxelSniper). It adds support for newer versions of [Spigot](https://www.spigotmc.org/) and [Paper](https://papermc.io/) keeping available all features from original version of plugin, but with some optimizations and code cleanup.
 
-## Support
+## Links
 
-The purpose of this fork was to add Voxel Sniper to our building server, which runs on the latest version of Java and Paper. After we got some feedback, we decided also to support Java 8 and Spigot 1.13.2 on separated `backward` branch. These versions also works on newer versions of Java and Spigot/Paper.
+* [Download](https://dev.bukkit.org/projects/favs)
+* [Discord](https://discord.gg/intellectualsites)
+* [Issues](https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues)
+* [Wiki](https://voxelsniper.fandom.com/wiki/VoxelSniper_Wiki) (Not maintained by IntellectualSites)
+* [JavaDocs](https://ci.athion.net/job/FastAsyncVoxelSniper-Javadocs/)
 
-## Download
+## Contributing
+See [here](https://github.com/IntellectualSites/FastAsyncVoxelSniper/blob/main/CONTRIBUTING.md)
 
-* [voxel-sniper-flattened](https://github.com/mcparkournet/voxel-sniper-flattened/releases/download/v1.0.2/voxel-sniper-flattened-1.0.2-all.jar) - only for the latest version of Java and Paper
-* **[voxel-sniper-flattened-backward](https://github.com/mcparkournet/voxel-sniper-flattened/releases/download/v1.0.2-backward/voxel-sniper-flattened-1.0.2-backward.jar)** - for **Java 8+** and **Spigot 1.13.2+**
+## Maven Deployment
+For hosted javadocs, see above.
+
+###Gradle
+```kotlin
+repositories {
+    maven {
+        name = "IntellectualSites"
+        url = uri("https://mvn.intellectualsites.com/content/groups/public/")
+    }
+}
+
+dependencies {
+    compileOnly("com.thevoxelbox:FastAsyncVoxelSniper:2.1.0")
+}
+```
+
+###Maven
+```xml
+<!-- FastAsyncVoxelSniper -->
+<repository>
+    <id>IntellectualSites</id>
+    <url>https://mvn.intellectualsites.com/content/groups/public/</url>
+</repository>
+
+<!-- FastAsyncVoxelSniper API -->
+<dependency>
+    <groupId>com.thevoxelbox</groupId>
+    <artifactId>FastAsyncVoxelSniper</artifactId>
+    <version>2.1.0</version>
+    <scope>provided</scope>
+</dependency>
+```
