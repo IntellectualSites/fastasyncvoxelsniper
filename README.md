@@ -1,4 +1,4 @@
-# voxel-sniper-flattened
+# FastAsyncVoxelSniper
 
 This is a fork of [Voxel Sniper](https://github.com/TVPT/VoxelSniper). It adds support for newer versions of [Spigot](https://www.spigotmc.org/) and [Paper](https://papermc.io/) keeping available all features from original version of plugin, but with some optimizations and code cleanup.
 
