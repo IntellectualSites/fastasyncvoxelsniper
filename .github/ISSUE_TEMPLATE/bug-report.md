@@ -10,8 +10,8 @@ assignees: ''
 <!-- ⚠️⚠️ Do Not Delete This! You must follow this template. ⚠️⚠️ -->
 <!--- Incomplete reports will be marked as invalid, and closed, with few exceptions.-->
 
-<!--- If you are using 1.14 or 1.15 consider updating to 1.16.4 before raising an issue -->
-<!--- The priority lays on 1.16 right now, so issues reported for or 1.15 will be fixed for the 1.16 versions -->
+<!--- If you are using 1.14 or 1.15 consider updating to 1.17.1 before raising an issue -->
+<!--- The priority lays on 1.17 right now, so issues reported for or 1.15 will be fixed for the 1.16 versions -->
 
 **[REQUIRED] FastAsyncVoxelSniper Configuration Files**
 <!--- If you cannot perform the above, we require logs/latest.log; config.yml and config-legacy.yml -->
@@ -39,6 +39,7 @@ Steps to reproduce the behavior:
 **Checklist**:
 <!--- Make sure you've completed the following steps (put an "X" between of brackets): -->
 - [] I included all information required in the sections above
-- [] I made sure there are no duplicates of this report [(Use Search)](https://github.com/IntellectualSites/voxel-sniper-flattened/issues?q=is%3Aissue)
+- [] I made sure there are no duplicates of this report [(Use Search)](https://github.com/FastAsyncVoxelSniper/issues?
+  q=is%3Aissue)
 - [] I made sure I am using an up-to-date version of [FastAsyncVoxelSniper](https://ci.athion.net/job/FastAsyncVoxelSniper-flattening/)
 - [] I made sure the bug/error is not caused by any other plugin

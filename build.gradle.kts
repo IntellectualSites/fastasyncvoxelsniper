@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
 	java
 	`java-library`
+    `maven-publish`
     
 	id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
 	id("com.github.johnrengelman.shadow") version "7.0.0"
@@ -66,4 +67,96 @@ tasks.named<ShadowJar>("shadowJar") {
 
 tasks.named("build").configure {
 	dependsOn("shadowJar")
+}
+
+val javadocDir = rootDir.resolve("docs").resolve("javadoc")
+tasks {
+    val assembleTargetDir = create<Copy>("assembleTargetDirectory") {
+        destinationDir = rootDir.resolve("target")
+        into(destinationDir)
+        from(withType<Jar>())
+    }
+    named("build") {
+        dependsOn(assembleTargetDir)
+    }
+
+    named<Delete>("clean") {
+        doFirst {
+            rootDir.resolve("target").deleteRecursively()
+            javadocDir.deleteRecursively()
+        }
+    }
+
+    compileJava {
+        options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000"))
+        options.compilerArgs.add("-Xlint:all")
+        for (disabledLint in arrayOf("processing", "path", "fallthrough", "serial"))
+            options.compilerArgs.add("-Xlint:$disabledLint")
+        options.isDeprecation = true
+        options.encoding = "UTF-8"
+    }
+
+    javadoc {
+        val opt = options as StandardJavadocDocletOptions
+        opt.addStringOption("Xdoclint:none", "-quiet")
+        opt.tags(
+                "apiNote:a:API Note:",
+                "implSpec:a:Implementation Requirements:",
+                "implNote:a:Implementation Note:"
+        )
+        opt.destinationDirectory = javadocDir
+        opt.addBooleanOption("html5", true)
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            pom {
+
+                developers {
+                    developer {
+                        id.set("NotMyFault")
+                        name.set("NotMyFault")
+                    }
+                }
+
+                scm {
+                    url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
+                    connection.set("scm:https://IntellectualSites@github.com/IntellectualSites/FastAsyncVoxelSniper.git")
+                    developerConnection.set("scm:git://github.com/IntellectualSites/FastAsyncVoxelSniper.git")
+                }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        val nexusUsername: String? by project
+        val nexusPassword: String? by project
+        if (nexusUsername != null && nexusPassword != null) {
+            maven {
+                val releasesRepositoryUrl = "https://mvn.intellectualsites.com/content/repositories/releases/"
+                val snapshotRepositoryUrl = "https://mvn.intellectualsites.com/content/repositories/snapshots/"
+                url = uri(
+                        if (version.toString().endsWith("-SNAPSHOT")) snapshotRepositoryUrl
+                        else releasesRepositoryUrl
+                )
+
+                credentials {
+                    username = nexusUsername
+                    password = nexusPassword
+                }
+            }
+        } else {
+            logger.warn("No nexus repository is added; nexusUsername or nexusPassword is null.")
+        }
+    }
 }
