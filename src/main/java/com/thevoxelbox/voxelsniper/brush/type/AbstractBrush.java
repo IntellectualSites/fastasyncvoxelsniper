@@ -166,11 +166,7 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlockType(int x, int y, int z, BlockType type) {
-        try {
-            editSession.setBlock(x, y, z, type.getDefaultState());
-        } catch (WorldEditException e) {
-            throw new RuntimeException(e);
-        }
+        setBlockData(x, y, z, type.getDefaultState());
     }
 
     public void setBlockData(BlockVector3 position, BlockState blockState) {
@@ -183,6 +179,9 @@ public abstract class AbstractBrush implements Brush {
     public void setBlockData(int x, int y, int z, BlockState blockState) {
         try {
             editSession.setBlock(x, y, z, blockState);
+            if (blockState.getMaterial().isTile()) {
+                editSession.setTile(x, y, z, blockState.getMaterial().getDefaultTile());
+            }
         } catch (WorldEditException e) {
             throw new RuntimeException(e);
         }
