@@ -36,6 +36,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        plugin = this;
         this.voxelSniperConfig = loadConfig();
         this.brushRegistry = loadBrushRegistry();
         this.performerRegistry = loadPerformerRegistry();

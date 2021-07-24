@@ -18,7 +18,7 @@ public class CanyonBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+        String firstParameter = parameters[1];
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
         }

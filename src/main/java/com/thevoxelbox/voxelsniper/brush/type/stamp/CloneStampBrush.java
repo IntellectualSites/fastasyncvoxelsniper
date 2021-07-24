@@ -17,7 +17,7 @@ public class CloneStampBrush extends AbstractStampBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        String parameter = parameters[0];
+        String parameter = parameters[1];
         if (parameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
             messenger.sendMessage(ChatColor.GREEN + "cs f -- Activates Fill mode");

@@ -13,7 +13,7 @@ public class ShellVoxelBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[0].equalsIgnoreCase("info")) {
+        if (parameters[1].equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
         } else {
             messenger.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");

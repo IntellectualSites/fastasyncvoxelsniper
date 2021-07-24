@@ -23,7 +23,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[0].equalsIgnoreCase("info")) {
+        if (parameters[1].equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
