@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.ajoberstar.grgit.Grgit
 
 plugins {
 	java
@@ -7,6 +8,7 @@ plugins {
     
 	id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
 	id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("org.ajoberstar.grgit") version "4.1.0"
 }
 
 java {
@@ -36,8 +38,22 @@ configurations.all {
 	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
+var rootVersion by extra("2.1.1")
+var buildNumber by extra("")
+ext {
+    val git: Grgit = Grgit.open {
+        dir = File("$rootDir/.git")
+    }
+    val commit: String? = git.head().abbreviatedId
+    buildNumber = if (project.hasProperty("buildnumber")) {
+        project.properties["buildnumber"] as String
+    } else {
+        commit.toString()
+    }
+}
+
 group = "com.thevoxelbox"
-version = "2.1.1"
+version = String.format("%s-%s", rootVersion, buildNumber)
 
 bukkit {
 	name = "FastAsyncVoxelSniper"
