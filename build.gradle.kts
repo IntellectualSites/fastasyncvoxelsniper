@@ -24,7 +24,7 @@ repositories {
 dependencies {
 	compileOnlyApi("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
 	compileOnly("org.jetbrains:annotations:20.1.0")
-	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-74")
+	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-93")
 	implementation("org.incendo.serverlib:ServerLib:2.2.1")
 	implementation("org.bstats:bstats-bukkit:2.2.1")
 	implementation("org.bstats:bstats-base:2.2.1")
