@@ -44,13 +44,13 @@ public class StencilBrush extends AbstractBrush {
     private short xRef;
     private short zRef;
     private short yRef;
-    private byte pasteParam;
     private byte point = 1;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+        String firstParameter = parameters[1];
+        byte pasteParam;
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified schematic.  Allowed size of schematic is based on rank.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
@@ -58,16 +58,20 @@ public class StencilBrush extends AbstractBrush {
             return;
         } else if (firstParameter.equalsIgnoreCase("full")) {
             this.pasteOption = 0;
-            this.pasteParam = 1;
+            pasteParam = 1;
         } else if (firstParameter.equalsIgnoreCase("fill")) {
             this.pasteOption = 1;
-            this.pasteParam = 1;
+            pasteParam = 1;
         } else if (firstParameter.equalsIgnoreCase("replace")) {
             this.pasteOption = 2;
-            this.pasteParam = 1;
+            pasteParam = 1;
+        } else {
+            // Reset to [name] parameter expected.
+            this.pasteOption = 1;
+            pasteParam = 0;
         }
         try {
-            this.filename = parameters[1 + this.pasteParam];
+            this.filename = parameters[1 + pasteParam];
             File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + this.filename + ".vstencil");
             if (file.exists()) {
                 messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded. Make sure you are using powder if you do not want any chance of overwriting the file.");
@@ -75,6 +79,7 @@ public class StencilBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist. Ready to be saved to, but cannot be pasted.");
             }
         } catch (RuntimeException exception) {
+            exception.printStackTrace();
             messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
         }
     }
@@ -122,7 +127,7 @@ public class StencilBrush extends AbstractBrush {
     private void stencilPaste(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches("NoFileLoaded")) {
-            messenger.sendMessage(ChatColor.RED + "You did not specify a filename.  This is required.");
+            messenger.sendMessage(ChatColor.RED + "You did not specify a filename. This is required.");
             return;
         }
         File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencils/" + this.filename + ".vstencil");

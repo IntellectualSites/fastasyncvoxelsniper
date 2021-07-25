@@ -20,7 +20,7 @@ public class Rotation2DBrush extends AbstractBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        this.angle = Math.toRadians(Double.parseDouble(parameters[0]));
+        this.angle = Math.toRadians(Double.parseDouble(parameters[1]));
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
     }
