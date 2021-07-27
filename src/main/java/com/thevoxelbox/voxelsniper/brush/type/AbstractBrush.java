@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -126,17 +127,20 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    public void generateTree(TreeGenerator.TreeType treeType, BlockVector3 location) {
-        try {
-            editSession.getWorld().generateTree(treeType, editSession, location);
-        } catch (WorldEditException e) {
-            throw new RuntimeException(e);
-        }
+    public boolean generateTree(TreeGenerator.TreeType treeType, BlockVector3 location) {
+        // Must run sync, Paper doesn't generate the whole tree and Tuinity fails otherwise.
+        // This might be caused by async catcher for block remove!
+        return TaskManager.IMP.sync(() -> {
+            try {
+                return treeType.generate(editSession, location);
+            } catch (WorldEditException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public Direction getDirection(BlockVector3 first, BlockVector3 second) {
-        Direction[] directions = Direction.values();
-        for (Direction direction : directions) {
+        for (Direction direction : Direction.values()) {
             if (first.getX() + direction.getX() == second.getX()
                     && first.getY() + direction.getY() == second.getY()
                     && first.getZ() + direction.getZ() == second.getZ()) {

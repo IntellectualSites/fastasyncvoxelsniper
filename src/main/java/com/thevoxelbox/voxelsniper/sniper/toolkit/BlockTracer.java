@@ -1,43 +1,23 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
-
-import java.util.Iterator;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockTracer {
 
-    private Block targetBlock;
-    private Block lastBlock;
+    private final BlockVector3 targetBlock;
 
-    public BlockTracer(Player player, int distance) {//FAWE modify (make public)
-        Location eyeLocation = player.getEyeLocation();
-        Block block = eyeLocation.getBlock();
-        this.targetBlock = block;
-        this.lastBlock = block;
-        Iterator<Block> iterator = new BlockIterator(player, distance);
-        iterate(iterator);
+    public BlockTracer(Player player, int distance, boolean useLastBlock) {//FAWE modify (make public)
+        com.sk89q.worldedit.entity.Player fp = BukkitAdapter.adapt(player);
+        com.sk89q.worldedit.util.Location location = fp.getBlockTrace(distance, useLastBlock);
+
+        this.targetBlock = location == null ? null : location.toBlockPoint();
     }
 
-    private void iterate(Iterator<? extends Block> iterator) {
-        while (iterator.hasNext()) {
-            Block block = iterator.next();
-            this.lastBlock = this.targetBlock;
-            this.targetBlock = block;
-            if (!block.getType().isEmpty()) {
-                return;
-            }
-        }
-    }
-
-    public Block getTargetBlock() {
+    public @Nullable BlockVector3 getTargetBlock() {
         return this.targetBlock;
-    }
-
-    public Block getLastBlock() {
-        return this.lastBlock;
     }
 
 }

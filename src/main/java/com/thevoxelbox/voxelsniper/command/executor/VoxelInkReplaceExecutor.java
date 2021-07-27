@@ -1,6 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -10,7 +12,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,8 +43,10 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
         BlockData blockData;
         if (arguments.length == 0) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
-            Block targetBlock = blockTracer.getTargetBlock();
-            blockData = targetBlock.getBlockData();
+            BlockVector3 targetBlock = blockTracer.getTargetBlock();
+            blockData = player.getWorld().getBlockAt(
+                    targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()
+            ).getBlockData();
         } else {
             try {
                 blockData = Bukkit.createBlockData(arguments[0]);
@@ -52,9 +55,10 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
                 return;
             }
         }
-        toolkitProperties.setReplaceBlockData(BukkitAdapter.adapt(blockData));
+        BlockState blockState = BukkitAdapter.adapt(blockData);
+        toolkitProperties.setReplaceBlockData(blockState);
         Messenger messenger = new Messenger(sender);
-        messenger.sendReplaceBlockDataMessage(BukkitAdapter.adapt(blockData));
+        messenger.sendReplaceBlockDataMessage(blockState);
     }
 
 }

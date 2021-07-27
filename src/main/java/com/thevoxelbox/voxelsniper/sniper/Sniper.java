@@ -9,8 +9,9 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
-import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -22,7 +23,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -52,8 +52,8 @@ public class Sniper {
 
     private Toolkit createDefaultToolkit() {
         Toolkit toolkit = new Toolkit("default");
-        toolkit.addToolAction(Material.ARROW, ToolAction.ARROW);
-        toolkit.addToolAction(Material.GUNPOWDER, ToolAction.GUNPOWDER);
+        toolkit.addToolAction(ItemTypes.ARROW, ToolAction.ARROW);
+        toolkit.addToolAction(ItemTypes.GUNPOWDER, ToolAction.GUNPOWDER);
         return toolkit;
     }
 
@@ -70,8 +70,8 @@ public class Sniper {
         Player player = getPlayer();
         PlayerInventory inventory = player.getInventory();
         ItemStack itemInHand = inventory.getItemInMainHand();
-        Material itemType = itemInHand.getType();
-        if (itemType.isEmpty()) {
+        ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
+        if (itemType == ItemTypes.AIR) {
             return getToolkit(DEFAULT_TOOLKIT_NAME);
         }
         return getToolkit(itemType);
@@ -82,7 +82,7 @@ public class Sniper {
     }
 
     @Nullable
-    public Toolkit getToolkit(Material itemType) {
+    public Toolkit getToolkit(ItemType itemType) {
         return this.toolkits.stream()
                 .filter(toolkit -> toolkit.hasToolAction(itemType))
                 .findFirst()
@@ -114,7 +114,7 @@ public class Sniper {
     public boolean snipe(
             Player player,
             Action action,
-            Material usedItem,
+            ItemType usedItem,
             @Nullable Block clickedBlock,
             BlockFace clickedBlockFace
     ) {
@@ -192,13 +192,9 @@ public class Sniper {
                     Request.reset();
                     Request.request().setExtent(editSession);
                     if (clickedBlock == null) {
-                        int distance = toolkitProperties.getBlockTracerRange() == null ? Math.max(
-                                Bukkit.getViewDistance(),
-                                3
-                        ) * 16 - toolkitProperties.getBrushSize() : toolkitProperties.getBlockTracerRange();
-                        Location rayTraceResult = fp.getBlockTrace(distance, true);
+                        BlockVector3 rayTraceResult = toolkitProperties.createBlockTracer(player).getTargetBlock();
                         if (rayTraceResult != null) {
-                            rayTraceBlock = rayTraceResult.toBlockPoint();
+                            rayTraceBlock = rayTraceResult;
                         }
                     }
                 }
@@ -223,13 +219,13 @@ public class Sniper {
                             messenger.sendBlockTypeMessage();
                             return true;
                         } else if (toolAction == ToolAction.GUNPOWDER) {
-                            Material material = BukkitAdapter.adapt(editSession.getBlockType(
+                            BlockType blockType = editSession.getBlockType(
                                     targetBlock.getX(),
                                     targetBlock.getY(),
                                     targetBlock.getZ()
-                            ));
+                            );
 
-                            if (material.isEmpty()) {
+                            if (Materials.isEmpty(blockType)) {
                                 toolkitProperties.resetBlockData();
                             } else {
                                 toolkitProperties.setBlockData(editSession.getBlock(targetBlock));
@@ -266,11 +262,11 @@ public class Sniper {
                 } else {
                     if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                         if (targetBlock.getY() != editSession.getMinY() &&
-                                BukkitAdapter.adapt(editSession.getBlockType(
+                                Materials.isEmpty(editSession.getBlockType(
                                         targetBlock.getX(),
                                         targetBlock.getY(),
                                         targetBlock.getZ()
-                                )).isEmpty()) {
+                                ))) {
                             player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
                             return true;
                         }

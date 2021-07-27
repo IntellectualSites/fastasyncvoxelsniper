@@ -155,7 +155,6 @@ public class CopyPastaBrush extends AbstractBrush {
                             z = this.pastePoint[2] + this.offsetPoint[2] + k;
                             break;
                     }
-                    BlockState block = clampY(x, y, z);
                     if (!(Materials.isEmpty(this.blockArray[currentPosition]) && !this.pasteAir)) {
                         setBlockData(x, y, z, this.dataArray[currentPosition]);
                     }

@@ -1,6 +1,6 @@
 package com.thevoxelbox.voxelsniper.config;
 
-import org.bukkit.Material;
+import com.sk89q.worldedit.world.block.BlockType;
 
 import java.util.List;
 
@@ -8,12 +8,12 @@ public class VoxelSniperConfig {
 
     private final boolean messageOnLoginEnabled;
     private final int litesniperMaxBrushSize;
-    private final List<Material> litesniperRestrictedMaterials;
+    private final List<BlockType> litesniperRestrictedMaterials;
 
     public VoxelSniperConfig(
             boolean messageOnLoginEnabled,
             int litesniperMaxBrushSize,
-            List<Material> litesniperRestrictedMaterials
+            List<BlockType> litesniperRestrictedMaterials
     ) {
         this.messageOnLoginEnabled = messageOnLoginEnabled;
         this.litesniperMaxBrushSize = litesniperMaxBrushSize;
@@ -28,7 +28,7 @@ public class VoxelSniperConfig {
         return this.litesniperMaxBrushSize;
     }
 
-    public List<Material> getLitesniperRestrictedMaterials() {
+    public List<BlockType> getLitesniperRestrictedMaterials() {
         return this.litesniperRestrictedMaterials;
     }
 

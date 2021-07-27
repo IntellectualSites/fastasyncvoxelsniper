@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
+import com.sk89q.worldedit.world.item.ItemType;
 import com.thevoxelbox.voxelsniper.BrushRegistrar;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushCreator;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
-import org.bukkit.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public class Toolkit {
     private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
 
     private final String toolkitName;
-    private final Map<Material, ToolAction> toolActions = new EnumMap<>(Material.class);
+    private final Map<ItemType, ToolAction> toolActions = new HashMap<>();
     private final Map<BrushProperties, Brush> brushes = new HashMap<>();
     private final ToolkitProperties properties = new ToolkitProperties();
     private BrushProperties currentBrushProperties;
@@ -38,20 +37,20 @@ public class Toolkit {
         createBrush(DEFAULT_BRUSH_PROPERTIES);
     }
 
-    public void addToolAction(Material toolMaterial, ToolAction action) {
+    public void addToolAction(ItemType toolMaterial, ToolAction action) {
         this.toolActions.put(toolMaterial, action);
     }
 
-    public boolean hasToolAction(Material toolMaterial) {
+    public boolean hasToolAction(ItemType toolMaterial) {
         return this.toolActions.containsKey(toolMaterial);
     }
 
     @Nullable
-    public ToolAction getToolAction(Material toolMaterial) {
+    public ToolAction getToolAction(ItemType toolMaterial) {
         return this.toolActions.get(toolMaterial);
     }
 
-    public void removeToolAction(Material toolMaterial) {
+    public void removeToolAction(ItemType toolMaterial) {
         this.toolActions.remove(toolMaterial);
     }
 
@@ -94,7 +93,7 @@ public class Toolkit {
         return this.previousBrushProperties;
     }
 
-    public Map<Material, ToolAction> getToolActions() {
+    public Map<ItemType, ToolAction> getToolActions() {
         return Collections.unmodifiableMap(this.toolActions);
     }
 

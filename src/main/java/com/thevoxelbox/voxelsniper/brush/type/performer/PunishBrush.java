@@ -8,10 +8,10 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
+import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -290,8 +290,9 @@ public class PunishBrush extends AbstractPerformerBrush {
                                 target.setX(location.getX() + x);
                                 target.setY(location.getY() + y);
                                 target.setZ(location.getZ() + z);
-                                if (this.hypnoAffectLandscape && target.getBlock()
-                                        .getType() == Material.AIR) {
+                                if (this.hypnoAffectLandscape && Materials.isEmpty(BukkitAdapter.asBlockType(target
+                                        .getBlock()
+                                        .getType()))) {
                                     continue;
                                 }
                                 target = location.clone();
