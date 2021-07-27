@@ -54,8 +54,8 @@ public class TreeSnipeBrush extends AbstractBrush {
     private void single(Snipe snipe, BlockVector3 targetBlock) {
         BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
         setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
+        SnipeMessenger messenger = snipe.createMessenger();
         if (!generateTree(this.treeType, targetBlock)) {
-            SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.RED + "Failed to generate a tree!");
         }
         setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
@@ -75,6 +75,8 @@ public class TreeSnipeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         printTreeType(messenger);
+        // TODO Remove once fixed
+        messenger.sendMessage(ChatColor.GOLD + "Warning: This brush is currently not undo-able due to a server bug!");
     }
 
     private void printTreeType(SnipeMessenger messenger) {

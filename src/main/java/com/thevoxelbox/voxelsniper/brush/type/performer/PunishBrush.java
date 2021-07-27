@@ -162,7 +162,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         }
         int brushSize = toolkitProperties.getBrushSize();
         int brushSizeSquare = brushSize * brushSize;
-        World world = BukkitAdapter.adapt(getEditSession().getWorld());//FAWE modified
+        World world = BukkitAdapter.adapt(getEditSession().getWorld());
         BlockVector3 targetBlock = getTargetBlock();
         Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
         List<LivingEntity> entities = world.getLivingEntities();

@@ -9,7 +9,7 @@ public class BlockTracer {
 
     private final BlockVector3 targetBlock;
 
-    public BlockTracer(Player player, int distance, boolean useLastBlock) {//FAWE modify (make public)
+    public BlockTracer(Player player, int distance, boolean useLastBlock) {
         com.sk89q.worldedit.entity.Player fp = BukkitAdapter.adapt(player);
         com.sk89q.worldedit.util.Location location = fp.getBlockTrace(distance, useLastBlock);
 

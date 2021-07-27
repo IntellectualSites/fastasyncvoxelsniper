@@ -45,7 +45,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.sniperRegistry = new SniperRegistry();
         loadCommands();
         loadListeners();
-        new FastAsyncVoxelSniper(this);//FAWE add
+        new FastAsyncVoxelSniper(this);
         // Enable metrics
         Metrics metrics = new Metrics(this, 6405);
         // Check if we are in a safe environment

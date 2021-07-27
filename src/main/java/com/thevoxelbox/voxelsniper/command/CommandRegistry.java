@@ -29,7 +29,7 @@ public class CommandRegistry {
 
     private CommandMap getCommandMap(Server server) {
         try {
-            Method method = server.getClass().getDeclaredMethod("getCommandMap"); // FAWE modify
+            Method method = server.getClass().getDeclaredMethod("getCommandMap");
             return (CommandMap) method.invoke(server);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
             throw new RuntimeException(exception);

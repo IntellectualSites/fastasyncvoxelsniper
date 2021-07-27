@@ -110,7 +110,6 @@ public class Sniper {
      * @param clickedBlockFace Face of that targeted Block
      * @return true if command visibly processed, false otherwise.
      */
-    //FAWE MODIFIED
     public boolean snipe(
             Player player,
             Action action,
@@ -118,7 +117,7 @@ public class Sniper {
             @Nullable Block clickedBlock,
             BlockFace clickedBlockFace
     ) {
-        { //FAWE ADDED
+        {
             switch (action) {
                 case LEFT_CLICK_AIR:
                 case LEFT_CLICK_BLOCK:
@@ -146,7 +145,7 @@ public class Sniper {
             player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + permission + "'");
             return false;
         }
-        { //FAWE ADDED
+        {
             BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
             LocalSession session = wePlayer.getSession();
             QueueHandler queue = Fawe.get().getQueueHandler();
@@ -181,14 +180,14 @@ public class Sniper {
             ToolAction toolAction,
             BrushProperties currentBrushProperties
     ) {
-        LocalSession session = fp.getSession(); //FAWE add
-        synchronized (session) {//FAWE add
-            EditSession editSession = session.createEditSession(fp); //FAWE add
+        LocalSession session = fp.getSession();
+        synchronized (session) {
+            EditSession editSession = session.createEditSession(fp);
 
-            try {//FAWE ADD
+            try {
                 ToolkitProperties toolkitProperties = toolkit.getProperties();
                 BlockVector3 rayTraceBlock = null;
-                {//FAWE add
+                {
                     Request.reset();
                     Request.request().setExtent(editSession);
                     if (clickedBlock == null) {
@@ -289,7 +288,7 @@ public class Sniper {
                     }
                 }
                 return false;
-            } finally { //FAWE ADD
+            } finally {
                 session.remember(editSession);
                 editSession.flushQueue();
                 WorldEdit.getInstance().flushBlockBag(fp, editSession);
