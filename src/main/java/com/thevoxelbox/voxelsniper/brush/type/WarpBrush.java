@@ -20,7 +20,7 @@ public class WarpBrush extends AbstractBrush {
         if (lastBlock == null) {
             return;
         }
-        Fawe.get().getQueueHandler().sync(() -> {//FAWE Add
+        Fawe.get().getQueueHandler().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             Location location = BukkitAdapter.adapt(world, lastBlock);
             Location playerLocation = player.getLocation();
@@ -38,7 +38,7 @@ public class WarpBrush extends AbstractBrush {
         if (lastBlock == null) {
             return;
         }
-        Fawe.get().getQueueHandler().sync(() -> {//FAWE add
+        Fawe.get().getQueueHandler().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             Location location = BukkitAdapter.adapt(world, lastBlock);
             Location playerLocation = player.getLocation();

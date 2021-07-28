@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.item.ItemType;
+import com.sk89q.worldedit.world.item.ItemTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
@@ -8,7 +11,6 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -52,8 +54,8 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             }
             PlayerInventory inventory = player.getInventory();
             ItemStack itemInHand = inventory.getItemInMainHand();
-            Material itemType = itemInHand.getType();
-            if (itemType.isEmpty()) {
+            ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
+            if (itemType == ItemTypes.AIR) {
                 sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
                 return;
             }
@@ -64,7 +66,9 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             }
             toolkit.addToolAction(itemType, action);
             sniper.addToolkit(toolkit);
-            sender.sendMessage(itemType.name() + " has been assigned to '" + toolkitName + "' as action " + action.name() + ".");
+            sender.sendMessage(itemInHand
+                    .getType()
+                    .name() + " has been assigned to '" + toolkitName + "' as action " + action.name() + ".");
             return;
         }
         if (length == 2 && firstArgument.equalsIgnoreCase("remove")) {
@@ -79,8 +83,8 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
         if (length == 1 && firstArgument.equalsIgnoreCase("remove")) {
             PlayerInventory inventory = player.getInventory();
             ItemStack itemInHand = inventory.getItemInMainHand();
-            Material material = itemInHand.getType();
-            if (material.isEmpty()) {
+            ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
+            if (itemType == ItemTypes.AIR) {
                 sender.sendMessage("Can't unassign empty hands.");
                 return;
             }
@@ -89,7 +93,7 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
                 sender.sendMessage("Can't unassign default tool.");
                 return;
             }
-            toolkit.removeToolAction(material);
+            toolkit.removeToolAction(itemType);
         }
     }
 

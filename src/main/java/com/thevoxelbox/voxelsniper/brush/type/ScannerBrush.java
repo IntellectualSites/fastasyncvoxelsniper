@@ -120,7 +120,7 @@ public class ScannerBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.GRAY + "Nope.");
         } else if (blockFace == Direction.DOWN) {// Scan up
             for (int i = 1; i < this.depth + 1; i++) {
-                EditSession editSession = getEditSession();//FAWE modified
+                EditSession editSession = getEditSession();
                 if ((targetBlock.getY() + i) >= editSession.getMaxY() + 1) {
                     break;
                 }

@@ -43,18 +43,21 @@ public class TreeSnipeBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock().add(0, getYOffset(), 0);
-        single(targetBlock);
+        single(snipe, targetBlock);
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
-        single(getTargetBlock());
+        single(snipe, getTargetBlock());
     }
 
-    private void single(BlockVector3 targetBlock) {
+    private void single(Snipe snipe, BlockVector3 targetBlock) {
         BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
         setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
-        generateTree(this.treeType, targetBlock);
+        if (!generateTree(this.treeType, targetBlock)) {
+            SnipeMessenger messenger = snipe.createMessenger();
+            messenger.sendMessage(ChatColor.RED + "Failed to generate a tree!");
+        }
         setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
     }
 
@@ -72,6 +75,8 @@ public class TreeSnipeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         printTreeType(messenger);
+        // TODO Remove once fixed
+        messenger.sendMessage(ChatColor.RED + "Warning: This brush is currently not undo-able due to a Spigot bug!");
     }
 
     private void printTreeType(SnipeMessenger messenger) {

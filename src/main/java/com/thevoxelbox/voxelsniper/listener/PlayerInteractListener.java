@@ -1,9 +1,10 @@
 package com.thevoxelbox.voxelsniper.listener;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.item.ItemType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class PlayerInteractListener implements Listener<PlayerInteractEvent> {
             return;
         }
         Action action = event.getAction();
-        Material usedItem = event.getMaterial();
+        ItemType usedItem = BukkitAdapter.asItemType(event.getMaterial());
         Block clickedBlock = event.getClickedBlock();
         BlockFace clickedBlockFace = event.getBlockFace();
         if (sniper.isEnabled() && sniper.snipe(player, action, usedItem, clickedBlock, clickedBlockFace)) {

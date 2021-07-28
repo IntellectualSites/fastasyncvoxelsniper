@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -8,7 +7,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 public class CleanSnowBrush extends AbstractBrush {
 
@@ -61,15 +59,15 @@ public class CleanSnowBrush extends AbstractBrush {
                         int targetBlockX = targetBlock.getX();
                         int targetBlockY = targetBlock.getY();
                         int targetBlockZ = targetBlock.getZ();
-                        if (BukkitAdapter.adapt(clampY(
+                        if (clampY(
                                 targetBlockX + x - brushSize,
                                 targetBlockY + z - brushSize,
                                 targetBlockZ + y - brushSize
-                        ).getBlockType()) == Material.SNOW && (BukkitAdapter.adapt(clampY(
+                        ).getBlockType() == BlockTypes.SNOW && (clampY(
                                 targetBlockX + x - brushSize,
                                 targetBlockY + z - brushSize - 1,
                                 targetBlockZ + y - brushSize
-                        ).getBlockType()) == Material.SNOW || clampY(
+                        ).getBlockType() == BlockTypes.SNOW || clampY(
                                 targetBlockX + x - brushSize,
                                 targetBlockY + z - brushSize - 1,
                                 targetBlockZ + y - brushSize

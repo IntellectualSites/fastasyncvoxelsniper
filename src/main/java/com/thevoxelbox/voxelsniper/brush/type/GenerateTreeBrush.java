@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -11,14 +10,21 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 public class GenerateTreeBrush extends AbstractBrush {
+
+    private static final MaterialSet SOLIDS = MaterialSet.builder()
+            .with(BlockCategories.LOGS)
+            .with(MaterialSets.AIRS)
+            .add(BlockTypes.WATER)
+            .add(BlockTypes.SNOW)
+            .build();
 
     // Tree Variables.
     private final Random randGenerator = new Random();
@@ -79,21 +85,23 @@ public class GenerateTreeBrush extends AbstractBrush {
                     return;
                 }
                 if (parameter.startsWith("lt")) { // Leaf Type
-                    Material leafType = Material.matchMaterial(parameter.replace("lt", "") + "_leaves");
+                    BlockType leafType = BlockTypes.get((parameter.replace("lt", "") + "_leaves")
+                            .toLowerCase(Locale.ROOT));
                     if (leafType == null) {
                         messenger.sendMessage(ChatColor.RED + "Invalid leaf type");
                         return;
                     }
-                    this.leafType = BukkitAdapter.asBlockType(leafType);
-                    messenger.sendMessage(ChatColor.BLUE + "Leaf Type set to " + this.leafType);
+                    this.leafType = leafType;
+                    messenger.sendMessage(ChatColor.BLUE + "Leaf Type set to " + this.leafType.getRichName().toString());
                 } else if (parameter.startsWith("wt")) { // Wood Type
-                    Material woodType = Material.matchMaterial(parameter.replace("wt", "") + "_log");
+                    BlockType woodType = BlockTypes.get((parameter.replace("wt", "") + "_log")
+                            .toLowerCase(Locale.ROOT));
                     if (woodType == null) {
                         messenger.sendMessage(ChatColor.RED + "Invalid wood type");
                         return;
                     }
-                    this.woodType = BukkitAdapter.asBlockType(woodType);
-                    messenger.sendMessage(ChatColor.BLUE + "Wood Type set to " + this.woodType);
+                    this.woodType = woodType;
+                    messenger.sendMessage(ChatColor.BLUE + "Wood Type set to " + this.woodType.getRichName().toString());
                 } else if (parameter.startsWith("tt")) { // Tree Thickness
                     this.thickness = Integer.parseInt(parameter.replace("tt", ""));
                     messenger.sendMessage(ChatColor.BLUE + "Thickness set to " + this.thickness);
@@ -309,14 +317,8 @@ public class GenerateTreeBrush extends AbstractBrush {
                     // Place log block.
                     setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, this.woodType);
                 }
-                MaterialSet solids = MaterialSet.builder()
-                        .with(BlockCategories.LOGS)
-                        .with(MaterialSets.AIRS)
-                        .add(BlockTypes.WATER)
-                        .add(BlockTypes.SNOW)
-                        .build();
                 // Checks is block below is solid
-                if (solids.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
+                if (SOLIDS.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
                     // Mos down if solid.
                     this.blockPositionY -= 1;
                     if (this.rootFloat) {
@@ -336,7 +338,7 @@ public class GenerateTreeBrush extends AbstractBrush {
                         this.blockPositionZ += zDirection;
                     }
                     // Checks if new location is solid, if not then move down.
-                    if (solids.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
+                    if (SOLIDS.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
                         this.blockPositionY -= 1;
                     }
                 }
