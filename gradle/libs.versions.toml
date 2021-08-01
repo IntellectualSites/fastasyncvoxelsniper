@@ -1,0 +1,28 @@
+[versions]
+# Platform expectations
+paper = "1.17.1-R0.1-SNAPSHOT"
+
+# Annotations
+annotations = "21.0.1"
+
+# Plugins
+fawe-bukkit = "1.17-93"
+
+# Third party
+serverlib = "2.2.1"
+bstats = "2.2.1"
+
+[libraries]
+# Platform expectations
+paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+
+# Annotations
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+# Plugins
+faweBukkit = { group = "com.fastasyncworldedit", name = "FAWE-Bukkit", version.ref = "fawe-bukkit" }
+
+# Third party
+serverlib = { group = "org.incendo.serverlib", name = "ServerLib", version.ref = "serverlib" }
+bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
+bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }

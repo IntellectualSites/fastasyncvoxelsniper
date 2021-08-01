@@ -22,12 +22,19 @@ repositories {
 }
 
 dependencies {
-	compileOnlyApi("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-	compileOnly("org.jetbrains:annotations:20.1.0")
-	compileOnlyApi("com.fastasyncworldedit:FAWE-Bukkit:1.17-93")
-	implementation("org.incendo.serverlib:ServerLib:2.2.1")
-	implementation("org.bstats:bstats-bukkit:2.2.1")
-	implementation("org.bstats:bstats-base:2.2.1")
+    // Platform expectations
+	compileOnlyApi(libs.paper)
+
+    // Annotations
+	compileOnly(libs.annotations)
+
+    // Plugins
+	compileOnlyApi(libs.faweBukkit)
+
+    // Third party
+	implementation(libs.serverlib)
+	implementation(libs.bstatsBase)
+	implementation(libs.bstatsBukkit)
 }
 
 tasks.compileJava.configure {
@@ -58,7 +65,8 @@ version = String.format("%s-%s", rootVersion, buildNumber)
 bukkit {
 	name = "FastAsyncVoxelSniper"
 	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
-	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550", "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
+	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
+            "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
 	apiVersion = "1.13"
 	version = rootProject.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
