@@ -27,5 +27,5 @@ jobs:
       - name : Archive Artifacts
         uses : actions/upload-artifact@v2
         with :
-          name : FastAsyncVoxelSniper-1.17-${{ env.SHA }}
-          path : build/libs/FastAsyncVoxelSniper-*-${{ env.SHA }}.jar
+          name : FastAsyncVoxelSniper-2.1.1-${{ env.SHA }}
+          path : build/libs/FastAsyncVoxelSniper-2.1.1-${{ env.SHA }}.jar
