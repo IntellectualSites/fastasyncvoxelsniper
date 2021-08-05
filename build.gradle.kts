@@ -45,7 +45,7 @@ configurations.all {
 	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
-var rootVersion by extra("2.1.1")
+var rootVersion by extra("2.1.3")
 var buildNumber by extra("")
 ext {
     val git: Grgit = Grgit.open {
