@@ -12,6 +12,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class SpiralStaircaseBrush extends AbstractBrush {
@@ -23,7 +24,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
+        if (parameters[0].equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
@@ -49,6 +50,18 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("block", "step", "woodstair", "cobblestair",
+                    "c", "cc",
+                    "n", "e", "s", "world"
+            ), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

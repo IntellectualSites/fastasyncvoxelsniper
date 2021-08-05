@@ -11,9 +11,15 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
+
+    private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
+            .map(tolerance -> tolerance.name().toLowerCase(Locale.ROOT))
+            .collect(Collectors.toList());
 
     @Nullable
     private Vector coordinatesOne;
@@ -26,7 +32,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
+        if (parameters[0].equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
             String toleranceOptions = Arrays.stream(Tolerance.values())
                     .map(tolerance -> tolerance.name()
@@ -46,6 +52,15 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tolerance.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(TOLERANCES.stream(), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class ErodeBrush extends AbstractBrush {
 
@@ -56,7 +57,7 @@ public class ErodeBrush extends AbstractBrush {
             }
             ErosionPreset currentPresetBackup = this.currentPreset;
             if (parameter.charAt(0) == 'f') {
-                String fillFacesString = parameter.replace("f", "");
+                String fillFacesString = parameter.substring(1);
                 Integer fillFaces = NumericParser.parseInteger(fillFacesString);
                 if (fillFaces != null) {
                     this.currentPreset = new ErosionPreset(
@@ -68,7 +69,7 @@ public class ErodeBrush extends AbstractBrush {
                 }
             }
             if (parameter.charAt(0) == 'e') {
-                String erosionFacesString = parameter.replace("e", "");
+                String erosionFacesString = parameter.substring(1);
                 Integer erosionFaces = NumericParser.parseInteger(erosionFacesString);
                 if (erosionFaces != null) {
                     this.currentPreset = new ErosionPreset(
@@ -80,7 +81,7 @@ public class ErodeBrush extends AbstractBrush {
                 }
             }
             if (parameter.charAt(0) == 'F') {
-                String fillRecursionString = parameter.replace("F", "");
+                String fillRecursionString = parameter.substring(1);
                 Integer fillRecursion = NumericParser.parseInteger(fillRecursionString);
                 if (fillRecursion != null) {
                     this.currentPreset = new ErosionPreset(
@@ -92,7 +93,7 @@ public class ErodeBrush extends AbstractBrush {
                 }
             }
             if (parameter.charAt(0) == 'E') {
-                String erosionRecursionString = parameter.replace("E", "");
+                String erosionRecursionString = parameter.substring(1);
                 Integer erosionRecursion = NumericParser.parseInteger(erosionRecursionString);
                 if (erosionRecursion != null) {
                     this.currentPreset = new ErosionPreset(
@@ -118,6 +119,15 @@ public class ErodeBrush extends AbstractBrush {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("f", "e", "F", "E"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

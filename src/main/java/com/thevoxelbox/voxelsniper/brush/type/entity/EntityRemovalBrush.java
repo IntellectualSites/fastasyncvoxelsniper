@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Stream;
 
 public class EntityRemovalBrush extends AbstractBrush {
 
@@ -29,7 +30,10 @@ public class EntityRemovalBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         for (String currentParam : parameters) {
-            if (!currentParam.isEmpty() && (currentParam.charAt(0) == '+' || currentParam.charAt(0) == '-')) {
+            if (currentParam.isEmpty()) {
+                continue;
+            }
+            if (currentParam.charAt(0) == '+' || currentParam.charAt(0) == '-') {
                 boolean isAddOperation = currentParam.charAt(0) == '+';
                 // +#/-# will suppress auto-prefixing
                 String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(
@@ -48,6 +52,18 @@ public class EntityRemovalBrush extends AbstractBrush {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(
+                    Stream.of("list-exemptions", "lex", "+", "-", "+#", "-#"),
+                    parameter, 0
+            );
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -94,11 +110,11 @@ public class EntityRemovalBrush extends AbstractBrush {
     private int removeEntities(int chunkX, int chunkZ) {
         return TaskManager.IMP.sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
-            int entityCount = 0;
             if (!world.isChunkLoaded(chunkX, chunkZ)) {
-                return entityCount;
+                return 0;
             }
 
+            int entityCount = 0;
             for (Entity entity : world.getChunkAt(chunkX, chunkZ).getEntities()) {
                 if (!isClassInExemptionList(entity.getClass())) {
                     entity.remove();
@@ -111,15 +127,7 @@ public class EntityRemovalBrush extends AbstractBrush {
 
     private boolean isClassInExemptionList(Class<? extends Entity> entityClass) {
         // Create a list of superclasses and interfaces implemented by the current entity type
-        List<String> entityClassHierarchy = new ArrayList<>();
-        Class<?> currentClass = entityClass;
-        while (currentClass != null && !currentClass.equals(Object.class)) {
-            entityClassHierarchy.add(currentClass.getCanonicalName());
-            for (Class<?> interfaceClass : currentClass.getInterfaces()) {
-                entityClassHierarchy.add(interfaceClass.getCanonicalName());
-            }
-            currentClass = currentClass.getSuperclass();
-        }
+        List<String> entityClassHierarchy = getEntityClassHierarchy(entityClass);
         return this.exemptions.stream()
                 .anyMatch(exemptionPattern -> entityClassHierarchy.stream()
                         .anyMatch(typeName -> typeName.matches(exemptionPattern)));
@@ -132,6 +140,19 @@ public class EntityRemovalBrush extends AbstractBrush {
                 .message(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE + String.join(", ", this.exemptions))
                 .brushSizeMessage()
                 .send();
+    }
+
+    private List<String> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
+        List<String> entityClassHierarchy = new ArrayList<>();
+        Class<?> currentClass = entityClass;
+        while (currentClass != null && !currentClass.equals(Object.class)) {
+            entityClassHierarchy.add(currentClass.getCanonicalName());
+            for (Class<?> interfaceClass : currentClass.getInterfaces()) {
+                entityClassHierarchy.add(interfaceClass.getCanonicalName());
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return entityClassHierarchy;
     }
 
 }

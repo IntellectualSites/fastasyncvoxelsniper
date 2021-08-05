@@ -10,6 +10,9 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class OverlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
@@ -26,13 +29,15 @@ public class OverlayBrush extends AbstractPerformerBrush {
             }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-                messenger.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
+                messenger.sendMessage(ChatColor.AQUA + "/b over d[number] (ex: d3) -- How many blocks deep you want to replace " +
+                        "from the surface.");
+                messenger.sendMessage(ChatColor.BLUE + "/b over all -- Sets the brush to overlay over ALL " +
+                        "materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
                 return;
             }
             if (parameter.charAt(0) == 'd') {
                 try {
-                    this.depth = Integer.parseInt(parameter.replace("d", ""));
+                    this.depth = Integer.parseInt(parameter.substring(1));
                     if (this.depth < 1) {
                         this.depth = 1;
                     }
@@ -50,6 +55,15 @@ public class OverlayBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("d", "all"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

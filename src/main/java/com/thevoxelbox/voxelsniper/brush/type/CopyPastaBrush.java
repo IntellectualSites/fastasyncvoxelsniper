@@ -8,6 +8,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class CopyPastaBrush extends AbstractBrush {
@@ -29,7 +30,7 @@ public class CopyPastaBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String parameter = parameters[1];
+        String parameter = parameters[0];
         if (parameter.equalsIgnoreCase("info")) {
             snipe.createMessageSender()
                     .message(ChatColor.GOLD + "CopyPasta Parameters:")
@@ -48,6 +49,15 @@ public class CopyPastaBrush extends AbstractBrush {
             this.pivot = Integer.parseInt(parameter);
             messenger.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("air", "90", "180", "270", "0"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

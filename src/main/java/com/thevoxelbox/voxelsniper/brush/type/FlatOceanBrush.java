@@ -7,6 +7,9 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class FlatOceanBrush extends AbstractBrush {
 
     private static final int DEFAULT_WATER_LEVEL = 29;
@@ -23,18 +26,18 @@ public class FlatOceanBrush extends AbstractBrush {
                 continue;
             }
             if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GREEN + "yo[number] to set the Level to which the water will rise.");
-                messenger.sendMessage(ChatColor.GREEN + "yl[number] to set the Level to which the ocean floor will rise.");
+                messenger.sendMessage(ChatColor.GREEN + "/b fo yo[number] to set the Level to which the water will rise.");
+                messenger.sendMessage(ChatColor.GREEN + "/b fo yl[number] to set the Level to which the ocean floor will rise.");
             }
             if (parameter.startsWith("yo")) {
-                int newWaterLevel = Integer.parseInt(parameter.replace("yo", ""));
+                int newWaterLevel = Integer.parseInt(parameter.substring(2));
                 if (newWaterLevel < this.floorLevel) {
                     newWaterLevel = this.floorLevel + 1;
                 }
                 this.waterLevel = newWaterLevel;
                 messenger.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
             } else if (parameter.startsWith("yl")) {
-                int newFloorLevel = Integer.parseInt(parameter.replace("yl", ""));
+                int newFloorLevel = Integer.parseInt(parameter.substring(2));
                 if (newFloorLevel > this.waterLevel) {
                     newFloorLevel = this.waterLevel - 1;
                     if (newFloorLevel == 0) {
@@ -46,6 +49,15 @@ public class FlatOceanBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("yo", "yl"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

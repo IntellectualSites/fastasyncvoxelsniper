@@ -5,6 +5,9 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
     private double xRad;
@@ -23,18 +26,18 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
             try {
                 if (parameter.equalsIgnoreCase("info")) {
                     messenger.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-                    messenger.sendMessage(ChatColor.AQUA + "x[n]: Set X radius to n");
-                    messenger.sendMessage(ChatColor.AQUA + "y[n]: Set Y radius to n");
-                    messenger.sendMessage(ChatColor.AQUA + "z[n]: Set Z radius to n");
+                    messenger.sendMessage(ChatColor.AQUA + "/b elo x[n]: Set X radius to n");
+                    messenger.sendMessage(ChatColor.AQUA + "/b elo y[n]: Set Y radius to n");
+                    messenger.sendMessage(ChatColor.AQUA + "/b elo z[n]: Set Z radius to n");
                     return;
                 } else if (parameter.charAt(0) == 'x') {
-                    this.xRad = Integer.parseInt(parameter.replace("x", ""));
+                    this.xRad = Integer.parseInt(parameter.substring(1));
                     messenger.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
                 } else if (parameter.charAt(0) == 'y') {
-                    this.yRad = Integer.parseInt(parameter.replace("y", ""));
+                    this.yRad = Integer.parseInt(parameter.substring(1));
                     messenger.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
                 } else if (parameter.charAt(0) == 'z') {
-                    this.zRad = Integer.parseInt(parameter.replace("z", ""));
+                    this.zRad = Integer.parseInt(parameter.substring(1));
                     messenger.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
                 } else if (parameter.equalsIgnoreCase("true")) {
                     this.istrue = true;
@@ -45,6 +48,15 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("x", "y", "z"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

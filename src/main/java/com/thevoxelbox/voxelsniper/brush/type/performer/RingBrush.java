@@ -6,6 +6,9 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class RingBrush extends AbstractPerformerBrush {
 
     private double trueCircle;
@@ -31,7 +34,7 @@ public class RingBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
             } else if (parameter.startsWith("ir")) {
                 try {
-                    this.innerSize = Double.parseDouble(parameter.replace("ir", ""));
+                    this.innerSize = Double.parseDouble(parameter.substring(2));
                     messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
                 } catch (NumberFormatException exception) {
                     messenger.sendMessage(ChatColor.RED + "The parameters included are invalid.");
@@ -40,6 +43,15 @@ public class RingBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("true", "false", "ir"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

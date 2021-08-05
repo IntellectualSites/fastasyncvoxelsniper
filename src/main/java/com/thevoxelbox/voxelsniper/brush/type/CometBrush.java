@@ -12,6 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class CometBrush extends AbstractBrush {
 
     private boolean useBigBalls;
@@ -23,7 +26,7 @@ public class CometBrush extends AbstractBrush {
             String parameter = parameters[index];
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage("Parameters:");
-                messenger.sendMessage("balls [big|small]  -- Sets your ball size.");
+                messenger.sendMessage("/b com balls [big|small]  -- Sets your ball size.");
             }
             if (parameter.equalsIgnoreCase("balls")) {
                 if (index + 1 >= parameters.length) {
@@ -41,6 +44,19 @@ public class CometBrush extends AbstractBrush {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("balls"), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String parameter = parameters[1];
+            return super.sortCompletions(Stream.of("big", "small"), parameter, 1);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

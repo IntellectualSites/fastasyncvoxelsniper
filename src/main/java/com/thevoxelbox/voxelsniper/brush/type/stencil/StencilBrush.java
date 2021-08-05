@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This is paste only currently. Assumes files exist, and thus has no usefulness until I add in saving stencils later. Uses sniper-exclusive stencil format: 3
@@ -49,7 +51,7 @@ public class StencilBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[1];
+        String firstParameter = parameters[0];
         byte pasteParam;
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Stencil brush Parameters:");
@@ -82,6 +84,15 @@ public class StencilBrush extends AbstractBrush {
             exception.printStackTrace();
             messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("full", "fill", "replace"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

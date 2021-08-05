@@ -1,14 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.biome.BiomeTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Biome;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,33 +17,55 @@ import java.util.stream.Stream;
 public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
+    private static final List<String> BIOMES = BiomeTypes.values().stream()
+            .map(BiomeType::getId)
+            .collect(Collectors.toList());
 
     private BiomeType biomeType = null;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Regenerate Chunk brush:");
-                messenger.sendMessage(ChatColor.AQUA + "/b gc biome");
-                printBiomeType(messenger);
-                return;
-            }
-            if (parameter.equals(DEFAULT_BIOME)) {
+        String firstParameter = parameters[0];
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Regenerate Chunk brush:");
+            messenger.sendMessage(ChatColor.AQUA + "/b gc biome");
+            messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
+                    (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
+        } else {
+            String biomeName = parameters[0];
+            if (biomeName.equals(DEFAULT_BIOME)) {
                 this.biomeType = null;
             } else {
-                try {
-                    this.biomeType = BukkitAdapter.adapt(Biome.valueOf(parameter.toUpperCase()));
-                } catch (IllegalArgumentException exception) {
+                BiomeType biomeType = BiomeTypes.get(biomeName);
+                if (biomeType != null) {
+                    this.biomeType = biomeType;
+                } else {
                     messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such biome type.");
                 }
             }
-            printBiomeType(messenger);
+            messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
+                    (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("biome"), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("biome")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Stream.concat(
+                        Stream.of(DEFAULT_BIOME),
+                        BIOMES.stream()
+                ), parameter, 1);
+            }
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -62,12 +83,8 @@ public class RegenerateChunkBrush extends AbstractBrush {
         int chunkX = targetBlock.getX() >> 4;
         int chunkZ = targetBlock.getZ() >> 4;
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.biomeType == null) {
-            messenger.sendMessage("Generating that chunk using " + DEFAULT_BIOME + " biome, this might take a while! " + chunkX + " " + chunkZ);
-        } else {
-            messenger.sendMessage("Generating that chunk using " + BukkitAdapter.adapt(this.biomeType).name().toLowerCase()
-                    + " biome, this might take a while! " + chunkX + " " + chunkZ);
-        }
+        messenger.sendMessage("Generating that chunk using " + (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()) +
+                " biome, this might take a while! " + chunkX + " " + chunkZ);
         if (regenerateChunk(chunkX, chunkZ, this.biomeType)) {
             messenger.sendMessage(ChatColor.GREEN + "Successfully generated that chunk! " + chunkX + " " + chunkZ);
         } else {
@@ -81,19 +98,8 @@ public class RegenerateChunkBrush extends AbstractBrush {
         messenger.sendBrushNameMessage();
         messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Tread lightly.");
         messenger.sendMessage(ChatColor.LIGHT_PURPLE + "This brush will melt your spleen and sell your kidneys.");
-        printBiomeType(messenger);
-    }
-
-    private void printBiomeType(SnipeMessenger messenger) {
-        String printout = Stream.concat(
-                Stream.of(((this.biomeType == null) ? ChatColor.GRAY : ChatColor.DARK_GRAY) + DEFAULT_BIOME + ChatColor.WHITE),
-                BiomeTypes.values().stream()
-                        .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GRAY + BukkitAdapter.adapt(biomeType).name()
-                                .toLowerCase() : ChatColor.DARK_GRAY + BukkitAdapter.adapt(biomeType).name()
-                                .toLowerCase()) + ChatColor.WHITE)
-        )
-                .collect(Collectors.joining(", "));
-        messenger.sendMessage(printout);
+        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
+                (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
     }
 
 }

@@ -18,8 +18,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class StencilListBrush extends AbstractBrush {
 
@@ -37,7 +39,7 @@ public class StencilListBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String secondParameter = parameters[1];
+        String secondParameter = parameters[0];
         if (secondParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
@@ -65,6 +67,15 @@ public class StencilListBrush extends AbstractBrush {
         } catch (RuntimeException exception) {
             messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("full", "fill", "replace"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

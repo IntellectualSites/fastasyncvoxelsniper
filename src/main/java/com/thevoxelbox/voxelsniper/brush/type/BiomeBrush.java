@@ -2,50 +2,54 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.biome.BiomeTypes;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class BiomeBrush extends AbstractBrush {
 
-    private Biome selectedBiome = Biome.PLAINS;
+    private static final List<String> BIOMES = BiomeTypes.values().stream()
+            .map(BiomeType::getId)
+            .collect(Collectors.toList());
+
+    private BiomeType selectedBiome = BiomeTypes.PLAINS;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
-        String firstParameter = parameters[1];
+        String firstParameter = parameters[0];
         if (firstParameter.equalsIgnoreCase("info")) {
             player.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-            StringBuilder availableBiomes = new StringBuilder();
-            for (Biome biome : Biome.values()) {
-                if (availableBiomes.length() == 0) {
-                    availableBiomes = new StringBuilder(ChatColor.DARK_GREEN + biome.name());
-                    continue;
-                }
-                availableBiomes.append(ChatColor.RED).append(", ").append(ChatColor.DARK_GREEN)
-                        .append(biome.name());
-            }
-            player.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
+            player.sendMessage(ChatColor.AQUA + "/b bio biome");
+            player.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.getId());
         } else {
-            // allows biome names with spaces in their name
-            String biomeName = IntStream.range(2, parameters.length)
-                    .mapToObj(index -> " " + parameters[index])
-                    .collect(Collectors.joining("", firstParameter, ""));
-            this.selectedBiome = Arrays.stream(Biome.values())
-                    .filter(biome -> biomeName.equalsIgnoreCase(biome.name()))
-                    .findFirst()
-                    .orElse(this.selectedBiome);
-            player.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+            String biomeName = parameters[0];
+            BiomeType biomeType = BiomeTypes.get(biomeName);
+            if (biomeType != null) {
+                this.selectedBiome = biomeType;
+                player.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.getId());
+            } else {
+                player.sendMessage(ChatColor.RED + "Invalid biome type.");
+            }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(BIOMES.stream(), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -99,7 +103,7 @@ public class BiomeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.getId());
     }
 
 }

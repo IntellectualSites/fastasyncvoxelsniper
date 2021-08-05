@@ -14,6 +14,9 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class OceanBrush extends AbstractBrush {
 
     private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
@@ -47,8 +50,10 @@ public class OceanBrush extends AbstractBrush {
             String parameter = parameters[i];
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.BLUE + "Parameters:");
-                messenger.sendMessage(ChatColor.GREEN + "-wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. -wlevel 64)");
-                messenger.sendMessage(ChatColor.GREEN + "-cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
+                messenger.sendMessage(ChatColor.GREEN + "/b o -wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. " +
+                        "-wlevel 64)");
+                messenger.sendMessage(ChatColor.GREEN + "/b o -cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea " +
+                        "floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
             } else if (parameter.equalsIgnoreCase("-wlevel")) {
                 if ((i + 1) >= parameters.length) {
                     messenger.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
@@ -65,7 +70,7 @@ public class OceanBrush extends AbstractBrush {
                 }
                 this.waterLevel = temp - 1;
                 messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
-            } else if (parameter.equalsIgnoreCase("-cfloor") || parameter.equalsIgnoreCase("-coverfloor")) {
+            } else if (parameter.equalsIgnoreCase("-cfloor")) {
                 if ((i + 1) >= parameters.length) {
                     messenger.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
                     continue;
@@ -77,6 +82,22 @@ public class OceanBrush extends AbstractBrush {
                 ));
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("-wlevel", "-cfloor"), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("-cfloor")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Stream.of("y", "n"), parameter, 1);
+            }
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

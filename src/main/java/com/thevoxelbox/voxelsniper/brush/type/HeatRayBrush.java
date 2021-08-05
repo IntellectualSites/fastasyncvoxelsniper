@@ -16,7 +16,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class HeatRayBrush extends AbstractBrush {
 
@@ -64,16 +66,25 @@ public class HeatRayBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
             }
             if (parameter.startsWith("oct")) {
-                this.octaves = Integer.parseInt(parameter.replace("oct", ""));
+                this.octaves = Integer.parseInt(parameter.substring(3));
                 messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
             } else if (parameter.startsWith("amp")) {
-                this.amplitude = Double.parseDouble(parameter.replace("amp", ""));
+                this.amplitude = Double.parseDouble(parameter.substring(3));
                 messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
             } else if (parameter.startsWith("freq")) {
-                this.frequency = Double.parseDouble(parameter.replace("freq", ""));
+                this.frequency = Double.parseDouble(parameter.substring(4));
                 messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("oct", "amp", "freq"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

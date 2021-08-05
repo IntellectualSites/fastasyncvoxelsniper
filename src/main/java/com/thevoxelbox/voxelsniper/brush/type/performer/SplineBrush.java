@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * FOR ANY BRUSH THAT USES A SPLINE, EXTEND THAT BRUSH FROM THIS BRUSH!!! That way, the spline calculations are already there. Also, the UI for
@@ -31,10 +32,10 @@ public class SplineBrush extends AbstractPerformerBrush {
             if (parameter.equalsIgnoreCase("info")) {
                 snipe.createMessageSender()
                         .message(ChatColor.GOLD + "Spline brush parameters")
-                        .message(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve")
-                        .message(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve")
-                        .message(ChatColor.AQUA + "clear: Clear out the curve selection")
-                        .message(ChatColor.AQUA + "ren: Render curve from control points")
+                        .message(ChatColor.AQUA + "/b sp ss -- Enable endpoint selection mode for desired curve")
+                        .message(ChatColor.AQUA + "/b sp sc -- Enable control point selection mode for desired curve")
+                        .message(ChatColor.AQUA + "/b sp clear -- Clear out the curve selection")
+                        .message(ChatColor.AQUA + "/b sp ren -- Render curve from control points")
                         .send();
                 return;
             } else if (parameter.equalsIgnoreCase("sc")) {
@@ -71,6 +72,15 @@ public class SplineBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("ss", "sc", "clear", "ren"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

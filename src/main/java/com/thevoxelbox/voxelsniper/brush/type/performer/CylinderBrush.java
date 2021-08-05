@@ -8,6 +8,9 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class CylinderBrush extends AbstractPerformerBrush {
 
     private double trueCircle;
@@ -22,7 +25,7 @@ public class CylinderBrush extends AbstractPerformerBrush {
             }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
+                messenger.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight. Default is 1.");
                 messenger.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
                 messenger.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
                 return;
@@ -34,14 +37,14 @@ public class CylinderBrush extends AbstractPerformerBrush {
                 this.trueCircle = 0;
                 messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
             } else if (parameter.charAt(0) == 'h') {
-                Integer height = NumericParser.parseInteger(parameter.replace("h", ""));
+                Integer height = NumericParser.parseInteger(parameter.substring(1));
                 if (height == null) {
                     return;
                 }
                 toolkitProperties.setVoxelHeight(height);
                 messenger.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
             } else if (parameter.charAt(0) == 'c') {
-                Integer center = NumericParser.parseInteger(parameter.replace("c", ""));
+                Integer center = NumericParser.parseInteger(parameter.substring(1));
                 if (center == null) {
                     return;
                 }
@@ -51,6 +54,15 @@ public class CylinderBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("h", "true", "c"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

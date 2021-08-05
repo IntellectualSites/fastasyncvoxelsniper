@@ -13,15 +13,6 @@ import org.bukkit.ChatColor;
 public class SnowConeBrush extends AbstractBrush {
 
     @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        String firstParameter = parameters[1];
-        if (firstParameter.equalsIgnoreCase("info")) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GOLD + "Snow Cone Parameters:");
-        }
-    }
-
-    @Override
     public void handleArrowAction(Snipe snipe) {
     }
 
@@ -29,12 +20,12 @@ public class SnowConeBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         if (getBlockType(targetBlock) == BlockTypes.SNOW) {
-            addSnow(snipe, targetBlock);
+            addSnow(targetBlock);
         } else {
             BlockVector3 blockAbove = BlockVector3.at(targetBlock.getX(), targetBlock.getY() + 1, targetBlock.getZ());
             BlockType type = getBlockType(blockAbove);
             if (Materials.isEmpty(type)) {
-                addSnow(snipe, blockAbove);
+                addSnow(blockAbove);
             } else {
                 SnipeMessenger messenger = snipe.createMessenger();
                 messenger.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
@@ -42,7 +33,7 @@ public class SnowConeBrush extends AbstractBrush {
         }
     }
 
-    private void addSnow(Snipe snipe, BlockVector3 targetBlock) {
+    private void addSnow(BlockVector3 targetBlock) {
         int blockPositionX = targetBlock.getX();
         int blockPositionY = targetBlock.getY();
         int blockPositionZ = targetBlock.getZ();

@@ -23,7 +23,7 @@ public class TriangleBrush extends AbstractPerformerBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        if (parameters[1].equalsIgnoreCase("info")) {
+        if (parameters[0].equalsIgnoreCase("info")) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.GOLD + "Triangle Brush instructions: Select three corners with the arrow brush, then generate the triangle with the powder brush.");
         }

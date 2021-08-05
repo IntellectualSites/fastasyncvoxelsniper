@@ -7,7 +7,9 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class SplatterVoxelBrush extends AbstractPerformerBrush {
 
@@ -41,7 +43,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
                         .send();
                 return;
             } else if (parameter.charAt(0) == 's') {
-                double temp = Integer.parseInt(parameter.replace("s", ""));
+                double temp = Integer.parseInt(parameter.substring(1));
                 if (temp >= SEED_PERCENT_MIN && temp <= SEED_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Seed percent set to: " + temp / 100 + "%");
                     this.seedPercent = (int) temp;
@@ -49,7 +51,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
                     messenger.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
                 }
             } else if (parameter.charAt(0) == 'g') {
-                double temp = Integer.parseInt(parameter.replace("g", ""));
+                double temp = Integer.parseInt(parameter.substring(1));
                 if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + temp / 100 + "%");
                     this.growPercent = (int) temp;
@@ -57,7 +59,7 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
                     messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                 }
             } else if (parameter.charAt(0) == 'r') {
-                int temp = Integer.parseInt(parameter.replace("r", ""));
+                int temp = Integer.parseInt(parameter.substring(1));
                 if (temp >= SPLATTER_RECURSIONS_PERCENT_MIN && temp <= SPLATTER_RECURSIONS_PERCENT_MAX) {
                     messenger.sendMessage(ChatColor.AQUA + "Recursions set to: " + temp);
                     this.splatterRecursions = temp;
@@ -68,6 +70,15 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("s", "g", "r"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

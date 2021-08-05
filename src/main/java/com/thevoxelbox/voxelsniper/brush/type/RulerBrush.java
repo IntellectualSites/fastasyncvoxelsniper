@@ -9,6 +9,9 @@ import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class RulerBrush extends AbstractBrush {
 
     private boolean first = true;
@@ -30,13 +33,13 @@ public class RulerBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
                 return;
             } else if (parameter.charAt(0) == 'x') {
-                this.offsetX = Integer.parseInt(parameter.replace("x", ""));
+                this.offsetX = Integer.parseInt(parameter.substring(1));
                 messenger.sendMessage(ChatColor.AQUA + "X offset set to " + this.offsetX);
             } else if (parameter.charAt(0) == 'y') {
-                this.offsetY = Integer.parseInt(parameter.replace("y", ""));
+                this.offsetY = Integer.parseInt(parameter.substring(1));
                 messenger.sendMessage(ChatColor.AQUA + "Y offset set to " + this.offsetY);
             } else if (parameter.charAt(0) == 'z') {
-                this.offsetZ = Integer.parseInt(parameter.replace("z", ""));
+                this.offsetZ = Integer.parseInt(parameter.substring(1));
                 messenger.sendMessage(ChatColor.AQUA + "Z offset set to " + this.offsetZ);
             } else if (parameter.startsWith("ruler")) {
                 this.offsetZ = 0;
@@ -47,6 +50,29 @@ public class RulerBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("ruler", "x"), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("x")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Stream.of("y"), parameter, 1);
+            }
+        }
+        if (parameters.length == 3) {
+            String secondParameter = parameters[1];
+            if (secondParameter.equalsIgnoreCase("y")) {
+                String parameter = parameters[2];
+                return super.sortCompletions(Stream.of("z"), parameter, 2);
+            }
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

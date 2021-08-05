@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class JockeyBrush extends AbstractBrush {
 
@@ -55,6 +56,15 @@ public class JockeyBrush extends AbstractBrush {
             this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
         }
         messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("-i:", "-po:", "-s:"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

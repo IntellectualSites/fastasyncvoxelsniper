@@ -11,6 +11,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public class SetRedstoneFlipBrush extends AbstractBrush {
@@ -28,7 +29,8 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
             }
             if (parameter.equalsIgnoreCase("info")) {
                 messenger.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n,s,e,world), Set the direction that you wish to flip your repeaters, defaults to north/south.");
+                messenger.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n, s, ns, e, world, " +
+                        "ew), Set the direction that you wish to flip your repeaters, defaults to north/south.");
                 return;
             }
             if (Stream.of("n", "s", "ns")
@@ -43,6 +45,15 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("n", "s", "ns", "e", "world", "ew"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

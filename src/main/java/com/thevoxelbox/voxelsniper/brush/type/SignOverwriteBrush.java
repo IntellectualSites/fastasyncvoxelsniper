@@ -18,6 +18,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class SignOverwriteBrush extends AbstractBrush {
 
@@ -54,15 +56,16 @@ public class SignOverwriteBrush extends AbstractBrush {
                             .message(ChatColor.BLUE + "The arrow writes the internal line buffer to the tearget sign.")
                             .message(ChatColor.BLUE + "The powder reads the text of the target sign into the internal buffer.")
                             .message(ChatColor.AQUA + "Sign Overwrite Brush Parameters:")
-                            .message(ChatColor.GREEN + "-1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the first sign line. (e.g. -1 Blah Blah)")
-                            .message(ChatColor.GREEN + "-2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)")
-                            .message(ChatColor.GREEN + "-3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)")
-                            .message(ChatColor.GREEN + "-4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)")
-                            .message(ChatColor.GREEN + "-clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)")
-                            .message(ChatColor.GREEN + "-clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)")
-                            .message(ChatColor.GREEN + "-multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)")
-                            .message(ChatColor.GREEN + "-save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)")
-                            .message(ChatColor.GREEN + "-open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)")
+                            .message(ChatColor.GREEN + "/b sio -1[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the " +
+                                    "text of the first sign line. (e.g. -1 Blah Blah)")
+                            .message(ChatColor.GREEN + "/b sio -2[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the second sign line. (e.g. -2 Blah Blah)")
+                            .message(ChatColor.GREEN + "/b sio -3[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the third sign line. (e.g. -3 Blah Blah)")
+                            .message(ChatColor.GREEN + "/b sio -4[:(enabled|disabled)] ... " + ChatColor.BLUE + "-- Sets the text of the fourth sign line. (e.g. -4 Blah Blah)")
+                            .message(ChatColor.GREEN + "/b sio -clear " + ChatColor.BLUE + "-- Clears the line buffer. (Alias: -c)")
+                            .message(ChatColor.GREEN + "/b sio -clearall " + ChatColor.BLUE + "-- Clears the line buffer and sets all lines back to enabled. (Alias: -ca)")
+                            .message(ChatColor.GREEN + "/b sio -multiple [on|off] " + ChatColor.BLUE + "-- Enables or disables ranged mode. (Alias: -m) (see Wiki for more information)")
+                            .message(ChatColor.GREEN + "/b sio -save (name) " + ChatColor.BLUE + "-- Save you buffer to a file named [name]. (Alias: -s)")
+                            .message(ChatColor.GREEN + "/b sio -open (name) " + ChatColor.BLUE + "-- Loads a buffer from a file named [name]. (Alias: -o)")
                             .send();
                 } else if (parameter.startsWith("-1")) {
                     textChanged = true;
@@ -121,6 +124,24 @@ public class SignOverwriteBrush extends AbstractBrush {
         if (textChanged) {
             displayBuffer(snipe);
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("-1", "-2", "-3", "-4", "-clear", "-clearall",
+                    "-multiple", "-save", "-open"
+            ), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("-multiple")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Stream.of("on", "off"), parameter, 1);
+            }
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

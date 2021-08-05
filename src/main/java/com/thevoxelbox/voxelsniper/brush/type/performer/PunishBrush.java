@@ -13,16 +13,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PunishBrush extends AbstractPerformerBrush {
+
+    private static final List<String> PUNISHMENTS = Arrays.stream(Punishment.values())
+            .map(punishment -> punishment.name().toLowerCase(Locale.ROOT))
+            .collect(Collectors.toList());
 
     private static final int MAX_RANDOM_TELEPORTATION_RANGE = 400;
     private static final int TICKS_PER_SECOND = 20;
@@ -49,9 +58,9 @@ public class PunishBrush extends AbstractPerformerBrush {
                         .message(ChatColor.AQUA + "Punishments can be set via /b p [punishment]")
                         .message(ChatColor.AQUA + "Punishment level can be set with /vc [level]")
                         .message(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]")
-                        .message(ChatColor.AQUA + "Parameter -toggleHypnoLandscape will make Hypno punishment only affect landscape.")
-                        .message(ChatColor.AQUA + "Parameter -toggleSM [playername] will make punishbrush only affect that player.")
-                        .message(ChatColor.AQUA + "Parameter -toggleSelf will toggle whether you get hit as well.")
+                        .message(ChatColor.AQUA + "/b p -toggleHypnoLandscape will make Hypno punishment only affect landscape.")
+                        .message(ChatColor.AQUA + "/b p -toggleSM [playername] will make punishbrush only affect that player.")
+                        .message(ChatColor.AQUA + "/b p -toggleSelf will toggle whether you get hit as well.")
                         .message(ChatColor.AQUA + "Available Punishment Options:")
                         .send();
                 StringBuilder punishmentOptions = new StringBuilder();
@@ -91,6 +100,26 @@ public class PunishBrush extends AbstractPerformerBrush {
                 }
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.concat(
+                    PUNISHMENTS.stream(),
+                    Stream.of("-toggleHypnoLandscape", "-toggleSM", "-toggleSelf")
+            ), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("-toggleSM")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Bukkit.getOnlinePlayers().stream()
+                        .map(HumanEntity::getName), parameter, 1);
+            }
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

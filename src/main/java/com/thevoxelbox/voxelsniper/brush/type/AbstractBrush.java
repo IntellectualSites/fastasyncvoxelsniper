@@ -4,9 +4,11 @@ import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.world.RegenOptions;
 import com.sk89q.worldedit.world.biome.BiomeType;
@@ -17,10 +19,16 @@ import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractBrush implements Brush {
 
@@ -35,6 +43,41 @@ public abstract class AbstractBrush implements Brush {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
         player.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return sortCompletions(Stream.empty(), parameter, 0);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * Sort and return all possible completions that match given parameter.
+     *
+     * @param completions Completions
+     * @param parameter   Given parameter
+     * @param index       Parameter index
+     * @return Sorted completions.
+     */
+    public List<String> sortCompletions(Stream<String> completions, String parameter, int index) {
+        // The first brush parameter may be info.
+        // Removing MINECRAFT_IDENTIFIER permits to complete whether minecraft:XXXX or XXXX.
+        String parameterLowered = (parameter.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
+                ? parameter.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
+                : parameter)
+                .toLowerCase(Locale.ROOT);
+        return (index == 0 ? Stream.concat(completions, Stream.of("info")) : completions)
+                .filter(completion -> {
+                    if (completion.startsWith(Identifiers.MINECRAFT_IDENTIFIER)) {
+                        completion = completion.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH);
+                    }
+                    return completion.startsWith(parameterLowered);
+                })
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -79,9 +122,9 @@ public abstract class AbstractBrush implements Brush {
         return getBlock(x, clampY(y), z);
     }
 
-    public void setBiome(int x, int y, int z, Biome biome) {
+    public void setBiome(int x, int y, int z, BiomeType biomeType) {
         try {
-            editSession.setBiome(x, y, z, BukkitAdapter.adapt(biome));
+            editSession.setBiome(x, y, z, biomeType);
         } catch (WorldEditException e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +170,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    public boolean generateTree(TreeGenerator.TreeType treeType, BlockVector3 location) {
+    public boolean generateTree(BlockVector3 location, TreeGenerator.TreeType treeType) {
         // Must run sync, Paper doesn't generate the whole tree and Tuinity fails otherwise.
         // This might be caused by async catcher for block remove!
         return TaskManager.IMP.sync(() -> {
@@ -137,6 +180,13 @@ public abstract class AbstractBrush implements Brush {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public Entity createEntity(BlockVector3 location, org.bukkit.entity.Entity bukkitEntity) {
+        return editSession.createEntity(
+                new Location(editSession, location.getX(), location.getY(), location.getZ()),
+                BukkitAdapter.adapt(bukkitEntity).getState()
+        );
     }
 
     public Direction getDirection(BlockVector3 first, BlockVector3 second) {
@@ -181,14 +231,15 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlockData(int x, int y, int z, BlockState blockState) {
-        try {
-            editSession.setBlock(x, y, z, blockState);
-            if (blockState.getMaterial().isTile()) {
+        editSession.setBlock(x, y, z, blockState);
+        if (blockState.getMaterial().isTile()) {
+            try {
                 editSession.setTile(x, y, z, blockState.getMaterial().getDefaultTile());
+            } catch (WorldEditException e) {
+                throw new RuntimeException(e);
             }
-        } catch (WorldEditException e) {
-            throw new RuntimeException(e);
         }
+
     }
 
     public BaseBlock getFullBlock(BlockVector3 position) {
@@ -221,11 +272,7 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlock(int x, int y, int z, BaseBlock block) {
-        try {
-            editSession.setBlock(x, y, z, block);
-        } catch (WorldEditException e) {
-            throw new RuntimeException(e);
-        }
+        editSession.setBlock(x, y, z, block);
     }
 
     public EditSession getEditSession() {

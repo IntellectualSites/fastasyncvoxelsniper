@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Moves a selection blockPositionY a certain amount.
@@ -63,6 +64,15 @@ public class MoveBrush extends AbstractBrush {
                 messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("x", "y", "z", "reset"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
