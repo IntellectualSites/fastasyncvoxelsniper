@@ -130,7 +130,6 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
                     .filter(toolkitName -> toolkitName.startsWith(argumentLowered))
                     .collect(Collectors.toList());
         }
-
         return Collections.emptyList();
     }
 
