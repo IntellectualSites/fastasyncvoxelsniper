@@ -45,7 +45,6 @@ configurations.all {
 	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
-var rootVersion by extra("2.2.0")
 var buildNumber by extra("")
 ext {
     val git: Grgit = Grgit.open {
@@ -60,7 +59,7 @@ ext {
 }
 
 group = "com.thevoxelbox"
-version = String.format("%s-%s", rootVersion, buildNumber)
+version = String.format("%s-%s", rootProject.version, buildNumber)
 
 bukkit {
 	name = "FastAsyncVoxelSniper"
