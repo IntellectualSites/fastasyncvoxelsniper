@@ -92,8 +92,6 @@ public class TreeSnipeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         messenger.sendMessage(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName());
-        // TODO Remove once fixed
-        messenger.sendMessage(ChatColor.RED + "Warning: This brush is currently not undo-able due to a Spigot bug!");
     }
 
 }

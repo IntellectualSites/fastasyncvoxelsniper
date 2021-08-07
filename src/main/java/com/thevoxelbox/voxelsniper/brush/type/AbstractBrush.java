@@ -171,15 +171,11 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public boolean generateTree(BlockVector3 location, TreeGenerator.TreeType treeType) {
-        // Must run sync, Paper doesn't generate the whole tree and Tuinity fails otherwise.
-        // This might be caused by async catcher for block remove!
-        return TaskManager.IMP.sync(() -> {
-            try {
-                return treeType.generate(editSession, location);
-            } catch (WorldEditException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        try {
+            return treeType.generate(editSession, location);
+        } catch (WorldEditException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Entity createEntity(BlockVector3 location, org.bukkit.entity.Entity bukkitEntity) {
