@@ -27,7 +27,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Set Repeater Flip Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b setrf [d] -- Valid direction inputs are (n, s, ns, e, w, ew):" +
+            messenger.sendMessage(ChatColor.AQUA + "/b setrf [d] -- Valid direction inputs are: n, s, ns, e, w, ew. " +
                     "Sets the direction that you wish to flip your repeaters, defaults to north/south.");
         } else {
             if (parameters.length == 1) {
