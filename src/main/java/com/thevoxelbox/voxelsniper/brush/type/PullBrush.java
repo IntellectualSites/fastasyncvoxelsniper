@@ -23,15 +23,26 @@ public class PullBrush extends AbstractBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        Double pinch = NumericParser.parseDouble(parameters[0]);
-        Double bubble = NumericParser.parseDouble(parameters[0]);
-        if (pinch == null || bubble == null) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Invalid brush parameters!");
-            return;
+        SnipeMessenger messenger = snipe.createMessenger();
+        String firstParameter = parameters[0];
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Pull Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b pull [d] -- set pinch and bubble to d");
+        } else {
+            if (parameters.length == 1) {
+                Double pinch = NumericParser.parseDouble(firstParameter);
+                Double bubble = NumericParser.parseDouble(firstParameter);
+                if (pinch == null || bubble == null) {
+                    messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    return;
+                }
+                this.c1 = 1 - pinch;
+                this.c2 = bubble;
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
+            }
         }
-        this.c1 = 1 - pinch;
-        this.c2 = bubble;
     }
 
     @Override

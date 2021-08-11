@@ -30,24 +30,28 @@ public class CopyPastaBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String parameter = parameters[0];
-        if (parameter.equalsIgnoreCase("info")) {
-            snipe.createMessageSender()
-                    .message(ChatColor.GOLD + "CopyPasta Parameters:")
-                    .message(ChatColor.AQUA + "/b cp air -- toggle include (default) or exclude  air during paste")
-                    .message(ChatColor.AQUA + "/b cp 0|90|180|270 -- toggle rotation (0 default)")
-                    .send();
-            return;
-        }
-        if (parameter.equalsIgnoreCase("air")) {
-            this.pasteAir = !this.pasteAir;
-            messenger.sendMessage(ChatColor.GOLD + "Paste air: " + this.pasteAir);
-            return;
-        }
-        if (Stream.of("90", "180", "270", "0")
-                .anyMatch(parameter::equalsIgnoreCase)) {
-            this.pivot = Integer.parseInt(parameter);
-            messenger.sendMessage(ChatColor.GOLD + "Pivot angle: " + this.pivot);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "CopyPasta Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b cp air -- Toggles include (default) or exclude air during paste.");
+            messenger.sendMessage(ChatColor.AQUA + "/b cp [0|90|180|270] -- Toggles rotation (0 default)");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("air")) {
+                    this.pasteAir = !this.pasteAir;
+                    messenger.sendMessage(ChatColor.GOLD + "Paste air set to " + this.pasteAir);
+                } else if (Stream.of("0", "90", "180", "270")
+                        .anyMatch(firstParameter::equalsIgnoreCase)) {
+                    this.pivot = Integer.parseInt(firstParameter);
+                    messenger.sendMessage(ChatColor.GOLD + "Pivot angle set to " + this.pivot);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
+            }
         }
     }
 

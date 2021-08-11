@@ -24,13 +24,25 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        Double angle = NumericParser.parseDouble(parameters[0]);
-        if (angle == null) {
-            messenger.sendMessage("Exception while parsing parameter: " + parameters[0]);
-            return;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Rotation2DVertical Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b rot2v [a] -- Sets rotation angle to a");
+        } else {
+            if (parameters.length == 1) {
+                Double degreesAngle = NumericParser.parseDouble(parameters[0]);
+                if (degreesAngle != null) {
+                    this.angle = Math.toRadians(degreesAngle);
+                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
+            }
         }
-        this.angle = Math.toRadians(angle);
-        messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
     }
 
     @Override

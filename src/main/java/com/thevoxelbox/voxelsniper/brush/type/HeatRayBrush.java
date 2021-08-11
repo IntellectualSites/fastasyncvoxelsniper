@@ -12,6 +12,7 @@ import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
@@ -57,23 +58,45 @@ public class HeatRayBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String s : parameters) {
-            String parameter = s.toLowerCase();
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Heat Ray brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b hr oct[int] -- Octaves parameter for the noise generator.");
-                messenger.sendMessage(ChatColor.AQUA + "/b hr amp[float] -- Amplitude parameter for the noise generator.");
-                messenger.sendMessage(ChatColor.AQUA + "/b hr freq[float] -- Frequency parameter for the noise generator.");
-            }
-            if (parameter.startsWith("oct")) {
-                this.octaves = Integer.parseInt(parameter.substring(3));
-                messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
-            } else if (parameter.startsWith("amp")) {
-                this.amplitude = Double.parseDouble(parameter.substring(3));
-                messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-            } else if (parameter.startsWith("freq")) {
-                this.frequency = Double.parseDouble(parameter.substring(4));
-                messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Heat Ray Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr oct [o] -- Sets octave parameter to o for the noise generator.");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr amp [a] -- Sets amplitude parameter to a for the noise generator.");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr freq [f] -- Sets frequency parameter to f for the noise generator.");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("oct")) {
+                    Integer octaves = NumericParser.parseInteger(parameters[1]);
+                    if (octaves != null) {
+                        this.octaves = octaves;
+                        messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("amp")) {
+                    Double amplitude = NumericParser.parseDouble(parameters[1]);
+                    if (amplitude != null) {
+                        this.amplitude = amplitude;
+                        messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("freq")) {
+                    Double frequency = NumericParser.parseDouble(parameters[1]);
+                    if (frequency != null) {
+                        this.frequency = frequency;
+                        messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
             }
         }
     }

@@ -4,6 +4,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -17,30 +18,40 @@ public class RingBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b ri true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b ri false will switch back. (false is default)");
-                messenger.sendMessage(ChatColor.AQUA + "/b ri ir2.5 -- will set the inner radius to 2.5 units");
-                return;
-            } else if (parameter.startsWith("true")) {
-                this.trueCircle = 0.5;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            } else if (parameter.startsWith("false")) {
-                this.trueCircle = 0;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            } else if (parameter.startsWith("ir")) {
-                try {
-                    this.innerSize = Double.parseDouble(parameter.substring(2));
-                    messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
-                } catch (NumberFormatException exception) {
-                    messenger.sendMessage(ChatColor.RED + "The parameters included are invalid.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b ri [true|false] -- Uses a true circle algorithm instead of the skinnier " +
+                    "version with classic sniper nubs. (false is default)");
+            messenger.sendMessage(ChatColor.AQUA + "/b ri ir [n] -- Sets the inner radius to n units.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("true")) {
+                    this.trueCircle = 0.5;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                } else if (firstParameter.equalsIgnoreCase("false")) {
+                    this.trueCircle = 0;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
+                }
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("ir")) {
+                    Double innerSize = NumericParser.parseDouble(parameters[1]);
+                    if (innerSize != null) {
+                        this.innerSize = innerSize;
+                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }

@@ -287,7 +287,11 @@ public class Sniper {
                         }
                         BlockVector3 lastBlock = clickedBlock == null
                                 ? rayTraceLastBlock
-                                : targetBlock.add(clickedBlockFace.getModX(), clickedBlockFace.getModY(), clickedBlockFace.getModZ());
+                                : targetBlock.add(
+                                        clickedBlockFace.getModX(),
+                                        clickedBlockFace.getModY(),
+                                        clickedBlockFace.getModZ()
+                                );
                         currentBrush.perform(snipe, toolAction, editSession, targetBlock, lastBlock);
                         return true;
                     }

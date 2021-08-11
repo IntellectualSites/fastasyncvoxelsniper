@@ -22,26 +22,31 @@ public class CometBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (int index = 0; index < parameters.length; ++index) {
-            String parameter = parameters[index];
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage("Parameters:");
-                messenger.sendMessage("/b com balls [big|small]  -- Sets your ball size.");
-            }
-            if (parameter.equalsIgnoreCase("balls")) {
-                if (index + 1 >= parameters.length) {
-                    messenger.sendMessage("The balls parameter expects a ball size after it.");
-                }
-                String newBallSize = parameters[++index];
-                if (newBallSize.equalsIgnoreCase("big")) {
-                    this.useBigBalls = true;
-                    messenger.sendMessage("Your balls are " + ChatColor.DARK_RED + ("BIG"));
-                } else if (newBallSize.equalsIgnoreCase("small")) {
-                    this.useBigBalls = false;
-                    messenger.sendMessage("Your balls are " + ChatColor.DARK_RED + ("small"));
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage("Comet Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b com balls [big|small] -- Sets your ball size.");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("balls")) {
+                    String newBallSize = parameters[1];
+                    if (newBallSize.equalsIgnoreCase("big")) {
+                        this.useBigBalls = true;
+                        messenger.sendMessage(ChatColor.AQUA + "Your balls are " + ChatColor.DARK_RED + "big");
+                    } else if (newBallSize.equalsIgnoreCase("small")) {
+                        this.useBigBalls = false;
+                        messenger.sendMessage(ChatColor.AQUA + "Your balls are " + ChatColor.DARK_RED + "small");
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Unknown ball size.");
+                    }
                 } else {
-                    messenger.sendMessage("Unknown ball size.");
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter " +
+                            "info.");
                 }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
             }
         }
     }
@@ -53,8 +58,11 @@ public class CometBrush extends AbstractBrush {
             return super.sortCompletions(Stream.of("balls"), parameter, 0);
         }
         if (parameters.length == 2) {
-            String parameter = parameters[1];
-            return super.sortCompletions(Stream.of("big", "small"), parameter, 1);
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("balls")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(Stream.of("big", "small"), parameter, 1);
+            }
         }
         return super.handleCompletions(parameters, snipe);
     }

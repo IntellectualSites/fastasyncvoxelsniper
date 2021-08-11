@@ -11,7 +11,9 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -25,18 +27,33 @@ public class TreeSnipeBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];
+
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b t tree_type");
-            messenger.sendMessage(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName());
+            messenger.sendMessage(ChatColor.AQUA + "/b t [t] -- Sets the selected tree type to t.");
+            messenger.sendMessage(ChatColor.AQUA + "/b t list -- Lists all available trees.");
         } else {
-            String treeName = parameters[0];
-            TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(treeName);
-            if (this.treeType == null) {
-                this.treeType = treeType;
-                messenger.sendMessage(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName());
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            Arrays.stream(TreeGenerator.TreeType.values())
+                                    .map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                            treeType.lookupKeys.get(0))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else {
+                    TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);
+
+                    if (treeType != null) {
+                        this.treeType = treeType;
+                        messenger.sendMessage(ChatColor.GOLD + "Tree type set to: " + ChatColor.DARK_GREEN + this.treeType.getName());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid tree type.");
+                    }
+                }
             } else {
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tree type.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -45,14 +62,10 @@ public class TreeSnipeBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("treetype"), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("treetype")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(TREES.stream(), parameter, 1);
-            }
+            return super.sortCompletions(Stream.concat(
+                    TREES.stream(),
+                    Stream.of("list")
+            ), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);
     }

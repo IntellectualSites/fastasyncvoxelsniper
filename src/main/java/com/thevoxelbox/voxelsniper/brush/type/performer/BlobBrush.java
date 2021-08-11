@@ -4,9 +4,12 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class BlobBrush extends AbstractPerformerBrush {
 
@@ -20,27 +23,39 @@ public class BlobBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Blob brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b blob g[int] -- set a growth percentage (" + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "). Default is " + GROW_PERCENT_DEFAULT);
-                return;
-            }
-            if (parameter.charAt(0) == 'g') {
-                int temp = Integer.parseInt(parameter.substring(1));
-                if (temp >= GROW_PERCENT_MIN && temp <= GROW_PERCENT_MAX) {
-                    messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + (float) temp / 100 + "%");
-                    this.growPercent = temp;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Blob Brush Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b blob g [n] -- Sets the growth percentage to n (" + GROW_PERCENT_MIN +
+                    "-" + GROW_PERCENT_MAX + "). Default is " + GROW_PERCENT_DEFAULT + ".");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("g")) {
+                    Integer growPercent = NumericParser.parseInteger(parameters[1]);
+                    if (growPercent != null && growPercent >= GROW_PERCENT_MIN && growPercent <= GROW_PERCENT_MAX) {
+                        this.growPercent = growPercent;
+                        messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + this.growPercent / 100 + "%");
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                    }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer " + GROW_PERCENT_MIN + "-" + GROW_PERCENT_MAX + "!");
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("g"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

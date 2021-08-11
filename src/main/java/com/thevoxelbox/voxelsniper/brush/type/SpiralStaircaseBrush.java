@@ -24,30 +24,33 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[0].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b sstair 'block' (default) | 'step' | 'woodstair' | 'cobblestair' -- set the type of staircase");
-            messenger.sendMessage(ChatColor.AQUA + "/b sstair 'c' (default) | 'cc' -- set the turning direction of staircase");
-            messenger.sendMessage(ChatColor.AQUA + "/b sstair 'n' (default) | 'e' | 's' | 'world' -- set the opening direction of staircase");
-            return;
-        }
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (Stream.of("block", "step", "woodstair", "cobblestair")
-                    .anyMatch(parameter::equalsIgnoreCase)) {
-                this.stairType = parameter;
-                messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
-            } else if (parameter.equalsIgnoreCase("c") || parameter.equalsIgnoreCase("cc")) {
-                this.sdirect = parameter;
-                messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-            } else if (Stream.of("n", "e", "s", "world")
-                    .anyMatch(parameter::equalsIgnoreCase)) {
-                this.sopen = parameter;
-                messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b sstair [block|step|woodstair|cobblestair] -- Sets the type of staircase.");
+            messenger.sendMessage(ChatColor.AQUA + "/b sstair [c|cc] -- Sets the turning direction of staircase.");
+            messenger.sendMessage(ChatColor.AQUA + "/b sstair [n|e|s|w] -- Sets the opening direction of staircase.");
+        } else {
+            if (parameters.length == 1) {
+                if (Stream.of("block", "step", "woodstair", "cobblestair")
+                        .anyMatch(firstParameter::equalsIgnoreCase)) {
+                    this.stairType = firstParameter;
+                    messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + this.stairType);
+                } else if (Stream.of("c", "cc")
+                        .anyMatch(firstParameter::equalsIgnoreCase)) {
+                    this.sdirect = firstParameter;
+                    messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+                } else if (Stream.of("n", "e", "s", "w")
+                        .anyMatch(firstParameter::equalsIgnoreCase)) {
+                    this.sopen = firstParameter;
+                    messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -56,9 +59,10 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("block", "step", "woodstair", "cobblestair",
+            return super.sortCompletions(Stream.of(
+                    "block", "step", "woodstair", "cobblestair",
                     "c", "cc",
-                    "n", "e", "s", "world"
+                    "n", "e", "s", "w"
             ), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);

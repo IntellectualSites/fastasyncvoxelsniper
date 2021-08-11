@@ -22,9 +22,12 @@ public class LineBrush extends AbstractPerformerBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        if (parameters[0].equalsIgnoreCase("info")) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a line to set the second point.");
+        SnipeMessenger messenger = snipe.createMessenger();
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. " +
+                    "Right click with gunpowder to draw a line to set the second point.");
         }
     }
 
@@ -46,11 +49,11 @@ public class LineBrush extends AbstractPerformerBrush {
             messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
         } else {
             this.targetCoordinates = Vectors.toBukkit(targetBlock);
-            linePowder();
+            lineGunpowder();
         }
     }
 
-    private void linePowder() {
+    private void lineGunpowder() {
         Vector originClone = new Vector().
                 copy(this.originCoordinates)
                 .add(HALF_BLOCK_OFFSET);

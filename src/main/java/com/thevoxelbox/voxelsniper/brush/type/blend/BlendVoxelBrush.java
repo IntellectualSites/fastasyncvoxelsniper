@@ -19,9 +19,11 @@ public class BlendVoxelBrush extends AbstractBlendBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[0].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b bv water -- toggle include or exclude (default) water");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b bv water -- Toggles include or exclude (default) water.");
             return;
         }
         super.handleCommand(parameters, snipe);

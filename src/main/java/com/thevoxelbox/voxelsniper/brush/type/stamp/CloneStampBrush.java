@@ -20,33 +20,48 @@ public class CloneStampBrush extends AbstractStampBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        String parameter = parameters[0];
-        if (parameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder brush parameters");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs f -- Activates Fill mode");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs a -- Activates No-Air mode");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs d -- Activates Default mode");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs c[number] -- Sets center");
-        }
-        if (parameter.equalsIgnoreCase("a")) {
-            setStamp(StampType.NO_AIR);
-            reSort();
-            messenger.sendMessage(ChatColor.AQUA + "No-Air stamp brush");
-        } else if (parameter.equalsIgnoreCase("f")) {
-            setStamp(StampType.FILL);
-            reSort();
-            messenger.sendMessage(ChatColor.AQUA + "Fill stamp brush");
-        } else if (parameter.equalsIgnoreCase("d")) {
-            setStamp(StampType.DEFAULT);
-            reSort();
-            messenger.sendMessage(ChatColor.AQUA + "Default stamp brush");
-        } else if (parameter.charAt(0) == 'c') {
-            Integer cylinderCenter = NumericParser.parseInteger(parameter.substring(1));
-            if (cylinderCenter == null) {
-                return;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder Brush Parameters:");
+            messenger.sendMessage(ChatColor.GREEN + "/b cs f -- Activates Fill mode.");
+            messenger.sendMessage(ChatColor.GREEN + "/b cs a -- Activates No-Air mode.");
+            messenger.sendMessage(ChatColor.GREEN + "/b cs d -- Activates Default mode.");
+            messenger.sendMessage(ChatColor.GREEN + "/b cs c [n] -- Sets center to n.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("a")) {
+                    setStamp(StampType.NO_AIR);
+                    reSort();
+                    messenger.sendMessage(ChatColor.AQUA + "No-Air stamp brush activated.");
+                } else if (firstParameter.equalsIgnoreCase("f")) {
+                    setStamp(StampType.FILL);
+                    reSort();
+                    messenger.sendMessage(ChatColor.AQUA + "Fill stamp brush activated.");
+                } else if (firstParameter.equalsIgnoreCase("d")) {
+                    setStamp(StampType.DEFAULT);
+                    reSort();
+                    messenger.sendMessage(ChatColor.AQUA + "Default stamp brush activated.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
+                }
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("c")) {
+                    Integer cylinderCenter = NumericParser.parseInteger(parameters[1]);
+                    if (cylinderCenter != null) {
+                        toolkitProperties.setCylinderCenter(cylinderCenter);
+                        messenger.sendMessage(ChatColor.BLUE + "Center set to " + toolkitProperties.getCylinderCenter());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
-            toolkitProperties.setCylinderCenter(cylinderCenter);
-            messenger.sendMessage(ChatColor.BLUE + "Center set to " + toolkitProperties.getCylinderCenter());
         }
     }
 

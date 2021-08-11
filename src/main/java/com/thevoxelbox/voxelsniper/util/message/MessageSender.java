@@ -60,7 +60,7 @@ public class MessageSender {
     }
 
     public MessageSender cylinderCenterMessage(int cylinderCenter) {
-        this.messages.add(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + cylinderCenter);
+        this.messages.add(ChatColor.BLUE + "Brush Center: " + ChatColor.DARK_RED + cylinderCenter);
         return this;
     }
 

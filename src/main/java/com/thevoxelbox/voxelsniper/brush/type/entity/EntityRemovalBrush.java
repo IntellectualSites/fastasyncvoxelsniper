@@ -10,13 +10,22 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EntityRemovalBrush extends AbstractBrush {
+
+    private static final List<String> ENTITY_CLASSES = Arrays.stream(EntityType.values())
+            .map(EntityType::getEntityClass)
+            .flatMap(entityClass -> getEntityClassHierarchy(entityClass).stream())
+            .distinct()
+            .map(Class::getCanonicalName)
+            .collect(Collectors.toList());
 
     private final List<String> exemptions = new ArrayList<>(3);
 
@@ -29,27 +38,44 @@ public class EntityRemovalBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String currentParam : parameters) {
-            if (currentParam.isEmpty()) {
-                continue;
-            }
-            if (currentParam.charAt(0) == '+' || currentParam.charAt(0) == '-') {
-                boolean isAddOperation = currentParam.charAt(0) == '+';
-                // +#/-# will suppress auto-prefixing
-                String exemptionPattern = currentParam.startsWith("+#") || currentParam.startsWith("-#") ? currentParam.substring(
-                        2) : (currentParam.contains(".") ? currentParam.substring(1) : ".*." + currentParam.substring(1));
-                if (isAddOperation) {
-                    this.exemptions.add(exemptionPattern);
-                    messenger.sendMessage(String.format("Added %s to entity exemptions list.", exemptionPattern));
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.BLUE + "EntityRemoval brush:");
+            messenger.sendMessage(ChatColor.AQUA + "/b er + [e] -- Adds an exemption.");
+            messenger.sendMessage(ChatColor.AQUA + "/b er - [e] -- Removes an exemption.");
+            messenger.sendMessage(ChatColor.AQUA + "/b er list -- Lists all exemptions.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            exemptions.stream()
+                                    .map(exemption -> ChatColor.LIGHT_PURPLE + exemption)
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
                 } else {
-                    this.exemptions.remove(exemptionPattern);
-                    messenger.sendMessage(String.format("Removed %s from entity exemptions list.", exemptionPattern));
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
                 }
-            }
-            if (currentParam.equalsIgnoreCase("list-exemptions") || currentParam.equalsIgnoreCase("lex")) {
-                for (String exemption : this.exemptions) {
-                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + exemption);
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("+")) {
+                    String exemptionToAdd = parameters[1];
+                    if (isEntityClass(exemptionToAdd)) {
+                        this.exemptions.add(exemptionToAdd);
+                        messenger.sendMessage(ChatColor.GREEN + "Added \"" + exemptionToAdd + "\" to entity exemptions list.");
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid entity class.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("-")) {
+                    String exemptionToRemove = parameters[1];
+                    this.exemptions.remove(exemptionToRemove);
+                    messenger.sendMessage(ChatColor.YELLOW + "Removed \"" + exemptionToRemove + "\" from entity exemptions list.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -58,10 +84,17 @@ public class EntityRemovalBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(
-                    Stream.of("list-exemptions", "lex", "+", "-", "+#", "-#"),
-                    parameter, 0
-            );
+            return super.sortCompletions(Stream.of("+", "-", "list"), parameter, 0);
+        }
+        if (parameters.length == 2) {
+            String firstParameter = parameters[0];
+            if (firstParameter.equalsIgnoreCase("+")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(ENTITY_CLASSES.stream(), parameter, 1);
+            } else if (firstParameter.equalsIgnoreCase("-")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(this.exemptions.stream(), parameter, 1);
+            }
         }
         return super.handleCompletions(parameters, snipe);
     }
@@ -84,22 +117,12 @@ public class EntityRemovalBrush extends AbstractBrush {
         int chunkZ = targetBlock.getZ() >> 4;
         int entityCount = 0;
         int chunkCount = 0;
-        try {
-            int radius = Math.round(toolkitProperties.getBrushSize() / 16.0F);
-            for (int x = chunkX - radius; x <= chunkX + radius; x++) {
-                for (int z = chunkZ - radius; z <= chunkZ + radius; z++) {
-                    entityCount += removeEntities(x, z);
-                    chunkCount++;
-                }
+        int radius = Math.round(toolkitProperties.getBrushSize() / 16.0F);
+        for (int x = chunkX - radius; x <= chunkX + radius; x++) {
+            for (int z = chunkZ - radius; z <= chunkZ + radius; z++) {
+                entityCount += removeEntities(x, z);
+                chunkCount++;
             }
-        } catch (PatternSyntaxException exception) {
-            exception.printStackTrace();
-            messenger.sendMessage(ChatColor.RED + "Error in RegEx: " + ChatColor.LIGHT_PURPLE + exception.getPattern());
-            messenger.sendMessage(ChatColor.RED + String.format(
-                    "%s (Index: %d)",
-                    exception.getDescription(),
-                    exception.getIndex()
-            ));
         }
         messenger.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (
                 chunkCount == 1
@@ -116,7 +139,7 @@ public class EntityRemovalBrush extends AbstractBrush {
 
             int entityCount = 0;
             for (Entity entity : world.getChunkAt(chunkX, chunkZ).getEntities()) {
-                if (!isClassInExemptionList(entity.getClass())) {
+                if (!isEntityClassInExemptionList(entity.getClass())) {
                     entity.remove();
                     entityCount++;
                 }
@@ -125,12 +148,22 @@ public class EntityRemovalBrush extends AbstractBrush {
         });
     }
 
-    private boolean isClassInExemptionList(Class<? extends Entity> entityClass) {
+    private boolean isEntityClass(String path) {
+        try {
+            Class<?> clazz = Class.forName(path);
+            return Entity.class.isAssignableFrom(clazz);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    private boolean isEntityClassInExemptionList(Class<? extends Entity> entityClass) {
         // Create a list of superclasses and interfaces implemented by the current entity type
-        List<String> entityClassHierarchy = getEntityClassHierarchy(entityClass);
+        List<Class<?>> entityClassHierarchy = getEntityClassHierarchy(entityClass);
         return this.exemptions.stream()
-                .anyMatch(exemptionPattern -> entityClassHierarchy.stream()
-                        .anyMatch(typeName -> typeName.matches(exemptionPattern)));
+                .anyMatch(exemption -> entityClassHierarchy.stream()
+                        .map(Class::getCanonicalName)
+                        .anyMatch(typeName -> typeName.equals(exemption)));
     }
 
     @Override
@@ -142,14 +175,15 @@ public class EntityRemovalBrush extends AbstractBrush {
                 .send();
     }
 
-    private List<String> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
-        List<String> entityClassHierarchy = new ArrayList<>();
+    private static List<Class<?>> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
+        List<Class<?>> entityClassHierarchy = new ArrayList<>(10);
+        entityClassHierarchy.add(Entity.class);
         Class<?> currentClass = entityClass;
-        while (currentClass != null && !currentClass.equals(Object.class)) {
-            entityClassHierarchy.add(currentClass.getCanonicalName());
-            for (Class<?> interfaceClass : currentClass.getInterfaces()) {
-                entityClassHierarchy.add(interfaceClass.getCanonicalName());
-            }
+
+        while (currentClass != null && !currentClass.equals(Entity.class)) {
+            entityClassHierarchy.add(currentClass);
+            entityClassHierarchy.addAll(Arrays.asList(currentClass.getInterfaces()));
+
             currentClass = currentClass.getSuperclass();
         }
         return entityClassHierarchy;

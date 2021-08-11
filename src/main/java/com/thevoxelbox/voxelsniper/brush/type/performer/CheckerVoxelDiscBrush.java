@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -17,24 +16,25 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String param : parameters) {
-            String parameter = param.toLowerCase();
-            if (parameter.equals("info")) {
-                BrushProperties brushProperties = snipe.getBrushProperties();
-                messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "true  -- Enables using World Coordinates.");
-                messenger.sendMessage(ChatColor.AQUA + "false -- Disables using World Coordinates.");
-                return;
-            }
-            if (parameter.startsWith("true")) {
-                this.useWorldCoordinates = true;
-                messenger.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
-            } else if (parameter.startsWith("false")) {
-                this.useWorldCoordinates = false;
-                messenger.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage("CheckerVoxelDisc Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b cvd [true|false] -- Enables or disables using World Coordinates.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("true")) {
+                    this.useWorldCoordinates = true;
+                    messenger.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
+                } else if (firstParameter.equalsIgnoreCase("false")) {
+                    this.useWorldCoordinates = false;
+                    messenger.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
-                break;
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }

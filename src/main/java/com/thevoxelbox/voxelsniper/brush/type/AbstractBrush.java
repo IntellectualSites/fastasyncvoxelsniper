@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -70,12 +69,7 @@ public abstract class AbstractBrush implements Brush {
                 : parameter)
                 .toLowerCase(Locale.ROOT);
         return (index == 0 ? Stream.concat(completions, Stream.of("info")) : completions)
-                .filter(completion -> {
-                    if (completion.startsWith(Identifiers.MINECRAFT_IDENTIFIER)) {
-                        completion = completion.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH);
-                    }
-                    return completion.startsWith(parameterLowered);
-                })
+                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(parameterLowered))
                 .sorted()
                 .collect(Collectors.toList());
     }

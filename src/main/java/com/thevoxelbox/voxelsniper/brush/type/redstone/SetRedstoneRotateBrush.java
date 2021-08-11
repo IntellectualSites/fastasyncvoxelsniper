@@ -71,7 +71,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
                 return;
             }
             int delay = block.getState(delayProperty);
-            block = block.with(delayProperty, -delay % 4 + 1 < 5 ? (delay + 1) : (delay - 4));
+            block = block.with(delayProperty, (delay % 4) + 1);
             setBlockData(x, y, z, block);
         }
     }

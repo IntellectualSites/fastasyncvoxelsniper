@@ -5,6 +5,7 @@ import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.biome.BiomeTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
     private static final List<String> BIOMES = BiomeTypes.values().stream()
-            .map(BiomeType::getId)
+            .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
     private BiomeType biomeType = null;
@@ -27,25 +28,44 @@ public class RegenerateChunkBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];
+
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Regenerate Chunk brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b gc biome");
-            messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
+            messenger.sendMessage(ChatColor.AQUA + "/b gc [b] -- Sets the selected regen biome type to b.");
+            messenger.sendMessage(ChatColor.AQUA + "/b gc list -- Lists all available biomes.");
+            messenger.sendMessage(ChatColor.DARK_AQUA + "Currently selected biome type: " + ChatColor.DARK_GREEN +
                     (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
         } else {
-            String biomeName = parameters[0];
-            if (biomeName.equals(DEFAULT_BIOME)) {
-                this.biomeType = null;
-            } else {
-                BiomeType biomeType = BiomeTypes.get(biomeName);
-                if (biomeType != null) {
-                    this.biomeType = biomeType;
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            Stream.concat(
+                                    Stream.of(((this.biomeType == null) ? ChatColor.GRAY : ChatColor.DARK_GRAY) + DEFAULT_BIOME),
+                                    BiomeTypes.values().stream()
+                                            .map(biomeType -> ((biomeType == this.biomeType)
+                                                    ? ChatColor.GRAY
+                                                    : ChatColor.DARK_GRAY) +
+                                                    biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+                            ).collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
                 } else {
-                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such biome type.");
+                    if (firstParameter.equals(DEFAULT_BIOME)) {
+                        this.biomeType = null;
+                    } else {
+                        BiomeType biomeType = BiomeTypes.get(firstParameter);
+                        if (biomeType != null) {
+                            this.biomeType = biomeType;
+                        } else {
+                            messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
+                        }
+                    }
+                    messenger.sendMessage(ChatColor.GOLD + "Biome type set to " + ChatColor.DARK_GREEN +
+                            (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
                 }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
-            messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
-                    (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
         }
     }
 
@@ -53,17 +73,10 @@ public class RegenerateChunkBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("biome"), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("biome")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(Stream.concat(
-                        Stream.of(DEFAULT_BIOME),
-                        BIOMES.stream()
-                ), parameter, 1);
-            }
+            return super.sortCompletions(Stream.concat(
+                    Stream.of("list", DEFAULT_BIOME),
+                    BIOMES.stream()
+            ), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);
     }

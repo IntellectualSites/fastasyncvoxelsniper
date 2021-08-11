@@ -7,7 +7,11 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class CanyonBrush extends AbstractBrush {
 
@@ -19,19 +23,43 @@ public class CanyonBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];
+
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GREEN + "y[number] to set the Level to which the land will be shifted down");
-        }
-        if (!firstParameter.isEmpty() && firstParameter.charAt(0) == 'y') {
-            int y = Integer.parseInt(firstParameter.substring(1));
-            if (y < SHIFT_LEVEL_MIN) {
-                y = SHIFT_LEVEL_MIN;
-            } else if (y > SHIFT_LEVEL_MAX) {
-                y = SHIFT_LEVEL_MAX;
+            messenger.sendMessage(ChatColor.GOLD + "Canyon Brush Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the Level to which the land will be shifted down to n.");
+        } else {
+            if (parameters.length == 2) {
+
+                if (firstParameter.equalsIgnoreCase("y")) {
+                    Integer yLevel = NumericParser.parseInteger(parameters[1]);
+                    if (yLevel != null) {
+                        if (yLevel < SHIFT_LEVEL_MIN) {
+                            yLevel = SHIFT_LEVEL_MIN;
+                        } else if (yLevel > SHIFT_LEVEL_MAX) {
+                            yLevel = SHIFT_LEVEL_MAX;
+                        }
+                        this.yLevel = yLevel;
+                        messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
-            this.yLevel = y;
-            messenger.sendMessage(ChatColor.GREEN + "Shift Level set to " + this.yLevel);
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("y"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

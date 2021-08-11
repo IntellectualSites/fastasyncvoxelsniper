@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
 
     private static final List<String> BLOCKS = BlockType.REGISTRY.values().stream()
-            .map(BlockType::getId)
+            .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
     private final VoxelSniperPlugin plugin;
@@ -88,14 +88,8 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
                     ? argument.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
                     : argument)
                     .toLowerCase(Locale.ROOT);
-            // Removing MINECRAFT_IDENTIFIER permits to complete whether minecraft:XXXX or XXXX.
             return BLOCKS.stream()
-                    .filter(id -> {
-                        if (id.startsWith(Identifiers.MINECRAFT_IDENTIFIER)) {
-                            id = id.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH);
-                        }
-                        return id.startsWith(argumentLowered);
-                    })
+                    .filter(id -> id.startsWith(argumentLowered))
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();

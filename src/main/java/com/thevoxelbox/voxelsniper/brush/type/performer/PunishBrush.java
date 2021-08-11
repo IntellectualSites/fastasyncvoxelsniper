@@ -50,54 +50,64 @@ public class PunishBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (int i = 0; i < parameters.length; i++) {
-            String parameter = parameters[i].toLowerCase();
-            if (parameter.equalsIgnoreCase("info")) {
-                snipe.createMessageSender()
-                        .message(ChatColor.GOLD + "Punish Brush Options:")
-                        .message(ChatColor.AQUA + "Punishments can be set via /b p [punishment]")
-                        .message(ChatColor.AQUA + "Punishment level can be set with /vc [level]")
-                        .message(ChatColor.AQUA + "Punishment duration in seconds can be set with /vh [duration]")
-                        .message(ChatColor.AQUA + "/b p -toggleHypnoLandscape will make Hypno punishment only affect landscape.")
-                        .message(ChatColor.AQUA + "/b p -toggleSM [playername] will make punishbrush only affect that player.")
-                        .message(ChatColor.AQUA + "/b p -toggleSelf will toggle whether you get hit as well.")
-                        .message(ChatColor.AQUA + "Available Punishment Options:")
-                        .send();
-                StringBuilder punishmentOptions = new StringBuilder();
-                for (Punishment punishment : Punishment.values()) {
-                    if (punishmentOptions.length() != 0) {
-                        punishmentOptions.append(" | ");
-                    }
-                    punishmentOptions.append(punishment.name());
-                }
-                messenger.sendMessage(ChatColor.GOLD + punishmentOptions.toString());
-                return;
-            } else if (parameter.equalsIgnoreCase("-toggleSM")) {
-                this.specificPlayer = !this.specificPlayer;
-                if (this.specificPlayer) {
-                    if (i + 1 >= parameters.length) {
-                        messenger.sendMessage(ChatColor.AQUA + "You have to specify a player name after -toggleSM if you want to turn the specific player feature on.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
+            messenger.sendMessage(ChatColor.AQUA + "/b p [p] -- Sets Punishment to p.");
+            messenger.sendMessage(ChatColor.AQUA + "/vc [l] -- Sets Punishment level to l.");
+            messenger.sendMessage(ChatColor.AQUA + "/vh [d] -- Sets Punishment duration to h.");
+            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSM [s] -- Makes Punish Brush only affect that player.");
+            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSelf -- Toggles whether you get hit as well.");
+            messenger.sendMessage(ChatColor.AQUA + "/b p toggleHypnoLandscape -- Makes Hypno punishment only affect " +
+                    "landscape.");
+            messenger.sendMessage(ChatColor.AQUA + "/b p list -- Lists all available punishments.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            Arrays.stream(Punishment.values())
+                                    .map(punishment -> ((punishment == this.punishment) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                            punishment.name())
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else if (firstParameter.equalsIgnoreCase("toggleSelf")) {
+                    this.hitsSelf = !this.hitsSelf;
+                    if (this.hitsSelf) {
+                        messenger.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
                     } else {
-                        this.punishPlayerName = parameters[++i];
+                        messenger.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("toggleHypnoLandscape")) {
+                    this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
+                } else {
+                    try {
+                        this.punishment = Punishment.valueOf(firstParameter);
+                        messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
+                                .toLowerCase(Locale.ROOT) + " punishment selected.");
+                    } catch (IllegalArgumentException exception) {
+                        messenger.sendMessage(ChatColor.AQUA + "Invalid Punishment.");
                     }
                 }
-            } else if (parameter.equalsIgnoreCase("-toggleSelf")) {
-                this.hitsSelf = !this.hitsSelf;
-                if (this.hitsSelf) {
-                    messenger.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("toggleSM")) {
+                    String punishPlayerName = parameters[1];
+                    if (Bukkit.getPlayer(punishPlayerName) != null) {
+                        this.specificPlayer = !this.specificPlayer;
+                        if (this.specificPlayer) {
+                            this.punishPlayerName = punishPlayerName;
+                            messenger.sendMessage(ChatColor.AQUA + "Your punishments will now only affect: " + this.punishPlayerName);
+                        }
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid player name.");
+                    }
                 } else {
-                    messenger.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
                 }
-            } else if (parameter.equalsIgnoreCase("-toggleHypnoLandscape")) {
-                this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
             } else {
-                try {
-                    this.punishment = Punishment.valueOf(parameter.toUpperCase());
-                    messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
-                            .toLowerCase() + " punishment selected.");
-                } catch (IllegalArgumentException exception) {
-                    messenger.sendMessage(ChatColor.AQUA + "No such Punishment.");
-                }
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -108,14 +118,16 @@ public class PunishBrush extends AbstractPerformerBrush {
             String parameter = parameters[0];
             return super.sortCompletions(Stream.concat(
                     PUNISHMENTS.stream(),
-                    Stream.of("-toggleHypnoLandscape", "-toggleSM", "-toggleSelf")
+                    Stream.of("list", "toggleSM", "toggleSelf", "toggleHypnoLandscape")
             ), parameter, 0);
         }
         if (parameters.length == 2) {
             String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("-toggleSM")) {
+            if (firstParameter.equalsIgnoreCase("toggleSM")) {
                 String parameter = parameters[1];
+                Player sniper = snipe.getSniper().getPlayer();
                 return super.sortCompletions(Bukkit.getOnlinePlayers().stream()
+                        .filter(sniper::canSee)
                         .map(HumanEntity::getName), parameter, 1);
             }
         }

@@ -34,37 +34,38 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Jagged Line Brush instructions: Right click first point with the arrow. Right click with powder to draw a jagged line to set the second point.");
-                messenger.sendMessage(ChatColor.AQUA + "/b j r# - sets the number of recursions (default 3, must be 1-10)");
-                messenger.sendMessage(ChatColor.AQUA + "/b j s# - sets the spread (default 3, must be 1-10)");
-                return;
-            }
-            if (parameter.charAt(0) == 'r') {
-                Integer temp = NumericParser.parseInteger(parameter.substring(1));
-                if (temp == null) {
-                    messenger.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
-                    return;
-                }
-                if (temp >= RECURSION_MIN && temp <= RECURSION_MAX) {
-                    this.recursion = temp;
-                    messenger.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "Right click first point with the arrow. Right click with gunpowder to " +
+                    "draw a jagged line to set the second point.");
+            messenger.sendMessage(ChatColor.GOLD + "Jagged Line Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b j r [n] - Sets the number of recursions to n. (default 3, must be 1-10)");
+            messenger.sendMessage(ChatColor.AQUA + "/b j s [n] - Sets the spread to n. (default 3, must be 1-10)");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("r")) {
+                    Integer recursion = NumericParser.parseInteger(parameters[1]);
+                    if (recursion != null && recursion >= RECURSION_MIN && recursion <= RECURSION_MAX) {
+                        this.recursion = recursion;
+                        messenger.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("s")) {
+                    Integer spread = NumericParser.parseInteger(parameters[1]);
+                    if (spread != null) {
+                        this.spread = spread;
+                        messenger.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "ERROR: Recursion must be " + RECURSION_MIN + "-" + RECURSION_MAX);
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-                return;
-            } else if (parameter.charAt(0) == 's') {
-                Integer spread = NumericParser.parseInteger(parameter.substring(1));
-                if (spread == null) {
-                    messenger.sendMessage(ChatColor.RED + String.format("Exception while parsing parameter: %s", parameter));
-                    return;
-                }
-                this.spread = spread;
-                messenger.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }

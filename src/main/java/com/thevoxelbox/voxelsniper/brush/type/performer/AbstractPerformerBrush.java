@@ -28,7 +28,7 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
         String parameter = parameters[0];
         PerformerProperties performerProperties = performerRegistry.getPerformerProperties(parameter);
         if (performerProperties == null) {
-            super.handleCommand(hackTheArray(parameters), snipe);
+            super.handleCommand(parameters, snipe);
             return;
         }
         this.performerProperties = performerProperties;
@@ -39,23 +39,8 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
         this.performer.sendInfo(performerSnipe);
         if (parameters.length > 1) {
             String[] additionalArguments = Arrays.copyOfRange(parameters, 1, parameters.length);
-            super.handleCommand(hackTheArray(additionalArguments), snipe);
+            super.handleCommand(additionalArguments, snipe);
         }
-    }
-
-    /**
-     * Padds an empty String to the front of the array.
-     *
-     * @param args Array to pad empty string in front of
-     * @return padded array
-     */
-    private String[] hackTheArray(String[] args) {
-        String[] returnValue = new String[args.length + 1];
-        for (int i = 0, argsLength = args.length; i < argsLength; i++) {
-            String arg = args[i];
-            returnValue[i + 1] = arg;
-        }
-        return returnValue;
     }
 
     @Override

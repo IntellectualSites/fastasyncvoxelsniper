@@ -18,23 +18,26 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Disc Face brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b df true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-                return;
-            }
-            if (parameter.startsWith("true")) {
-                this.trueCircle = 0.5;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            } else if (parameter.startsWith("false")) {
-                this.trueCircle = 0;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Disc Face Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b df [true|false] -- Uses a true circle algorithm instead of the " +
+                    "skinnier version with classic sniper nubs. (false is default)");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("true")) {
+                    this.trueCircle = 0.5;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                } else if (firstParameter.equalsIgnoreCase("false")) {
+                    this.trueCircle = 0;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }

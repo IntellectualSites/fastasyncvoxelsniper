@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
 public class Rotation2DBrush extends AbstractBrush {
@@ -20,9 +21,26 @@ public class Rotation2DBrush extends AbstractBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        this.angle = Math.toRadians(Double.parseDouble(parameters[0]));
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Rotation2D Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b rot2 [a] -- Sets rotation angle to a.");
+        } else {
+            if (parameters.length == 1) {
+                Double degreesAngle = NumericParser.parseDouble(parameters[0]);
+                if (degreesAngle != null) {
+                    this.angle = Math.toRadians(degreesAngle);
+                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
+            }
+        }
     }
 
     @Override

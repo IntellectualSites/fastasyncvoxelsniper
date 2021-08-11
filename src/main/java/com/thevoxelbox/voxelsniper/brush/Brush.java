@@ -44,7 +44,7 @@ public interface Brush {
     void handleArrowAction(Snipe snipe);
 
     /**
-     * The powder action. Executed when a player RightClicks with Gunpowder
+     * The gunpowder action. Executed when a player RightClicks with Gunpowder
      *
      * @param snipe Snipe
      */

@@ -5,6 +5,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -21,32 +22,47 @@ public class FlatOceanBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GREEN + "/b fo yo[number] to set the Level to which the water will rise.");
-                messenger.sendMessage(ChatColor.GREEN + "/b fo yl[number] to set the Level to which the ocean floor will rise.");
-            }
-            if (parameter.startsWith("yo")) {
-                int newWaterLevel = Integer.parseInt(parameter.substring(2));
-                if (newWaterLevel < this.floorLevel) {
-                    newWaterLevel = this.floorLevel + 1;
-                }
-                this.waterLevel = newWaterLevel;
-                messenger.sendMessage(ChatColor.GREEN + "Water Level set to " + this.waterLevel);
-            } else if (parameter.startsWith("yl")) {
-                int newFloorLevel = Integer.parseInt(parameter.substring(2));
-                if (newFloorLevel > this.waterLevel) {
-                    newFloorLevel = this.waterLevel - 1;
-                    if (newFloorLevel == 0) {
-                        newFloorLevel = 1;
-                        this.waterLevel = 2;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GREEN + "/b fo yo [n] -- Sets the level to which the water will rise to n.");
+            messenger.sendMessage(ChatColor.GREEN + "/b fo yl [n] -- Sets the level to which the ocean floor will rise to n.");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("yo")) {
+                    String newWaterLevelString = parameters[1];
+                    Integer newWaterLevel = NumericParser.parseInteger(newWaterLevelString);
+                    if (newWaterLevel != null) {
+                        if (newWaterLevel < this.floorLevel) {
+                            newWaterLevel = this.floorLevel + 1;
+                        }
+                        this.waterLevel = newWaterLevel;
+                        messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
+                } else if (firstParameter.equalsIgnoreCase("yl")) {
+                    String newFloorLevelString = parameters[1];
+                    Integer newFloorLevel = NumericParser.parseInteger(newFloorLevelString);
+                    if (newFloorLevel != null) {
+                        if (newFloorLevel > this.waterLevel) {
+                            newFloorLevel = this.waterLevel - 1;
+                            if (newFloorLevel == 0) {
+                                newFloorLevel = 1;
+                                this.waterLevel = 2;
+                            }
+                        }
+                        this.floorLevel = newFloorLevel;
+                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-                this.floorLevel = newFloorLevel;
-                messenger.sendMessage(ChatColor.GREEN + "Ocean floor Level set to " + this.floorLevel);
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
             }
         }
     }

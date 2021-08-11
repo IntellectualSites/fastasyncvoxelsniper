@@ -46,40 +46,34 @@ public class OceanBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (int i = 0; i < parameters.length; i++) {
-            String parameter = parameters[i];
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.BLUE + "Parameters:");
-                messenger.sendMessage(ChatColor.GREEN + "/b o -wlevel #  " + ChatColor.BLUE + "--  Sets the water level (e.g. " +
-                        "-wlevel 64)");
-                messenger.sendMessage(ChatColor.GREEN + "/b o -cfloor [y|n]  " + ChatColor.BLUE + "--  Enables or disables sea " +
-                        "floor cover (e.g. -cfloor y) (Cover material will be your voxel material)");
-            } else if (parameter.equalsIgnoreCase("-wlevel")) {
-                if ((i + 1) >= parameters.length) {
-                    messenger.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -wlevel [#] (e.g. -wlevel 64)");
-                    continue;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.BLUE + "Parameters:");
+            messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [t] " + ChatColor.BLUE + "-- Sets the water level. (e.g. " +
+                    "wlevel 64)");
+            messenger.sendMessage(ChatColor.GREEN + "/b o cfloor [true|false] " + ChatColor.BLUE + "-- Enables or disables " +
+                    "sea floor cover. (e.g. -cfloor y) (Cover material will be your voxel material)");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("wlevel")) {
+                    Integer waterLevel = NumericParser.parseInteger(parameters[1]);
+                    if (waterLevel != null && waterLevel > WATER_LEVEL_MIN) {
+                        this.waterLevel = waterLevel - 1;
+                        messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("cfloor")) {
+                    this.coverFloor = Boolean.parseBoolean(parameters[1]);
+                    messenger.sendMessage(ChatColor.BLUE + "Floor cover " + ChatColor.GREEN + (this.coverFloor ? "enabled" :
+                            "disabled") + ChatColor.BLUE + ".");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-                Integer temp = NumericParser.parseInteger(parameters[++i]);
-                if (temp == null) {
-                    messenger.sendMessage(ChatColor.RED + String.format("Error while parsing parameter: %s", parameter));
-                    return;
-                }
-                if (temp <= WATER_LEVEL_MIN) {
-                    messenger.sendMessage(ChatColor.RED + "Error: Your specified water level was below 12.");
-                    continue;
-                }
-                this.waterLevel = temp - 1;
-                messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
-            } else if (parameter.equalsIgnoreCase("-cfloor")) {
-                if ((i + 1) >= parameters.length) {
-                    messenger.sendMessage(ChatColor.RED + "Missing parameter. Correct syntax: -cfloor [y|n] (e.g. -cfloor y)");
-                    continue;
-                }
-                this.coverFloor = parameters[++i].equalsIgnoreCase("y");
-                messenger.sendMessage(ChatColor.BLUE + String.format(
-                        "Floor cover %s.",
-                        ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")
-                ));
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -88,13 +82,13 @@ public class OceanBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("-wlevel", "-cfloor"), parameter, 0);
+            return super.sortCompletions(Stream.of("wlevel", "cfloor"), parameter, 0);
         }
         if (parameters.length == 2) {
             String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("-cfloor")) {
+            if (firstParameter.equalsIgnoreCase("cfloor")) {
                 String parameter = parameters[1];
-                return super.sortCompletions(Stream.of("y", "n"), parameter, 1);
+                return super.sortCompletions(Stream.of("true", "false"), parameter, 1);
             }
         }
         return super.handleCompletions(parameters, snipe);

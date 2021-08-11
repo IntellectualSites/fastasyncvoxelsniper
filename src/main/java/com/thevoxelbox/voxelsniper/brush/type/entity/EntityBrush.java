@@ -10,16 +10,18 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EntityBrush extends AbstractBrush {
 
     private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
-            .map(com.sk89q.worldedit.world.entity.EntityType::getId)
+            .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
     private EntityType entityType = EntityTypes.ZOMBIE;
@@ -27,18 +29,34 @@ public class EntityBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[0].equalsIgnoreCase("info")) {
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.BLUE + "Entity brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b en entity_type");
-            messenger.sendMessage(ChatColor.GOLD + "Currently selected entity type: " + ChatColor.DARK_GREEN + this.entityType.getName());
+            messenger.sendMessage(ChatColor.AQUA + "/b en [e] -- Sets the selected entity type to e.");
+            messenger.sendMessage(ChatColor.AQUA + "/b en list -- Lists all available entities.");
         } else {
-            String entityName = parameters[0];
-            EntityType currentEntity = EntityTypes.get(entityName);
-            if (currentEntity != null) {
-                this.entityType = currentEntity;
-                messenger.sendMessage(ChatColor.GREEN + "Entity type set to " + ChatColor.DARK_GREEN + this.entityType.getName());
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            EntityType.REGISTRY.values().stream()
+                                    .map(entityType -> ((entityType == this.entityType) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                            entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else {
+                    EntityType currentEntity = EntityTypes.get(firstParameter);
+
+                    if (currentEntity != null) {
+                        this.entityType = currentEntity;
+                        messenger.sendMessage(ChatColor.GREEN + "Entity type set to " + ChatColor.DARK_GREEN + this.entityType.getName());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid entity type.");
+                    }
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "This is not a valid entity!");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -47,7 +65,10 @@ public class EntityBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(ENTITIES.stream(), parameter, 0);
+            return super.sortCompletions(Stream.concat(
+                    ENTITIES.stream(),
+                    Stream.of("list")
+            ), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);
     }

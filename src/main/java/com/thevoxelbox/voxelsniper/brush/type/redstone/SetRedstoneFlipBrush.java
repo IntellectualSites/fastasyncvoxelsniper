@@ -23,26 +23,28 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Set Repeater Flip Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b setrf <direction> -- valid direction inputs are(n, s, ns, e, world, " +
-                        "ew), Set the direction that you wish to flip your repeaters, defaults to north/south.");
-                return;
-            }
-            if (Stream.of("n", "s", "ns")
-                    .anyMatch(parameter::startsWith)) {
-                this.northSouth = true;
-                messenger.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
-            } else if (Stream.of("e", "world", "ew")
-                    .anyMatch(parameter::startsWith)) {
-                this.northSouth = false;
-                messenger.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Set Repeater Flip Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b setrf [d] -- Valid direction inputs are (n, s, ns, e, w, ew):" +
+                    "Sets the direction that you wish to flip your repeaters, defaults to north/south.");
+        } else {
+            if (parameters.length == 1) {
+                if (Stream.of("n", "s", "ns")
+                        .anyMatch(firstParameter::startsWith)) {
+                    this.northSouth = true;
+                    messenger.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
+                } else if (Stream.of("e", "w", "ew")
+                        .anyMatch(firstParameter::startsWith)) {
+                    this.northSouth = false;
+                    messenger.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -51,7 +53,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("n", "s", "ns", "e", "world", "ew"), parameter, 0);
+            return super.sortCompletions(Stream.of("n", "s", "ns", "e", "w", "ew"), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);
     }

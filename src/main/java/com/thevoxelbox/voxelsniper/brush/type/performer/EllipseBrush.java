@@ -30,60 +30,60 @@ public class EllipseBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Ellipse brush parameters");
-                messenger.sendMessage(ChatColor.AQUA + "/b el x[n]: Set X size modifier to n");
-                messenger.sendMessage(ChatColor.AQUA + "/b el y[n]: Set Y size modifier to n");
-                messenger.sendMessage(ChatColor.AQUA + "/b el t[n]: Set the amount of time steps");
-                messenger.sendMessage(ChatColor.AQUA + "/b el fill: Toggles fill mode");
-                return;
-            } else if (parameter.charAt(0) == 'x') {
-                Integer tempXScale = NumericParser.parseInteger(parameter.substring(1));
-                if (tempXScale == null) {
-                    messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-                    return;
-                }
-                if (tempXScale < SCL_MIN || tempXScale > SCL_MAX) {
-                    messenger.sendMessage(ChatColor.AQUA + "Invalid X scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-                    continue;
-                }
-                this.xscl = tempXScale;
-                messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
-            } else if (parameter.charAt(0) == 'y') {
-                Integer tempYScale = NumericParser.parseInteger(parameter.substring(1));
-                if (tempYScale == null) {
-                    messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-                    return;
-                }
-                if (tempYScale < SCL_MIN || tempYScale > SCL_MAX) {
-                    messenger.sendMessage(ChatColor.AQUA + "Invalid Y scale (" + SCL_MIN + "-" + SCL_MAX + ")");
-                    continue;
-                }
-                this.yscl = tempYScale;
-                messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
-            } else if (parameter.charAt(0) == 't') {
-                Integer tempSteps = NumericParser.parseInteger(parameter.substring(1));
-                if (tempSteps == null) {
-                    messenger.sendMessage(ChatColor.RED + "Incorrect parameter \"" + parameter + "\"; use the \"info\" parameter.");
-                    return;
-                }
-                if (tempSteps < STEPS_MIN || tempSteps > STEPS_MAX) {
-                    messenger.sendMessage(ChatColor.AQUA + "Invalid step number (" + STEPS_MIN + "-" + STEPS_MAX + ")");
-                    continue;
-                }
-                this.steps = tempSteps;
-                messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
-            } else if (parameter.equalsIgnoreCase("fill")) {
-                if (this.fill) {
-                    this.fill = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Ellipse Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b el fill -- Toggles fill mode.");
+            messenger.sendMessage(ChatColor.AQUA + "/b el x [n] -- Sets X size modifier to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b el y [n] -- Sets Y size modifier to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b el t [n] -- Sets the amount of time steps.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("fill")) {
+                    if (this.fill) {
+                        this.fill = false;
+                        messenger.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+                    } else {
+                        this.fill = true;
+                        messenger.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+                    }
                 } else {
-                    this.fill = true;
-                    messenger.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
+                }
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("x")) {
+                    Integer xscl = NumericParser.parseInteger(parameters[1]);
+                    if (xscl != null && xscl >= SCL_MIN && xscl <= SCL_MAX) {
+                        this.xscl = xscl;
+                        messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("y")) {
+                    Integer yscl = NumericParser.parseInteger(parameters[1]);
+                    if (yscl != null && yscl >= SCL_MIN && yscl <= SCL_MAX) {
+                        this.yscl = yscl;
+                        messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("t")) {
+                    Integer steps = NumericParser.parseInteger(parameters[1]);
+                    if (steps != null && steps >= STEPS_MIN && steps <= STEPS_MAX) {
+                        this.steps = steps;
+                        messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
     }
@@ -92,7 +92,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("x", "y", "t", "fill"), parameter, 0);
+            return super.sortCompletions(Stream.of("fill", "x", "y", "t"), parameter, 0);
         }
         return super.handleCompletions(parameters, snipe);
     }
