@@ -29,14 +29,14 @@ public class BiomeBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b bio [b] -- Sets the selected biome type to b.");
+            messenger.sendMessage(ChatColor.AQUA + "/b bio [t] -- Sets the selected biome type to t.");
             messenger.sendMessage(ChatColor.AQUA + "/b bio list -- Lists all available biomes.");
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             BiomeTypes.values().stream()
-                                    .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                    .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
                                     .collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

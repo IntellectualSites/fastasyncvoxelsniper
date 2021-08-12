@@ -41,9 +41,9 @@ public class EntityRemovalBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.BLUE + "EntityRemoval brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b er + [e] -- Adds an exemption.");
-            messenger.sendMessage(ChatColor.AQUA + "/b er - [e] -- Removes an exemption.");
+            messenger.sendMessage(ChatColor.BLUE + "EntityRemoval Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b er + [t] -- Adds an exemption.");
+            messenger.sendMessage(ChatColor.AQUA + "/b er - [t] -- Removes an exemption.");
             messenger.sendMessage(ChatColor.AQUA + "/b er list -- Lists all exemptions.");
         } else {
             if (parameters.length == 1) {

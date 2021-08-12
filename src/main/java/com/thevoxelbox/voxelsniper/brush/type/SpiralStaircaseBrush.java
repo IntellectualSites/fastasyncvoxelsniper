@@ -15,6 +15,8 @@ import org.bukkit.ChatColor;
 import java.util.List;
 import java.util.stream.Stream;
 
+// TODO maybe add an arg to pass the width of the staircase, voxel height is the default implemented arg for several brushes.
+// TODO rewrite to accept all stairs and steps.
 public class SpiralStaircaseBrush extends AbstractBrush {
 
     private String stairType = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
@@ -28,6 +30,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/vh [n] -- Sets height to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair [block|step|woodstair|cobblestair] -- Sets the type of staircase.");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair [c|cc] -- Sets the turning direction of staircase.");
             messenger.sendMessage(ChatColor.AQUA + "/b sstair [n|e|s|w] -- Sets the opening direction of staircase.");

@@ -25,7 +25,9 @@ public class CometBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage("Comet Brush Parameters:");
+            messenger.sendMessage(ChatColor.RED + "Warning: This brush is not undo-able! You can use //ex to extinguish the " +
+                    "fire it creates.");
+            messenger.sendMessage(ChatColor.GOLD + "Comet Brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b com balls [big|small] -- Sets your ball size.");
         } else {
             if (parameters.length == 2) {

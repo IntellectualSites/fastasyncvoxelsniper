@@ -50,8 +50,7 @@ public class OceanBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.BLUE + "Parameters:");
-            messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [t] " + ChatColor.BLUE + "-- Sets the water level. (e.g. " +
-                    "wlevel 64)");
+            messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [n] " + ChatColor.BLUE + "-- Sets the water level to n.");
             messenger.sendMessage(ChatColor.GREEN + "/b o cfloor [true|false] " + ChatColor.BLUE + "-- Enables or disables " +
                     "sea floor cover. (e.g. -cfloor y) (Cover material will be your voxel material)");
         } else {

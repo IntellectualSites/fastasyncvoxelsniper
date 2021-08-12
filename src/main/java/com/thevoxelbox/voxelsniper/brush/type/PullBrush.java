@@ -18,8 +18,8 @@ public class PullBrush extends AbstractBrush {
 
     private final Set<PullBrushBlockWrapper> surface = new HashSet<>();
     private int voxelHeight;
-    private double c1 = 1;
-    private double c2;
+    private double pinch = 1;
+    private double bubble;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -27,17 +27,19 @@ public class PullBrush extends AbstractBrush {
         String firstParameter = parameters[0];
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Pull Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b pull [d] -- set pinch and bubble to d");
+            messenger.sendMessage(ChatColor.AQUA + "/b pull [n] -- Sets pinch and bubble to n.");
         } else {
             if (parameters.length == 1) {
                 Double pinch = NumericParser.parseDouble(firstParameter);
                 Double bubble = NumericParser.parseDouble(firstParameter);
-                if (pinch == null || bubble == null) {
+                if (pinch != null && bubble != null) {
+                    this.pinch = 1 - pinch;
+                    this.bubble = bubble;
+                    messenger.sendMessage(ChatColor.AQUA + "Pinch set to: " + this.pinch);
+                    messenger.sendMessage(ChatColor.AQUA + "Bubble set to: " + this.bubble);
+                } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number.");
-                    return;
                 }
-                this.c1 = 1 - pinch;
-                this.c2 = bubble;
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
                         "parameter info.");
@@ -151,7 +153,7 @@ public class PullBrush extends AbstractBrush {
 
     private double getStr(double t) {
         double lt = 1 - t;
-        return (lt * lt * lt) + 3 * (lt * lt) * t * this.c1 + 3 * lt * (t * t) * this.c2; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
+        return (lt * lt * lt) + 3 * (lt * lt) * t * this.pinch + 3 * lt * (t * t) * this.bubble; // My + (t * ((By + (t * ((c2 + (t * (0 - c2))) - By))) - My));
     }
 
     private void getSurface(ToolkitProperties toolkitProperties) {
@@ -224,8 +226,8 @@ public class PullBrush extends AbstractBrush {
         messenger.sendBrushNameMessage();
         messenger.sendBrushSizeMessage();
         messenger.sendVoxelHeightMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Pinch " + (-this.c1 + 1));
-        messenger.sendMessage(ChatColor.AQUA + "Bubble " + this.c2);
+        messenger.sendMessage(ChatColor.AQUA + "Pinch " + (-this.pinch + 1));
+        messenger.sendMessage(ChatColor.AQUA + "Bubble " + this.bubble);
     }
 
     private static final class PullBrushBlockWrapper {

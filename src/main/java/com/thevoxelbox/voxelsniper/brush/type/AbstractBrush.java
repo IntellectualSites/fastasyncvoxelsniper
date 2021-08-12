@@ -63,7 +63,7 @@ public abstract class AbstractBrush implements Brush {
      */
     public List<String> sortCompletions(Stream<String> completions, String parameter, int index) {
         // The first brush parameter may be info.
-        // Removing MINECRAFT_IDENTIFIER permits to complete whether minecraft:XXXX or XXXX.
+        // Removing MINECRAFT_IDENTIFIER permits completing whether minecraft:XXXX or XXXX.
         String parameterLowered = (parameter.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
                 ? parameter.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
                 : parameter)

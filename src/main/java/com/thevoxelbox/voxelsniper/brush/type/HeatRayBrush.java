@@ -62,9 +62,9 @@ public class HeatRayBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Heat Ray Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr oct [o] -- Sets octave parameter to o for the noise generator.");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr amp [a] -- Sets amplitude parameter to a for the noise generator.");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr freq [f] -- Sets frequency parameter to f for the noise generator.");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr oct [n] -- Sets octave parameter to n for the noise generator.");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr amp [n] -- Sets amplitude parameter to n for the noise generator.");
+            messenger.sendMessage(ChatColor.AQUA + "/b hr freq [n] -- Sets frequency parameter to n for the noise generator.");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("oct")) {

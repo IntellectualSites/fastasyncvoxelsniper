@@ -46,7 +46,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             Arrays.stream(Tolerance.values())
-                                    .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                    .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             tolerance.name().toLowerCase(Locale.ROOT))
                                     .collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

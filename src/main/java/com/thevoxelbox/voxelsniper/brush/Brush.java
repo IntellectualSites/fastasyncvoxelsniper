@@ -37,14 +37,14 @@ public interface Brush {
     void perform(Snipe snipe, ToolAction action, EditSession editSession, BlockVector3 targetBlock, BlockVector3 lastBlock);
 
     /**
-     * The arrow action. Executed when a player RightClicks with an Arrow
+     * The arrow action. Executed when a player right clicks with an arrow
      *
      * @param snipe Snipe
      */
     void handleArrowAction(Snipe snipe);
 
     /**
-     * The gunpowder action. Executed when a player RightClicks with Gunpowder
+     * The gunpowder action. Executed when a player right clicks with gunpowder
      *
      * @param snipe Snipe
      */

@@ -70,7 +70,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(
                         targetBlockType)) {
-                    sender.sendMessage("You are not allowed to use " + targetBlockType.getRichName().toString() + ".");
+                    sender.sendMessage("You are not allowed to use " + targetBlockType.getId() + ".");
                     return;
                 }
                 toolkitProperties.setBlockType(targetBlockType);
@@ -81,7 +81,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
         BlockType blockType = BlockTypes.get(arguments[0].toLowerCase(Locale.ROOT));
         if (blockType != null) {
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(blockType)) {
-                sender.sendMessage("You are not allowed to use " + blockType.getRichName().toString() + ".");
+                sender.sendMessage("You are not allowed to use " + blockType.getId() + ".");
                 return;
             }
             toolkitProperties.setBlockType(blockType);
