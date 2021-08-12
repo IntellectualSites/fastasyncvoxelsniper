@@ -70,7 +70,7 @@ bukkit {
 	version = rootProject.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
 	depend = listOf("FastAsyncWorldEdit")
-	website = "https://github.com/IntellectualSites/FastAsyncVoxelSniper"
+	website = "https://dev.bukkit.org/projects/favs"
 	description = "World editing from ingame using 3D brushes"
 }
 
