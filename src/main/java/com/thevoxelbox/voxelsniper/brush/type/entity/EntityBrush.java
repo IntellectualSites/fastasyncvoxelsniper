@@ -33,14 +33,14 @@ public class EntityBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.BLUE + "Entity brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b en [e] -- Sets the selected entity type to e.");
+            messenger.sendMessage(ChatColor.AQUA + "/b en [t] -- Sets the selected entity type to t.");
             messenger.sendMessage(ChatColor.AQUA + "/b en list -- Lists all available entities.");
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             EntityType.REGISTRY.values().stream()
-                                    .map(entityType -> ((entityType == this.entityType) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                    .map(entityType -> ((entityType == this.entityType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
                                     .collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

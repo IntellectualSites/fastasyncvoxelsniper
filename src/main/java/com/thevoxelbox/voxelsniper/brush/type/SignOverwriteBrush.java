@@ -110,7 +110,9 @@ public class SignOverwriteBrush extends AbstractBrush {
                                     "line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
                             newTextBuilder = new StringBuilder(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH));
                         }
-                        this.signTextLines[lineIndex] = ChatColor.translateAlternateColorCodes('&', newTextBuilder.toString());
+                        String formattedText = ChatColor.translateAlternateColorCodes('&', newTextBuilder.toString());
+                        this.signTextLines[lineIndex] = formattedText;
+                        messenger.sendMessage(ChatColor.AQUA + "Line " + lineNumber + " set to: " + ChatColor.RESET + formattedText);
                     } else if (secondParameter.equalsIgnoreCase("toggle")) {
                         this.signLinesEnabled[lineIndex] = !this.signLinesEnabled[lineIndex];
                         messenger.sendMessage(ChatColor.BLUE + "Line " + firstParameter + " is " + ChatColor.GREEN +
@@ -131,8 +133,7 @@ public class SignOverwriteBrush extends AbstractBrush {
                     saveBufferToFile(snipe, fileName);
                 } else if (firstParameter.equalsIgnoreCase("open") || firstParameter.equalsIgnoreCase("o")) {
                     String fileName = parameters[1];
-                    loadBufferFromFile(snipe, fileName);
-                    textChanged = true;
+                    textChanged = loadBufferFromFile(snipe, fileName);
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
@@ -276,9 +277,9 @@ public class SignOverwriteBrush extends AbstractBrush {
      */
     private void saveBufferToFile(Snipe snipe, String fileName) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(this.pluginDataFolder, fileName + ".vsign");
+        File store = new File(this.pluginDataFolder, "/signs/" + fileName + ".vsign");
         if (store.exists()) {
-            messenger.sendMessage("This file already exists.");
+            messenger.sendMessage(ChatColor.RED + "This file already exists.");
             return;
         }
         try {
@@ -300,13 +301,15 @@ public class SignOverwriteBrush extends AbstractBrush {
 
     /**
      * Loads a buffer from a file.
+     *
+     * @return true if file has been loaded successfully, false otherwise
      */
-    private void loadBufferFromFile(Snipe snipe, String fileName) {
+    private boolean loadBufferFromFile(Snipe snipe, String fileName) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(this.pluginDataFolder, fileName + ".vsign");
+        File store = new File(this.pluginDataFolder, "/signs/" + fileName + ".vsign");
         if (!store.exists()) {
-            messenger.sendMessage("This file does not exist.");
-            return;
+            messenger.sendMessage(ChatColor.RED + "This file does not exist.");
+            return false;
         }
         try {
             FileReader inFile = new FileReader(store);
@@ -318,9 +321,11 @@ public class SignOverwriteBrush extends AbstractBrush {
             inStream.close();
             inFile.close();
             messenger.sendMessage(ChatColor.BLUE + "File loaded successfully.");
+            return true;
         } catch (IOException exception) {
             messenger.sendMessage(ChatColor.RED + "Failed to load file. " + exception.getMessage());
             exception.printStackTrace();
+            return false;
         }
     }
 

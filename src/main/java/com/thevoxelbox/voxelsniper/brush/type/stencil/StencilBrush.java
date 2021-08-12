@@ -54,10 +54,8 @@ public class StencilBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "Size of the stencils you are allowed to paste depends on rank (member / " +
-                    "lite, sniper, curator, admin)");
             messenger.sendMessage(ChatColor.GOLD + "Stencil Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b st (full|fill|replace) [n] -- Loads the specified stencil n. Allowed " +
+            messenger.sendMessage(ChatColor.AQUA + "/b st (full|fill|replace) [s] -- Loads the specified stencil s. Allowed " +
                     "size of stencil is based on rank. Full/fill/replace must come first. Full = paste all blocks, " +
                     "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
         } else {

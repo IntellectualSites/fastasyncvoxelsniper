@@ -47,16 +47,16 @@ public class RulerBrush extends AbstractBrush {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
                             "parameter info.");
                 }
-            } else if (parameters.length == 2) {
+            } else if (parameters.length == 3) {
                 Integer offsetX = NumericParser.parseInteger(parameters[0]);
                 Integer offsetY = NumericParser.parseInteger(parameters[1]);
                 Integer offsetZ = NumericParser.parseInteger(parameters[2]);
                 this.offsetX = offsetX == null ? 0 : offsetX;
                 this.offsetY = offsetY == null ? 0 : offsetY;
                 this.offsetZ = offsetZ == null ? 0 : offsetZ;
-                messenger.sendMessage(ChatColor.AQUA + "X offset set to " + this.offsetX);
-                messenger.sendMessage(ChatColor.AQUA + "Y offset set to " + this.offsetY);
-                messenger.sendMessage(ChatColor.AQUA + "Z offset set to " + this.offsetZ);
+                messenger.sendMessage(ChatColor.AQUA + "X offset set to: " + this.offsetX);
+                messenger.sendMessage(ChatColor.AQUA + "Y offset set to: " + this.offsetY);
+                messenger.sendMessage(ChatColor.AQUA + "Z offset set to: " + this.offsetZ);
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
                         "parameter info.");

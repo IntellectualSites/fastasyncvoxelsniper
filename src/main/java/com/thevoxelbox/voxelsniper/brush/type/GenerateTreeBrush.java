@@ -57,20 +57,20 @@ public class GenerateTreeBrush extends AbstractBrush {
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "This brush takes the following parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b gt default -- Restores default params.");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt lt [l] -- Sets leaf type to l. (e.g. oak)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt wt [w] -- Sets wood type to w. (e.g. oak)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt lt [t] -- Sets leaf type to t. (e.g. oak)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt wt [t] -- Sets wood type to t. (e.g. oak)");
             messenger.sendMessage(ChatColor.AQUA + "/b gt tt [n] -- Sets tree thickness to n. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt rf [f] -- Sets root float. (true or false)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt sh [h] -- Sets starting height to h. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt rl [l] -- Sets root length to c (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt ts [s] -- Sets trunk slope chance to s. (0-100)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt bl [l] -- Sets branch length to l. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt minr [r] -- Sets minimum roots. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt maxr [r] -- Sets maximum roots. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt minh [h] -- Sets minimum height. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt maxh [h] -- Sets maximum height. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt minl [l] -- Sets minimum leaf node size. (whole number)");
-            messenger.sendMessage(ChatColor.AQUA + "/b gt maxl [l] -- Sets maximum leaf node size. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt rf [true|false] -- Sets root float.");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt sh [n] -- Sets starting height to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt rl [n] -- Sets root length to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt ts [n] -- Sets trunk slope chance to n. (0-100)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt bl [n] -- Sets branch length to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt minr [n] -- Sets minimum roots to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt maxr [n] -- Sets maximum roots to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt minh [n] -- Sets minimum height to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt maxh [n] -- Sets maximum height to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt minl [n] -- Sets minimum leaf node size to n. (whole number)");
+            messenger.sendMessage(ChatColor.AQUA + "/b gt maxl [n] -- Sets maximum leaf node size to n. (whole number)");
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("default")) { // Default settings.
@@ -102,7 +102,7 @@ public class GenerateTreeBrush extends AbstractBrush {
                     BlockType leafType = BlockTypes.get(parameters[1]);
                     if (leafType != null) {
                         this.leafType = leafType;
-                        messenger.sendMessage(ChatColor.BLUE + "Leaf Type set to " + this.leafType.getRichName().toString());
+                        messenger.sendMessage(ChatColor.BLUE + "Leaf Type set to " + this.leafType.getId());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid leaf type.");
                     }
@@ -110,7 +110,7 @@ public class GenerateTreeBrush extends AbstractBrush {
                     BlockType woodType = BlockTypes.get(parameters[1]);
                     if (woodType != null) {
                         this.woodType = woodType;
-                        messenger.sendMessage(ChatColor.BLUE + "Wood Type set to " + this.woodType.getRichName().toString());
+                        messenger.sendMessage(ChatColor.BLUE + "Wood Type set to " + this.woodType.getId());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid wood type.");
                     }
@@ -275,7 +275,7 @@ public class GenerateTreeBrush extends AbstractBrush {
             this.createLeafNode();
         }
     }
-    // The Gunpowder currently does nothing extra.
+    // The gunpowder currently does nothing extra.
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {

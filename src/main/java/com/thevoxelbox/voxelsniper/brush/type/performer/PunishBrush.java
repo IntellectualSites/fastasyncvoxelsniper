@@ -55,9 +55,9 @@ public class PunishBrush extends AbstractPerformerBrush {
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
             messenger.sendMessage(ChatColor.AQUA + "/b p [p] -- Sets Punishment to p.");
-            messenger.sendMessage(ChatColor.AQUA + "/vc [l] -- Sets Punishment level to l.");
-            messenger.sendMessage(ChatColor.AQUA + "/vh [d] -- Sets Punishment duration to h.");
-            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSM [s] -- Makes Punish Brush only affect that player.");
+            messenger.sendMessage(ChatColor.AQUA + "/vc [n] -- Sets Punishment level to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/vh [n] -- Sets Punishment duration to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSM [s] -- Makes Punish Brush only affect s player name.");
             messenger.sendMessage(ChatColor.AQUA + "/b p toggleSelf -- Toggles whether you get hit as well.");
             messenger.sendMessage(ChatColor.AQUA + "/b p toggleHypnoLandscape -- Makes Hypno punishment only affect " +
                     "landscape.");
@@ -67,7 +67,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             Arrays.stream(Punishment.values())
-                                    .map(punishment -> ((punishment == this.punishment) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                    .map(punishment -> ((punishment == this.punishment) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             punishment.name())
                                     .collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

@@ -31,7 +31,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Regenerate Chunk brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b gc [b] -- Sets the selected regen biome type to b.");
+            messenger.sendMessage(ChatColor.AQUA + "/b gc [t] -- Sets the selected regen biome type to t.");
             messenger.sendMessage(ChatColor.AQUA + "/b gc list -- Lists all available biomes.");
             messenger.sendMessage(ChatColor.DARK_AQUA + "Currently selected biome type: " + ChatColor.DARK_GREEN +
                     (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
@@ -40,11 +40,9 @@ public class RegenerateChunkBrush extends AbstractBrush {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             Stream.concat(
-                                    Stream.of(((this.biomeType == null) ? ChatColor.GRAY : ChatColor.DARK_GRAY) + DEFAULT_BIOME),
+                                    Stream.of(((this.biomeType == null) ? ChatColor.GOLD : ChatColor.GRAY) + DEFAULT_BIOME),
                                     BiomeTypes.values().stream()
-                                            .map(biomeType -> ((biomeType == this.biomeType)
-                                                    ? ChatColor.GRAY
-                                                    : ChatColor.DARK_GRAY) +
+                                            .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                                     biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
                             ).collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

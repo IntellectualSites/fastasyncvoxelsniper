@@ -28,13 +28,13 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Rotation2DVertical Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b rot2v [a] -- Sets rotation angle to a");
+            messenger.sendMessage(ChatColor.AQUA + "/b rot2v [n] -- Sets rotation angle to n.");
         } else {
             if (parameters.length == 1) {
                 Double degreesAngle = NumericParser.parseDouble(parameters[0]);
                 if (degreesAngle != null) {
                     this.angle = Math.toRadians(degreesAngle);
-                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle);
+                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle + " gradians");
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number.");
                 }

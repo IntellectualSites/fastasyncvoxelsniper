@@ -37,7 +37,7 @@ public class TreeSnipeBrush extends AbstractBrush {
                 if (firstParameter.equalsIgnoreCase("list")) {
                     messenger.sendMessage(
                             Arrays.stream(TreeGenerator.TreeType.values())
-                                    .map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY : ChatColor.DARK_GRAY) +
+                                    .map(treeType -> ((treeType == this.treeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             treeType.lookupKeys.get(0))
                                     .collect(Collectors.joining(ChatColor.WHITE + ", "))
                     );

@@ -19,7 +19,7 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage("CheckerVoxelDisc Brush Parameters:");
+            messenger.sendMessage(ChatColor.GOLD + "CheckerVoxelDisc Brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b cvd [true|false] -- Enables or disables using World Coordinates.");
         } else {
             if (parameters.length == 1) {

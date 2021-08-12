@@ -37,7 +37,7 @@ public class JockeyBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Jockey Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b jockey [n] [i] [s] -- Sets whether players only or entities should be " +
+            messenger.sendMessage(ChatColor.AQUA + "/b jockey [true|false] [true|false] [true|false] -- Sets whether players only or entities should be " +
                     "affected to n. Sets if entities should be inverted to i. Sets if entities should be stacked to s.");
         } else {
             if (parameters.length == 4) {

@@ -42,7 +42,7 @@ public class StencilListBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Stencil List Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b sl (full|fill|replace) [n] -- Loads the specified stencil list n. " +
+            messenger.sendMessage(ChatColor.AQUA + "/b sl (full|fill|replace) [s] -- Loads the specified stencil list s. " +
                     "Full/fill/replace must come first. Full = paste all blocks, " +
                     "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
         } else {

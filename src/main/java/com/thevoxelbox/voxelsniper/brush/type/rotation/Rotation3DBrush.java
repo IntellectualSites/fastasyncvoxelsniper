@@ -34,11 +34,11 @@ public class Rotation3DBrush extends AbstractBrush {
         // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Rotate Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b rot3d p [a] -- Sets degrees of pitch rotation to a (rotation about the Z" +
+            messenger.sendMessage(ChatColor.AQUA + "/b rot3 p [n] -- Sets degrees of pitch rotation to n (rotation about the Z" +
                     " axis).");
-            messenger.sendMessage(ChatColor.BLUE + "/b rot3d r [a] -- Sets degrees of roll rotation to a (rotation about the X" +
+            messenger.sendMessage(ChatColor.BLUE + "/b rot3 r [n] -- Sets degrees of roll rotation to n (rotation about the X" +
                     " axis).");
-            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b rot3d y [a] -- Sets degrees of yaw rotation to a (Rotation " +
+            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b rot3 y [n] -- Sets degrees of yaw rotation to n (Rotation " +
                     " about the Y axis).");
         } else {
             if (parameters.length == 2) {
@@ -46,13 +46,13 @@ public class Rotation3DBrush extends AbstractBrush {
                 if (value != null && value >= 0 && value <= 359) {
                     if (firstParameter.equalsIgnoreCase("p")) {
                         this.sePitch = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch + " gradians");
                     } else if (firstParameter.equalsIgnoreCase("r")) {
                         this.seRoll = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll);
+                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll + " gradians");
                     } else if (firstParameter.equalsIgnoreCase("y")) {
                         this.seYaw = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw + " gradians");
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");
@@ -78,7 +78,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         getMatrix();
-        rotate(snipe);
+        rotate();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         getMatrix();
-        rotate(snipe);
+        rotate();
     }
 
     private void getMatrix() { // only need to do once. But y needs to change + sphere
@@ -113,7 +113,7 @@ public class Rotation3DBrush extends AbstractBrush {
         }
     }
 
-    private void rotate(Snipe snipe) {
+    private void rotate() {
         // basically 1) make it a sphere we are rotating in, not a cylinder
         // 2) do three rotations in a row, one in each dimension, unless some dimensions are set to zero or undefined or
         // whatever, then skip those.
