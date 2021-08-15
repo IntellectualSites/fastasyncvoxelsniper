@@ -9,7 +9,11 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Rotation3DBrush extends AbstractBrush {
 
@@ -25,37 +29,48 @@ public class Rotation3DBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Rotate brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "p[0-359] -- set degrees of pitch rotation (rotation about the Z axis).");
-                messenger.sendMessage(ChatColor.BLUE + "r[0-359] -- set degrees of roll rotation (rotation about the X axis).");
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "y[0-359] -- set degrees of yaw rotation (Rotation about the Y axis).");
-                return;
-            } else if (parameter.charAt(0) == 'p') {
-                this.sePitch = Math.toRadians(Double.parseDouble(parameter.replace("p", "")));
-                messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch);
-                if (this.sePitch < 0 || this.sePitch > 359) {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
+        String firstParameter = parameters[0];
+
+        // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Rotate Brush Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b rot3 p [n] -- Sets degrees of pitch rotation to n (rotation about the Z" +
+                    " axis).");
+            messenger.sendMessage(ChatColor.BLUE + "/b rot3 r [n] -- Sets degrees of roll rotation to n (rotation about the X" +
+                    " axis).");
+            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b rot3 y [n] -- Sets degrees of yaw rotation to n (Rotation " +
+                    " about the Y axis).");
+        } else {
+            if (parameters.length == 2) {
+                Double value = NumericParser.parseDouble(parameters[1]);
+                if (value != null && value >= 0 && value <= 359) {
+                    if (firstParameter.equalsIgnoreCase("p")) {
+                        this.sePitch = Math.toRadians(value);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch + " gradians");
+                    } else if (firstParameter.equalsIgnoreCase("r")) {
+                        this.seRoll = Math.toRadians(value);
+                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll + " gradians");
+                    } else if (firstParameter.equalsIgnoreCase("y")) {
+                        this.seYaw = Math.toRadians(value);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw + " gradians");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");
                 }
-            } else if (parameter.charAt(0) == 'r') {
-                this.seRoll = Math.toRadians(Double.parseDouble(parameter.replace("r", "")));
-                messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll);
-                if (this.seRoll < 0 || this.seRoll > 359) {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
-                }
-            } else if (parameter.charAt(0) == 'y') {
-                this.seYaw = Math.toRadians(Double.parseDouble(parameter.replace("y", "")));
-                messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw);
-                if (this.seYaw < 0 || this.seYaw > 359) {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Angles must be from 1-359");
-                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("p", "r", "y"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -63,7 +78,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         getMatrix();
-        rotate(snipe);
+        rotate();
     }
 
     @Override
@@ -71,7 +86,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         getMatrix();
-        rotate(snipe);
+        rotate();
     }
 
     private void getMatrix() { // only need to do once. But y needs to change + sphere
@@ -98,15 +113,15 @@ public class Rotation3DBrush extends AbstractBrush {
         }
     }
 
-    private void rotate(Snipe snipe) {
+    private void rotate() {
         // basically 1) make it a sphere we are rotating in, not a cylinder
         // 2) do three rotations in a row, one in each dimension, unless some dimensions are set to zero or undefined or
         // whatever, then skip those.
-        // --> Why not utilize Sniper'world new opportunities and have arrow rotate all 3, powder rotate x, goldsisc y, otherdisc z. Or something like that. Or
+        // --> Why not utilize Sniper'world new opportunities and have arrow rotate all 3, gunpowder rotate x, goldsisc y, otherdisc z. Or something like that. Or
         // we
-        // could just use arrow and powder and just differentiate between left and right click that gis 4 different situations
+        // could just use arrow and gunpowder and just differentiate between left and right click that gis 4 different situations
         // --> Well, there would be 7 different possibilities... X, Y, Z, XY, XZ, YZ, XYZ, and different numbers of parameters for each, so I think each having
-        // and item is too confusing. How about this: arrow = rotate one dimension, based on the face you click, and takes 1 param... powder: rotates all three
+        // and item is too confusing. How about this: arrow = rotate one dimension, based on the face you click, and takes 1 param... gunpowder: rotates all three
         // at once, and takes 3 params.
         double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
         double cosYaw = Math.cos(this.seYaw);

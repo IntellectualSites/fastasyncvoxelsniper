@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class PaintExecutor implements CommandExecutor, TabCompleter {
@@ -43,7 +44,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
     public List<String> complete(CommandSender sender, String[] arguments) {
         if (arguments.length == 1) {
             String argument = arguments[0];
-            String argumentLowered = argument.toLowerCase();
+            String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return ART_NAMES.stream()
                     .filter(artName -> artName.startsWith(argumentLowered))
                     .collect(Collectors.toList());

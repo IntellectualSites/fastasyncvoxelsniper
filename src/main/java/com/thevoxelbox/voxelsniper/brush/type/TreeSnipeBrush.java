@@ -10,34 +10,64 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class TreeSnipeBrush extends AbstractBrush {
+
+    private static final List<String> TREES = new ArrayList<>(TreeGenerator.TreeType.getPrimaryAliases());
 
     private TreeGenerator.TreeType treeType = TreeGenerator.TreeType.TREE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-                messenger.sendMessage(ChatColor.AQUA + "/b t treetype");
-                printTreeType(messenger);
-                return;
-            }
-            try {
-                this.treeType = TreeGenerator.TreeType.valueOf(parameter.toUpperCase());
-                printTreeType(messenger);
-            } catch (IllegalArgumentException exception) {
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tree type.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
+            messenger.sendMessage(ChatColor.AQUA + "/b t [t] -- Sets the selected tree type to t.");
+            messenger.sendMessage(ChatColor.AQUA + "/b t list -- Lists all available trees.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            Arrays.stream(TreeGenerator.TreeType.values())
+                                    .map(treeType -> ((treeType == this.treeType) ? ChatColor.GOLD : ChatColor.GRAY) +
+                                            treeType.lookupKeys.get(0))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else {
+                    TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);
+
+                    if (treeType != null) {
+                        this.treeType = treeType;
+                        messenger.sendMessage(ChatColor.GOLD + "Tree type set to: " + ChatColor.DARK_GREEN + this.treeType.getName());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid tree type.");
+                    }
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.concat(
+                    TREES.stream(),
+                    Stream.of("list")
+            ), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -54,7 +84,7 @@ public class TreeSnipeBrush extends AbstractBrush {
     private void single(Snipe snipe, BlockVector3 targetBlock) {
         BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
         setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
-        if (!generateTree(this.treeType, targetBlock)) {
+        if (!generateTree(targetBlock, this.treeType)) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.RED + "Failed to generate a tree!");
         }
@@ -74,18 +104,7 @@ public class TreeSnipeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        printTreeType(messenger);
-        // TODO Remove once fixed
-        messenger.sendMessage(ChatColor.RED + "Warning: This brush is currently not undo-able due to a Spigot bug!");
-    }
-
-    private void printTreeType(SnipeMessenger messenger) {
-        String printout = Arrays.stream(TreeGenerator.TreeType.values())
-                .map(treeType -> ((treeType == this.treeType) ? ChatColor.GRAY + treeType.name()
-                        .toLowerCase() : ChatColor.DARK_GRAY + treeType.name()
-                        .toLowerCase()) + ChatColor.WHITE)
-                .collect(Collectors.joining(", "));
-        messenger.sendMessage(printout);
+        messenger.sendMessage(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName());
     }
 
 }

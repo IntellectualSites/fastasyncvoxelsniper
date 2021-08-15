@@ -2,50 +2,71 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.thevoxelbox.voxelsniper.sniper.Sniper;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.biome.BiomeTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Biome;
-import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class BiomeBrush extends AbstractBrush {
 
-    private Biome selectedBiome = Biome.PLAINS;
+    private static final List<String> BIOMES = BiomeTypes.values().stream()
+            .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .collect(Collectors.toList());
+
+    private BiomeType biomeType = BiomeTypes.PLAINS;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        Sniper sniper = snipe.getSniper();
-        Player player = sniper.getPlayer();
-        String firstParameter = parameters[1];
+        SnipeMessenger messenger = snipe.createMessenger();
+        String firstParameter = parameters[0];
+
         if (firstParameter.equalsIgnoreCase("info")) {
-            player.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
-            StringBuilder availableBiomes = new StringBuilder();
-            for (Biome biome : Biome.values()) {
-                if (availableBiomes.length() == 0) {
-                    availableBiomes = new StringBuilder(ChatColor.DARK_GREEN + biome.name());
-                    continue;
-                }
-                availableBiomes.append(ChatColor.RED).append(", ").append(ChatColor.DARK_GREEN)
-                        .append(biome.name());
-            }
-            player.sendMessage(ChatColor.DARK_BLUE + "Available biomes: " + availableBiomes);
+            messenger.sendMessage(ChatColor.GOLD + "Biome Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b bio [t] -- Sets the selected biome type to t.");
+            messenger.sendMessage(ChatColor.AQUA + "/b bio list -- Lists all available biomes.");
         } else {
-            // allows biome names with spaces in their name
-            String biomeName = IntStream.range(2, parameters.length)
-                    .mapToObj(index -> " " + parameters[index])
-                    .collect(Collectors.joining("", firstParameter, ""));
-            this.selectedBiome = Arrays.stream(Biome.values())
-                    .filter(biome -> biomeName.equalsIgnoreCase(biome.name()))
-                    .findFirst()
-                    .orElse(this.selectedBiome);
-            player.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            BiomeTypes.values().stream()
+                                    .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
+                                            biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else {
+                    BiomeType biomeType = BiomeTypes.get(firstParameter);
+
+                    if (biomeType != null) {
+                        this.biomeType = biomeType;
+                        messenger.sendMessage(ChatColor.GOLD + "Biome type set to " + ChatColor.DARK_GREEN + this.biomeType.getId());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
+                    }
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
+            }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.concat(
+                    BIOMES.stream(),
+                    Stream.of("list")
+            ), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -71,7 +92,7 @@ public class BiomeBrush extends AbstractBrush {
             for (int z = -brushSize; z <= brushSize; z++) {
                 if (xSquared + Math.pow(z, 2) <= brushSizeSquared) {
                     for (int y = 0; y < editSession.getMaxY() + 1; ++y) {
-                        setBiome(targetBlockX + x, y, targetBlockZ + z, this.selectedBiome);
+                        setBiome(targetBlockX + x, y, targetBlockZ + z, this.biomeType);
                     }
                 }
             }
@@ -99,7 +120,7 @@ public class BiomeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.selectedBiome.name());
+        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.biomeType.getId());
     }
 
 }

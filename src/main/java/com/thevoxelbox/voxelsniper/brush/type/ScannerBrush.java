@@ -11,6 +11,9 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ScannerBrush extends AbstractBrush {
 
     private static final int DEPTH_MIN = 1;
@@ -23,27 +26,38 @@ public class ScannerBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Scanner brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b sc d# -- will set the search depth to #. Clamps to 1 - 64.");
-                return;
-            }
-            if (parameter.charAt(0) == 'd') {
-                Integer depth = NumericParser.parseInteger(parameter.substring(1));
-                if (depth == null) {
-                    messenger.sendMessage(ChatColor.RED + "Depth is not a number.");
-                    return;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Scanner Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b sc d [d] -- Sets the search depth to #. Clamps to 1 - 64.");
+        } else {
+            if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("d")) {
+                    Integer depth = NumericParser.parseInteger(parameters[1]);
+                    if (depth != null) {
+                        this.depth = depth < DEPTH_MIN ? DEPTH_MIN : Math.min(depth, DEPTH_MAX);
+                        messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-                this.depth = depth < DEPTH_MIN ? DEPTH_MIN : Math.min(depth, DEPTH_MAX);
-                messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("d"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

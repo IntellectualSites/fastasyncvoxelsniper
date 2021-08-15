@@ -9,8 +9,10 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.ChatColor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 public abstract class AbstractBlendBrush extends AbstractBrush {
 
@@ -20,15 +22,23 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("water")) {
-                this.waterExcluded = !this.waterExcluded;
-                messenger.sendMessage(ChatColor.AQUA + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"));
-            }
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("water")) {
+            this.waterExcluded = !this.waterExcluded;
+            messenger.sendMessage(ChatColor.AQUA + "Water Mode set to : " + (this.waterExcluded ? "exclude" : "include"));
+        } else {
+            messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("water"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

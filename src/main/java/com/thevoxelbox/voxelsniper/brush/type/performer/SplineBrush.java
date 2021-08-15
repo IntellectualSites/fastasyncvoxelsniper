@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * FOR ANY BRUSH THAT USES A SPLINE, EXTEND THAT BRUSH FROM THIS BRUSH!!! That way, the spline calculations are already there. Also, the UI for
@@ -24,53 +25,67 @@ public class SplineBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                snipe.createMessageSender()
-                        .message(ChatColor.GOLD + "Spline brush parameters")
-                        .message(ChatColor.AQUA + "ss: Enable endpoint selection mode for desired curve")
-                        .message(ChatColor.AQUA + "sc: Enable control point selection mode for desired curve")
-                        .message(ChatColor.AQUA + "clear: Clear out the curve selection")
-                        .message(ChatColor.AQUA + "ren: Render curve from control points")
-                        .send();
-                return;
-            } else if (parameter.equalsIgnoreCase("sc")) {
-                if (this.ctrl) {
-                    this.ctrl = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Spline Brush Barameters");
+            messenger.sendMessage(ChatColor.AQUA + "/b sp ss -- Enables endpoint selection mode for desired curve");
+            messenger.sendMessage(ChatColor.AQUA + "/b sp sc -- Enables control point selection mode for desired curve");
+            messenger.sendMessage(ChatColor.AQUA + "/b sp clear -- Clears out the curve selection");
+            messenger.sendMessage(ChatColor.AQUA + "/b sp ren -- Renders curve from control points");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("ss")) {
+                    if (this.set) {
+                        this.set = false;
+                        messenger.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
+                    } else {
+                        this.set = true;
+                        this.ctrl = false;
+                        messenger.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("sc")) {
+                    if (this.ctrl) {
+                        this.ctrl = false;
+                        messenger.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
+                    } else {
+                        this.set = false;
+                        this.ctrl = true;
+                        messenger.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("clear")) {
+                    clear(snipe);
+                } else if (firstParameter.equalsIgnoreCase("ren")) {
+                    if (this.endPts.size() == 2 && this.ctrlPts.size() == 2) {
+                        if (spline(
+                                new Point(this.endPts.get(0)),
+                                new Point(this.endPts.get(1)),
+                                new Point(this.ctrlPts.get(0)),
+                                new Point(this.ctrlPts.get(1)),
+                                snipe
+                        )) {
+                            render();
+                        }
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Some endpoints or controlspoints are missing.");
+                    }
                 } else {
-                    this.set = false;
-                    this.ctrl = true;
-                    messenger.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
-                }
-            } else if (parameter.equalsIgnoreCase("ss")) {
-                if (this.set) {
-                    this.set = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
-                } else {
-                    this.set = true;
-                    this.ctrl = false;
-                    messenger.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
-                }
-            } else if (parameter.equalsIgnoreCase("clear")) {
-                clear(snipe);
-            } else if (parameter.equalsIgnoreCase("ren")) {
-                if (spline(
-                        new Point(this.endPts.get(0)),
-                        new Point(this.endPts.get(1)),
-                        new Point(this.ctrlPts.get(0)),
-                        new Point(this.ctrlPts.get(1)),
-                        snipe
-                )) {
-                    render();
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("ss", "sc", "clear", "ren"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

@@ -6,6 +6,9 @@ import com.thevoxelbox.voxelsniper.brush.type.blend.BlendBallBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ErodeBlendBrush extends AbstractBrush {
 
     private final BlendBallBrush blendBall;
@@ -20,6 +23,18 @@ public class ErodeBlendBrush extends AbstractBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         this.blendBall.handleCommand(parameters, snipe);
         this.erode.handleCommand(parameters, snipe);
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.concat(
+                    this.blendBall.handleCompletions(parameters, snipe).stream(),
+                    this.erode.handleCompletions(parameters, snipe).stream()
+            ), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

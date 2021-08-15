@@ -19,9 +19,11 @@ public class BlendBallBrush extends AbstractBlendBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Blend Ball Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b bb water -- toggle include or exclude (default: exclude) water");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Blend Ball Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b bb water -- Toggles include or exclude (default) water.");
             return;
         }
         super.handleCommand(parameters, snipe);

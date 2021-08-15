@@ -19,9 +19,11 @@ public class BlendVoxelDiscBrush extends AbstractBlendBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- toggle include or exclude (default) water");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Blend Voxel Disc Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b bvd water -- Toggles include or exclude (default) water.");
             return;
         }
         super.handleCommand(parameters, snipe);

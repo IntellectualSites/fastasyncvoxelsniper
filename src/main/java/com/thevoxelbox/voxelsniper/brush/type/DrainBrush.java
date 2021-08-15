@@ -10,6 +10,9 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class DrainBrush extends AbstractBrush {
 
     private double trueCircle;
@@ -18,33 +21,46 @@ public class DrainBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b drain true -- will use a true sphere algorithm instead of the skinnier version with classic sniper nubs. /b drain false will switch back. (false is default)");
-                messenger.sendMessage(ChatColor.AQUA + "/b drain d -- toggles disc drain mode, as opposed to a ball drain mode");
-                return;
-            } else if (parameter.startsWith("true")) {
-                this.trueCircle = 0.5;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            } else if (parameter.startsWith("false")) {
-                this.trueCircle = 0;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            } else if (parameter.equalsIgnoreCase("d")) {
-                if (this.disc) {
-                    this.disc = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b drain [true|false] -- Uses a true sphere algorithm instead of the " +
+                    "skinnier version with classic sniper nubs. Default is false.");
+            messenger.sendMessage(ChatColor.AQUA + "/b drain d -- Toggles disc drain mode, as opposed to a ball drain mode.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("true")) {
+                    this.trueCircle = 0.5;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                } else if (firstParameter.equalsIgnoreCase("false")) {
+                    this.trueCircle = 0;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                } else if (firstParameter.equalsIgnoreCase("d")) {
+                    if (this.disc) {
+                        this.disc = false;
+                        messenger.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+                    } else {
+                        this.disc = true;
+                        messenger.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+                    }
                 } else {
-                    this.disc = true;
-                    messenger.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
+                        "info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("true", "false", "d"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

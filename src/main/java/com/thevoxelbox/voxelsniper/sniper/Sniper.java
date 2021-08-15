@@ -17,6 +17,7 @@ import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -186,19 +187,25 @@ public class Sniper {
 
             try {
                 ToolkitProperties toolkitProperties = toolkit.getProperties();
-                BlockVector3 rayTraceBlock = null;
+                BlockVector3 rayTraceTargetBlock = null;
+                BlockVector3 rayTraceLastBlock = null;
                 {
                     Request.reset();
                     Request.request().setExtent(editSession);
                     if (clickedBlock == null) {
-                        BlockVector3 rayTraceResult = toolkitProperties.createBlockTracer(player).getTargetBlock();
-                        if (rayTraceResult != null) {
-                            rayTraceBlock = rayTraceResult;
+                        BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+                        BlockVector3 targetRayTraceResult = blockTracer.getTargetBlock();
+                        if (targetRayTraceResult != null) {
+                            rayTraceTargetBlock = targetRayTraceResult;
+                        }
+                        BlockVector3 lastRayTraceResult = blockTracer.getLastBlock();
+                        if (lastRayTraceResult != null) {
+                            rayTraceLastBlock = lastRayTraceResult;
                         }
                     }
                 }
                 BlockVector3 targetBlock = clickedBlock == null
-                        ? rayTraceBlock
+                        ? rayTraceTargetBlock
                         : BukkitAdapter.asBlockVector(clickedBlock.getLocation());
                 if (player.isSneaking()) {
                     SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
@@ -278,11 +285,13 @@ public class Sniper {
                             PerformerBrush performerBrush = (PerformerBrush) currentBrush;
                             performerBrush.initialize(snipe);
                         }
-                        BlockVector3 lastBlock = targetBlock.add(
-                                clickedBlockFace.getModX(),
-                                clickedBlockFace.getModY(),
-                                clickedBlockFace.getModZ()
-                        );
+                        BlockVector3 lastBlock = clickedBlock == null
+                                ? rayTraceLastBlock
+                                : targetBlock.add(
+                                        clickedBlockFace.getModX(),
+                                        clickedBlockFace.getModY(),
+                                        clickedBlockFace.getModZ()
+                                );
                         currentBrush.perform(snipe, toolAction, editSession, targetBlock, lastBlock);
                         return true;
                     }

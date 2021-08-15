@@ -3,7 +3,6 @@ package com.thevoxelbox.voxelsniper.command.executor;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
-import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
@@ -22,6 +21,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class BrushExecutor implements CommandExecutor, TabCompleter {
@@ -88,46 +88,57 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         Brush brush = toolkit.useBrush(newBrush);
         if (arguments.length > 1) {
             Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, newBrush, brush);
-            if (brush instanceof PerformerBrush) {
-                String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
-                PerformerBrush performerBrush = (PerformerBrush) brush;
-                performerBrush.handleCommand(parameters, snipe);
-            } else {
-                String[] parameters = hackTheArray(Arrays.copyOfRange(arguments, 1, arguments.length));
-                brush.handleCommand(parameters, snipe);
-            }
+            String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
+            brush.handleCommand(parameters, snipe);
             return;
         }
         sniper.sendInfo(sender);
-    }
-
-    /**
-     * Pads an empty String to the front of the array.
-     *
-     * @param args Array to pad empty string in front of
-     * @return padded array
-     */
-    private String[] hackTheArray(String[] args) {
-        String[] returnValue = new String[args.length + 1];
-        returnValue[0] = "";
-        for (int i = 0, argsLength = args.length; i < argsLength; i++) {
-            String arg = args[i];
-            returnValue[i + 1] = arg;
-        }
-        return returnValue;
     }
 
     @Override
     public List<String> complete(CommandSender sender, String[] arguments) {
         if (arguments.length == 1) {
             String argument = arguments[0];
-            String argumentLowered = argument.toLowerCase();
+            String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return this.plugin.getBrushRegistry()
                     .getBrushesProperties()
                     .keySet()
                     .stream()
                     .filter(brushAlias -> brushAlias.startsWith(argumentLowered))
                     .collect(Collectors.toList());
+        }
+        if (arguments.length > 1) {
+            SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
+            Player player = (Player) sender;
+            Sniper sniper = sniperRegistry.getSniper(player);
+            if (sniper == null) {
+                return Collections.emptyList();
+            }
+
+            Toolkit toolkit = sniper.getCurrentToolkit();
+            if (toolkit == null) {
+                return Collections.emptyList();
+            }
+
+            String firstArgument = arguments[0];
+            BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
+            BrushProperties newBrush = brushRegistry.getBrushProperties(firstArgument);
+            if (newBrush == null) {
+                return Collections.emptyList();
+            }
+
+            String permission = newBrush.getPermission();
+            if (permission != null && !player.hasPermission(permission)) {
+                return Collections.emptyList();
+            }
+
+            Brush brush = toolkit.useBrush(newBrush);
+            ToolkitProperties toolkitProperties = toolkit.getProperties();
+
+            Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, newBrush, brush);
+            String[] parameters = Arrays.copyOfRange(arguments, 1, arguments.length);
+
+            return brush.handleCompletions(parameters, snipe);
         }
         return Collections.emptyList();
     }

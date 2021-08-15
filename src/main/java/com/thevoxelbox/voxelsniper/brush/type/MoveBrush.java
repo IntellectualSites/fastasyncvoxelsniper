@@ -3,14 +3,15 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Moves a selection blockPositionY a certain amount.
@@ -30,39 +31,70 @@ public class MoveBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        BrushProperties brushProperties = snipe.getBrushProperties();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + brushProperties.getName() + " Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b mv x[int] -- set the x direction (positive => east)");
-                messenger.sendMessage(ChatColor.AQUA + "/b mv y[int] -- set the y direction (positive => up)");
-                messenger.sendMessage(ChatColor.AQUA + "/b mv z[int] -- set the z direction (positive => south)");
-                messenger.sendMessage(ChatColor.AQUA + "/b mv reset -- reset the brush (x:0 y:0 z:0)");
-                messenger.sendMessage(ChatColor.AQUA + "Use arrow and gunpowder to define two points.");
-            }
-            if (parameter.equalsIgnoreCase("reset")) {
-                this.moveDirections[0] = 0;
-                this.moveDirections[1] = 0;
-                this.moveDirections[2] = 0;
-                messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-                messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-                messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
-            }
-            String parameterLowered = parameter.toLowerCase();
-            if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'x') {
-                this.moveDirections[0] = Integer.parseInt(parameter.substring(1));
-                messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-            } else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'y') {
-                this.moveDirections[1] = Integer.parseInt(parameter.substring(1));
-                messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-            } else if (!parameterLowered.isEmpty() && parameterLowered.charAt(0) == 'z') {
-                this.moveDirections[2] = Integer.parseInt(parameter.substring(1));
-                messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "Use arrow and gunpowder to define two points.");
+            messenger.sendMessage(ChatColor.GOLD + "Move Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b mv x [n] -- Sets the x direction to n. (positive => east)");
+            messenger.sendMessage(ChatColor.AQUA + "/b mv y [n] -- Sets the y direction to n. (positive => up)");
+            messenger.sendMessage(ChatColor.AQUA + "/b mv z [n] -- Sets the z direction to n. (positive => south)");
+            messenger.sendMessage(ChatColor.AQUA + "/b mv reset -- Resets the brush. (x:0 y:0 z:0)");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("reset")) {
+                    this.moveDirections[0] = 0;
+                    this.moveDirections[1] = 0;
+                    this.moveDirections[2] = 0;
+                    messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+                    messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
+                    messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
+                }
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("x")) {
+                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
+                    if (moveDirection != null) {
+                        this.moveDirections[0] = moveDirection;
+                        messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("y")) {
+                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
+                    if (moveDirection != null) {
+                        this.moveDirections[1] = moveDirection;
+                        messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[0]);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("z")) {
+                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
+                    if (moveDirection != null) {
+                        this.moveDirections[2] = moveDirection;
+                        messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[0]);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("x", "y", "z", "reset"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

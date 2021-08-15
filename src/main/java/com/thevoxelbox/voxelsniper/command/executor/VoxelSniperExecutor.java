@@ -93,6 +93,11 @@ public class VoxelSniperExecutor implements CommandExecutor {
                 sniper.setEnabled(true);
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
+            } else if (firstArgument.equalsIgnoreCase("info")) {
+                sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
+                sender.sendMessage(plugin.getDescription().getDescription());
+                sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
+                return;
             } else if (firstArgument.equalsIgnoreCase("disable")) {
                 sniper.setEnabled(false);
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));

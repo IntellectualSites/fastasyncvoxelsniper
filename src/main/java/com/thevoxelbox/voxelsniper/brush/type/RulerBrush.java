@@ -6,8 +6,12 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class RulerBrush extends AbstractBrush {
 
@@ -20,33 +24,53 @@ public class RulerBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. Right click with powder for distances from that block (can repeat without getting a new first block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b r x[x value] y[y value] z[z value] -- Will place blocks one at a time of the type you have set with /v at the location you click + this many units away.  If you don't include a value, it will be zero.  Don't include ANY values, and the brush will just measure distance.");
-                messenger.sendMessage(ChatColor.BLUE + "/b r ruler -- will reset the tool to just measure distances, not layout blocks.");
-                return;
-            } else if (parameter.charAt(0) == 'x') {
-                this.offsetX = Integer.parseInt(parameter.replace("x", ""));
-                messenger.sendMessage(ChatColor.AQUA + "X offset set to " + this.offsetX);
-            } else if (parameter.charAt(0) == 'y') {
-                this.offsetY = Integer.parseInt(parameter.replace("y", ""));
-                messenger.sendMessage(ChatColor.AQUA + "Y offset set to " + this.offsetY);
-            } else if (parameter.charAt(0) == 'z') {
-                this.offsetZ = Integer.parseInt(parameter.replace("z", ""));
-                messenger.sendMessage(ChatColor.AQUA + "Z offset set to " + this.offsetZ);
-            } else if (parameter.startsWith("ruler")) {
-                this.offsetZ = 0;
-                this.offsetY = 0;
-                this.offsetX = 0;
-                messenger.sendMessage(ChatColor.BLUE + "Ruler mode.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. " +
+                    "Right click with gunpowder for distances from that block (can repeat without getting a new first " +
+                    "block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
+            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b r [x] [y] [z] -- Places blocks one at a time of the type you " +
+                    "have set with /v at the location you click + this many units away. If you don't include a value, " +
+                    "it will be zero. Don't include ANY values, and the brush will just measure distance.");
+            messenger.sendMessage(ChatColor.BLUE + "/b r ruler -- Resets the tool to just measure distances, not " +
+                    "layout blocks.");
+
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("ruler")) {
+                    this.offsetZ = 0;
+                    this.offsetY = 0;
+                    this.offsetX = 0;
+                    messenger.sendMessage(ChatColor.BLUE + "Ruler mode.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
+                }
+            } else if (parameters.length == 3) {
+                Integer offsetX = NumericParser.parseInteger(parameters[0]);
+                Integer offsetY = NumericParser.parseInteger(parameters[1]);
+                Integer offsetZ = NumericParser.parseInteger(parameters[2]);
+                this.offsetX = offsetX == null ? 0 : offsetX;
+                this.offsetY = offsetY == null ? 0 : offsetY;
+                this.offsetZ = offsetZ == null ? 0 : offsetZ;
+                messenger.sendMessage(ChatColor.AQUA + "X offset set to: " + this.offsetX);
+                messenger.sendMessage(ChatColor.AQUA + "Y offset set to: " + this.offsetY);
+                messenger.sendMessage(ChatColor.AQUA + "Z offset set to: " + this.offsetZ);
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("ruler"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

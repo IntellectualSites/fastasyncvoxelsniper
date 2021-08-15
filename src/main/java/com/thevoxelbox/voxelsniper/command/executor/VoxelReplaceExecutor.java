@@ -4,7 +4,6 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
-import com.sk89q.worldedit.world.block.BlockTypesCache;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
@@ -14,17 +13,21 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
+
+    private static final List<String> BLOCKS = BlockType.REGISTRY.values().stream()
+            .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .collect(Collectors.toList());
 
     private final VoxelSniperPlugin plugin;
 
@@ -81,9 +84,11 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
     public List<String> complete(CommandSender sender, String[] arguments) {
         if (arguments.length == 1) {
             String argument = arguments[0];
-            String argumentLowered = argument.toLowerCase();
-            return Arrays.stream(BlockTypesCache.values)
-                    .map(BlockType::getId)
+            String argumentLowered = (argument.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
+                    ? argument.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
+                    : argument)
+                    .toLowerCase(Locale.ROOT);
+            return BLOCKS.stream()
                     .filter(id -> id.startsWith(argumentLowered))
                     .collect(Collectors.toList());
         }

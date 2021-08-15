@@ -45,7 +45,6 @@ configurations.all {
 	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
-var rootVersion by extra("2.1.1")
 var buildNumber by extra("")
 ext {
     val git: Grgit = Grgit.open {
@@ -60,7 +59,7 @@ ext {
 }
 
 group = "com.thevoxelbox"
-version = String.format("%s-%s", rootVersion, buildNumber)
+version = String.format("%s-%s", rootProject.version, buildNumber)
 
 bukkit {
 	name = "FastAsyncVoxelSniper"
@@ -71,7 +70,7 @@ bukkit {
 	version = rootProject.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
 	depend = listOf("FastAsyncWorldEdit")
-	website = "https://github.com/IntellectualSites/FastAsyncVoxelSniper"
+	website = "https://dev.bukkit.org/projects/favs"
 	description = "World editing from ingame using 3D brushes"
 }
 

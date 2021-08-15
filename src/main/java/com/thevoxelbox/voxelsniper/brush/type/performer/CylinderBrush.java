@@ -8,6 +8,9 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 public class CylinderBrush extends AbstractPerformerBrush {
 
     private double trueCircle;
@@ -16,41 +19,61 @@ public class CylinderBrush extends AbstractPerformerBrush {
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "/b c h[number] -- set the cylinder v.voxelHeight.  Default is 1.");
-                messenger.sendMessage(ChatColor.DARK_AQUA + "/b c true -- will use a true circle algorithm instead of the skinnier version with classic sniper nubs. /b b false will switch back. (false is default)");
-                messenger.sendMessage(ChatColor.DARK_BLUE + "/b c c[number] -- set the origin of the cylinder compared to the target block. Positive numbers will move the cylinder upward, negative will move it downward.");
-                return;
-            }
-            if (parameter.startsWith("true")) {
-                this.trueCircle = 0.5;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
-            } else if (parameter.startsWith("false")) {
-                this.trueCircle = 0;
-                messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
-            } else if (parameter.charAt(0) == 'h') {
-                Integer height = NumericParser.parseInteger(parameter.replace("h", ""));
-                if (height == null) {
-                    return;
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
+            messenger.sendMessage(ChatColor.DARK_AQUA + "/b c [true|false] -- Uses a true circle algorithm instead of the " +
+                    "skinnier version with classic sniper nubs. (false is default)");
+            messenger.sendMessage(ChatColor.AQUA + "/b c h [n] -- Sets the cylinder v.voxelHeight to n. Default is 1.");
+            messenger.sendMessage(ChatColor.BLUE + "/b c c [n] -- Sets the origin of the cylinder compared to the target block " +
+                    "to n. Positive numbers will move the cylinder upward, negative will move it downward.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("true")) {
+                    this.trueCircle = 0.5;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                } else if (firstParameter.equalsIgnoreCase("false")) {
+                    this.trueCircle = 0;
+                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
+                            "parameter info.");
                 }
-                toolkitProperties.setVoxelHeight(height);
-                messenger.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
-            } else if (parameter.charAt(0) == 'c') {
-                Integer center = NumericParser.parseInteger(parameter.replace("c", ""));
-                if (center == null) {
-                    return;
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("h")) {
+                    Integer height = NumericParser.parseInteger(parameters[1]);
+                    if (height != null) {
+                        toolkitProperties.setVoxelHeight(height);
+                        messenger.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else if (firstParameter.equalsIgnoreCase("c")) {
+                    Integer center = NumericParser.parseInteger(parameters[1]);
+                    if (center != null) {
+                        toolkitProperties.setCylinderCenter(center);
+                        messenger.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + toolkitProperties.getCylinderCenter());
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-                toolkitProperties.setCylinderCenter(center);
-                messenger.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + toolkitProperties.getCylinderCenter());
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("h", "c", "true", "false"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

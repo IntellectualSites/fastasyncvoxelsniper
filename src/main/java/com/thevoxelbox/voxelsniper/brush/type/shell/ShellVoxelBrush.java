@@ -11,16 +11,6 @@ import org.bukkit.ChatColor;
 public class ShellVoxelBrush extends AbstractBrush {
 
     @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Shell Voxel Parameters:");
-        } else {
-            messenger.sendMessage(ChatColor.RED + "Invalid parameter - see the info message for help.");
-        }
-    }
-
-    @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         vShell(snipe, targetBlock);

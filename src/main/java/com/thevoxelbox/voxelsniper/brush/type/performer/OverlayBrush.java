@@ -8,7 +8,11 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class OverlayBrush extends AbstractPerformerBrush {
 
@@ -20,36 +24,53 @@ public class OverlayBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            if (parameter.equalsIgnoreCase("info")) {
-                messenger.sendMessage(ChatColor.GOLD + "Overlay brush parameters:");
-                messenger.sendMessage(ChatColor.AQUA + "d[number] (ex:  d3) How many blocks deep you want to replace from the surface.");
-                messenger.sendMessage(ChatColor.BLUE + "all (ex:  /b over all) Sets the brush to overlay over ALL materials, not just natural surface ones (will no longer ignore trees and buildings).  The parameter /some will set it back to default.");
-                return;
-            }
-            if (parameter.charAt(0) == 'd') {
-                try {
-                    this.depth = Integer.parseInt(parameter.replace("d", ""));
-                    if (this.depth < 1) {
-                        this.depth = 1;
-                    }
-                    messenger.sendMessage(ChatColor.AQUA + "Depth set to " + this.depth);
-                } catch (NumberFormatException e) {
-                    messenger.sendMessage(ChatColor.RED + "Depth isn't a number.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Overlay Brush Parameters:");
+            messenger.sendMessage(ChatColor.BLUE + "/b over all -- Sets the brush to overlay over ALL materials, not just " +
+                    "natural surface ones (will no longer ignore trees and buildings).");
+            messenger.sendMessage(ChatColor.BLUE + "/b over some -- Sets the brush to overlay over natural surface " +
+                    "materials.");
+            messenger.sendMessage(ChatColor.AQUA + "/b over d [n] -- Sets how many blocks deep you want to replace " +
+                    "from the surface to n.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("all")) {
+                    this.allBlocks = true;
+                    messenger.sendMessage(ChatColor.BLUE + "Will overlay over any block: " + this.depth);
+                } else if (firstParameter.equalsIgnoreCase("some")) {
+                    this.allBlocks = false;
+                    messenger.sendMessage(ChatColor.BLUE + "Will overlay only natural block types: " + this.depth);
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }
-            } else if (parameter.startsWith("all")) {
-                this.allBlocks = true;
-                messenger.sendMessage(ChatColor.BLUE + "Will overlay over any block." + this.depth);
-            } else if (parameter.startsWith("some")) {
-                this.allBlocks = false;
-                messenger.sendMessage(ChatColor.BLUE + "Will overlay only natural block types." + this.depth);
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("d")) {
+                    Integer depth = NumericParser.parseInteger(parameters[1]);
+                    if (depth != null) {
+                        this.depth = depth < 1 ? 1 : depth;
+                        messenger.sendMessage(ChatColor.AQUA + "Depth set to: " + this.depth);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
+                } else {
+                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! use the info parameter to display parameter info.");
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("all", "some", "d"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

@@ -11,9 +11,16 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
+
+    private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
+            .map(tolerance -> tolerance.name().toLowerCase(Locale.ROOT))
+            .collect(Collectors.toList());
 
     @Nullable
     private Vector coordinatesOne;
@@ -26,26 +33,50 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (parameters[1].equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.YELLOW + "3-Point Circle Brush instructions: Select three corners with the arrow brush, then generate the Circle with the powder brush.");
-            String toleranceOptions = Arrays.stream(Tolerance.values())
-                    .map(tolerance -> tolerance.name()
-                            .toLowerCase())
-                    .collect(Collectors.joining("|"));
-            messenger.sendMessage(ChatColor.GOLD + "/b tpc " + toleranceOptions + " -- Toggle the calculations to emphasize accuracy or smoothness");
-            return;
-        }
-        for (String s : parameters) {
-            try {
-                String parameter = s.toUpperCase();
-                this.tolerance = Tolerance.valueOf(parameter);
-                messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
-                        .toLowerCase() + " tolerance.");
-                return;
-            } catch (IllegalArgumentException exception) {
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No such tolerance.");
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "3-Point Circle Brush instructions: Select three corners with the arrow " +
+                    "brush, then generate the Circle with the gunpowder brush.");
+            messenger.sendMessage(ChatColor.GOLD + "3-Point Circle Parameters");
+            messenger.sendMessage(ChatColor.AQUA + "/b tpc [t] -- Sets the calculations to emphasize accuracy or smoothness " +
+                    "to t.");
+        } else {
+            if (parameters.length == 1) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(
+                            Arrays.stream(Tolerance.values())
+                                    .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GOLD : ChatColor.GRAY) +
+                                            tolerance.name().toLowerCase(Locale.ROOT))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                    );
+                } else {
+                    try {
+                        this.tolerance = Tolerance.valueOf(firstParameter);
+                        messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
+                                .toLowerCase(Locale.ROOT) + " tolerance.");
+                    } catch (IllegalArgumentException exception) {
+                        messenger.sendMessage(ChatColor.RED + "Invalid tolerance.");
+                    }
+                }
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(
+                    Stream.concat(
+                            TOLERANCES.stream(),
+                            Stream.of("list")
+                    ), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

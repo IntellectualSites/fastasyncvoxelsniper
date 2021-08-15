@@ -18,8 +18,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class StencilListBrush extends AbstractBrush {
 
@@ -32,39 +34,63 @@ public class StencilListBrush extends AbstractBrush {
     private short xRef;
     private short zRef;
     private short yRef;
-    private byte pasteParam;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        String secondParameter = parameters[1];
-        if (secondParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Stencil List brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b schem [optional: 'full' 'fill' or 'replace', with fill as default] [name] -- Loads the specified stencil list.  Full/fill/replace must come first.  Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
-            return;
-        } else if (secondParameter.equalsIgnoreCase("full")) {
-            this.pasteOption = 0;
-            this.pasteParam = 1;
-        } else if (secondParameter.equalsIgnoreCase("fill")) {
-            this.pasteOption = 1;
-            this.pasteParam = 1;
-        } else if (secondParameter.equalsIgnoreCase("replace")) {
-            this.pasteOption = 2;
-            this.pasteParam = 1;
-        }
-        try {
-            this.filename = parameters[1 + this.pasteParam];
-            File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencilLists/" + this.filename + ".txt");
-            if (file.exists()) {
-                messenger.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
-                readStencilList();
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Stencil List Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b sl (full|fill|replace) [s] -- Loads the specified stencil list s. " +
+                    "Full/fill/replace must come first. Full = paste all blocks, " +
+                    "fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.");
+        } else {
+            byte pasteOption;
+            byte pasteParam;
+            if (firstParameter.equalsIgnoreCase("full")) {
+                pasteOption = 0;
+                pasteParam = 1;
+            } else if (firstParameter.equalsIgnoreCase("fill")) {
+                pasteOption = 1;
+                pasteParam = 1;
+            } else if (firstParameter.equalsIgnoreCase("replace")) {
+                pasteOption = 2;
+                pasteParam = 1;
             } else {
-                messenger.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
-                this.filename = "NoFileLoaded";
+                // Reset to [name] parameter expectsted.
+                pasteOption = 1;
+                pasteParam = 0;
             }
-        } catch (RuntimeException exception) {
-            messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
+            if (parameters.length != 2 + pasteParam) {
+                messenger.sendMessage(ChatColor.RED + "Missing arguments, this command expects more.");
+                return;
+            }
+
+            this.pasteOption = pasteOption;
+            try {
+                this.filename = parameters[1 + pasteParam];
+                File file = new File(VoxelSniperPlugin.getPlugin().getDataFolder() + "/stencilLists/" + this.filename + ".txt");
+                if (file.exists()) {
+                    messenger.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
+                    readStencilList();
+                } else {
+                    messenger.sendMessage(ChatColor.AQUA + "Stencil List '" + this.filename + "' does not exist.  This brush will not function without a valid stencil list.");
+                    this.filename = "NoFileLoaded";
+                }
+            } catch (RuntimeException exception) {
+                messenger.sendMessage(ChatColor.RED + "You need to type a stencil list name.");
+            }
         }
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length == 1) {
+            String parameter = parameters[0];
+            return super.sortCompletions(Stream.of("full", "fill", "replace"), parameter, 0);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override

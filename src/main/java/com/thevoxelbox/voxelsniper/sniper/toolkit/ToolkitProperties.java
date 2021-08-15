@@ -74,7 +74,7 @@ public class ToolkitProperties {
         int distance = this.blockTracerRange == null
                 ? Math.max(Bukkit.getViewDistance(), 3) * 16 - this.brushSize
                 : this.blockTracerRange;
-        return new BlockTracer(player, distance, true);
+        return new BlockTracer(player, distance);
     }
 
     public void addToVoxelList(BlockState blockData) {

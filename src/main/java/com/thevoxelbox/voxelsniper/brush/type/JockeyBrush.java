@@ -18,6 +18,7 @@ import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class JockeyBrush extends AbstractBrush {
 
@@ -29,32 +30,43 @@ public class JockeyBrush extends AbstractBrush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
+        String firstParameter = parameters[0];
         boolean stack = false;
         boolean playerOnly = false;
         boolean inverse = false;
-        for (String parameter : parameters) {
-            if (parameter.isEmpty()) {
-                continue;
-            }
-            int length = parameter.length();
-            if (parameter.startsWith("-i:")) {
-                inverse = parameter.charAt(length - 1) == 'y';
-            }
-            if (parameter.startsWith("-po:")) {
-                playerOnly = parameter.charAt(length - 1) == 'y';
-            }
-            if (parameter.startsWith("-s:")) {
-                stack = parameter.charAt(length - 1) == 'y';
+
+        if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.GOLD + "Jockey Brush Parameters:");
+            messenger.sendMessage(ChatColor.AQUA + "/b jockey [true|false] [true|false] [true|false] -- Sets whether players only or entities should be " +
+                    "affected to n. Sets if entities should be inverted to i. Sets if entities should be stacked to s.");
+        } else {
+            if (parameters.length == 4) {
+                playerOnly = Boolean.parseBoolean(parameters[1]);
+                inverse = Boolean.parseBoolean(parameters[2]);
+                stack = Boolean.parseBoolean(parameters[3]);
+            } else {
+                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
+                        "parameter info.");
             }
         }
         if (inverse) {
-            this.jockeyType = playerOnly ? JockeyType.INVERSE_PLAYER_ONLY : JockeyType.INVERSE_ALL_ENTITIES;
+            this.jockeyType = playerOnly ? JockeyType.INVERT_PLAYER_ONLY : JockeyType.INVERT_ALL_ENTITIES;
         } else if (stack) {
             this.jockeyType = playerOnly ? JockeyType.STACK_PLAYER_ONLY : JockeyType.STACK_ALL_ENTITIES;
         } else {
             this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
         }
         messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+    }
+
+    @Override
+    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
+        if (parameters.length <= 3) {
+            int index = parameters.length - 1;
+            String parameter = parameters[index];
+            return super.sortCompletions(Stream.of("true", "false"), parameter, index);
+        }
+        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -70,7 +82,7 @@ public class JockeyBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
-        if (this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
+        if (this.jockeyType == JockeyType.INVERT_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
             player.eject();
             player.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
         } else {
@@ -101,7 +113,7 @@ public class JockeyBrush extends AbstractBrush {
                     if (entity.getEntityId() == player.getEntityId()) {
                         continue;
                     }
-                    if (this.jockeyType == JockeyType.NORMAL_PLAYER_ONLY || this.jockeyType == JockeyType.INVERSE_PLAYER_ONLY) {
+                    if (this.jockeyType == JockeyType.NORMAL_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_PLAYER_ONLY) {
                         if (!(entity instanceof Player)) {
                             continue;
                         }
@@ -127,7 +139,7 @@ public class JockeyBrush extends AbstractBrush {
                 PluginManager pluginManager = Bukkit.getPluginManager();
                 pluginManager.callEvent(playerTeleportEvent);
                 if (!playerTeleportEvent.isCancelled()) {
-                    if (jockeyType == JockeyType.INVERSE_PLAYER_ONLY || jockeyType == JockeyType.INVERSE_ALL_ENTITIES) {
+                    if (jockeyType == JockeyType.INVERT_PLAYER_ONLY || jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
                         player.addPassenger(finalClosest);
                     } else {
                         finalClosest.addPassenger(player);
@@ -183,8 +195,8 @@ public class JockeyBrush extends AbstractBrush {
 
         NORMAL_ALL_ENTITIES("Normal (All)"),
         NORMAL_PLAYER_ONLY("Normal (Player only)"),
-        INVERSE_ALL_ENTITIES("Inverse (All)"),
-        INVERSE_PLAYER_ONLY("Inverse (Player only)"),
+        INVERT_ALL_ENTITIES("Invert (All)"),
+        INVERT_PLAYER_ONLY("Invert (Player only)"),
         STACK_ALL_ENTITIES("Stack (All)"),
         STACK_PLAYER_ONLY("Stack (Player only)");
 

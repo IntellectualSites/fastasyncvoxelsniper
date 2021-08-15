@@ -51,7 +51,7 @@ public class Messenger {
     }
 
     public void sendCylinderCenterMessage(int cylinderCenter) {
-        sendMessage(ChatColor.DARK_BLUE + "Brush Center: " + ChatColor.DARK_RED + cylinderCenter);
+        sendMessage(ChatColor.BLUE + "Brush Center: " + ChatColor.DARK_RED + cylinderCenter);
     }
 
     public void sendVoxelHeightMessage(int voxelHeight) {
