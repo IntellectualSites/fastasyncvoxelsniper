@@ -6,11 +6,16 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 annotations = "21.0.1"
 
 # Plugins
-fawe-bukkit = "1.17-93"
+fawe-bukkit = "1.17-138"
 
 # Third party
 serverlib = "2.2.1"
 bstats = "2.2.1"
+
+# Gradle plugins
+shadow = "7.0.0"
+grgit = "4.1.0"
+pluginyml = "0.4.0"
 
 [libraries]
 # Platform expectations
@@ -26,3 +31,8 @@ faweBukkit = { group = "com.fastasyncworldedit", name = "FAWE-Bukkit", version.r
 serverlib = { group = "org.incendo.serverlib", name = "ServerLib", version.ref = "serverlib" }
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
+
+[plugins]
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit" }
+pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }

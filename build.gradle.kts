@@ -5,10 +5,10 @@ plugins {
 	java
 	`java-library`
     `maven-publish`
-    
-	id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
-	id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.ajoberstar.grgit") version "4.1.0"
+
+    alias(libs.plugins.pluginyml)
+	alias(libs.plugins.shadow)
+	alias(libs.plugins.grgit)
 }
 
 java {
