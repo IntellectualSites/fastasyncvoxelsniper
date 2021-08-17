@@ -35,6 +35,20 @@ public class EntityRemovalBrush extends AbstractBrush {
         this.exemptions.add("org.bukkit.entity.NPC");
     }
 
+    private static List<Class<?>> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
+        List<Class<?>> entityClassHierarchy = new ArrayList<>(10);
+        entityClassHierarchy.add(Entity.class);
+        Class<?> currentClass = entityClass;
+
+        while (currentClass != null && !currentClass.equals(Entity.class)) {
+            entityClassHierarchy.add(currentClass);
+            entityClassHierarchy.addAll(Arrays.asList(currentClass.getInterfaces()));
+
+            currentClass = currentClass.getSuperclass();
+        }
+        return entityClassHierarchy;
+    }
+
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
@@ -173,20 +187,6 @@ public class EntityRemovalBrush extends AbstractBrush {
                 .message(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE + String.join(", ", this.exemptions))
                 .brushSizeMessage()
                 .send();
-    }
-
-    private static List<Class<?>> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
-        List<Class<?>> entityClassHierarchy = new ArrayList<>(10);
-        entityClassHierarchy.add(Entity.class);
-        Class<?> currentClass = entityClass;
-
-        while (currentClass != null && !currentClass.equals(Entity.class)) {
-            entityClassHierarchy.add(currentClass);
-            entityClassHierarchy.addAll(Arrays.asList(currentClass.getInterfaces()));
-
-            currentClass = currentClass.getSuperclass();
-        }
-        return entityClassHierarchy;
     }
 
 }

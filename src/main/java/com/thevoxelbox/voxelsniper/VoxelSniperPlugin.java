@@ -25,12 +25,11 @@ import java.util.stream.Collectors;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
+    public static VoxelSniperPlugin plugin;
     private VoxelSniperConfig voxelSniperConfig;
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
-
-    public static VoxelSniperPlugin plugin;
 
     public static JavaPlugin getPlugin() {
         return plugin;

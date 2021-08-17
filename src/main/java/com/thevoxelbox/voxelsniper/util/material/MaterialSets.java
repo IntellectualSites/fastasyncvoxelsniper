@@ -108,7 +108,6 @@ public final class MaterialSets {
             .add(BlockTypes.SNOW)
             .add(BlockTypes.CLAY)
             .build();
-
     public static final MaterialSet ORES = MaterialSet.builder()
             .with(BlockCategories.COAL_ORES)
             .with("COPPER_ORES")
@@ -121,12 +120,10 @@ public final class MaterialSets {
             .add(BlockTypes.NETHER_QUARTZ_ORE)
             .add("NETHER_GOLD_ORE")
             .build();
-
     public static final MaterialSet OVERRIDEABLE_WITH_ORES = MaterialSet.builder()
             .with(OVERRIDEABLE)
             .with(ORES)
             .build();
-
     public static final MaterialSet PISTONS = MaterialSet.builder()
             .add(BlockTypes.MOVING_PISTON)
             .add(BlockTypes.PISTON)
