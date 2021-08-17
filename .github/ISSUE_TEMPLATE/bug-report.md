@@ -41,5 +41,5 @@ Steps to reproduce the behavior:
 - [] I included all information required in the sections above
 - [] I made sure there are no duplicates of this report [(Use Search)](https://github.com/FastAsyncVoxelSniper/issues?
   q=is%3Aissue)
-- [] I made sure I am using an up-to-date version of [FastAsyncVoxelSniper](https://ci.athion.net/job/FastAsyncVoxelSniper-flattening/)
+- [] I made sure I am using an up-to-date version of [FastAsyncVoxelSniper](https://dev.bukkit.org/projects/favs/files)
 - [] I made sure the bug/error is not caused by any other plugin

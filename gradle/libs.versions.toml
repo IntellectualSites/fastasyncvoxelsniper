@@ -6,7 +6,7 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 annotations = "21.0.1"
 
 # Plugins
-fawe-bukkit = "1.17-138"
+fawe-bukkit = "1.17-157"
 
 # Third party
 serverlib = "2.2.1"
