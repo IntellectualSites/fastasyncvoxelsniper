@@ -92,14 +92,15 @@ public class RegenerateChunkBrush extends AbstractBrush {
     private void generateChunk(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         int chunkX = targetBlock.getX() >> 4;
+        int chunkY = targetBlock.getY() >> 8;
         int chunkZ = targetBlock.getZ() >> 4;
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage("Generating that chunk using " + (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()) +
-                " biome, this might take a while! " + chunkX + " " + chunkZ);
+                " biome, this might take a while! " + chunkX + " " + chunkY + " " + chunkZ);
         if (regenerateChunk(chunkX, chunkZ, this.biomeType)) {
-            messenger.sendMessage(ChatColor.GREEN + "Successfully generated that chunk! " + chunkX + " " + chunkZ);
+            messenger.sendMessage(ChatColor.GREEN + "Successfully generated that chunk! " + chunkX + " " + chunkY + " " + chunkZ);
         } else {
-            messenger.sendMessage(ChatColor.RED + "Failed to generate that chunk! " + chunkX + " " + chunkZ);
+            messenger.sendMessage(ChatColor.RED + "Failed to generate that chunk! " + chunkX + " " + chunkY + " " + chunkZ);
         }
     }
 
