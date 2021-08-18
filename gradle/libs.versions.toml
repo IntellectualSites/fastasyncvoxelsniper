@@ -3,7 +3,7 @@
 paper = "1.17.1-R0.1-SNAPSHOT"
 
 # Annotations
-annotations = "21.0.1"
+annotations = "22.0.0"
 
 # Plugins
 fawe-bukkit = "1.17-157"

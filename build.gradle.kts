@@ -125,6 +125,9 @@ tasks {
         )
         opt.destinationDirectory = javadocDir
         opt.addBooleanOption("html5", true)
+        opt.links("https://papermc.io/javadocs/paper/1.17/")
+        opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Javadocs/javadoc/")
+        opt.links("https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/")
     }
 
     jar {
