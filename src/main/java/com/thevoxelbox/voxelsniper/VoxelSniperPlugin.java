@@ -10,6 +10,7 @@ import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import io.papermc.lib.PaperLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,6 +51,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         // Check if we are in a safe environment
         ServerLib.checkUnsafeForks();
         ServerLib.checkJavaLTS();
+        PaperLib.suggestPaper(this);
     }
 
     private VoxelSniperConfig loadConfig() {

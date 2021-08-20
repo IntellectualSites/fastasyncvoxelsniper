@@ -11,6 +11,7 @@ fawe-bukkit = "1.17-157"
 # Third party
 serverlib = "2.2.1"
 bstats = "2.2.1"
+paperlib = "1.0.6"
 
 # Gradle plugins
 shadow = "7.0.0"
@@ -31,6 +32,7 @@ faweBukkit = { group = "com.fastasyncworldedit", name = "FAWE-Bukkit", version.r
 serverlib = { group = "org.incendo.serverlib", name = "ServerLib", version.ref = "serverlib" }
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
+paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
