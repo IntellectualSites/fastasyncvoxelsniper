@@ -119,7 +119,7 @@ public class OceanBrush extends AbstractBrush {
                 int currentHeight = getHeight(x, z);
                 int wLevelDiff = currentHeight - (this.waterLevel - 1);
                 int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), LOW_CUT_LEVEL);
-                int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY() + 1);
+                int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY());
                 // go down from highest Y block down to new sea floor
                 for (int y = highestY; y > newSeaFloorLevel; y--) {
                     BlockState block = getBlock(x, y, z);
@@ -149,7 +149,12 @@ public class OceanBrush extends AbstractBrush {
 
     private int getHeight(int bx, int bz) {
         EditSession editSession = getEditSession();
-        for (int y = getHighestTerrainBlock(bx, bz, editSession.getMinY(), editSession.getMaxY() + 1); y > 0; y--) {
+        for (int y = getHighestTerrainBlock(
+                bx,
+                bz,
+                editSession.getMinY(),
+                editSession.getMaxY()
+        ); y > editSession.getMinY(); y--) {
             BlockState clamp = this.clampY(bx, y, bz);
             if (!EXCLUDED_MATERIALS.contains(clamp)) {
                 return y;

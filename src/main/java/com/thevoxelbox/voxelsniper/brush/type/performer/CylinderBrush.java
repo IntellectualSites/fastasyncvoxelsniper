@@ -98,19 +98,26 @@ public class CylinderBrush extends AbstractPerformerBrush {
             yEndPoint = yStartingPoint;
         }
         EditSession editSession = getEditSession();
-        if (yStartingPoint < 0) {
-            yStartingPoint = 0;
+        int minHeight = editSession.getMinY();
+        if (yStartingPoint < minHeight) {
+            yStartingPoint = minHeight;
             messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        } else if (yStartingPoint > editSession.getMaxY()) {
-            yStartingPoint = editSession.getMaxY();
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+        } else {
+            int maxHeight = editSession.getMaxY();
+            if (yStartingPoint > maxHeight) {
+                yStartingPoint = maxHeight;
+                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            }
         }
-        if (yEndPoint < 0) {
-            yEndPoint = 0;
+        if (yEndPoint < minHeight) {
+            yEndPoint = minHeight;
             messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        } else if (yEndPoint > editSession.getMaxY()) {
-            yEndPoint = editSession.getMaxY();
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+        } else {
+            int maxHeight = editSession.getMaxY();
+            if (yEndPoint > maxHeight) {
+                yEndPoint = maxHeight;
+                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            }
         }
         int blockX = targetBlock.getX();
         int blockZ = targetBlock.getZ();
