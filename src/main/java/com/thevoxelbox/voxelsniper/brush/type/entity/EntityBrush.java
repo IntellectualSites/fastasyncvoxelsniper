@@ -42,7 +42,9 @@ public class EntityBrush extends AbstractBrush {
                             EntityType.REGISTRY.values().stream()
                                     .map(entityType -> ((entityType == this.entityType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available entity types: ", ""
+                                    ))
                     );
                 } else {
                     EntityType currentEntity = EntityTypes.get(firstParameter);

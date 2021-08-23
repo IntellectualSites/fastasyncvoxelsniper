@@ -48,7 +48,9 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                             Arrays.stream(Tolerance.values())
                                     .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             tolerance.name().toLowerCase(Locale.ROOT))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available tolerances: ", ""
+                                    ))
                     );
                 } else {
                     try {

@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -74,9 +73,10 @@ public class MessageSender {
             this.messages.add(ChatColor.DARK_GREEN + "No blocks selected!");
         }
         String message = voxelList.stream()
-                .map(BlockStateHolder::getAsString)
-                .map(dataAsString -> dataAsString + " ")
-                .collect(Collectors.joining("", ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA, ""));
+                .map(state -> ChatColor.AQUA + state.getAsString())
+                .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                        ChatColor.DARK_GREEN + "Block Types Selected: ", ""
+                ));
         this.messages.add(message);
         return this;
     }

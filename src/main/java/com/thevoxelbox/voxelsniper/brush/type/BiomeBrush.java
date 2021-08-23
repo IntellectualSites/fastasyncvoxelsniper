@@ -38,7 +38,9 @@ public class BiomeBrush extends AbstractBrush {
                             BiomeTypes.values().stream()
                                     .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available biomes: ", ""
+                                    ))
                     );
                 } else {
                     BiomeType biomeType = BiomeTypes.get(firstParameter);

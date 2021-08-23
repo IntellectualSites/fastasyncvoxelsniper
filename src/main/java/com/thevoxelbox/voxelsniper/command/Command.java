@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class Command extends org.bukkit.command.Command {
@@ -54,6 +55,10 @@ public final class Command extends org.bukkit.command.Command {
             @NotNull String[] args,
             @Nullable Location location
     ) {
+        String permission = this.properties.getPermission();
+        if (permission != null && !permission.isEmpty() && !sender.hasPermission(permission)) {
+            return Collections.emptyList();
+        }
         if (this.tabCompleter == null) {
             return super.tabComplete(sender, alias, args, location);
         }

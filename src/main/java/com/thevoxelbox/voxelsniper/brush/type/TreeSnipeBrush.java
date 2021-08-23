@@ -39,7 +39,9 @@ public class TreeSnipeBrush extends AbstractBrush {
                             Arrays.stream(TreeGenerator.TreeType.values())
                                     .map(treeType -> ((treeType == this.treeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             treeType.lookupKeys.get(0))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available tree types: ", ""
+                                    ))
                     );
                 } else {
                     TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);

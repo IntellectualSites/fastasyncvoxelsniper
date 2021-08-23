@@ -69,7 +69,9 @@ public class PunishBrush extends AbstractPerformerBrush {
                             Arrays.stream(Punishment.values())
                                     .map(punishment -> ((punishment == this.punishment) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             punishment.name())
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available punishments: ", ""
+                                    ))
                     );
                 } else if (firstParameter.equalsIgnoreCase("toggleSelf")) {
                     this.hitsSelf = !this.hitsSelf;

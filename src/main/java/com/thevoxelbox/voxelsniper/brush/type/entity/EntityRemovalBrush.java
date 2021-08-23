@@ -65,7 +65,9 @@ public class EntityRemovalBrush extends AbstractBrush {
                     messenger.sendMessage(
                             exemptions.stream()
                                     .map(exemption -> ChatColor.LIGHT_PURPLE + exemption)
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available default exemptions: ", ""
+                                    ))
                     );
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
@@ -184,7 +186,11 @@ public class EntityRemovalBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Exemptions: " + ChatColor.LIGHT_PURPLE + String.join(", ", this.exemptions))
+                .message(this.exemptions.stream()
+                        .map(exemption -> ChatColor.LIGHT_PURPLE + exemption)
+                        .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                ChatColor.GREEN + "Exemptions: ", ""
+                        )))
                 .brushSizeMessage()
                 .send();
     }
