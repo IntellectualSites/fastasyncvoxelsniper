@@ -351,7 +351,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 
     private void addEffect(LivingEntity entity, PotionEffectType type) {
         PotionEffect effect = new PotionEffect(type, TICKS_PER_SECOND * this.punishDuration, this.punishLevel);
-        entity.addPotionEffect(effect, true);
+        entity.addPotionEffect(effect);
     }
 
     @Override
