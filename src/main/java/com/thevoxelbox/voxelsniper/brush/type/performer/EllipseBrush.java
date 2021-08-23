@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -175,15 +176,16 @@ public class EllipseBrush extends AbstractPerformerBrush {
     }
 
     private void ellipseFill(Snipe snipe, BlockVector3 targetBlock) {
+        EditSession editSession = getEditSession();
         int ix = this.xscl;
         int iy = this.yscl;
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
         int blockZ = targetBlock.getZ();
-        this.performer.perform(getEditSession(), blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
+        this.performer.perform(editSession, blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
         try {
             if (ix >= iy) { // Need this unless you want weird holes
-                for (iy = this.yscl; iy > 0; iy--) {
+                for (iy = this.yscl; iy >= editSession.getMinY(); iy--) {
                     for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
                         int x = (int) Math.round(ix * Math.cos(steps));
                         int y = (int) Math.round(iy * Math.sin(steps));
@@ -232,7 +234,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     ix--;
                 }
             } else {
-                for (ix = this.xscl; ix > 0; ix--) {
+                for (ix = this.xscl; ix >= editSession.getMinY(); ix--) {
                     for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
                         int x = (int) Math.round(ix * Math.cos(steps));
                         int y = (int) Math.round(iy * Math.sin(steps));

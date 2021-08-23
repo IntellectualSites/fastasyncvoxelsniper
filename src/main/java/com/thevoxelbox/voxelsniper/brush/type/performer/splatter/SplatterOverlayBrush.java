@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -144,6 +145,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 
     private void splatterOverlay(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        EditSession editSession = getEditSession();
         // Splatter Time
         int brushSize = toolkitProperties.getBrushSize();
         int[][] splat = new int[2 * brushSize + 1][2 * brushSize + 1];
@@ -198,7 +200,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 BlockVector3 targetBlock = this.getTargetBlock();
                 int blockX = targetBlock.getX();
                 int blockZ = targetBlock.getZ();
-                for (int y = targetBlock.getY(); y > 0; y--) {
+                for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) {
                     // start scanning from the height you clicked at
                     if (memory[x + brushSize][z + brushSize] != 1) {
                         // if haven't already found the surface in this column
@@ -254,6 +256,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
 
     private void splatterOverlayTwo(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        EditSession editSession = getEditSession();
         // Splatter Time
         int brushSize = toolkitProperties.getBrushSize();
         int[][] splat = new int[2 * brushSize + 1][2 * brushSize + 1];
@@ -308,7 +311,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 BlockVector3 targetBlock = this.getTargetBlock();
                 int blockX = targetBlock.getX();
                 int blockZ = targetBlock.getZ();
-                for (int y = targetBlock.getY(); y > 0; y--) { // start scanning from the height you clicked at
+                for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) { // start scanning from the height you clicked at
                     if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(
                                 z,
