@@ -5,10 +5,8 @@ import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,7 +14,7 @@ import java.util.stream.Stream;
 public class RulerBrush extends AbstractBrush {
 
     private boolean first = true;
-    private Vector coordinates = new Vector(0, 0, 0);
+    private BlockVector3 coordinates = BlockVector3.ZERO;
     private int offsetX;
     private int offsetY;
     private int offsetZ;
@@ -78,7 +76,7 @@ public class RulerBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         BlockType blockDataType = toolkitProperties.getBlockType();
         BlockVector3 targetBlock = getTargetBlock();
-        this.coordinates = Vectors.toBukkit(targetBlock);
+        this.coordinates = targetBlock;
         if (this.offsetX == 0 && this.offsetY == 0 && this.offsetZ == 0) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
@@ -94,7 +92,7 @@ public class RulerBrush extends AbstractBrush {
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.coordinates == null || this.coordinates.lengthSquared() == 0) {
+        if (this.coordinates == null || this.coordinates.lengthSq() == 0) {
             messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow. Comparing to point 0,0,0 instead.");
             return;
         }
@@ -103,7 +101,7 @@ public class RulerBrush extends AbstractBrush {
         messenger.sendMessage(ChatColor.AQUA + "X change: " + (targetBlock.getX() - this.coordinates.getX()));
         messenger.sendMessage(ChatColor.AQUA + "Y change: " + (targetBlock.getY() - this.coordinates.getY()));
         messenger.sendMessage(ChatColor.AQUA + "Z change: " + (targetBlock.getZ() - this.coordinates.getZ()));
-        double distance = Math.round(Vectors.toBukkit(targetBlock)
+        double distance = Math.round(targetBlock
                 .subtract(this.coordinates)
                 .length() * 100) / 100.0;
         double blockDistance = Math.round((Math.abs(Math.max(Math.max(

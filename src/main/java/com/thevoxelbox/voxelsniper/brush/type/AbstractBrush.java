@@ -191,6 +191,17 @@ public abstract class AbstractBrush implements Brush {
         return null;
     }
 
+    public BlockVector3 getRelativeBlock(BlockVector3 origin, Direction direction) {
+        int x = origin.getX();
+        int y = origin.getY();
+        int z = origin.getZ();
+        return getRelativeBlock(x, y, z, direction);
+    }
+
+    public BlockVector3 getRelativeBlock(int x, int y, int z, Direction direction) {
+        return direction.toBlockVector().add(x, y, z);
+    }
+
     public BlockType getBlockType(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
