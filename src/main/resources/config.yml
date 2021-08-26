@@ -1,3 +1,9 @@
 message-on-login-enabled: true
+default-block-material: AIR
+default-replace-block-material: AIR
+default-brush-size: 3
 litesniper-max-brush-size: 5
-litesniper-restricted-materials:
+litesniper-restricted-materials: []
+brush-size-warning-threshold: 20
+default-voxel-height: 1
+default-cylinder-center: 0

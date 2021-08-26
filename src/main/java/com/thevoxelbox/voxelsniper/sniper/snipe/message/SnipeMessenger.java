@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
@@ -18,7 +19,7 @@ public class SnipeMessenger {
     public SnipeMessenger(ToolkitProperties toolkitProperties, BrushProperties brushProperties, Player player) {
         this.toolkitProperties = toolkitProperties;
         this.brushProperties = brushProperties;
-        this.messenger = new Messenger(player);
+        this.messenger = new Messenger(VoxelSniperPlugin.plugin, player);
     }
 
     public void sendBrushNameMessage() {

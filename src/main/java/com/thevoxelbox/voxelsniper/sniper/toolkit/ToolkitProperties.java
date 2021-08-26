@@ -2,7 +2,8 @@ package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -13,11 +14,8 @@ import java.util.List;
 
 public class ToolkitProperties {
 
-    private static final BlockType DEFAULT_BLOCK_MATERIAL = BlockTypes.AIR;
-    private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL = BlockTypes.AIR;
-    private static final int DEFAULT_BRUSH_SIZE = 3;
-    private static final int DEFAULT_VOXEL_HEIGHT = 1;
-    private static final int DEFAULT_CYLINDER_CENTER = 0;
+    private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
+
     private final List<BlockState> voxelList = new ArrayList<>();
     private BlockState blockData;
     private BlockState replaceBlockData;
@@ -29,29 +27,36 @@ public class ToolkitProperties {
     private boolean lightningEnabled;
 
     public ToolkitProperties() {
-        this.blockData = DEFAULT_BLOCK_MATERIAL.getDefaultState();
-        this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.getDefaultState();
-        this.brushSize = DEFAULT_BRUSH_SIZE;
-        this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
+        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
+
+        this.blockData = config.getDefaultBlockMaterial().getDefaultState();
+        this.replaceBlockData = config.getDefaultBlockMaterial().getDefaultState();
+        this.brushSize = config.getDefaultBrushSize();
+        this.voxelHeight = config.getDefaultVoxelHeight();
+        this.cylinderCenter = config.getDefaultCylinderCenter();
     }
 
     public void reset() {
+        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
+
         resetBlockData();
         resetReplaceBlockData();
-        this.brushSize = DEFAULT_BRUSH_SIZE;
-        this.voxelHeight = DEFAULT_VOXEL_HEIGHT;
-        this.cylinderCenter = DEFAULT_CYLINDER_CENTER;
+        this.brushSize = config.getDefaultBrushSize();
+        this.voxelHeight = config.getDefaultVoxelHeight();
+        this.cylinderCenter = config.getDefaultCylinderCenter();
         this.blockTracerRange = null;
         this.lightningEnabled = false;
         this.voxelList.clear();
     }
 
     public void resetBlockData() {
-        this.blockData = DEFAULT_BLOCK_MATERIAL.getDefaultState();
+        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
+        this.blockData = config.getDefaultBlockMaterial().getDefaultState();
     }
 
     public void resetReplaceBlockData() {
-        this.replaceBlockData = DEFAULT_REPLACE_BLOCK_MATERIAL.getDefaultState();
+        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
+        this.replaceBlockData = config.getDefaultBlockMaterial().getDefaultState();
     }
 
     public BlockType getBlockType() {

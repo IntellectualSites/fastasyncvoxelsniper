@@ -17,7 +17,6 @@ public class Snipe {
     private final BrushProperties brushProperties;
     private final Brush brush;
 
-
     public Snipe(
             Sniper sniper,
             Toolkit toolkit,

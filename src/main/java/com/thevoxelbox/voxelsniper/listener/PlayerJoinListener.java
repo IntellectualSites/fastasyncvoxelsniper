@@ -40,7 +40,6 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
     }
 
     private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
-        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
         Sniper newSniper = new Sniper(uuid);
         sniperRegistry.register(newSniper);
         return newSniper;

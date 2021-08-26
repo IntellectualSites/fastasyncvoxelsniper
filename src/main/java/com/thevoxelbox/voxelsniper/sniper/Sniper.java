@@ -143,7 +143,8 @@ public class Sniper {
         BrushProperties currentBrushProperties = toolkit.getCurrentBrushProperties();
         String permission = currentBrushProperties.getPermission();
         if (permission != null && !player.hasPermission(permission)) {
-            player.sendMessage("You are not allowed to use this brush. You're missing the permission node '" + permission + "'");
+            player.sendMessage(ChatColor.RED + "You are not allowed to use this brush. You're missing the permission node " +
+                    "'" + permission + "'");
             return false;
         }
         {

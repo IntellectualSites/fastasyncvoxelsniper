@@ -43,7 +43,7 @@ public class VoxelHeightExecutor implements CommandExecutor {
             return;
         }
         toolkitProperties.setVoxelHeight(height);
-        Messenger messenger = new Messenger(sender);
+        Messenger messenger = new Messenger(plugin, sender);
         messenger.sendVoxelHeightMessage(height);
     }
 

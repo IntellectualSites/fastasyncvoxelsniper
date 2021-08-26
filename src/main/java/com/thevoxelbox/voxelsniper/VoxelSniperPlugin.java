@@ -1,7 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
@@ -19,10 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.serverlib.ServerLib;
 
 import java.io.File;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
@@ -58,15 +52,18 @@ public class VoxelSniperPlugin extends JavaPlugin {
         saveDefaultConfig();
         FileConfiguration config = getConfig();
         VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(config);
-        boolean messageOnLoginEnabled = voxelSniperConfigLoader.isMessageOnLoginEnabled();
-        int litesniperMaxBrushSize = voxelSniperConfigLoader.getLitesniperMaxBrushSize();
-        List<BlockType> litesniperRestrictedMaterials = voxelSniperConfigLoader.getLitesniperRestrictedMaterials()
-                .stream()
-                .map(key -> key.toLowerCase(Locale.ROOT))
-                .map(BlockTypes::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        return new VoxelSniperConfig(messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
+
+        return new VoxelSniperConfig(
+                voxelSniperConfigLoader.isMessageOnLoginEnabled(),
+                voxelSniperConfigLoader.getDefaultBlockMaterial(),
+                voxelSniperConfigLoader.getDefaultReplaceBlockMaterial(),
+                voxelSniperConfigLoader.getDefaultBrushSize(),
+                voxelSniperConfigLoader.getLitesniperMaxBrushSize(),
+                voxelSniperConfigLoader.getLitesniperRestrictedMaterials(),
+                voxelSniperConfigLoader.getBrushSizeWarningThreshold(),
+                voxelSniperConfigLoader.getDefaultVoxelHeight(),
+                voxelSniperConfigLoader.getDefaultCylinderCenter()
+        );
     }
 
     private BrushRegistry loadBrushRegistry() {
@@ -94,6 +91,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
+    }
+
+    public void reload() {
+        this.reloadConfig();
+        this.voxelSniperConfig = loadConfig();
     }
 
     public VoxelSniperConfig getVoxelSniperConfig() {

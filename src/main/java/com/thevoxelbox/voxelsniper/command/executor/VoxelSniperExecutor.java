@@ -113,10 +113,23 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("info")) {
-                sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
-                sender.sendMessage(plugin.getDescription().getDescription());
-                sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
+                if (sender.hasPermission("voxelsniper.admin")) {
+                    sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
+                    sender.sendMessage(plugin.getDescription().getDescription());
+                    sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
+                            "node 'voxelsniper.admin'");
+                }
                 return;
+            } else if (firstArgument.equalsIgnoreCase("reload")) {
+                if (sender.hasPermission("voxelsniper.admin")) {
+                    plugin.reload();
+                    sender.sendMessage(ChatColor.GREEN + "Configuration reloaded!");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
+                            "node 'voxelsniper.admin'");
+                }
             }
         }
         sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
@@ -128,7 +141,10 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
         if (arguments.length == 1) {
             String argument = arguments[0];
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
-            return Stream.of("brushes", "range", "perf", "perflong", "enable", "info", "disable", "toggle")
+            return Stream.concat(
+                            Stream.of("brushes", "range", "perf", "perflong", "enable", "disable", "toggle"),
+                            sender.hasPermission("voxelsniper.admin") ? Stream.of("info", "reload") : Stream.empty()
+                    )
                     .filter(subCommand -> subCommand.startsWith(argumentLowered))
                     .collect(Collectors.toList());
         }

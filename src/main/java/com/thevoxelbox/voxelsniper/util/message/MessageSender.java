@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.util.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -11,12 +12,12 @@ import java.util.stream.Collectors;
 
 public class MessageSender {
 
-    private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
-
+    private final VoxelSniperPlugin plugin;
     private final CommandSender sender;
     private final List<String> messages = new ArrayList<>(0);
 
     public MessageSender(CommandSender sender) {
+        this.plugin = VoxelSniperPlugin.plugin;
         this.sender = sender;
     }
 
@@ -52,7 +53,7 @@ public class MessageSender {
 
     public MessageSender brushSizeMessage(int brushSize) {
         this.messages.add(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + brushSize);
-        if (brushSize >= BRUSH_SIZE_WARNING_THRESHOLD) {
+        if (brushSize >= this.plugin.getVoxelSniperConfig().getBrushSizeWarningThreshold()) {
             this.messages.add(ChatColor.RED + "WARNING: Large brush size selected!");
         }
         return this;

@@ -64,7 +64,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         if (brushSize != null) {
             VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
             int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
-            Messenger messenger = new Messenger(sender);
+            Messenger messenger = new Messenger(plugin, sender);
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
                 sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
                 toolkitProperties.setBrushSize(litesniperMaxBrushSize);
