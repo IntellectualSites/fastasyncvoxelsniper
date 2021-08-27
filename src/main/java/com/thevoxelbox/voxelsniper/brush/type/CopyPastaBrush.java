@@ -14,6 +14,9 @@ import java.util.stream.Stream;
 public class CopyPastaBrush extends AbstractBrush {
 
     private static final int BLOCK_LIMIT = 10000;
+
+    private int blockLimit;
+
     private final int[] pastePoint = new int[3];
     private final int[] minPoint = new int[3];
     private final int[] offsetPoint = new int[3];
@@ -26,6 +29,11 @@ public class CopyPastaBrush extends AbstractBrush {
     private BlockType[] blockArray;
     private BlockState[] dataArray;
     private int pivot; // ccw degrees
+
+    @Override
+    public void loadProperties() {
+        this.blockLimit = getIntegerProperty("block-limit", BLOCK_LIMIT);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -97,7 +105,7 @@ public class CopyPastaBrush extends AbstractBrush {
         if (this.points == 2) {
             if (this.numBlocks == 0) {
                 doCopy(snipe);
-            } else if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
+            } else if (this.numBlocks > 0 && this.numBlocks < this.blockLimit) {
                 BlockVector3 targetBlock = this.getTargetBlock();
                 this.pastePoint[0] = targetBlock.getX();
                 this.pastePoint[1] = targetBlock.getY();
@@ -119,7 +127,7 @@ public class CopyPastaBrush extends AbstractBrush {
         }
         this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.numBlocks > 0 && this.numBlocks < BLOCK_LIMIT) {
+        if (this.numBlocks > 0 && this.numBlocks < this.blockLimit) {
             this.blockArray = new BlockType[this.numBlocks];
             this.dataArray = new BlockState[this.numBlocks];
             for (int i = 0; i < this.arraySize[0]; i++) {
@@ -135,7 +143,7 @@ public class CopyPastaBrush extends AbstractBrush {
             }
             messenger.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks copied.");
         } else {
-            messenger.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + BLOCK_LIMIT + ")");
+            messenger.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + this.blockLimit + ")");
         }
     }
 

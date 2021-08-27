@@ -15,8 +15,14 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
 
-    private int depth = DEFAULT_DEPTH;
     private boolean allBlocks;
+
+    private int depth;
+
+    @Override
+    public void loadProperties() {
+        this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

@@ -20,16 +20,31 @@ import java.util.stream.Stream;
 public class JaggedLineBrush extends AbstractPerformerBrush {
 
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
+
     private static final int RECURSION_MIN = 1;
-    private static final int RECURSION_DEFAULT = 3;
     private static final int RECURSION_MAX = 10;
-    private static final int SPREAD_DEFAULT = 3;
+
+    private static final int DEFAULT_RECURSION = 3;
+    private static final int DEFAULT_SPREAD = 3;
 
     private final Random random = new Random();
     private Vector originCoordinates;
     private Vector targetCoordinates = new Vector();
-    private int recursion = RECURSION_DEFAULT;
-    private int spread = SPREAD_DEFAULT;
+
+    private int recursionMin;
+    private int recursionMax;
+
+    private int recursion;
+    private int spread;
+
+    @Override
+    public void loadProperties() {
+        this.recursionMin = getIntegerProperty("recursion-min", RECURSION_MIN);
+        this.recursionMax = getIntegerProperty("recursion-max", RECURSION_MAX);
+
+        this.recursion = getIntegerProperty("defaut-recursion", DEFAULT_RECURSION);
+        this.spread = getIntegerProperty("defaut-spread", DEFAULT_SPREAD);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -46,7 +61,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("r")) {
                     Integer recursion = NumericParser.parseInteger(parameters[1]);
-                    if (recursion != null && recursion >= RECURSION_MIN && recursion <= RECURSION_MAX) {
+                    if (recursion != null && recursion >= this.recursionMin && recursion <= this.recursionMax) {
                         this.recursion = recursion;
                         messenger.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
                     } else {

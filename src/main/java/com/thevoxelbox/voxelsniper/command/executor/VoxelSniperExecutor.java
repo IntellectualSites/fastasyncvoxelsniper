@@ -125,7 +125,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
             } else if (firstArgument.equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("voxelsniper.admin")) {
                     plugin.reload();
-                    sender.sendMessage(ChatColor.GREEN + "Configuration reloaded!");
+                    sender.sendMessage(ChatColor.GREEN + "FastAsyncVoxelSniper reloaded!");
                 } else {
                     sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
                             "node 'voxelsniper.admin'");

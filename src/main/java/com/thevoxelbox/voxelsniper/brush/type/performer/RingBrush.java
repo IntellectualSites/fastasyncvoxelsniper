@@ -12,8 +12,11 @@ import java.util.stream.Stream;
 
 public class RingBrush extends AbstractPerformerBrush {
 
+    private static final double DEFAULT_INNER_SIZE = 0.0;
+
     private double trueCircle;
-    private double innerSize;
+
+    private double innerSize = DEFAULT_INNER_SIZE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

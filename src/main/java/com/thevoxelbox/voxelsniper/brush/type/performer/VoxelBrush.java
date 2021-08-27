@@ -7,6 +7,10 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 public class VoxelBrush extends AbstractPerformerBrush {
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleArrowAction(Snipe snipe) {
         voxel(snipe);
     }

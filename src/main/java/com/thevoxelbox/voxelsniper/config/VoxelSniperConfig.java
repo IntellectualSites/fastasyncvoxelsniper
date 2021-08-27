@@ -1,10 +1,14 @@
 package com.thevoxelbox.voxelsniper.config;
 
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 
 import java.util.List;
+import java.util.Map;
 
 public class VoxelSniperConfig {
+
+    private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
     private final boolean messageOnLoginEnabled;
     private final BlockType defaultBlockMaterial;
@@ -15,6 +19,7 @@ public class VoxelSniperConfig {
     private final int brushSizeWarningThreshold;
     private final int defaultVoxelHeight;
     private final int defaultCylinderCenter;
+    private final Map<String, Map<String, Object>> brushProperties;
 
     public VoxelSniperConfig(
             boolean messageOnLoginEnabled,
@@ -25,7 +30,8 @@ public class VoxelSniperConfig {
             List<BlockType> litesniperRestrictedMaterials,
             int brushSizeWarningThreshold,
             int defaultVoxelHeight,
-            int defaultCylinderCenter
+            int defaultCylinderCenter,
+            Map<String, Map<String, Object>> brushProperties
     ) {
         this.messageOnLoginEnabled = messageOnLoginEnabled;
         this.defaultBlockMaterial = defaultBlockMaterial;
@@ -36,6 +42,7 @@ public class VoxelSniperConfig {
         this.brushSizeWarningThreshold = brushSizeWarningThreshold;
         this.defaultVoxelHeight = defaultVoxelHeight;
         this.defaultCylinderCenter = defaultCylinderCenter;
+        this.brushProperties = brushProperties;
     }
 
     public boolean isMessageOnLoginEnabled() {
@@ -72,6 +79,15 @@ public class VoxelSniperConfig {
 
     public int getDefaultCylinderCenter() {
         return defaultCylinderCenter;
+    }
+
+    public Map<String, Map<String, Object>> getBrushProperties() {
+        return brushProperties;
+    }
+
+    public void saveBrushPropertyToConfig(String brush, String propertyKey, Object value) {
+        plugin.getConfig().set(VoxelSniperConfigLoader.BRUSH_PROPERTIES + "." + brush + "." + propertyKey, value);
+        plugin.saveConfig();
     }
 
 }

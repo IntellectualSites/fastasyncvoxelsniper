@@ -23,9 +23,21 @@ import java.util.stream.Stream;
 public class JockeyBrush extends AbstractBrush {
 
     private static final int ENTITY_STACK_LIMIT = 50;
-    private JockeyType jockeyType = JockeyType.NORMAL_ALL_ENTITIES;
+
+    private static final JockeyType DEFAULT_JOCKEY_TYPE = JockeyType.NORMAL_ALL_ENTITIES;
+
     @Nullable
     private Entity jockeyedEntity;
+
+    private int entityStackLimit;
+
+    private JockeyType jockeyType;
+
+    @Override
+    public void loadProperties() {
+        this.entityStackLimit = getIntegerProperty("entity-stack-limit", ENTITY_STACK_LIMIT);
+        this.jockeyType = (JockeyType) getEnumProperty("default-jockey-type", JockeyType.class, DEFAULT_JOCKEY_TYPE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -162,7 +174,7 @@ public class JockeyBrush extends AbstractBrush {
         Entity lastEntity = player;
         int stackHeight = 0;
         for (Entity entity : nearbyEntities) {
-            if (stackHeight >= ENTITY_STACK_LIMIT) {
+            if (stackHeight >= entityStackLimit) {
                 return;
             }
             if (this.jockeyType == JockeyType.STACK_ALL_ENTITIES) {

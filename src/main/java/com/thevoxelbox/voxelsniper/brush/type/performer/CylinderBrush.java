@@ -16,6 +16,10 @@ public class CylinderBrush extends AbstractPerformerBrush {
     private double trueCircle;
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();

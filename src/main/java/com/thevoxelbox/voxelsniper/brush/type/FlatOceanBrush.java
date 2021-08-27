@@ -16,8 +16,14 @@ public class FlatOceanBrush extends AbstractBrush {
     private static final int DEFAULT_WATER_LEVEL = 29;
     private static final int DEFAULT_FLOOR_LEVEL = 8;
 
-    private int waterLevel = DEFAULT_WATER_LEVEL;
-    private int floorLevel = DEFAULT_FLOOR_LEVEL;
+    private int waterLevel;
+    private int floorLevel;
+
+    @Override
+    public void loadProperties() {
+        this.waterLevel = getIntegerProperty("default-water-level", DEFAULT_WATER_LEVEL);
+        this.floorLevel = getIntegerProperty("default-floor-level", DEFAULT_FLOOR_LEVEL);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
+
     private static final List<String> BIOMES = BiomeTypes.values().stream()
             .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());

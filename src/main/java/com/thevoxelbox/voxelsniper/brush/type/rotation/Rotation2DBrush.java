@@ -14,10 +14,12 @@ import org.bukkit.ChatColor;
 
 public class Rotation2DBrush extends AbstractBrush {
 
-    private int mode;
+    private static final int DEFAULT_ANGLE = 0;
+
     private int brushSize;
     private BlockState[][][] snap;
-    private double angle;
+
+    private double angle = DEFAULT_ANGLE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -47,26 +49,16 @@ public class Rotation2DBrush extends AbstractBrush {
     public void handleArrowAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            getMatrix();
-            rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        getMatrix();
+        rotate();
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            getMatrix();
-            rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        getMatrix();
+        rotate();
     }
 
     private void getMatrix() {

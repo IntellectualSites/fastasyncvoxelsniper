@@ -2,10 +2,13 @@ package com.thevoxelbox.voxelsniper.config;
 
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
+    protected static final String BRUSH_PROPERTIES = "brush-properties";
 
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
@@ -66,7 +70,13 @@ public class VoxelSniperConfigLoader {
      * @return default type
      */
     public BlockType getDefaultBlockMaterial() {
-        return BlockTypes.get(this.config.getString(DEFAULT_BLOCK_MATERIAL, DEFAULT_BLOCK_MATERIAL_VALUE.getId()));
+        String type = this.config.getString(DEFAULT_BLOCK_MATERIAL);
+        if (type != null) {
+            BlockType blockType = BlockTypes.get(type.toLowerCase(Locale.ROOT));
+            return blockType == null ? DEFAULT_BLOCK_MATERIAL_VALUE : blockType;
+        } else {
+            return DEFAULT_BLOCK_MATERIAL_VALUE;
+        }
     }
 
     /**
@@ -84,10 +94,13 @@ public class VoxelSniperConfigLoader {
      * @return default type
      */
     public BlockType getDefaultReplaceBlockMaterial() {
-        return BlockTypes.get(this.config.getString(
-                DEFAULT_REPLACE_BLOCK_MATERIAL,
-                DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE.getId()
-        ));
+        String type = this.config.getString(DEFAULT_REPLACE_BLOCK_MATERIAL);
+        if (type != null) {
+            BlockType blockType = BlockTypes.get(type.toLowerCase(Locale.ROOT));
+            return blockType == null ? DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE : blockType;
+        } else {
+            return DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE;
+        }
     }
 
     /**
@@ -210,6 +223,55 @@ public class VoxelSniperConfigLoader {
      */
     public void setDefaultCylinderCenter(int center) {
         this.config.set(DEFAULT_CYLINDER_CENTER, center);
+    }
+
+    /**
+     * Return brush properties.
+     *
+     * @return brush properties
+     */
+    public Map<String, Map<String, Object>> getBrushProperties() {
+        Map<String, Map<String, Object>> brushesMap = new HashMap<>();
+
+        ConfigurationSection brushesSection = config.getConfigurationSection(BRUSH_PROPERTIES);
+        if (brushesSection == null) {
+            return brushesMap;
+        }
+
+        for (String brush : brushesSection.getKeys(false)) {
+            Map<String, Object> propertiesMap = new HashMap<>();
+
+            ConfigurationSection propertiesSection = config.getConfigurationSection(BRUSH_PROPERTIES + "." + brush);
+            if (propertiesSection == null) {
+                continue;
+            }
+
+            for (String property : propertiesSection.getKeys(false)) {
+                propertiesMap.put(property, this.config.get(BRUSH_PROPERTIES + "." + brush + "." + property));
+            }
+
+            brushesMap.put(brush, propertiesMap);
+        }
+
+        return brushesMap;
+    }
+
+    /**
+     * Set brush properties.
+     *
+     * @param brushProperties brush properties
+     */
+    public void setBrushProperties(Map<String, Map<String, Object>> brushProperties) {
+        for (Map.Entry<String, Map<String, Object>> brushesEntry : brushProperties.entrySet()) {
+            String brush = brushesEntry.getKey();
+
+            for (Map.Entry<String, Object> propertiesEntry : brushesEntry.getValue().entrySet()) {
+                String propertyKey = propertiesEntry.getKey();
+                Object propertyValue = propertiesEntry.getValue();
+
+                this.config.set(BRUSH_PROPERTIES + "." + brush + "." + propertyKey, propertyValue);
+            }
+        }
     }
 
 }

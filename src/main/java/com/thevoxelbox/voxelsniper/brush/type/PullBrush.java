@@ -16,10 +16,20 @@ import java.util.Set;
 
 public class PullBrush extends AbstractBrush {
 
+    private static final int DEFAULT_PINCH = 1;
+    private static final int DEFAULT_BUBBLE = 0;
+
     private final Set<PullBrushBlockWrapper> surface = new HashSet<>();
     private int voxelHeight;
-    private double pinch = 1;
+
+    private double pinch;
     private double bubble;
+
+    @Override
+    public void loadProperties() {
+        this.pinch = getIntegerProperty("default-pinch", DEFAULT_PINCH);
+        this.bubble = getIntegerProperty("default-bubble", DEFAULT_BUBBLE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

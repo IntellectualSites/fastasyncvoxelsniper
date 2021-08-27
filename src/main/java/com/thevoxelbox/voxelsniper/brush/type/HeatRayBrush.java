@@ -27,6 +27,11 @@ public class HeatRayBrush extends AbstractBrush {
     private static final double REQUIRED_COBBLE_DENSITY = 0.5;
     private static final double REQUIRED_FIRE_DENSITY = -0.25;
     private static final double REQUIRED_AIR_DENSITY = 0;
+
+    private static final int DEFAULT_OCTAVES = 5;
+    private static final double DEFAULT_FREQUENCY = 1;
+    private static final double DEFAULT_AMPLITUDE = 0.3;
+
     private static final MaterialSet FLAMEABLE_BLOCKS = MaterialSet.builder()
             .with(BlockCategories.LOGS)
             .with(BlockCategories.SAPLINGS)
@@ -51,9 +56,26 @@ public class HeatRayBrush extends AbstractBrush {
             .add(BlockTypes.LADDER)
             .build();
 
-    private int octaves = 5;
-    private double frequency = 1;
-    private double amplitude = 0.3;
+    private double requiredObsidianDensity;
+    private double requiredCobbleDensity;
+    private double requiredFireDensity;
+    private double requiredAirDensity;
+
+    private int octaves;
+    private double frequency;
+    private double amplitude;
+
+    @Override
+    public void loadProperties() {
+        this.requiredObsidianDensity = getDoubleProperty("required-obsidian-density", REQUIRED_OBSIDIAN_DENSITY);
+        this.requiredCobbleDensity = getDoubleProperty("required-cobble-density", REQUIRED_COBBLE_DENSITY);
+        this.requiredFireDensity = getDoubleProperty("required-fire-density", REQUIRED_FIRE_DENSITY);
+        this.requiredAirDensity = getDoubleProperty("required-air-density", REQUIRED_AIR_DENSITY);
+
+        this.octaves = getIntegerProperty("default-octaves", DEFAULT_OCTAVES);
+        this.frequency = getDoubleProperty("default-frequency", DEFAULT_FREQUENCY);
+        this.amplitude = getDoubleProperty("default-amplitude", DEFAULT_AMPLITUDE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -144,7 +166,7 @@ public class HeatRayBrush extends AbstractBrush {
                                 currentLocation.getBlockZ()
                         );
                         BlockType currentBlockType = currentBlock.getBlockType();
-                        if (currentBlockType == BlockTypes.CHEST) {
+                        if (MaterialSets.CHESTS.contains(currentBlockType)) {
                             continue;
                         }
                         if (Materials.isLiquid(currentBlockType)) {
@@ -198,7 +220,7 @@ public class HeatRayBrush extends AbstractBrush {
                                     this.frequency,
                                     this.amplitude
                             );
-                            if (obsidianDensity >= REQUIRED_OBSIDIAN_DENSITY) {
+                            if (obsidianDensity >= this.requiredObsidianDensity) {
                                 if (currentBlockType != BlockTypes.OBSIDIAN) {
                                     setBlockType(
                                             currentLocation.getBlockX(),
@@ -207,7 +229,7 @@ public class HeatRayBrush extends AbstractBrush {
                                             BlockTypes.OBSIDIAN
                                     );
                                 }
-                            } else if (cobbleDensity >= REQUIRED_COBBLE_DENSITY) {
+                            } else if (cobbleDensity >= this.requiredCobbleDensity) {
                                 if (currentBlockType != BlockTypes.COBBLESTONE) {
                                     setBlockType(
                                             currentLocation.getBlockX(),
@@ -216,7 +238,7 @@ public class HeatRayBrush extends AbstractBrush {
                                             BlockTypes.COBBLESTONE
                                     );
                                 }
-                            } else if (fireDensity >= REQUIRED_FIRE_DENSITY) {
+                            } else if (fireDensity >= this.requiredFireDensity) {
                                 if (currentBlockType != BlockTypes.FIRE) {
                                     setBlockType(
                                             currentLocation.getBlockX(),
@@ -225,7 +247,7 @@ public class HeatRayBrush extends AbstractBrush {
                                             BlockTypes.FIRE
                                     );
                                 }
-                            } else if (airDensity >= REQUIRED_AIR_DENSITY) {
+                            } else if (airDensity >= this.requiredAirDensity) {
                                 setBlockType(
                                         currentLocation.getBlockX(),
                                         currentLocation.getBlockY(),

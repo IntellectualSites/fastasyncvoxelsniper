@@ -8,17 +8,17 @@ import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 public class BlobBrush extends AbstractPerformerBrush {
 
-    private static final int GROW_PERCENT_DEFAULT = 1000;
-    private static final int GROW_PERCENT_MIN = 1;
-    private static final int GROW_PERCENT_MAX = 9999;
+    @Override
+    public void loadProperties() {
+        this.growthPercentMin = getIntegerProperty("growth-percent-min", GROWTH_PERCENT_MIN);
+        this.growthPercentMax = getIntegerProperty("growth-percent-max", GROWTH_PERCENT_MAX);
 
-    private final Random randomGenerator = new Random();
-    private int growPercent = GROW_PERCENT_DEFAULT; // chance block on recursion pass is made active
+        this.growthPercent = getIntegerProperty("default-growth-percent", DEFAULT_GROWTH_PERCENT);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -27,15 +27,15 @@ public class BlobBrush extends AbstractPerformerBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Blob Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b blob g [n] -- Sets the growth percentage to n (" + GROW_PERCENT_MIN +
-                    "-" + GROW_PERCENT_MAX + "). Default is " + GROW_PERCENT_DEFAULT + ".");
+            messenger.sendMessage(ChatColor.AQUA + "/b blob g [n] -- Sets the growth percentage to n (" + this.growthPercentMin +
+                    "-" + this.growthPercentMax + "). Default is " + DEFAULT_GROWTH_PERCENT + ".");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("g")) {
                     Integer growPercent = NumericParser.parseInteger(parameters[1]);
-                    if (growPercent != null && growPercent >= GROW_PERCENT_MIN && growPercent <= GROW_PERCENT_MAX) {
-                        this.growPercent = growPercent;
-                        messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + this.growPercent / 100 + "%");
+                    if (growPercent != null && growPercent >= super.growthPercentMin && growPercent <= super.growthPercentMax) {
+                        this.growthPercent = growPercent;
+                        messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + this.growthPercent / 100 + "%");
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
                     }
@@ -73,7 +73,7 @@ public class BlobBrush extends AbstractPerformerBrush {
         int brushSize = toolkitProperties.getBrushSize();
         if (checkValidGrowPercent()) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            messenger.sendMessage(ChatColor.BLUE + "Growth percent set to: " + this.growthPercent / 100 + "%");
         }
         // Seed the array
         int brushSizeDoubled = 2 * brushSize;
@@ -81,8 +81,9 @@ public class BlobBrush extends AbstractPerformerBrush {
         for (int x = brushSizeDoubled; x >= 0; x--) {
             for (int y = brushSizeDoubled; y >= 0; y--) {
                 for (int z = brushSizeDoubled; z >= 0; z--) {
-                    splat[x][y][z] = (x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && this.randomGenerator
-                            .nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent ? 0 : 1;
+                    splat[x][y][z] =
+                            (x == 0 || y == 0 | z == 0 || x == brushSizeDoubled || y == brushSizeDoubled || z == brushSizeDoubled) && super.generator
+                                    .nextInt(super.growthPercentMax + 1) <= this.growthPercent ? 0 : 1;
                 }
             }
         }
@@ -114,7 +115,7 @@ public class BlobBrush extends AbstractPerformerBrush {
                                 growCheck++;
                             }
                         }
-                        if (growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
+                        if (growCheck >= 1 && super.generator.nextInt(super.growthPercentMax + 1) <= this.growthPercent) {
                             tempSplat[x][y][z] = 0; // prevent bleed into splat
                         }
                     }
@@ -159,7 +160,7 @@ public class BlobBrush extends AbstractPerformerBrush {
         int brushSize = toolkitProperties.getBrushSize();
         if (checkValidGrowPercent()) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.BLUE + "Growth percent set to: 10%");
+            messenger.sendMessage(ChatColor.BLUE + "Growth percent set to: " + this.growthPercent / 100 + "%");
         }
         // Seed the array
         int brushSizeDoubled = 2 * brushSize;
@@ -193,7 +194,7 @@ public class BlobBrush extends AbstractPerformerBrush {
                                 growCheck++;
                             }
                         }
-                        if (growCheck >= 1 && this.randomGenerator.nextInt(GROW_PERCENT_MAX + 1) <= this.growPercent) {
+                        if (growCheck >= 1 && super.generator.nextInt(super.growthPercentMax + 1) <= this.growthPercent) {
                             // prevent bleed into splat
                             tempSplat[x][y][z] = 1;
                         }
@@ -234,8 +235,8 @@ public class BlobBrush extends AbstractPerformerBrush {
     }
 
     private boolean checkValidGrowPercent() {
-        if (this.growPercent < GROW_PERCENT_MIN || this.growPercent > GROW_PERCENT_MAX) {
-            this.growPercent = GROW_PERCENT_DEFAULT;
+        if (this.growthPercent < super.growthPercentMin || this.growthPercent > super.growthPercentMax) {
+            this.growthPercent = getIntegerProperty("default-grow-percent", DEFAULT_GROWTH_PERCENT);
             return true;
         }
         return false;
@@ -247,7 +248,7 @@ public class BlobBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.BLUE + "Growth percent set to: " + this.growPercent / 100 + "%")
+                .message(ChatColor.BLUE + "Growth percent set to: " + this.growthPercent / 100 + "%")
                 .send();
     }
 

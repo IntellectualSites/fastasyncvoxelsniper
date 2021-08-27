@@ -11,16 +11,57 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
 
+    protected static final int SEED_PERCENT_MIN = 1;
+    protected static final int SEED_PERCENT_MAX = 9999;
+    protected static final int GROWTH_PERCENT_MIN = 1;
+    protected static final int GROWTH_PERCENT_MAX = 9999;
+    protected static final int SPLATTER_RECURSIONS_MIN = 1;
+    protected static final int SPLATTER_RECURSIONS_MAX = 10;
+
+    protected static final int DEFAULT_SEED_PERCENT = 1000;
+    protected static final int DEFAULT_GROWTH_PERCENT = 1000;
+    protected static final int DEFAULT_SPLATTER_RECURSIONS = 3;
+
+    protected final Random generator = new Random();
+
     protected Performer performer;
     private PerformerProperties performerProperties;
+
+    protected int seedPercentMin;
+    protected int seedPercentMax;
+    protected int growthPercentMin;
+    protected int growthPercentMax;
+    protected int splatterRecursionsMin;
+    protected int splatterRecursionsMax;
+
+    protected int seedPercent;
+    protected int growthPercent;
+    protected int splatterRecursions;
 
     public AbstractPerformerBrush() {
         this.performerProperties = PerformerRegistrar.DEFAULT_PERFORMER_PROPERTIES;
         PerformerCreator performerCreator = this.performerProperties.getCreator();
         this.performer = performerCreator.create();
+        this.performer.setProperties(this.performerProperties);
+        this.performer.loadProperties();
+    }
+
+    @Override
+    public void loadProperties() {
+        this.seedPercentMin = getIntegerProperty("seed-percent-min", SEED_PERCENT_MIN);
+        this.seedPercentMax = getIntegerProperty("seed-percent-max", SEED_PERCENT_MAX);
+        this.growthPercentMin = getIntegerProperty("growth-percent-min", GROWTH_PERCENT_MIN);
+        this.growthPercentMax = getIntegerProperty("growth-percent-max", GROWTH_PERCENT_MAX);
+        this.splatterRecursionsMin = getIntegerProperty("splatter-recursions-min", SPLATTER_RECURSIONS_MIN);
+        this.splatterRecursionsMax = getIntegerProperty("splatter-recursions-max", SPLATTER_RECURSIONS_MAX);
+
+        this.seedPercent = getIntegerProperty("default-seed-percent", DEFAULT_SEED_PERCENT);
+        this.growthPercent = getIntegerProperty("default-growth-percent", DEFAULT_GROWTH_PERCENT);
+        this.splatterRecursions = getIntegerProperty("default-splatter-recursions", DEFAULT_SPLATTER_RECURSIONS);
     }
 
     @Override
@@ -34,6 +75,8 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
         this.performerProperties = performerProperties;
         PerformerCreator performerCreator = this.performerProperties.getCreator();
         this.performer = performerCreator.create();
+        this.performer.setProperties(this.performerProperties);
+        this.performer.loadProperties();
         sendInfo(snipe);
         PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
         this.performer.sendInfo(performerSnipe);

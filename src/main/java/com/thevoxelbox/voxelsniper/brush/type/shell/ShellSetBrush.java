@@ -17,6 +17,13 @@ public class ShellSetBrush extends AbstractBrush {
 
     private static final int MAX_SIZE = 5000000;
 
+    private int maxSize;
+
+    @Override
+    public void loadProperties() {
+        this.maxSize = getIntegerProperty("max-size", MAX_SIZE);
+    }
+
     @Nullable
     private BlockVector3 block;
     private World world;
@@ -65,7 +72,7 @@ public class ShellSetBrush extends AbstractBrush {
             int highY = Math.max(y1, y2);
             int highZ = Math.max(z1, z2);
             int size = Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY);
-            if (size > MAX_SIZE) {
+            if (size > maxSize) {
                 messenger.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
             } else {
                 List<BlockVector3> blocks = new ArrayList<>(size / 2);

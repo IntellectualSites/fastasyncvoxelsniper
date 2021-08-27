@@ -22,6 +22,10 @@ public class TriangleBrush extends AbstractPerformerBrush {
     private int cornerNumber = 1;
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];

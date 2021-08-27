@@ -16,10 +16,12 @@ import org.bukkit.ChatColor;
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rotation2DVerticalBrush extends AbstractBrush {
 
-    private int mode;
+    private static final int DEFAULT_ANGLE = 0;
+
     private int brushSize;
     private BlockState[][][] snap;
-    private double angle;
+
+    private double angle = DEFAULT_ANGLE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -49,26 +51,16 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
     public void handleArrowAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            this.getMatrix();
-            this.rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        this.getMatrix();
+        this.rotate();
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            this.getMatrix();
-            this.rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        this.getMatrix();
+        this.rotate();
     }
 
     private void getMatrix() {

@@ -17,7 +17,21 @@ public class CanyonBrush extends AbstractBrush {
 
     private static final int SHIFT_LEVEL_MIN = 10;
     private static final int SHIFT_LEVEL_MAX = 60;
-    private int yLevel = 10;
+
+    private static final int DEFAULT_Y_LEVEL = 10;
+
+    private int shiftLevelMin;
+    private int shiftLevelMax;
+
+    private int yLevel;
+
+    @Override
+    public void loadProperties() {
+        this.shiftLevelMin = getIntegerProperty("shift-level-min", SHIFT_LEVEL_MIN);
+        this.shiftLevelMax = getIntegerProperty("shift-level-max", SHIFT_LEVEL_MAX);
+
+        this.yLevel = getIntegerProperty("default-y-level", DEFAULT_Y_LEVEL);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -33,10 +47,10 @@ public class CanyonBrush extends AbstractBrush {
                 if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yLevel = NumericParser.parseInteger(parameters[1]);
                     if (yLevel != null) {
-                        if (yLevel < SHIFT_LEVEL_MIN) {
-                            yLevel = SHIFT_LEVEL_MIN;
-                        } else if (yLevel > SHIFT_LEVEL_MAX) {
-                            yLevel = SHIFT_LEVEL_MAX;
+                        if (yLevel < this.shiftLevelMin) {
+                            yLevel = this.shiftLevelMin;
+                        } else if (yLevel > this.shiftLevelMax) {
+                            yLevel = this.shiftLevelMax;
                         }
                         this.yLevel = yLevel;
                         messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);
@@ -94,7 +108,7 @@ public class CanyonBrush extends AbstractBrush {
                     currentYLevel++;
                 }
                 setBlockType(blockX + x, 0, blockZ + z, BlockTypes.BEDROCK);
-                for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
+                for (int y = 1; y < this.shiftLevelMin; y++) {
                     setBlockType(blockX + x, y, blockZ + z, BlockTypes.STONE);
                 }
             }

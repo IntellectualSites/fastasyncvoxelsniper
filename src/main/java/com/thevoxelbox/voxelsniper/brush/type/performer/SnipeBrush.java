@@ -7,6 +7,10 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 public class SnipeBrush extends AbstractPerformerBrush {
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         this.performer.perform(

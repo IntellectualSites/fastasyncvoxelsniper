@@ -17,11 +17,16 @@ import java.util.stream.Stream;
 
 public class Rotation3DBrush extends AbstractBrush {
 
+    private static final int DEFAULT_SE_YAW = 0;
+    private static final int DEFAULT_SE_PITCH = 0;
+    private static final int DEFAULT_SE_ROLL = 0;
+
     private int brushSize;
     private BlockState[][][] snap;
-    private double seYaw;
-    private double sePitch;
-    private double seRoll;
+
+    private double seYaw = DEFAULT_SE_YAW;
+    private double sePitch = DEFAULT_SE_PITCH;
+    private double seRoll = DEFAULT_SE_ROLL;
 
     // after all rotations, compare snapshot to new state of world?
     // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that

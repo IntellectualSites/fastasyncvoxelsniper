@@ -16,11 +16,18 @@ import java.util.stream.Stream;
 
 public class BiomeBrush extends AbstractBrush {
 
+    private static final BiomeType DEFAULT_BIOME_TYPE = BiomeTypes.PLAINS;
+
     private static final List<String> BIOMES = BiomeTypes.values().stream()
             .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
-    private BiomeType biomeType = BiomeTypes.PLAINS;
+    private BiomeType biomeType;
+
+    @Override
+    public void loadProperties() {
+        this.biomeType = (BiomeType) getRegistryProperty("default-biome-type", BiomeType.REGISTRY, DEFAULT_BIOME_TYPE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

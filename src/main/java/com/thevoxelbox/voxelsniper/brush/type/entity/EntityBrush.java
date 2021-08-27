@@ -20,11 +20,18 @@ import java.util.stream.Stream;
 
 public class EntityBrush extends AbstractBrush {
 
+    private static final EntityType DEFAULT_ENTITY_TYPE = EntityTypes.ZOMBIE;
+
     private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
             .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
-    private EntityType entityType = EntityTypes.ZOMBIE;
+    private EntityType entityType;
+
+    @Override
+    public void loadProperties() {
+        this.entityType = (EntityType) getRegistryProperty("default-entity-type", EntityType.REGISTRY, DEFAULT_ENTITY_TYPE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

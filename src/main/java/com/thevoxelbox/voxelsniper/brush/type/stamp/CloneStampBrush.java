@@ -16,6 +16,13 @@ import java.util.stream.Stream;
  */
 public class CloneStampBrush extends AbstractStampBrush {
 
+    private static final StampType DEFAULT_STAMP_TYPE = StampType.DEFAULT;
+
+    @Override
+    public void loadProperties() {
+        this.setStamp((StampType) getEnumProperty("default-stamp-type", StampType.class, DEFAULT_STAMP_TYPE));
+    }
+
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();

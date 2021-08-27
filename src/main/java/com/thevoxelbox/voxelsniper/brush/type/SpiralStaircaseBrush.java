@@ -19,9 +19,20 @@ import java.util.stream.Stream;
 // TODO rewrite to accept all stairs and steps.
 public class SpiralStaircaseBrush extends AbstractBrush {
 
-    private String stairType = "block"; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
-    private String sdirect = "c"; // "c" clockwise (default), "cc" counter-clockwise
-    private String sopen = "n"; // "n" north (default), "e" east, "world" south, "world" west
+    private static final String DEFAULT_STAIR_TYPE = "block";
+    private static final String DEFAULT_SDIRECT = "c";
+    private static final String DEFAULT_SOPEN = "n";
+
+    private String stairType; // "block" 1x1 blocks (default), "step" alternating step double step, "stair" staircase with blocks on corners
+    private String sdirect; // "c" clockwise (default), "cc" counter-clockwise
+    private String sopen; // "n" north (default), "e" east, "world" south, "world" west
+
+    @Override
+    public void loadProperties() {
+        this.stairType = getStringProperty("default-stair-type", DEFAULT_STAIR_TYPE);
+        this.sdirect = getStringProperty("default-sdirect", DEFAULT_SDIRECT);
+        this.sopen = getStringProperty("default-sopen", DEFAULT_SOPEN);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

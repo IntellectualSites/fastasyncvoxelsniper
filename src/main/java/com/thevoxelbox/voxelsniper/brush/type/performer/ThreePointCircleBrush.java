@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
+    private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
+
     private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
             .map(tolerance -> tolerance.name().toLowerCase(Locale.ROOT))
             .collect(Collectors.toList());
@@ -28,7 +30,13 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     private Vector coordinatesTwo;
     @Nullable
     private Vector coordinatesThree;
-    private Tolerance tolerance = Tolerance.DEFAULT;
+
+    private Tolerance tolerance;
+
+    @Override
+    public void loadProperties() {
+        this.tolerance = (Tolerance) getEnumProperty("default-tolerance", Tolerance.class, DEFAULT_TOLERANCE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

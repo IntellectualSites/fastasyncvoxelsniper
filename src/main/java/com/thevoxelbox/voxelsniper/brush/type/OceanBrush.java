@@ -19,9 +19,11 @@ import java.util.stream.Stream;
 
 public class OceanBrush extends AbstractBrush {
 
-    private static final int WATER_LEVEL_DEFAULT = 62; // y=63 -- we are using array indices here
     private static final int WATER_LEVEL_MIN = 12;
     private static final int LOW_CUT_LEVEL = 12;
+
+    private static final int DEFAULT_WATER_LEVEL = 62; // y=63 -- We are using array indices here.
+
     private static final MaterialSet EXCLUDED_MATERIALS = MaterialSet.builder()
             .with(BlockCategories.SAPLINGS)
             .with(BlockCategories.LOGS)
@@ -40,8 +42,19 @@ public class OceanBrush extends AbstractBrush {
             .add(BlockTypes.TALL_GRASS)
             .build();
 
-    private int waterLevel = WATER_LEVEL_DEFAULT;
+    private int waterLevelMin;
+    private int lowCutLevel;
+
+    private int waterLevel;
     private boolean coverFloor;
+
+    @Override
+    public void loadProperties() {
+        this.waterLevelMin = getIntegerProperty("water-level-min", WATER_LEVEL_MIN);
+        this.lowCutLevel = getIntegerProperty("low-cut-level", LOW_CUT_LEVEL);
+
+        this.waterLevel = getIntegerProperty("default-water-lever", DEFAULT_WATER_LEVEL);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -57,7 +70,7 @@ public class OceanBrush extends AbstractBrush {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("wlevel")) {
                     Integer waterLevel = NumericParser.parseInteger(parameters[1]);
-                    if (waterLevel != null && waterLevel > WATER_LEVEL_MIN) {
+                    if (waterLevel != null && waterLevel > this.waterLevelMin) {
                         this.waterLevel = waterLevel - 1;
                         messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
                     } else {
@@ -118,7 +131,7 @@ public class OceanBrush extends AbstractBrush {
             for (int z = minZ; z <= maxZ; z++) {
                 int currentHeight = getHeight(x, z);
                 int wLevelDiff = currentHeight - (this.waterLevel - 1);
-                int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), LOW_CUT_LEVEL);
+                int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), this.lowCutLevel);
                 int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY());
                 // go down from highest Y block down to new sea floor
                 for (int y = highestY; y > newSeaFloorLevel; y--) {
