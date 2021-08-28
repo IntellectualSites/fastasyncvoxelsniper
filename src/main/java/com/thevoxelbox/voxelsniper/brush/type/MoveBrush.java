@@ -193,6 +193,11 @@ public class MoveBrush extends AbstractBrush {
         private BlockVector3 location2;
         private World world2;
 
+        /**
+         * Create a new limited selection.
+         *
+         * @param maxBlockCount maximum number of blocks allowed inside
+         */
         public Selection(int maxBlockCount) {
             this.maxBlockCount = maxBlockCount;
         }

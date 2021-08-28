@@ -68,7 +68,7 @@ public class StencilListBrush extends AbstractBrush {
                 pasteOption = 2;
                 pasteParam = 1;
             } else {
-                // Reset to [name] parameter expectted
+                // Reset to [s] parameter expected.
                 pasteOption = 1;
                 pasteParam = 0;
             }

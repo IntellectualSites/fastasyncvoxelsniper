@@ -47,13 +47,14 @@ public class FlatOceanBrush extends AbstractBrush {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
                 } else if (firstParameter.equalsIgnoreCase("yl")) {
+                    EditSession editSession = getEditSession();
                     Integer newFloorLevel = NumericParser.parseInteger(parameters[1]);
                     if (newFloorLevel != null) {
                         if (newFloorLevel > this.waterLevel) {
                             newFloorLevel = this.waterLevel - 1;
-                            if (newFloorLevel == 0) {
-                                newFloorLevel = 1;
-                                this.waterLevel = 2;
+                            if (newFloorLevel <= editSession.getMinY()) {
+                                newFloorLevel = editSession.getMinY() + 1;
+                                this.waterLevel = editSession.getMinY() + 2;
                             }
                         }
                         this.floorLevel = newFloorLevel;

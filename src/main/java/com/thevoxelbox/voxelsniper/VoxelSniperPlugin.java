@@ -56,7 +56,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private VoxelSniperConfig loadConfig() {
         saveDefaultConfig();
         FileConfiguration config = getConfig();
-        VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(config);
+        VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(this, config);
 
         return new VoxelSniperConfig(
                 voxelSniperConfigLoader.isMessageOnLoginEnabled(),

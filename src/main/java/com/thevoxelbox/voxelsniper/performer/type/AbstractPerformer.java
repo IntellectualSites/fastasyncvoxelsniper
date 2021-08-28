@@ -11,11 +11,11 @@ public abstract class AbstractPerformer implements Performer {
 
     private PerformerProperties properties;
 
-    protected void setBlockType(EditSession editSession, int x, int y, int z, BlockType type) {
+    public void setBlockType(EditSession editSession, int x, int y, int z, BlockType type) {
         setBlockData(editSession, x, y, z, type.getDefaultState());
     }
 
-    protected void setBlockData(EditSession editSession, int x, int y, int z, BlockState blockState) {
+    public void setBlockData(EditSession editSession, int x, int y, int z, BlockState blockState) {
         editSession.setBlock(x, y, z, blockState);
         if (blockState.getMaterial().isTile()) {
             try {

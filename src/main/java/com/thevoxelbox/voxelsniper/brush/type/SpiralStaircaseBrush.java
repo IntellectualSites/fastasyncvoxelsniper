@@ -15,8 +15,6 @@ import org.bukkit.ChatColor;
 import java.util.List;
 import java.util.stream.Stream;
 
-// TODO maybe add an arg to pass the width of the staircase, voxel height is the default implemented arg for several brushes.
-// TODO rewrite to accept all stairs and steps.
 public class SpiralStaircaseBrush extends AbstractBrush {
 
     private static final String DEFAULT_STAIR_TYPE = "block";

@@ -40,7 +40,8 @@ public class CanyonBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Canyon Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the Level to which the land will be shifted down to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the y-level to which the land will be shifted down to n" +
+                    ".");
         } else {
             if (parameters.length == 2) {
 
@@ -49,8 +50,10 @@ public class CanyonBrush extends AbstractBrush {
                     if (yLevel != null) {
                         if (yLevel < this.shiftLevelMin) {
                             yLevel = this.shiftLevelMin;
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer >=" + this.shiftLevelMax + ".");
                         } else if (yLevel > this.shiftLevelMax) {
                             yLevel = this.shiftLevelMax;
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer <=" + this.shiftLevelMin + ".");
                         }
                         this.yLevel = yLevel;
                         messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);

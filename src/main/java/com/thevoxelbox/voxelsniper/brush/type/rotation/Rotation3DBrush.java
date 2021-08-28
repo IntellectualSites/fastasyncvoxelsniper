@@ -11,6 +11,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
+import org.checkerframework.checker.units.qual.degrees;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,6 +39,8 @@ public class Rotation3DBrush extends AbstractBrush {
 
         // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
         if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "The gradian is a unit of angle measurement different from the degree. " +
+                    "On average, 180 degrees = " + DECIMAL_FORMAT.format(Math.PI) + " radians.");
             messenger.sendMessage(ChatColor.GOLD + "Rotate Brush Brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b rot3 p [n] -- Sets degrees of pitch rotation to n (rotation about the Z" +
                     " axis).");
@@ -47,20 +50,21 @@ public class Rotation3DBrush extends AbstractBrush {
                     " about the Y axis).");
         } else {
             if (parameters.length == 2) {
-                Double value = NumericParser.parseDouble(parameters[1]);
-                if (value != null && value >= 0 && value <= 359) {
+                Double degreesAngle = NumericParser.parseDouble(parameters[1]);
+
+                if (degreesAngle != null && degreesAngle >= 0 && degreesAngle <= 359) {
                     if (firstParameter.equalsIgnoreCase("p")) {
-                        this.sePitch = Math.toRadians(value);
+                        this.sePitch = Math.toRadians(degreesAngle);
                         messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.sePitch) + " gradians");
+                                DECIMAL_FORMAT.format(this.sePitch) + " gradians (" + degreesAngle + " degrees)");
                     } else if (firstParameter.equalsIgnoreCase("r")) {
-                        this.seRoll = Math.toRadians(value);
+                        this.seRoll = Math.toRadians(degreesAngle);
                         messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.seRoll) + " gradians");
+                                DECIMAL_FORMAT.format(this.seRoll) + " gradians (" + degreesAngle + " degrees)");
                     } else if (firstParameter.equalsIgnoreCase("y")) {
-                        this.seYaw = Math.toRadians(value);
+                        this.seYaw = Math.toRadians(degreesAngle);
                         messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.seYaw) + " gradians");
+                                DECIMAL_FORMAT.format(this.seYaw) + " gradians (" + degreesAngle + " degrees)");
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");

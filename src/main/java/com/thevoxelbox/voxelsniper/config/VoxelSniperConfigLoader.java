@@ -2,21 +2,27 @@ package com.thevoxelbox.voxelsniper.config;
 
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Configuration storage defining global configurations for VoxelSniper.
  */
 public class VoxelSniperConfigLoader {
 
+    private static final String CONFIG_VERSION = "config-version";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
     private static final String DEFAULT_BLOCK_MATERIAL = "default-block-material";
     private static final String DEFAULT_REPLACE_BLOCK_MATERIAL = "default-replace-block-material";
@@ -28,22 +34,100 @@ public class VoxelSniperConfigLoader {
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
     protected static final String BRUSH_PROPERTIES = "brush-properties";
 
+    private static final int CONFIG_VERSION_VALUE = 1;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final int DEFAULT_BRUSH_SIZE_VALUE = 3;
     private static final int DEFAULT_LITESNIPER_MAX_BRUSH_SIZE = 5;
+    private static final List<BlockType> DEFAULT_LITESNIPER_RESTRICTED_MATERIALS = Arrays.asList(
+            BlockTypes.BARRIER,
+            BlockTypes.BEDROCK
+    );
     private static final int DEFAULT_BRUSH_SIZE_WARNING_THRESHOLD = 20;
     private static final int DEFAULT_VOXEL_HEIGHT_VALUE = 1;
     private static final int DEFAULT_CYLINDER_CENTER_VALUE = 0;
+    private static final Map<String, Map<String, Object>> DEFAULT_BRUSH_PROPERTIES = null;
 
+    private final VoxelSniperPlugin plugin;
     private final FileConfiguration config;
 
     /**
-     * @param config Configuration that is going to be used.
+     * Create a new cached voxel configuration loader.
+     *
+     * @param plugin plugin instance
+     * @param config configuration that is going to be used.
      */
-    public VoxelSniperConfigLoader(FileConfiguration config) {
+    public VoxelSniperConfigLoader(VoxelSniperPlugin plugin, FileConfiguration config) {
+        this.plugin = plugin;
         this.config = config;
+        updateConfig();
+    }
+
+    /**
+     * Update config settings the current config version and apply changes.
+     */
+    public void updateConfig() {
+        int currentConfigVersion = getConfigVersion();
+        if (currentConfigVersion != CONFIG_VERSION_VALUE) {
+            Bukkit.getLogger().warning("Invalid config file found! Trying to apply required changes...");
+            setConfigVersion(CONFIG_VERSION_VALUE);
+
+            if (currentConfigVersion < 1) {
+                Map<String, Object> oldEntries = new HashMap<>();
+                Stream.of(MESSAGE_ON_LOGIN_ENABLED, LITESNIPER_MAX_BRUSH_SIZE, LITESNIPER_RESTRICTED_MATERIALS)
+                        .forEach(key -> {
+                            if (key.equals(LITESNIPER_RESTRICTED_MATERIALS)) {
+                                oldEntries.put(key, getLitesniperRestrictedMaterials());
+                            } else {
+                                oldEntries.put(key, this.config.get(key));
+                            }
+                            this.config.set(key, null);
+                        });
+
+                setMessageOnLoginEnabled((boolean) oldEntries.getOrDefault(
+                        MESSAGE_ON_LOGIN_ENABLED,
+                        DEFAULT_MESSAGE_ON_LOGIN_ENABLED
+                ));
+                setDefaultBlockMaterial(getDefaultReplaceBlockMaterial());
+                setDefaultReplaceBlockMaterial(getDefaultReplaceBlockMaterial());
+                setDefaultBrushSize(getDefaultBrushSize());
+                setLitesniperMaxBrushSize((int) oldEntries.getOrDefault(
+                        LITESNIPER_MAX_BRUSH_SIZE,
+                        DEFAULT_LITESNIPER_MAX_BRUSH_SIZE
+                ));
+                setLitesniperRestrictedMaterials((List<BlockType>) oldEntries.getOrDefault(
+                        LITESNIPER_RESTRICTED_MATERIALS,
+                        DEFAULT_LITESNIPER_RESTRICTED_MATERIALS
+                ));
+                setBrushSizeWarningThreshold(getDefaultBrushSize());
+                setDefaultVoxelHeight(getDefaultVoxelHeight());
+                setDefaultCylinderCenter(getDefaultCylinderCenter());
+                setBrushProperties(getBrushProperties());
+            }
+
+            plugin.saveConfig();
+            Bukkit.getLogger().info("Your config file is now up-to-date! (v" + CONFIG_VERSION_VALUE + ")");
+        }
+
+    }
+
+    /**
+     * Return current config version.
+     *
+     * @return current version
+     */
+    public int getConfigVersion() {
+        return this.config.getInt(CONFIG_VERSION, 0);
+    }
+
+    /**
+     * Set current config version.
+     *
+     * @param version new version
+     */
+    public void setConfigVersion(int version) {
+        this.config.set(CONFIG_VERSION, version);
     }
 
     /**
@@ -168,7 +252,7 @@ public class VoxelSniperConfigLoader {
      */
     public void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
         this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
-                .map(BlockType::getId));
+                .map(BlockType::getId).collect(Collectors.toList()));
     }
 
     /**
@@ -236,7 +320,7 @@ public class VoxelSniperConfigLoader {
 
         ConfigurationSection brushesSection = config.getConfigurationSection(BRUSH_PROPERTIES);
         if (brushesSection == null) {
-            return brushesMap;
+            return DEFAULT_BRUSH_PROPERTIES;
         }
 
         for (String brush : brushesSection.getKeys(false)) {

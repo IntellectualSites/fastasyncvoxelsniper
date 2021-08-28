@@ -107,7 +107,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected int clampY(int y) {
+    public int clampY(int y) {
         int clampedY = y;
         int minHeight = editSession.getMinY();
         if (clampedY <= minHeight) {
@@ -121,18 +121,18 @@ public abstract class AbstractBrush implements Brush {
         return clampedY;
     }
 
-    protected BlockState clampY(BlockVector3 position) {
+    public BlockState clampY(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         return clampY(x, y, z);
     }
 
-    protected BlockState clampY(int x, int y, int z) {
+    public BlockState clampY(int x, int y, int z) {
         return getBlock(x, clampY(y), z);
     }
 
-    protected void setBiome(int x, int y, int z, BiomeType biomeType) {
+    public void setBiome(int x, int y, int z, BiomeType biomeType) {
         try {
             editSession.setBiome(x, y, z, biomeType);
         } catch (WorldEditException e) {
@@ -140,7 +140,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected int getHighestTerrainBlock(int x, int z, int minY, int maxY) {
+    public int getHighestTerrainBlock(int x, int z, int minY, int maxY) {
         try {
             return editSession.getHighestTerrainBlock(x, z, minY, maxY);
         } catch (WorldEditException e) {
@@ -148,7 +148,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected boolean regenerateChunk(int chunkX, int chunkZ, BiomeType biomeType) {
+    public boolean regenerateChunk(int chunkX, int chunkZ, BiomeType biomeType) {
         try {
             World world = BukkitAdapter.adapt(editSession.getWorld());
             int minX = chunkX << 4;
@@ -172,7 +172,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected void refreshChunk(int chunkX, int chunkZ) {
+    public void refreshChunk(int chunkX, int chunkZ) {
         try {
             editSession.getWorld().refreshChunk(chunkX, chunkZ);
         } catch (WorldEditException e) {
@@ -180,7 +180,7 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected boolean generateTree(BlockVector3 location, TreeGenerator.TreeType treeType) {
+    public boolean generateTree(BlockVector3 location, TreeGenerator.TreeType treeType) {
         try {
             return treeType.generate(editSession, location);
         } catch (WorldEditException e) {
@@ -188,14 +188,14 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected Entity createEntity(BlockVector3 location, org.bukkit.entity.Entity bukkitEntity) {
+    public Entity createEntity(BlockVector3 location, org.bukkit.entity.Entity bukkitEntity) {
         return editSession.createEntity(
                 new Location(editSession, location.getX(), location.getY(), location.getZ()),
                 BukkitAdapter.adapt(bukkitEntity).getState()
         );
     }
 
-    protected Direction getDirection(BlockVector3 first, BlockVector3 second) {
+    public Direction getDirection(BlockVector3 first, BlockVector3 second) {
         for (Direction direction : Direction.values()) {
             if (first.getX() + direction.getX() == second.getX()
                     && first.getY() + direction.getY() == second.getY()
@@ -206,48 +206,48 @@ public abstract class AbstractBrush implements Brush {
         return null;
     }
 
-    protected BlockVector3 getRelativeBlock(BlockVector3 origin, Direction direction) {
+    public BlockVector3 getRelativeBlock(BlockVector3 origin, Direction direction) {
         int x = origin.getX();
         int y = origin.getY();
         int z = origin.getZ();
         return getRelativeBlock(x, y, z, direction);
     }
 
-    protected BlockVector3 getRelativeBlock(int x, int y, int z, Direction direction) {
+    public BlockVector3 getRelativeBlock(int x, int y, int z, Direction direction) {
         return direction.toBlockVector().add(x, y, z);
     }
 
-    protected BlockType getBlockType(BlockVector3 position) {
+    public BlockType getBlockType(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         return getBlockType(x, y, z);
     }
 
-    protected BlockType getBlockType(int x, int y, int z) {
+    public BlockType getBlockType(int x, int y, int z) {
         BlockState block = getBlock(x, y, z);
         return block.getBlockType();
     }
 
-    protected void setBlockType(BlockVector3 position, BlockType type) {
+    public void setBlockType(BlockVector3 position, BlockType type) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         setBlockType(x, y, z, type);
     }
 
-    protected void setBlockType(int x, int y, int z, BlockType type) {
+    public void setBlockType(int x, int y, int z, BlockType type) {
         setBlockData(x, y, z, type.getDefaultState());
     }
 
-    protected void setBlockData(BlockVector3 position, BlockState blockState) {
+    public void setBlockData(BlockVector3 position, BlockState blockState) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         setBlockData(x, y, z, blockState);
     }
 
-    protected void setBlockData(int x, int y, int z, BlockState blockState) {
+    public void setBlockData(int x, int y, int z, BlockState blockState) {
         editSession.setBlock(x, y, z, blockState);
         if (blockState.getMaterial().isTile()) {
             try {
@@ -258,36 +258,36 @@ public abstract class AbstractBrush implements Brush {
         }
     }
 
-    protected BaseBlock getFullBlock(BlockVector3 position) {
+    public BaseBlock getFullBlock(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         return getFullBlock(x, y, z);
     }
 
-    protected BaseBlock getFullBlock(int x, int y, int z) {
+    public BaseBlock getFullBlock(int x, int y, int z) {
         return editSession.getFullBlock(x, y, z);
     }
 
-    protected BlockState getBlock(BlockVector3 position) {
+    public BlockState getBlock(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         return getBlock(x, y, z);
     }
 
-    protected BlockState getBlock(int x, int y, int z) {
+    public BlockState getBlock(int x, int y, int z) {
         return editSession.getBlock(x, y, z);
     }
 
-    protected void setBlock(BlockVector3 position, BaseBlock block) {
+    public void setBlock(BlockVector3 position, BaseBlock block) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
         setBlock(x, y, z, block);
     }
 
-    protected void setBlock(int x, int y, int z, BaseBlock block) {
+    public void setBlock(int x, int y, int z, BaseBlock block) {
         editSession.setBlock(x, y, z, block);
     }
 
@@ -303,7 +303,7 @@ public abstract class AbstractBrush implements Brush {
      * @param defaultValue the default value to set and return
      * @return the associated proprorty, or the default value
      */
-    protected Object getProperty(String propertyName, Object defaultValue) {
+    public Object getProperty(String propertyName, Object defaultValue) {
         return getProperty(propertyName, defaultValue, defaultValue);
     }
 
@@ -315,7 +315,7 @@ public abstract class AbstractBrush implements Brush {
      * @param defaultConfigValue the default config value to set, objets such as Enum and Registry values are not serializable*
      * @return the associated proprorty, or the default value
      */
-    protected Object getProperty(String propertyName, Object defaultValue, Object defaultConfigValue) {
+    public Object getProperty(String propertyName, Object defaultValue, Object defaultConfigValue) {
         String brush = this.properties.getName();
         Object currentPropertyValue = CONFIG.getBrushProperties()
                 .computeIfAbsent(brush, brushName -> new HashMap<>())
@@ -326,7 +326,7 @@ public abstract class AbstractBrush implements Brush {
         return currentPropertyValue;
     }
 
-    protected String getStringProperty(String propertyName, String defaultValue) {
+    public String getStringProperty(String propertyName, String defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue);
 
         if (propertyValue instanceof String) {
@@ -338,7 +338,7 @@ public abstract class AbstractBrush implements Brush {
         return defaultValue;
     }
 
-    protected boolean getBooleanProperty(String propertyName, boolean defaultValue) {
+    public boolean getBooleanProperty(String propertyName, boolean defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue);
 
         if (propertyValue instanceof Boolean) {
@@ -350,7 +350,7 @@ public abstract class AbstractBrush implements Brush {
         return defaultValue;
     }
 
-    protected int getIntegerProperty(String propertyName, int defaultValue) {
+    public int getIntegerProperty(String propertyName, int defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue);
 
         if (propertyValue instanceof Integer) {
@@ -362,7 +362,7 @@ public abstract class AbstractBrush implements Brush {
         return defaultValue;
     }
 
-    protected double getDoubleProperty(String propertyName, double defaultValue) {
+    public double getDoubleProperty(String propertyName, double defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue);
 
         if (propertyValue instanceof Double) {
@@ -374,7 +374,7 @@ public abstract class AbstractBrush implements Brush {
         return defaultValue;
     }
 
-    protected List<?> getListProperty(String propertyName, List<?> defaultValue) {
+    public List<?> getListProperty(String propertyName, List<?> defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue);
 
         if (propertyValue instanceof List) {
@@ -386,7 +386,7 @@ public abstract class AbstractBrush implements Brush {
         return defaultValue;
     }
 
-    protected Object getRegistryProperty(
+    public Object getRegistryProperty(
             String propertyName, NamespacedRegistry<? extends Keyed> registry, Keyed
             defaultValue
     ) {
@@ -405,7 +405,7 @@ public abstract class AbstractBrush implements Brush {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected Enum<?> getEnumProperty(String propertyName, Class<?> enumClass, Enum<?> defaultValue) {
+    public Enum<?> getEnumProperty(String propertyName, Class<?> enumClass, Enum<?> defaultValue) {
         Object propertyValue = this.getProperty(propertyName, defaultValue, defaultValue.name());
 
         if (propertyValue instanceof String) {

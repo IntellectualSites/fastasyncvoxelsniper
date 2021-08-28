@@ -1,19 +1,18 @@
-# DON'T MODIFY THIS LINE!
-config-version: 1
+# The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
 message-on-login-enabled: true
-default-block-material: AIR
-default-replace-block-material: AIR
+default-block-material: minecraft:air
+default-replace-block-material: minecraft:air
 default-brush-size: 3
-litesniper-max-brush-size: 5
+litesniper-max-brush-size: 7
 litesniper-restricted-materials:
-    - BARRIER
-    - BEDROCK
-brush-size-warning-threshold: 20
+    - minecraft:barrier
+    - minecraft:bedrock
+brush-size-warning-threshold: 3
 default-voxel-height: 1
 default-cylinder-center: 0
 brush-properties:
     Biome:
-        default-biome-type: PLAINS
+        default-biome-type: minecraft:plains
     Blob:
         growth-percent-min: 1
         growth-percent-max: 9999
@@ -49,7 +48,7 @@ brush-properties:
         default-growth-percent: 1000
         default-splatter-recursions: 3
     Entity:
-        default-entity-type: ZOMBIE
+        default-entity-type: minecraft:zombie
     Entity Removal:
         default-exemptions:
             - org.bukkit.entity.Player

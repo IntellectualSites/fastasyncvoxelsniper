@@ -65,7 +65,7 @@ public class OceanBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.BLUE + "Parameters:");
             messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [n] " + ChatColor.BLUE + "-- Sets the water level to n.");
             messenger.sendMessage(ChatColor.GREEN + "/b o cfloor [true|false] " + ChatColor.BLUE + "-- Enables or disables " +
-                    "sea floor cover. (e.g. -cfloor true -> Cover material will be your voxel material)");
+                    "sea floor cover. (e.g. /b o cfloor true -> Cover material will be your voxel material.)");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("wlevel")) {
@@ -74,7 +74,7 @@ public class OceanBrush extends AbstractBrush {
                         this.waterLevel = waterLevel;
                         messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer greater " + this.waterLevelMin + ".");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer >" + this.waterLevelMin + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("cfloor")) {
                     this.coverFloor = Boolean.parseBoolean(parameters[1]);

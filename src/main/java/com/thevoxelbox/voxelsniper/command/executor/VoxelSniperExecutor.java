@@ -137,8 +137,8 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
             String argument = arguments[0];
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return Stream.concat(
-                            Stream.of("brushes", "range", "perf", "perflong", "enable", "disable", "toggle"),
-                            sender.hasPermission("voxelsniper.admin") ? Stream.of("info", "reload") : Stream.empty()
+                            Stream.of("brushes", "range", "perf", "perflong", "enable", "disable", "toggle", "info"),
+                            sender.hasPermission("voxelsniper.admin") ? Stream.of("reload") : Stream.empty()
                     )
                     .filter(subCommand -> subCommand.startsWith(argumentLowered))
                     .collect(Collectors.toList());
