@@ -113,19 +113,14 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("info")) {
-                if (sender.hasPermission("voxelsniper.admin")) {
-                    sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
-                    sender.sendMessage(plugin.getDescription().getDescription());
-                    sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
-                } else {
-                    sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
-                            "node 'voxelsniper.admin'");
-                }
+                sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
+                sender.sendMessage(plugin.getDescription().getDescription());
+                sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
                 return;
             } else if (firstArgument.equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("voxelsniper.admin")) {
                     plugin.reload();
-                    sender.sendMessage(ChatColor.GREEN + "FastAsyncVoxelSniper reloaded!");
+                    sender.sendMessage(ChatColor.GREEN + "FastAsyncVoxelSniper config reloaded!");
                 } else {
                     sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
                             "node 'voxelsniper.admin'");

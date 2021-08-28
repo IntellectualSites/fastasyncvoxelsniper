@@ -28,7 +28,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Ellipse Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b elo [true|false] -- Toggles offset.");
+            messenger.sendMessage(ChatColor.AQUA + "/b elo [true|false] -- Toggles offset. Default is false.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo x [n] -- Sets X radius to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo y [n] -- Sets Y radius to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo z [n] -- Sets Z radius to n.");

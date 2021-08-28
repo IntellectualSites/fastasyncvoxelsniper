@@ -37,7 +37,8 @@ public class BlobBrush extends AbstractPerformerBrush {
                         this.growthPercent = growPercent;
                         messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + this.growthPercent / 100 + "%");
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                        messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer " + this.growthPercentMin +
+                                "-" + this.growthPercentMax + ".");
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");

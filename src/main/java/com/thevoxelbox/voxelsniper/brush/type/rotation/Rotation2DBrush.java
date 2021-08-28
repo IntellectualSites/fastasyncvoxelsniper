@@ -34,7 +34,7 @@ public class Rotation2DBrush extends AbstractBrush {
                 Double degreesAngle = NumericParser.parseDouble(parameters[0]);
                 if (degreesAngle != null) {
                     this.angle = Math.toRadians(degreesAngle);
-                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle + " gradians");
+                    messenger.sendMessage(ChatColor.GREEN + "Angle set to: " + DECIMAL_FORMAT.format(this.angle) + " gradians");
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number.");
                 }

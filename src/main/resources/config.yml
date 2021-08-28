@@ -1,9 +1,13 @@
+# DON'T MODIFY THIS LINE!
+config-version: 1
 message-on-login-enabled: true
 default-block-material: AIR
 default-replace-block-material: AIR
 default-brush-size: 3
 litesniper-max-brush-size: 5
-litesniper-restricted-materials: []
+litesniper-restricted-materials:
+    - BARRIER
+    - BEDROCK
 brush-size-warning-threshold: 20
 default-voxel-height: 1
 default-cylinder-center: 0
@@ -15,13 +19,13 @@ brush-properties:
         growth-percent-max: 9999
         default-growth-percent: 1000
     Canyon:
-        shift-level-min: 10
+        shift-level-min: -54
         shift-level-max: 60
-        default-y-level: 10
+        default-y-level: -54
     Canyon Selection:
-        shift-level-min: 10
+        shift-level-min: -54
         shift-level-max: 60
-        default-y-level: 10
+        default-y-level: -54
     Clone Stamp:
         default-stamp-type: DEFAULT
     Copy Pasta:
@@ -85,22 +89,34 @@ brush-properties:
     Jockey:
         entity-stack-limit: 50
         default-jockey-type: NORMAL_ALL_ENTITIES
+    Move:
+        max-block-count: 5000000
     Ocean:
         water-level-min: 12
         low-cut-level: 12
-        default-water-lever: 62
+        default-water-lever: 63
     Overlay:
         default-depth: 3
-    Pull:
-        default-pinch: 1
-        default-bubble: 0
     Punish:
         max-random-teleportation-range: 400
         infini-punish-size: -3
         default-punishment: FIRE
         default-punish-level: 10
         default-punish-duration: 60
+    Pull:
+        default-pinch: 1
+        default-bubble: 0
     Ring:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Splatter Ball:
         seed-percent-min: 1
         seed-percent-max: 9999
         growth-percent-min: 1
@@ -114,24 +130,6 @@ brush-properties:
         depth-min: 1
         depth-max: 64
         default-depth: 24
-    Set:
-        selection-size-max: 5000000
-    Shell Set:
-        max-size: 5000000
-    Spiral Staircase:
-        default-stair-type: block
-        default-sdirect: c
-        default-sopen: n
-    Splatter Ball:
-        seed-percent-min: 1
-        seed-percent-max: 9999
-        growth-percent-min: 1
-        growth-percent-max: 9999
-        splatter-recursions-min: 1
-        splatter-recursions-max: 10
-        default-seed-percent: 1000
-        default-growth-percent: 1000
-        default-splatter-recursions: 3
     Splatter Disc:
         seed-percent-min: 1
         seed-percent-max: 9999
@@ -142,6 +140,12 @@ brush-properties:
         default-seed-percent: 1000
         default-growth-percent: 1000
         default-splatter-recursions: 3
+    Set:
+        selection-size-max: 5000000
+    Shell Set:
+        max-size: 5000000
+    Stencil List:
+        default-paste-option: 1
     Splatter Overlay:
         seed-percent-min: 1
         seed-percent-max: 9999
@@ -154,6 +158,10 @@ brush-properties:
         default-splatter-recursions: 3
         default-depth: 3
         default-y-offset: 0
+    Spiral Staircase:
+        default-stair-type: block
+        default-sdirect: c
+        default-sopen: n
     Splatter Voxel:
         seed-percent-min: 1
         seed-percent-max: 9999
@@ -176,11 +184,9 @@ brush-properties:
         default-splatter-recursions: 3
     Stencil:
         default-paste-option: 1
-    Stencil List:
-        default-paste-option: 1
-    Three Point Circle:
-        default-tolerance: DEFAULT
     Tree Snipe:
         default-tree-type: TREE
+    Three Point Circle:
+        default-tolerance: DEFAULT
     Underlay:
         default-depth: 3

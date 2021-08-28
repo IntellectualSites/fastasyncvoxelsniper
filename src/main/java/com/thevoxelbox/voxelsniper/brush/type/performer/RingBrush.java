@@ -45,7 +45,7 @@ public class RingBrush extends AbstractPerformerBrush {
                     Double innerSize = NumericParser.parseDouble(parameters[1]);
                     if (innerSize != null) {
                         this.innerSize = innerSize;
-                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
+                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to: " + ChatColor.RED + this.innerSize);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }

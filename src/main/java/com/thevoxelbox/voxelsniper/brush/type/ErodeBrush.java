@@ -54,7 +54,7 @@ public class ErodeBrush extends AbstractBrush {
             if (preset != null) {
                 try {
                     this.currentPreset = preset.getPreset();
-                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Brush preset set to " + preset.getName());
+                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Brush preset set to: " + preset.getName());
                     return;
                 } catch (IllegalArgumentException exception) {
                     messenger.sendMessage(ChatColor.RED + "Invalid preset.");
@@ -275,10 +275,10 @@ public class ErodeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         messenger.sendBrushSizeMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
-        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces());
+        messenger.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to: " + this.currentPreset.getFillFaces());
+        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion());
+        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion());
     }
 
     private enum Preset {

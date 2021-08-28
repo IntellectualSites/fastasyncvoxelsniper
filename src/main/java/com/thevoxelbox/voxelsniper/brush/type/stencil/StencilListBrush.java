@@ -40,6 +40,9 @@ public class StencilListBrush extends AbstractBrush {
     @Override
     public void loadProperties() {
         this.pasteOption = (byte) getIntegerProperty("default-paste-option", DEFAULT_PASTE_OPTION);
+
+        File dataFolder = new File(PLUGIN_DATA_FOLDER, "/stencilLists");
+        dataFolder.mkdirs();
     }
 
     @Override
@@ -65,11 +68,11 @@ public class StencilListBrush extends AbstractBrush {
                 pasteOption = 2;
                 pasteParam = 1;
             } else {
-                // Reset to [name] parameter expectsted.
+                // Reset to [name] parameter expectted
                 pasteOption = 1;
                 pasteParam = 0;
             }
-            if (parameters.length != 2 + pasteParam) {
+            if (parameters.length != 1 + pasteParam) {
                 messenger.sendMessage(ChatColor.RED + "Missing arguments, this command expects more.");
                 return;
             }
@@ -77,7 +80,7 @@ public class StencilListBrush extends AbstractBrush {
             this.pasteOption = pasteOption;
             try {
                 this.filename = parameters[1 + pasteParam];
-                File file = new File(plugin.getDataFolder() + "/stencilLists/" + this.filename + ".txt");
+                File file = new File(PLUGIN_DATA_FOLDER, "/stencilLists/" + this.filename + ".txt");
                 if (file.exists()) {
                     messenger.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");
                     readStencilList();
@@ -118,7 +121,7 @@ public class StencilListBrush extends AbstractBrush {
 
     private void readStencilList() {
         stencilList.clear();
-        File file = new File(plugin.getDataFolder() + "/stencilLists/" + this.filename + ".txt");
+        File file = new File(PLUGIN_DATA_FOLDER, "/stencilLists/" + this.filename + ".txt");
         if (file.exists()) {
             try {
                 Scanner scanner = new Scanner(file);
@@ -142,7 +145,7 @@ public class StencilListBrush extends AbstractBrush {
         }
         String stencilName = this.readRandomStencil();
         messenger.sendMessage(stencilName);
-        File file = new File(plugin.getDataFolder() + "/stencils/" + stencilName + ".vstencil");
+        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -318,7 +321,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File(plugin.getDataFolder() + "/stencils/" + stencilName + ".vstencil");
+        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -494,7 +497,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File(plugin.getDataFolder() + "/stencils/" + stencilName + ".vstencil");
+        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
@@ -678,7 +681,7 @@ public class StencilListBrush extends AbstractBrush {
             return;
         }
         String stencilName = this.readRandomStencil();
-        File file = new File(plugin.getDataFolder() + "/stencils/" + stencilName + ".vstencil");
+        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
                 DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));

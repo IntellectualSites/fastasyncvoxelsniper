@@ -84,7 +84,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         this.seedPercent = seedPercent;
                         messenger.sendMessage(ChatColor.AQUA + "Seed percent set to: " + this.seedPercent / 100 + "%");
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Seed percent must be an integer 1-9999!");
+                        messenger.sendMessage(ChatColor.RED + "Seed percent must be an integer " + this.seedPercentMin +
+                                "-" + this.seedPercentMax + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("g")) {
                     Integer growPercent = NumericParser.parseInteger(parameters[1]);
@@ -92,7 +93,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         this.growthPercent = growPercent;
                         messenger.sendMessage(ChatColor.AQUA + "Growth percent set to: " + this.growthPercent / 100 + "%");
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer 1-9999!");
+                        messenger.sendMessage(ChatColor.RED + "Growth percent must be an integer " + this.growthPercentMin +
+                                "-" + this.growthPercentMax + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("r")) {
                     Integer splatterRecursions = NumericParser.parseInteger(parameters[1]);
@@ -101,7 +103,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         this.splatterRecursions = splatterRecursions;
                         messenger.sendMessage(ChatColor.AQUA + "Recursions set to: " + this.splatterRecursions);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Recursions must be an integer 1-10!");
+                        messenger.sendMessage(ChatColor.RED + "Recursions must be an integer " + this.splatterRecursionsMin +
+                                "-" + this.splatterRecursionsMax + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("yoff")) {
                     Integer yOffset = NumericParser.parseInteger(parameters[1]);

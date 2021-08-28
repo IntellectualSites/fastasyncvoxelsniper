@@ -58,7 +58,7 @@ public class CloneStampBrush extends AbstractStampBrush {
                     Integer cylinderCenter = NumericParser.parseInteger(parameters[1]);
                     if (cylinderCenter != null) {
                         toolkitProperties.setCylinderCenter(cylinderCenter);
-                        messenger.sendMessage(ChatColor.BLUE + "Center set to " + toolkitProperties.getCylinderCenter());
+                        messenger.sendMessage(ChatColor.BLUE + "Center set to: " + toolkitProperties.getCylinderCenter());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }

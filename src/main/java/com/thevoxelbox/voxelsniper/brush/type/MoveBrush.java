@@ -18,6 +18,8 @@ import java.util.stream.Stream;
  */
 public class MoveBrush extends AbstractBrush {
 
+    private static final int MAX_BLOCK_COUNT = 5000000;
+
     /**
      * Saved direction.
      */
@@ -27,6 +29,13 @@ public class MoveBrush extends AbstractBrush {
      */
     @Nullable
     private Selection selection;
+
+    private int maxBlockCount;
+
+    @Override
+    public void loadProperties() {
+        this.maxBlockCount = getIntegerProperty("max-block-count", MAX_BLOCK_COUNT);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -101,7 +110,7 @@ public class MoveBrush extends AbstractBrush {
     public void handleArrowAction(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.selection == null) {
-            this.selection = new Selection();
+            this.selection = new Selection(this.maxBlockCount);
         }
         this.selection.setLocation1(this.getTargetBlock(), getEditSession().getWorld());
         messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 1 set.");
@@ -119,7 +128,7 @@ public class MoveBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.selection == null) {
-            this.selection = new Selection();
+            this.selection = new Selection(this.maxBlockCount);
         }
         this.selection.setLocation2(this.getTargetBlock(), getEditSession().getWorld());
         messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 2 set.");
@@ -140,7 +149,7 @@ public class MoveBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         List<BlockVector3> locations = selection.getLocations();
         if (!locations.isEmpty()) {
-            Selection newSelection = new Selection();
+            Selection newSelection = new Selection(this.maxBlockCount);
             BlockVector3 movedLocation1 = selection.getLocation1();
             movedLocation1.add(direction[0], direction[1], direction[2]);
             BlockVector3 movedLocation2 = selection.getLocation2();
@@ -173,10 +182,8 @@ public class MoveBrush extends AbstractBrush {
 
     private static class Selection {
 
-        /**
-         * Maximum amount of Blocks allowed blockPositionY the Selection.
-         */
-        private static final int MAX_BLOCK_COUNT = 5000000;
+        private final int maxBlockCount;
+
         /**
          * Calculated Locations of the selection.
          */
@@ -185,6 +192,10 @@ public class MoveBrush extends AbstractBrush {
         private World world1;
         private BlockVector3 location2;
         private World world2;
+
+        public Selection(int maxBlockCount) {
+            this.maxBlockCount = maxBlockCount;
+        }
 
         /**
          * Calculates region, then saves all Blocks as Locations.
@@ -207,8 +218,9 @@ public class MoveBrush extends AbstractBrush {
                     int highX = Math.max(x1, x2);
                     int highY = Math.max(y1, y2);
                     int highZ = Math.max(z1, z2);
-                    if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > MAX_BLOCK_COUNT) {
-                        throw new RuntimeException(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+                    if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > this.maxBlockCount) {
+                        throw new RuntimeException(ChatColor.RED + "Selection size above " + this.maxBlockCount + " limit, " +
+                                "please use a smaller selection.");
                     }
                     for (int y = lowY; y <= highY; y++) {
                         for (int x = lowX; x <= highX; x++) {

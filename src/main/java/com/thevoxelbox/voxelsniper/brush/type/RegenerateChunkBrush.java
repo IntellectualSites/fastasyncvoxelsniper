@@ -60,7 +60,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
                             messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
                         }
                     }
-                    messenger.sendMessage(ChatColor.GOLD + "Biome type set to " + ChatColor.DARK_GREEN +
+                    messenger.sendMessage(ChatColor.GOLD + "Biome type set to: " + ChatColor.DARK_GREEN +
                             (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
                 }
             } else {

@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 public interface Performer {
 
     /**
-     * Initialize performer.
+     * Initialize performer data.
      *
      * @param snipe Snipe
      */

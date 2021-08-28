@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
@@ -9,6 +10,7 @@ import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
 import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import io.papermc.lib.PaperLib;
 import org.bstats.bukkit.Metrics;
@@ -105,12 +107,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
     private void testRegistries() {
         // Load brushes and performers to ensure their configuration is up-to-date.
-        this.brushRegistry.getBrushesProperties().forEach((key, properties) -> {
+        this.brushRegistry.getBrushesProperties().keySet().stream().sorted().forEachOrdered(key -> {
+            BrushProperties properties = this.brushRegistry.getBrushProperties(key);
             Brush brush = properties.getCreator().create();
             brush.setProperties(properties);
             brush.loadProperties();
         });
-        this.performerRegistry.getPerformerProperties().forEach((key, properties) -> {
+        this.performerRegistry.getPerformerProperties().keySet().stream().sorted().forEachOrdered(key -> {
+            PerformerProperties properties = this.performerRegistry.getPerformerProperties(key);
             Performer performer = properties.getCreator().create();
             performer.setProperties(properties);
             performer.loadProperties();

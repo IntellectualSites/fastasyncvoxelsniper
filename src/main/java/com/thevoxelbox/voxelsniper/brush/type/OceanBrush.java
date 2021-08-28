@@ -22,7 +22,7 @@ public class OceanBrush extends AbstractBrush {
     private static final int WATER_LEVEL_MIN = 12;
     private static final int LOW_CUT_LEVEL = 12;
 
-    private static final int DEFAULT_WATER_LEVEL = 62; // y=63 -- We are using array indices here.
+    private static final int DEFAULT_WATER_LEVEL = 63;
 
     private static final MaterialSet EXCLUDED_MATERIALS = MaterialSet.builder()
             .with(BlockCategories.SAPLINGS)
@@ -65,16 +65,16 @@ public class OceanBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.BLUE + "Parameters:");
             messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [n] " + ChatColor.BLUE + "-- Sets the water level to n.");
             messenger.sendMessage(ChatColor.GREEN + "/b o cfloor [true|false] " + ChatColor.BLUE + "-- Enables or disables " +
-                    "sea floor cover. (e.g. -cfloor y) (Cover material will be your voxel material)");
+                    "sea floor cover. (e.g. -cfloor true -> Cover material will be your voxel material)");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("wlevel")) {
                     Integer waterLevel = NumericParser.parseInteger(parameters[1]);
                     if (waterLevel != null && waterLevel > this.waterLevelMin) {
-                        this.waterLevel = waterLevel - 1;
-                        messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
+                        this.waterLevel = waterLevel;
+                        messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer greater " + this.waterLevelMin + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("cfloor")) {
                     this.coverFloor = Boolean.parseBoolean(parameters[1]);
@@ -130,7 +130,7 @@ public class OceanBrush extends AbstractBrush {
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
                 int currentHeight = getHeight(x, z);
-                int wLevelDiff = currentHeight - (this.waterLevel - 1);
+                int wLevelDiff = currentHeight - this.waterLevel;
                 int newSeaFloorLevel = Math.max((this.waterLevel - wLevelDiff), this.lowCutLevel);
                 int highestY = getHighestTerrainBlock(x, z, editSession.getMinY(), editSession.getMaxY());
                 // go down from highest Y block down to new sea floor
@@ -141,7 +141,7 @@ public class OceanBrush extends AbstractBrush {
                     }
                 }
                 // go down from water level to new sea level
-                for (int y = this.waterLevel; y > newSeaFloorLevel; y--) {
+                for (int y = this.waterLevel; y >= newSeaFloorLevel; y--) {
                     BlockState block = getBlock(x, y, z);
                     BlockType blockType = block.getBlockType();
                     if (blockType != BlockTypes.WATER) {
@@ -149,7 +149,7 @@ public class OceanBrush extends AbstractBrush {
                     }
                 }
                 // cover the sea floor of required
-                if (this.coverFloor && (newSeaFloorLevel < this.waterLevel)) {
+                if (this.coverFloor && (newSeaFloorLevel <= this.waterLevel)) {
                     BlockState block = getBlock(x, newSeaFloorLevel, z);
                     BlockType blockType = block.getBlockType();
                     if (blockType != toolkitProperties.getBlockType()) {
@@ -180,7 +180,7 @@ public class OceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.BLUE + "Water level set to " + ChatColor.GREEN + (this.waterLevel + 1)); // +1 since we are working with 0-based array indices
+        messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
         messenger.sendMessage(ChatColor.BLUE + String.format(
                 "Floor cover %s.",
                 ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")

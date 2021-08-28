@@ -62,8 +62,8 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                     );
                 } else {
                     try {
-                        this.tolerance = Tolerance.valueOf(firstParameter);
-                        messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
+                        this.tolerance = Tolerance.valueOf(firstParameter.toUpperCase(Locale.ROOT));
+                        messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.name()
                                 .toLowerCase(Locale.ROOT) + " tolerance.");
                     } catch (IllegalArgumentException exception) {
                         messenger.sendMessage(ChatColor.RED + "Invalid tolerance.");

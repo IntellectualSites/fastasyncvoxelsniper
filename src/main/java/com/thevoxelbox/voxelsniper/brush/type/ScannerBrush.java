@@ -48,7 +48,7 @@ public class ScannerBrush extends AbstractBrush {
                     Integer depth = NumericParser.parseInteger(parameters[1]);
                     if (depth != null) {
                         this.depth = depth < this.depthMin ? this.depthMin : Math.min(depth, this.depthMax);
-                        messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to " + this.depth);
+                        messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to: " + this.depth);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
@@ -100,41 +100,41 @@ public class ScannerBrush extends AbstractBrush {
     private void scan(Snipe snipe, Direction blockFace) {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
-        if (blockFace == Direction.NORTH) {// Scan south
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
-                    return;
-                }
-            }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
-        } else if (blockFace == Direction.SOUTH) {// Scan north
-            for (int i = 1; i < this.depth + 1; i++) {
-                if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
-                    return;
-                }
-            }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
-        } else if (blockFace == Direction.EAST) {// Scan west
+        if (blockFace == Direction.NORTH) { // Scan south
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() + i) == this.checkFor) {
                     messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
-        } else if (blockFace == Direction.WEST) {// Scan east
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+        } else if (blockFace == Direction.SOUTH) { // Scan north
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() - i) == this.checkFor) {
                     messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
-        } else if (blockFace == Direction.UP) {// Scan down
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+        } else if (blockFace == Direction.EAST) { // Scan west
             for (int i = 1; i < this.depth + 1; i++) {
-                if ((targetBlock.getY() - i) <= 0) {
+                if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
+                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    return;
+                }
+            }
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+        } else if (blockFace == Direction.WEST) { // Scan east
+            for (int i = 1; i < this.depth + 1; i++) {
+                if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
+                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    return;
+                }
+            }
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+        } else if (blockFace == Direction.UP) { // Scan down
+            for (int i = 1; i < this.depth + 1; i++) {
+                if ((targetBlock.getY() - i) <= getEditSession().getMinY()) {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() - i), targetBlock.getZ()) == this.checkFor) {
@@ -142,8 +142,8 @@ public class ScannerBrush extends AbstractBrush {
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
-        } else if (blockFace == Direction.DOWN) {// Scan up
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+        } else if (blockFace == Direction.DOWN) { // Scan up
             for (int i = 1; i < this.depth + 1; i++) {
                 EditSession editSession = getEditSession();
                 if ((targetBlock.getY() + i) >= editSession.getMaxY()) {
@@ -154,7 +154,7 @@ public class ScannerBrush extends AbstractBrush {
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "Nope.");
+            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
         }
     }
 
@@ -162,7 +162,7 @@ public class ScannerBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GREEN + "Scanner depth set to " + this.depth);
+        messenger.sendMessage(ChatColor.GREEN + "Scanner depth set to: " + this.depth);
         messenger.sendMessage(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
     }
 

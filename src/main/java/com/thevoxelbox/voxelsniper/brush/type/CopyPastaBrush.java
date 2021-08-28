@@ -48,11 +48,11 @@ public class CopyPastaBrush extends AbstractBrush {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("air")) {
                     this.pasteAir = !this.pasteAir;
-                    messenger.sendMessage(ChatColor.GOLD + "Paste air set to " + this.pasteAir);
+                    messenger.sendMessage(ChatColor.GOLD + "Paste air set to: " + this.pasteAir);
                 } else if (Stream.of("0", "90", "180", "270")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     this.pivot = Integer.parseInt(firstParameter);
-                    messenger.sendMessage(ChatColor.GOLD + "Pivot angle set to " + this.pivot);
+                    messenger.sendMessage(ChatColor.GOLD + "Pivot angle set to: " + this.pivot);
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
                 }

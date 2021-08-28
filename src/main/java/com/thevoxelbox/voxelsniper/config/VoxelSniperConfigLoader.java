@@ -49,7 +49,7 @@ public class VoxelSniperConfigLoader {
     /**
      * Return if the login message is enabled.
      *
-     * @return true if message on login is enabled, false otherwise.
+     * @return {@code true} if message on login is enabled, {@code false} otherwise.
      */
     public boolean isMessageOnLoginEnabled() {
         return this.config.getBoolean(MESSAGE_ON_LOGIN_ENABLED, DEFAULT_MESSAGE_ON_LOGIN_ENABLED);
@@ -65,7 +65,7 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Return default block material.
+     * Return default block type.
      *
      * @return default type
      */
@@ -80,7 +80,7 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Set default block material
+     * Set default block type.
      *
      * @param blockType default type
      */
@@ -89,7 +89,7 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Return default replace block material.
+     * Return default replace block type.
      *
      * @return default type
      */
@@ -104,7 +104,7 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Set default replace block material
+     * Set default replace block type.
      *
      * @param blockType default type
      */
@@ -149,9 +149,9 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Return List of restricted Litesniper Materials.
+     * Return List of restricted Litesniper materials.
      *
-     * @return List of restricted Litesniper Materials
+     * @return List of restricted Litesniper materials
      */
     public List<BlockType> getLitesniperRestrictedMaterials() {
         return this.config.getStringList(LITESNIPER_RESTRICTED_MATERIALS).stream()
@@ -162,9 +162,9 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Set new list of restricted Litesniper Materials.
+     * Set new list of restricted Litesniper materials.
      *
-     * @param restrictedMaterials List of restricted Litesniper Materials
+     * @param restrictedMaterials List of restricted Litesniper materials
      */
     public void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
         this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
@@ -227,6 +227,7 @@ public class VoxelSniperConfigLoader {
 
     /**
      * Return brush properties.
+     * This Map stores another Map (associating Property -> Value) per brush.
      *
      * @return brush properties
      */

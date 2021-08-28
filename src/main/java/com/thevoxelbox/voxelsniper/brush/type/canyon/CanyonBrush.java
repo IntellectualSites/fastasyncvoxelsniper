@@ -15,10 +15,10 @@ import java.util.stream.Stream;
 
 public class CanyonBrush extends AbstractBrush {
 
-    private static final int SHIFT_LEVEL_MIN = 10;
+    private static final int SHIFT_LEVEL_MIN = -54;
     private static final int SHIFT_LEVEL_MAX = 60;
 
-    private static final int DEFAULT_Y_LEVEL = 10;
+    private static final int DEFAULT_Y_LEVEL = -54;
 
     private int shiftLevelMin;
     private int shiftLevelMax;
@@ -107,8 +107,8 @@ public class CanyonBrush extends AbstractBrush {
                     setBlockType(blockX + x, y, blockZ + z, BlockTypes.AIR);
                     currentYLevel++;
                 }
-                setBlockType(blockX + x, 0, blockZ + z, BlockTypes.BEDROCK);
-                for (int y = 1; y < this.shiftLevelMin; y++) {
+                setBlockType(blockX + x, editSession.getMinY(), blockZ + z, BlockTypes.BEDROCK);
+                for (int y = editSession.getMinY() + 1; y < this.shiftLevelMin; y++) {
                     setBlockType(blockX + x, y, blockZ + z, BlockTypes.STONE);
                 }
             }
@@ -119,7 +119,7 @@ public class CanyonBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Shift Level set to " + this.yLevel)
+                .message(ChatColor.GREEN + "Shift Level set to: " + this.yLevel)
                 .send();
     }
 

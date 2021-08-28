@@ -51,13 +51,16 @@ public class Rotation3DBrush extends AbstractBrush {
                 if (value != null && value >= 0 && value <= 359) {
                     if (firstParameter.equalsIgnoreCase("p")) {
                         this.sePitch = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch + " gradians");
+                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.sePitch) + " gradians");
                     } else if (firstParameter.equalsIgnoreCase("r")) {
                         this.seRoll = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll + " gradians");
+                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.seRoll) + " gradians");
                     } else if (firstParameter.equalsIgnoreCase("y")) {
                         this.seYaw = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw + " gradians");
+                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.seYaw) + " gradians");
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");

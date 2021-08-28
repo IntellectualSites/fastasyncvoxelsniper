@@ -36,20 +36,18 @@ public class FlatOceanBrush extends AbstractBrush {
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("yo")) {
-                    String newWaterLevelString = parameters[1];
-                    Integer newWaterLevel = NumericParser.parseInteger(newWaterLevelString);
+                    Integer newWaterLevel = NumericParser.parseInteger(parameters[1]);
                     if (newWaterLevel != null) {
                         if (newWaterLevel < this.floorLevel) {
                             newWaterLevel = this.floorLevel + 1;
                         }
                         this.waterLevel = newWaterLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+                        messenger.sendMessage(ChatColor.GREEN + "Water level set to: " + this.waterLevel);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
                 } else if (firstParameter.equalsIgnoreCase("yl")) {
-                    String newFloorLevelString = parameters[1];
-                    Integer newFloorLevel = NumericParser.parseInteger(newFloorLevelString);
+                    Integer newFloorLevel = NumericParser.parseInteger(parameters[1]);
                     if (newFloorLevel != null) {
                         if (newFloorLevel > this.waterLevel) {
                             newFloorLevel = this.waterLevel - 1;
@@ -59,7 +57,7 @@ public class FlatOceanBrush extends AbstractBrush {
                             }
                         }
                         this.floorLevel = newFloorLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
@@ -135,8 +133,8 @@ public class FlatOceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+        messenger.sendMessage(ChatColor.GREEN + "Water level set to: " + this.waterLevel);
+        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel);
     }
 
 }

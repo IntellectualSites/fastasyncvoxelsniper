@@ -109,7 +109,7 @@ public class Sniper {
      * @param usedItem         Item in hand of player
      * @param clickedBlock     Block that the player targeted/interacted with
      * @param clickedBlockFace Face of that targeted Block
-     * @return true if command visibly processed, false otherwise.
+     * @return {@code true} if command visibly processed, {@code false} otherwise.
      */
     public boolean snipe(
             Player player,

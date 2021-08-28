@@ -102,7 +102,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                     this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
                 } else {
                     try {
-                        this.punishment = Punishment.valueOf(firstParameter);
+                        this.punishment = Punishment.valueOf(firstParameter.toUpperCase(Locale.ROOT));
                         messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
                                 .toLowerCase(Locale.ROOT) + " punishment selected.");
                     } catch (IllegalArgumentException exception) {

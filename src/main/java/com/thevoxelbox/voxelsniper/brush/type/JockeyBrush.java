@@ -157,7 +157,7 @@ public class JockeyBrush extends AbstractBrush {
                         finalClosest.addPassenger(player);
                         jockeyedEntity = finalClosest;
                     }
-                    player.sendMessage(ChatColor.GREEN + "You are now saddles on entity: " + finalClosest.getEntityId());
+                    player.sendMessage(ChatColor.GREEN + "You are now sitting on entity: " + finalClosest.getEntityId());
                 }
             });
         } else {

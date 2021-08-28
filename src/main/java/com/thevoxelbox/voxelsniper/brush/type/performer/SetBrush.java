@@ -66,8 +66,8 @@ public class SetBrush extends AbstractPerformerBrush {
         int highX = Math.max(x1, x2);
         int highY = Math.max(y1, y2);
         int highZ = Math.max(z1, z2);
-        if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > selectionSizeMax) {
-            messenger.sendMessage(ChatColor.RED + "Selection size above hardcoded limit, please use a smaller selection.");
+        if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > this.selectionSizeMax) {
+            messenger.sendMessage(ChatColor.RED + "Selection size above " + this.selectionSizeMax + " limit, please use a smaller selection.");
         } else {
             for (int y = lowY; y <= highY; y++) {
                 for (int x = lowX; x <= highX; x++) {
