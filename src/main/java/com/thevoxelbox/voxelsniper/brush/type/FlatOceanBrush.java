@@ -118,7 +118,7 @@ public class FlatOceanBrush extends AbstractBrush {
         int blockZ = chunkZ << 4;
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int z = 0; z < CHUNK_SIZE; z++) {
-                for (int y = 0; y <= editSession.getMaxY(); y++) {
+                for (int y = editSession.getMinY(); y <= editSession.getMaxY(); y++) {
                     if (y <= this.floorLevel) {
                         setBlockType(blockX + x, y, blockZ + z, BlockTypes.DIRT);
                     } else if (y <= this.waterLevel) {

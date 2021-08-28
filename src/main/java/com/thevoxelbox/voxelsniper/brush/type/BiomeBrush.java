@@ -100,7 +100,7 @@ public class BiomeBrush extends AbstractBrush {
             double xSquared = Math.pow(x, 2);
             for (int z = -brushSize; z <= brushSize; z++) {
                 if (xSquared + Math.pow(z, 2) <= brushSizeSquared) {
-                    for (int y = 0; y <= editSession.getMaxY(); ++y) {
+                    for (int y = editSession.getMinY(); y <= editSession.getMaxY(); ++y) {
                         setBiome(targetBlockX + x, y, targetBlockZ + z, this.biomeType);
                     }
                 }
