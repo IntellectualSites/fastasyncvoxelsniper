@@ -30,15 +30,12 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.getSniper(player);
-        if (sniper == null) {
-            return;
-        }
+        Sniper sniper = (sender instanceof Player) ? sniperRegistry.getSniper((Player) sender) : null;
+
         if (arguments.length >= 1) {
             String firstArgument = arguments[0];
             if (firstArgument.equalsIgnoreCase("brushes")) {
-                Toolkit toolkit = sniper.getCurrentToolkit();
+                Toolkit toolkit = sniper == null ? null : sniper.getCurrentToolkit();
                 BrushProperties brushProperties = toolkit == null ? null : toolkit.getCurrentBrushProperties();
                 sender.sendMessage(
                         this.plugin.getBrushRegistry().getBrushesProperties().entrySet().stream()
@@ -51,6 +48,9 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 );
                 return;
             } else if (firstArgument.equalsIgnoreCase("range")) {
+                if (sniper == null) {
+                    return;
+                }
                 Toolkit toolkit = sniper.getCurrentToolkit();
                 if (toolkit == null) {
                     return;
@@ -101,14 +101,23 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 );
                 return;
             } else if (firstArgument.equalsIgnoreCase("enable")) {
+                if (sniper == null) {
+                    return;
+                }
                 sniper.setEnabled(true);
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("disable")) {
+                if (sniper == null) {
+                    return;
+                }
                 sniper.setEnabled(false);
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("toggle")) {
+                if (sniper == null) {
+                    return;
+                }
                 sniper.setEnabled(!sniper.isEnabled());
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
@@ -127,8 +136,10 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 }
             }
         }
-        sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
-        sniper.sendInfo(sender);
+        if (sniper != null) {
+            sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
+            sniper.sendInfo(sender);
+        }
     }
 
     @Override

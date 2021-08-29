@@ -92,7 +92,7 @@ public class StencilBrush extends AbstractBrush {
 
             this.pasteOption = pasteOption;
             try {
-                this.filename = parameters[1 + pasteParam];
+                this.filename = parameters[pasteParam];
                 File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + this.filename + ".vstencil");
                 if (file.exists()) {
                     messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded. Make sure you are using gunpowder if you do not want any chance of overwriting the file.");

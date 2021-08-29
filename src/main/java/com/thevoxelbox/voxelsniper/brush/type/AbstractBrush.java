@@ -312,8 +312,8 @@ public abstract class AbstractBrush implements Brush {
      *
      * @param propertyName       the name of the property
      * @param defaultValue       the default value to set and return
-     * @param defaultConfigValue the default config value to set, objets such as Enum and Registry values are not serializable*
-     * @return the associated proprorty, or the default value
+     * @param defaultConfigValue the default config value to set, objets such as Enum and Registry values are not serializable
+     * @return the associated property, or the default value
      */
     public Object getProperty(String propertyName, Object defaultValue, Object defaultConfigValue) {
         String brush = this.properties.getName();

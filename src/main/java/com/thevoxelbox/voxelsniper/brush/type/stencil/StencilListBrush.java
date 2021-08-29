@@ -79,7 +79,7 @@ public class StencilListBrush extends AbstractBrush {
 
             this.pasteOption = pasteOption;
             try {
-                this.filename = parameters[1 + pasteParam];
+                this.filename = parameters[pasteParam];
                 File file = new File(PLUGIN_DATA_FOLDER, "/stencilLists/" + this.filename + ".txt");
                 if (file.exists()) {
                     messenger.sendMessage(ChatColor.RED + "Stencil List '" + this.filename + "' exists and was loaded.");

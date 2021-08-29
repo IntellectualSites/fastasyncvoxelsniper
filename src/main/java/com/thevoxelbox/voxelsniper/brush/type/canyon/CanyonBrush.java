@@ -50,10 +50,12 @@ public class CanyonBrush extends AbstractBrush {
                     if (yLevel != null) {
                         if (yLevel < this.shiftLevelMin) {
                             yLevel = this.shiftLevelMin;
-                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer >=" + this.shiftLevelMax + ".");
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer greater than or equal to" +
+                                    this.shiftLevelMax + ".");
                         } else if (yLevel > this.shiftLevelMax) {
                             yLevel = this.shiftLevelMax;
-                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer <=" + this.shiftLevelMin + ".");
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer less than or equal to " +
+                                    this.shiftLevelMin + ".");
                         }
                         this.yLevel = yLevel;
                         messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);

@@ -17,6 +17,7 @@ import com.thevoxelbox.voxelsniper.command.executor.VoxelListExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelReplaceExecutor;
 import com.thevoxelbox.voxelsniper.command.executor.VoxelSniperExecutor;
 import com.thevoxelbox.voxelsniper.command.property.CommandProperties;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandRegistrar {
@@ -224,7 +225,7 @@ public class CommandRegistrar {
                 .alias("vs")
                 .usage("/vs")
                 .usage("Example: /vs -- Returns the current brush settings.")
-                .sender(Player.class)
+                .sender(CommandSender.class)
                 .build();
         VoxelSniperExecutor executor = new VoxelSniperExecutor(this.plugin);
         this.registry.register(properties, executor);

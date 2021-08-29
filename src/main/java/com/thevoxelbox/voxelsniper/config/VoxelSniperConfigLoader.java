@@ -3,12 +3,10 @@ package com.thevoxelbox.voxelsniper.config;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -55,8 +53,8 @@ public class VoxelSniperConfigLoader {
     /**
      * Create a new cached voxel configuration loader.
      *
-     * @param plugin plugin instance
-     * @param config configuration that is going to be used.
+     * @param plugin the plugin instance
+     * @param config the configuration that is going to be used.
      */
     public VoxelSniperConfigLoader(VoxelSniperPlugin plugin, FileConfiguration config) {
         this.plugin = plugin;
@@ -67,10 +65,10 @@ public class VoxelSniperConfigLoader {
     /**
      * Update config settings the current config version and apply changes.
      */
-    public void updateConfig() {
+    private void updateConfig() {
         int currentConfigVersion = getConfigVersion();
         if (currentConfigVersion != CONFIG_VERSION_VALUE) {
-            Bukkit.getLogger().warning("Invalid config file found! Trying to apply required changes...");
+            plugin.getLogger().warning("Invalid config file found! Trying to apply required changes...");
             setConfigVersion(CONFIG_VERSION_VALUE);
 
             if (currentConfigVersion < 1) {
@@ -107,7 +105,7 @@ public class VoxelSniperConfigLoader {
             }
 
             plugin.saveConfig();
-            Bukkit.getLogger().info("Your config file is now up-to-date! (v" + CONFIG_VERSION_VALUE + ")");
+            plugin.getLogger().info("Your config file is now up-to-date! (v" + CONFIG_VERSION_VALUE + ")");
         }
 
     }
@@ -117,7 +115,7 @@ public class VoxelSniperConfigLoader {
      *
      * @return current version
      */
-    public int getConfigVersion() {
+    protected int getConfigVersion() {
         return this.config.getInt(CONFIG_VERSION, 0);
     }
 
@@ -126,7 +124,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param version new version
      */
-    public void setConfigVersion(int version) {
+    protected void setConfigVersion(int version) {
         this.config.set(CONFIG_VERSION, version);
     }
 
@@ -144,7 +142,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param enabled Messages on Login enabled
      */
-    public void setMessageOnLoginEnabled(boolean enabled) {
+    protected void setMessageOnLoginEnabled(boolean enabled) {
         this.config.set(MESSAGE_ON_LOGIN_ENABLED, enabled);
     }
 
@@ -168,7 +166,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param blockType default type
      */
-    public void setDefaultBlockMaterial(BlockType blockType) {
+    protected void setDefaultBlockMaterial(BlockType blockType) {
         this.config.set(DEFAULT_BLOCK_MATERIAL, blockType.getId());
     }
 
@@ -192,7 +190,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param blockType default type
      */
-    public void setDefaultReplaceBlockMaterial(BlockType blockType) {
+    protected void setDefaultReplaceBlockMaterial(BlockType blockType) {
         this.config.set(DEFAULT_REPLACE_BLOCK_MATERIAL, blockType.getId());
     }
 
@@ -210,7 +208,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param size default size
      */
-    public void setDefaultBrushSize(int size) {
+    protected void setDefaultBrushSize(int size) {
         this.config.set(DEFAULT_BRUSH_SIZE, size);
     }
 
@@ -228,7 +226,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param size maximum size
      */
-    public void setLitesniperMaxBrushSize(int size) {
+    protected void setLitesniperMaxBrushSize(int size) {
         this.config.set(LITESNIPER_MAX_BRUSH_SIZE, size);
     }
 
@@ -250,7 +248,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param restrictedMaterials List of restricted Litesniper materials
      */
-    public void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
+    protected void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
         this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
                 .map(BlockType::getId).collect(Collectors.toList()));
     }
@@ -269,7 +267,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param size maximum size
      */
-    public void setBrushSizeWarningThreshold(int size) {
+    protected void setBrushSizeWarningThreshold(int size) {
         this.config.set(BRUSH_SIZE_WARNING_THRESHOLD, size);
     }
 
@@ -287,7 +285,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param height default height
      */
-    public void setDefaultVoxelHeight(int height) {
+    protected void setDefaultVoxelHeight(int height) {
         this.config.set(DEFAULT_VOXEL_HEIGHT, height);
     }
 
@@ -305,7 +303,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param center default center
      */
-    public void setDefaultCylinderCenter(int center) {
+    protected void setDefaultCylinderCenter(int center) {
         this.config.set(DEFAULT_CYLINDER_CENTER, center);
     }
 
@@ -346,7 +344,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param brushProperties brush properties
      */
-    public void setBrushProperties(Map<String, Map<String, Object>> brushProperties) {
+    protected void setBrushProperties(Map<String, Map<String, Object>> brushProperties) {
         for (Map.Entry<String, Map<String, Object>> brushesEntry : brushProperties.entrySet()) {
             String brush = brushesEntry.getKey();
 

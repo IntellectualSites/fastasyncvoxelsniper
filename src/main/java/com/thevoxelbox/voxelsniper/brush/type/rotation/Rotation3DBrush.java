@@ -11,7 +11,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.checkerframework.checker.units.qual.degrees;
 
 import java.util.List;
 import java.util.stream.Stream;

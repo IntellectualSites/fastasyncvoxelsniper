@@ -55,6 +55,10 @@ public final class Command extends org.bukkit.command.Command {
             @NotNull String[] args,
             @Nullable Location location
     ) {
+        Class<? extends CommandSender> senderType = this.properties.getSenderTypeOrDefault();
+        if (!senderType.isInstance(sender)) {
+            return Collections.emptyList();
+        }
         String permission = this.properties.getPermission();
         if (permission != null && !permission.isEmpty() && !sender.hasPermission(permission)) {
             return Collections.emptyList();

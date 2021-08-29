@@ -74,7 +74,8 @@ public class OceanBrush extends AbstractBrush {
                         this.waterLevel = waterLevel;
                         messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer >" + this.waterLevelMin + ".");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer greater than" +
+                                this.waterLevelMin + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("cfloor")) {
                     this.coverFloor = Boolean.parseBoolean(parameters[1]);
