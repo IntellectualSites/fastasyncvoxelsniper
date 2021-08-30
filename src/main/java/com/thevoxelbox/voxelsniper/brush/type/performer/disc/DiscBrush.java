@@ -1,13 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
+import com.fastasyncworldedit.core.math.MutableBlockVector3;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,6 +14,10 @@ import java.util.stream.Stream;
 public class DiscBrush extends AbstractPerformerBrush {
 
     private double trueCircle;
+
+    @Override
+    public void loadProperties() {
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -68,13 +71,12 @@ public class DiscBrush extends AbstractPerformerBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
         double radiusSquared = (brushSize + this.trueCircle) * (brushSize + this.trueCircle);
-        Vector centerPoint = Vectors.toBukkit(targetBlock);
-        Vector currentPoint = new Vector().copy(centerPoint);
+        MutableBlockVector3 currentPoint = new MutableBlockVector3(targetBlock);
         for (int x = -brushSize; x <= brushSize; x++) {
-            currentPoint.setX(centerPoint.getX() + x);
+            currentPoint.mutX(targetBlock.getX() + x);
             for (int z = -brushSize; z <= brushSize; z++) {
-                currentPoint.setZ(centerPoint.getZ() + z);
-                if (centerPoint.distanceSquared(currentPoint) <= radiusSquared) {
+                currentPoint.mutZ(targetBlock.getZ() + z);
+                if (targetBlock.distanceSq(currentPoint) <= radiusSquared) {
                     this.performer.perform(
                             getEditSession(),
                             currentPoint.getBlockX(),

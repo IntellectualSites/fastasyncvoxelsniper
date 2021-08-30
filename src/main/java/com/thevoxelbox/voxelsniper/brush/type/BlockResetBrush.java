@@ -14,13 +14,16 @@ public class BlockResetBrush extends AbstractBrush {
 
     private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
             .with(BlockCategories.DOORS)
+            .with(BlockCategories.TRAPDOORS)
             .with(BlockCategories.SIGNS)
             .with(MaterialSets.CHESTS)
-            .with(MaterialSets.REDSTONE_TORCHES)
             .with(BlockCategories.FENCE_GATES)
             .add(BlockTypes.FURNACE)
+            .add(BlockTypes.REDSTONE_TORCH)
+            .add(BlockTypes.REDSTONE_WALL_TORCH)
             .add(BlockTypes.REDSTONE_WIRE)
             .add(BlockTypes.REPEATER)
+            .add(BlockTypes.COMPARATOR)
             .build();
 
     @Override

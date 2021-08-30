@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BrushExecutor implements CommandExecutor, TabCompleter {
@@ -61,11 +62,15 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         String firstArgument = arguments[0];
         Integer brushSize = NumericParser.parseInteger(firstArgument);
         if (brushSize != null) {
+            if (brushSize < 0) {
+                sender.sendMessage(ChatColor.RED + "Size must be a positive integer.");
+                return;
+            }
             VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
             int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
-            Messenger messenger = new Messenger(sender);
+            Messenger messenger = new Messenger(plugin, sender);
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
-                sender.sendMessage("Size is restricted to " + litesniperMaxBrushSize + " for you.");
+                sender.sendMessage(ChatColor.RED + "Size is restricted to " + litesniperMaxBrushSize + " for you.");
                 toolkitProperties.setBrushSize(litesniperMaxBrushSize);
                 messenger.sendBrushSizeMessage(litesniperMaxBrushSize);
             } else {
@@ -100,10 +105,12 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         if (arguments.length == 1) {
             String argument = arguments[0];
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
-            return this.plugin.getBrushRegistry()
-                    .getBrushesProperties()
-                    .keySet()
-                    .stream()
+            return this.plugin.getBrushRegistry().getBrushesProperties().entrySet().stream()
+                    .filter(entry -> {
+                        String permission = entry.getValue().getPermission();
+                        return permission == null || permission.isEmpty() || sender.hasPermission(permission);
+                    })
+                    .map(Map.Entry::getKey)
                     .filter(brushAlias -> brushAlias.startsWith(argumentLowered))
                     .collect(Collectors.toList());
         }

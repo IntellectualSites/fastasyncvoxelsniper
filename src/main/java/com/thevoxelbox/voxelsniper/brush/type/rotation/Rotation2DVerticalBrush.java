@@ -16,10 +16,12 @@ import org.bukkit.ChatColor;
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 public class Rotation2DVerticalBrush extends AbstractBrush {
 
-    private int mode;
+    private static final int DEFAULT_ANGLE = 0;
+
     private int brushSize;
     private BlockState[][][] snap;
-    private double angle;
+
+    private double angle = DEFAULT_ANGLE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -27,6 +29,8 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "The gradian is a unit of angle measurement different from the degree. " +
+                    "On average, 180 degrees = " + DECIMAL_FORMAT.format(Math.PI) + " radians.");
             messenger.sendMessage(ChatColor.GOLD + "Rotation2DVertical Brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b rot2v [n] -- Sets rotation angle to n.");
         } else {
@@ -34,7 +38,8 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
                 Double degreesAngle = NumericParser.parseDouble(parameters[0]);
                 if (degreesAngle != null) {
                     this.angle = Math.toRadians(degreesAngle);
-                    messenger.sendMessage(ChatColor.GREEN + "Angle set to " + this.angle + " gradians");
+                    messenger.sendMessage(ChatColor.GREEN + "Angle set to: " + DECIMAL_FORMAT.format(this.angle) + " gradians " +
+                            "(" + degreesAngle + " degrees)");
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number.");
                 }
@@ -49,26 +54,16 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
     public void handleArrowAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            this.getMatrix();
-            this.rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        this.getMatrix();
+        this.rotate();
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
-        if (this.mode == 0) {
-            this.getMatrix();
-            this.rotate();
-        } else {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
-        }
+        this.getMatrix();
+        this.rotate();
     }
 
     private void getMatrix() {

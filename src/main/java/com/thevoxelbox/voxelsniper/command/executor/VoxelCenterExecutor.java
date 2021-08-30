@@ -43,7 +43,7 @@ public class VoxelCenterExecutor implements CommandExecutor {
             return;
         }
         toolkitProperties.setCylinderCenter(center);
-        Messenger messenger = new Messenger(sender);
+        Messenger messenger = new Messenger(plugin, sender);
         messenger.sendCylinderCenterMessage(center);
     }
 

@@ -5,21 +5,24 @@ import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 public class RulerBrush extends AbstractBrush {
 
+    private static final int DEFAULT_X_OFFSET = 0;
+    private static final int DEFAULT_Y_OFFSET = 0;
+    private static final int DEFAULT_Z_OFFSET = 0;
+
     private boolean first = true;
-    private Vector coordinates = new Vector(0, 0, 0);
-    private int offsetX;
-    private int offsetY;
-    private int offsetZ;
+    private BlockVector3 coordinates = BlockVector3.ZERO;
+
+    private int xOffset = DEFAULT_X_OFFSET;
+    private int yOffset = DEFAULT_Y_OFFSET;
+    private int zOffset = DEFAULT_Z_OFFSET;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -39,24 +42,24 @@ public class RulerBrush extends AbstractBrush {
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("ruler")) {
-                    this.offsetZ = 0;
-                    this.offsetY = 0;
-                    this.offsetX = 0;
+                    this.zOffset = 0;
+                    this.yOffset = 0;
+                    this.xOffset = 0;
                     messenger.sendMessage(ChatColor.BLUE + "Ruler mode.");
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
                             "parameter info.");
                 }
             } else if (parameters.length == 3) {
-                Integer offsetX = NumericParser.parseInteger(parameters[0]);
-                Integer offsetY = NumericParser.parseInteger(parameters[1]);
-                Integer offsetZ = NumericParser.parseInteger(parameters[2]);
-                this.offsetX = offsetX == null ? 0 : offsetX;
-                this.offsetY = offsetY == null ? 0 : offsetY;
-                this.offsetZ = offsetZ == null ? 0 : offsetZ;
-                messenger.sendMessage(ChatColor.AQUA + "X offset set to: " + this.offsetX);
-                messenger.sendMessage(ChatColor.AQUA + "Y offset set to: " + this.offsetY);
-                messenger.sendMessage(ChatColor.AQUA + "Z offset set to: " + this.offsetZ);
+                Integer xOffset = NumericParser.parseInteger(parameters[0]);
+                Integer yOffset = NumericParser.parseInteger(parameters[1]);
+                Integer zOffset = NumericParser.parseInteger(parameters[2]);
+                this.xOffset = xOffset == null ? 0 : xOffset;
+                this.yOffset = yOffset == null ? 0 : yOffset;
+                this.zOffset = zOffset == null ? 0 : zOffset;
+                messenger.sendMessage(ChatColor.AQUA + "X-Offset set to: " + this.xOffset);
+                messenger.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + this.yOffset);
+                messenger.sendMessage(ChatColor.AQUA + "Z-Offset set to: " + this.zOffset);
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
                         "parameter info.");
@@ -78,8 +81,8 @@ public class RulerBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         BlockType blockDataType = toolkitProperties.getBlockType();
         BlockVector3 targetBlock = getTargetBlock();
-        this.coordinates = Vectors.toBukkit(targetBlock);
-        if (this.offsetX == 0 && this.offsetY == 0 && this.offsetZ == 0) {
+        this.coordinates = targetBlock;
+        if (this.xOffset == 0 && this.yOffset == 0 && this.zOffset == 0) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
             this.first = !this.first;
@@ -87,14 +90,14 @@ public class RulerBrush extends AbstractBrush {
             int x = targetBlock.getX();
             int y = targetBlock.getY();
             int z = targetBlock.getZ();
-            setBlockType(x + this.offsetX, y + this.offsetY, z + this.offsetZ, blockDataType);
+            setBlockType(x + this.xOffset, y + this.yOffset, z + this.zOffset, blockDataType);
         }
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.coordinates == null || this.coordinates.lengthSquared() == 0) {
+        if (this.coordinates == null || this.coordinates.lengthSq() == 0) {
             messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow. Comparing to point 0,0,0 instead.");
             return;
         }
@@ -103,7 +106,7 @@ public class RulerBrush extends AbstractBrush {
         messenger.sendMessage(ChatColor.AQUA + "X change: " + (targetBlock.getX() - this.coordinates.getX()));
         messenger.sendMessage(ChatColor.AQUA + "Y change: " + (targetBlock.getY() - this.coordinates.getY()));
         messenger.sendMessage(ChatColor.AQUA + "Z change: " + (targetBlock.getZ() - this.coordinates.getZ()));
-        double distance = Math.round(Vectors.toBukkit(targetBlock)
+        double distance = Math.round(targetBlock
                 .subtract(this.coordinates)
                 .length() * 100) / 100.0;
         double blockDistance = Math.round((Math.abs(Math.max(Math.max(

@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 
@@ -56,5 +57,24 @@ public interface Brush {
      * @param snipe Snipe
      */
     void sendInfo(Snipe snipe);
+
+    /**
+     * Return brush properties.
+     *
+     * @return brush properties
+     */
+    BrushProperties getProperties();
+
+    /**
+     * Set brush properties.
+     *
+     * @param properties brush properties
+     */
+    void setProperties(BrushProperties properties);
+
+    /**
+     * Load brush properties.
+     */
+    void loadProperties();
 
 }

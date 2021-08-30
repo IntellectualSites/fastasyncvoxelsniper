@@ -8,6 +8,10 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 public class VoxelDiscBrush extends AbstractPerformerBrush {
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         disc(snipe, targetBlock);

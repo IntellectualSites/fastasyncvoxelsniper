@@ -1,11 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
-import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
+import com.thevoxelbox.voxelsniper.command.TabCompleter;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
@@ -15,11 +13,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class VoxelSniperExecutor implements CommandExecutor {
+public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
 
     private final VoxelSniperPlugin plugin;
 
@@ -30,21 +30,27 @@ public class VoxelSniperExecutor implements CommandExecutor {
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.getSniper(player);
-        if (sniper == null) {
-            return;
-        }
+        Sniper sniper = (sender instanceof Player) ? sniperRegistry.getSniper((Player) sender) : null;
+
         if (arguments.length >= 1) {
             String firstArgument = arguments[0];
             if (firstArgument.equalsIgnoreCase("brushes")) {
-                BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
-                Map<String, BrushProperties> brushes = brushRegistry.getBrushesProperties();
-                Set<String> aliases = brushes.keySet();
-                String aliasesString = String.join(", ", aliases);
-                sender.sendMessage(aliasesString);
+                Toolkit toolkit = sniper == null ? null : sniper.getCurrentToolkit();
+                BrushProperties brushProperties = toolkit == null ? null : toolkit.getCurrentBrushProperties();
+                sender.sendMessage(
+                        this.plugin.getBrushRegistry().getBrushesProperties().entrySet().stream()
+                                .map(entry -> (entry.getValue() == brushProperties ? ChatColor.GOLD : ChatColor.GRAY)
+                                        + entry.getKey())
+                                .sorted()
+                                .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                        ChatColor.AQUA + "Available brushes: ", ""
+                                ))
+                );
                 return;
             } else if (firstArgument.equalsIgnoreCase("range")) {
+                if (sniper == null) {
+                    return;
+                }
                 Toolkit toolkit = sniper.getCurrentToolkit();
                 if (toolkit == null) {
                     return;
@@ -55,14 +61,17 @@ public class VoxelSniperExecutor implements CommandExecutor {
                 }
                 if (arguments.length == 2) {
                     Integer range = NumericParser.parseInteger(arguments[1]);
-                    if (range == null) {
-                        sender.sendMessage("Can't parse number.");
+                    if (range != null) {
+                        if (range < 1) {
+                            sender.sendMessage("Values less than 1 are not allowed.");
+                            return;
+                        } else {
+                            toolkitProperties.setBlockTracerRange(range);
+                        }
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "Invalid number.");
                         return;
                     }
-                    if (range < 1) {
-                        sender.sendMessage("Values less than 1 are not allowed.");
-                    }
-                    toolkitProperties.setBlockTracerRange(range);
                 } else {
                     toolkitProperties.setBlockTracerRange(0);
                 }
@@ -72,25 +81,44 @@ public class VoxelSniperExecutor implements CommandExecutor {
                         : "on") + ChatColor.GOLD + ". Range is " + ChatColor.LIGHT_PURPLE + blockTracerRange);
                 return;
             } else if (firstArgument.equalsIgnoreCase("perf")) {
-                PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
-                Map<String, PerformerProperties> performerProperties = performerRegistry.getPerformerProperties();
-                Set<String> aliases = performerProperties.keySet();
-                String aliasesString = String.join(", ", aliases);
-                sender.sendMessage(ChatColor.AQUA + "Available performers (abbreviated):");
-                sender.sendMessage(aliasesString);
+                sender.sendMessage(
+                        this.plugin.getPerformerRegistry().getPerformerProperties().keySet().stream()
+                                .map(alias -> ChatColor.GRAY + alias)
+                                .sorted()
+                                .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                        ChatColor.AQUA + "Available performers (abbreviated): ", ""
+                                ))
+                );
                 return;
             } else if (firstArgument.equalsIgnoreCase("perflong")) {
-                PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
-                String names = performerRegistry.getPerformerProperties()
-                        .values()
-                        .stream()
-                        .map(PerformerProperties::getName)
-                        .collect(Collectors.joining(", "));
-                sender.sendMessage(ChatColor.AQUA + "Available performers:");
-                sender.sendMessage(names);
+                sender.sendMessage(
+                        this.plugin.getPerformerRegistry().getPerformerProperties().values().stream()
+                                .map(properties -> ChatColor.GRAY + properties.getName())
+                                .sorted()
+                                .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                        ChatColor.AQUA + "Available performers: ", ""
+                                ))
+                );
                 return;
             } else if (firstArgument.equalsIgnoreCase("enable")) {
+                if (sniper == null) {
+                    return;
+                }
                 sniper.setEnabled(true);
+                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
+                return;
+            } else if (firstArgument.equalsIgnoreCase("disable")) {
+                if (sniper == null) {
+                    return;
+                }
+                sniper.setEnabled(false);
+                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
+                return;
+            } else if (firstArgument.equalsIgnoreCase("toggle")) {
+                if (sniper == null) {
+                    return;
+                }
+                sniper.setEnabled(!sniper.isEnabled());
                 sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
                 return;
             } else if (firstArgument.equalsIgnoreCase("info")) {
@@ -98,18 +126,35 @@ public class VoxelSniperExecutor implements CommandExecutor {
                 sender.sendMessage(plugin.getDescription().getDescription());
                 sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
                 return;
-            } else if (firstArgument.equalsIgnoreCase("disable")) {
-                sniper.setEnabled(false);
-                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
-                return;
-            } else if (firstArgument.equalsIgnoreCase("toggle")) {
-                sniper.setEnabled(!sniper.isEnabled());
-                sender.sendMessage("FastAsyncVoxelSniper is " + (sniper.isEnabled() ? "enabled" : "disabled"));
-                return;
+            } else if (firstArgument.equalsIgnoreCase("reload")) {
+                if (sender.hasPermission("voxelsniper.admin")) {
+                    plugin.reload();
+                    sender.sendMessage(ChatColor.GREEN + "FastAsyncVoxelSniper config reloaded!");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
+                            "node 'voxelsniper.admin'");
+                }
             }
         }
-        sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
-        sniper.sendInfo(sender);
+        if (sniper != null) {
+            sender.sendMessage(ChatColor.DARK_RED + "FastAsyncVoxelSniper - Current Brush Settings:");
+            sniper.sendInfo(sender);
+        }
+    }
+
+    @Override
+    public List<String> complete(CommandSender sender, String[] arguments) {
+        if (arguments.length == 1) {
+            String argument = arguments[0];
+            String argumentLowered = argument.toLowerCase(Locale.ROOT);
+            return Stream.concat(
+                            Stream.of("brushes", "range", "perf", "perflong", "enable", "disable", "toggle", "info"),
+                            sender.hasPermission("voxelsniper.admin") ? Stream.of("reload") : Stream.empty()
+                    )
+                    .filter(subCommand -> subCommand.startsWith(argumentLowered))
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
 }

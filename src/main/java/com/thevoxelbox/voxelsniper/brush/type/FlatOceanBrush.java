@@ -16,8 +16,14 @@ public class FlatOceanBrush extends AbstractBrush {
     private static final int DEFAULT_WATER_LEVEL = 29;
     private static final int DEFAULT_FLOOR_LEVEL = 8;
 
-    private int waterLevel = DEFAULT_WATER_LEVEL;
-    private int floorLevel = DEFAULT_FLOOR_LEVEL;
+    private int waterLevel;
+    private int floorLevel;
+
+    @Override
+    public void loadProperties() {
+        this.waterLevel = getIntegerProperty("default-water-level", DEFAULT_WATER_LEVEL);
+        this.floorLevel = getIntegerProperty("default-floor-level", DEFAULT_FLOOR_LEVEL);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -30,30 +36,29 @@ public class FlatOceanBrush extends AbstractBrush {
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("yo")) {
-                    String newWaterLevelString = parameters[1];
-                    Integer newWaterLevel = NumericParser.parseInteger(newWaterLevelString);
+                    Integer newWaterLevel = NumericParser.parseInteger(parameters[1]);
                     if (newWaterLevel != null) {
                         if (newWaterLevel < this.floorLevel) {
                             newWaterLevel = this.floorLevel + 1;
                         }
                         this.waterLevel = newWaterLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
+                        messenger.sendMessage(ChatColor.GREEN + "Water level set to: " + this.waterLevel);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
                 } else if (firstParameter.equalsIgnoreCase("yl")) {
-                    String newFloorLevelString = parameters[1];
-                    Integer newFloorLevel = NumericParser.parseInteger(newFloorLevelString);
+                    EditSession editSession = getEditSession();
+                    Integer newFloorLevel = NumericParser.parseInteger(parameters[1]);
                     if (newFloorLevel != null) {
                         if (newFloorLevel > this.waterLevel) {
                             newFloorLevel = this.waterLevel - 1;
-                            if (newFloorLevel == 0) {
-                                newFloorLevel = 1;
-                                this.waterLevel = 2;
+                            if (newFloorLevel <= editSession.getMinY()) {
+                                newFloorLevel = editSession.getMinY() + 1;
+                                this.waterLevel = editSession.getMinY() + 2;
                             }
                         }
                         this.floorLevel = newFloorLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
@@ -112,7 +117,7 @@ public class FlatOceanBrush extends AbstractBrush {
         int blockZ = chunkZ << 4;
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int z = 0; z < CHUNK_SIZE; z++) {
-                for (int y = 0; y < editSession.getMaxY() + 1; y++) {
+                for (int y = editSession.getMinY(); y <= editSession.getMaxY(); y++) {
                     if (y <= this.floorLevel) {
                         setBlockType(blockX + x, y, blockZ + z, BlockTypes.DIRT);
                     } else if (y <= this.waterLevel) {
@@ -129,8 +134,8 @@ public class FlatOceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GREEN + "Water level set to " + this.waterLevel);
-        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to " + this.floorLevel);
+        messenger.sendMessage(ChatColor.GREEN + "Water level set to: " + this.waterLevel);
+        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel);
     }
 
 }

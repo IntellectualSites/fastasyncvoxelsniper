@@ -27,15 +27,19 @@ public class SignOverwriteBrush extends AbstractBrush {
     private static final int MAX_SIGN_LINE_LENGTH = 15;
     private static final int NUM_SIGN_LINES = 4;
 
-    private final File pluginDataFolder;
     private final String[] signTextLines = new String[NUM_SIGN_LINES];
     private final boolean[] signLinesEnabled = new boolean[]{true, true, true, true};
     private boolean rangedMode;
 
-    public SignOverwriteBrush(File pluginDataFolder) {
-        this.pluginDataFolder = pluginDataFolder;
+    public SignOverwriteBrush() {
         clearBuffer();
         resetStates();
+    }
+
+    @Override
+    public void loadProperties() {
+        File dataFolder = new File(PLUGIN_DATA_FOLDER, "/signs");
+        dataFolder.mkdirs();
     }
 
     @Override
@@ -277,7 +281,7 @@ public class SignOverwriteBrush extends AbstractBrush {
      */
     private void saveBufferToFile(Snipe snipe, String fileName) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(this.pluginDataFolder, "/signs/" + fileName + ".vsign");
+        File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
         if (store.exists()) {
             messenger.sendMessage(ChatColor.RED + "This file already exists.");
             return;
@@ -302,11 +306,11 @@ public class SignOverwriteBrush extends AbstractBrush {
     /**
      * Loads a buffer from a file.
      *
-     * @return true if file has been loaded successfully, false otherwise
+     * @return {@code true} if file has been loaded successfully, {@code false} otherwise
      */
     private boolean loadBufferFromFile(Snipe snipe, String fileName) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(this.pluginDataFolder, "/signs/" + fileName + ".vsign");
+        File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
         if (!store.exists()) {
             messenger.sendMessage(ChatColor.RED + "This file does not exist.");
             return false;

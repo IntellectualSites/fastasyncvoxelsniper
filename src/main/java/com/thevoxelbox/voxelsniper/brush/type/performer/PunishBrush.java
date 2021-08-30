@@ -29,23 +29,41 @@ import java.util.stream.Stream;
 
 public class PunishBrush extends AbstractPerformerBrush {
 
+    private static final int TICKS_PER_SECOND = 20;
+
+    private static final int MAX_RANDOM_TELEPORTATION_RANGE = 400;
+    private static final int INFINI_PUNISH_SIZE = -3;
+
+    private static final Punishment DEFAULT_PUNISHMENT = Punishment.FIRE;
+    private static final int DEFAULT_PUNISH_LEVEL = 10;
+    private static final int DEFAULT_PUNISH_DURATION = 60;
+
     private static final List<String> PUNISHMENTS = Arrays.stream(Punishment.values())
             .map(punishment -> punishment.name().toLowerCase(Locale.ROOT))
             .collect(Collectors.toList());
 
-    private static final int MAX_RANDOM_TELEPORTATION_RANGE = 400;
-    private static final int TICKS_PER_SECOND = 20;
-    private static final int INFINIPUNISH_SIZE = -3;
-    private static final int DEFAULT_PUNISH_LEVEL = 10;
-    private static final int DEFAULT_PUNISH_DURATION = 60;
 
-    private Punishment punishment = Punishment.FIRE;
-    private int punishLevel = DEFAULT_PUNISH_LEVEL;
-    private int punishDuration = DEFAULT_PUNISH_DURATION;
     private boolean specificPlayer;
     private String punishPlayerName = "";
     private boolean hypnoAffectLandscape;
     private boolean hitsSelf;
+
+    private int maxRandomTeleportationRange;
+    private int infiniPunishSize;
+
+    private Punishment punishment;
+    private int punishLevel;
+    private int punishDuration;
+
+    @Override
+    public void loadProperties() {
+        this.maxRandomTeleportationRange = getIntegerProperty("max-random-teleportation-range", MAX_RANDOM_TELEPORTATION_RANGE);
+        this.infiniPunishSize = getIntegerProperty("infini-punish-size", INFINI_PUNISH_SIZE);
+
+        this.punishment = (Punishment) getEnumProperty("default-punishment", Punishment.class, DEFAULT_PUNISHMENT);
+        this.punishLevel = getIntegerProperty("default-punish-level", DEFAULT_PUNISH_LEVEL);
+        this.punishDuration = getIntegerProperty("default-punish-duration", DEFAULT_PUNISH_DURATION);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -69,7 +87,9 @@ public class PunishBrush extends AbstractPerformerBrush {
                             Arrays.stream(Punishment.values())
                                     .map(punishment -> ((punishment == this.punishment) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             punishment.name())
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available punishments: ", ""
+                                    ))
                     );
                 } else if (firstParameter.equalsIgnoreCase("toggleSelf")) {
                     this.hitsSelf = !this.hitsSelf;
@@ -82,7 +102,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                     this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
                 } else {
                     try {
-                        this.punishment = Punishment.valueOf(firstParameter);
+                        this.punishment = Punishment.valueOf(firstParameter.toUpperCase(Locale.ROOT));
                         messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
                                 .toLowerCase(Locale.ROOT) + " punishment selected.");
                     } catch (IllegalArgumentException exception) {
@@ -180,7 +200,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                             messenger.sendMessage("An error occured.");
                             return null;
                         }
-                    } else if (brushSize == INFINIPUNISH_SIZE) {
+                    } else if (brushSize == this.infiniPunishSize) {
                         numPunishApps++;
                         applyPunishment(entity, snipe);
                     }
@@ -301,8 +321,8 @@ public class PunishBrush extends AbstractPerformerBrush {
             case RANDOMTP:
                 Random random = new Random();
                 Location targetLocation = entity.getLocation();
-                targetLocation.setX(targetLocation.getX() + (random.nextInt(MAX_RANDOM_TELEPORTATION_RANGE) - MAX_RANDOM_TELEPORTATION_RANGE / 2.0));
-                targetLocation.setZ(targetLocation.getZ() + (random.nextInt(MAX_RANDOM_TELEPORTATION_RANGE) - MAX_RANDOM_TELEPORTATION_RANGE / 2.0));
+                targetLocation.setX(targetLocation.getX() + (random.nextInt(this.maxRandomTeleportationRange) - this.maxRandomTeleportationRange / 2.0));
+                targetLocation.setZ(targetLocation.getZ() + (random.nextInt(this.maxRandomTeleportationRange) - this.maxRandomTeleportationRange / 2.0));
                 entity.teleport(targetLocation);
                 break;
             case ALL_POTION:
@@ -351,7 +371,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 
     private void addEffect(LivingEntity entity, PotionEffectType type) {
         PotionEffect effect = new PotionEffect(type, TICKS_PER_SECOND * this.punishDuration, this.punishLevel);
-        entity.addPotionEffect(effect, true);
+        entity.addPotionEffect(effect);
     }
 
     @Override

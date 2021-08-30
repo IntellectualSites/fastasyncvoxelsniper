@@ -43,7 +43,7 @@ public class VoxelListExecutor implements CommandExecutor {
         if (toolkitProperties == null) {
             return;
         }
-        Messenger messenger = new Messenger(sender);
+        Messenger messenger = new Messenger(plugin, sender);
         if (arguments.length == 0) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
             BlockVector3 targetBlock = blockTracer.getTargetBlock();

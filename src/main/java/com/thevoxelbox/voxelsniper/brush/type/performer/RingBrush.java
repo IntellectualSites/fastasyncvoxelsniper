@@ -12,8 +12,11 @@ import java.util.stream.Stream;
 
 public class RingBrush extends AbstractPerformerBrush {
 
+    private static final double DEFAULT_INNER_SIZE = 0.0;
+
     private double trueCircle;
-    private double innerSize;
+
+    private double innerSize = DEFAULT_INNER_SIZE;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -42,7 +45,7 @@ public class RingBrush extends AbstractPerformerBrush {
                     Double innerSize = NumericParser.parseDouble(parameters[1]);
                     if (innerSize != null) {
                         this.innerSize = innerSize;
-                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to " + ChatColor.RED + this.innerSize);
+                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to: " + ChatColor.RED + this.innerSize);
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }

@@ -16,11 +16,18 @@ import java.util.stream.Stream;
 
 public class BiomeBrush extends AbstractBrush {
 
+    private static final BiomeType DEFAULT_BIOME_TYPE = BiomeTypes.PLAINS;
+
     private static final List<String> BIOMES = BiomeTypes.values().stream()
             .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
-    private BiomeType biomeType = BiomeTypes.PLAINS;
+    private BiomeType biomeType;
+
+    @Override
+    public void loadProperties() {
+        this.biomeType = (BiomeType) getRegistryProperty("default-biome-type", BiomeType.REGISTRY, DEFAULT_BIOME_TYPE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -38,14 +45,16 @@ public class BiomeBrush extends AbstractBrush {
                             BiomeTypes.values().stream()
                                     .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available biomes: ", ""
+                                    ))
                     );
                 } else {
                     BiomeType biomeType = BiomeTypes.get(firstParameter);
 
                     if (biomeType != null) {
                         this.biomeType = biomeType;
-                        messenger.sendMessage(ChatColor.GOLD + "Biome type set to " + ChatColor.DARK_GREEN + this.biomeType.getId());
+                        messenger.sendMessage(ChatColor.GOLD + "Biome type set to: " + ChatColor.DARK_GREEN + this.biomeType.getId());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
                     }
@@ -91,7 +100,7 @@ public class BiomeBrush extends AbstractBrush {
             double xSquared = Math.pow(x, 2);
             for (int z = -brushSize; z <= brushSize; z++) {
                 if (xSquared + Math.pow(z, 2) <= brushSizeSquared) {
-                    for (int y = 0; y < editSession.getMaxY() + 1; ++y) {
+                    for (int y = editSession.getMinY(); y <= editSession.getMaxY(); ++y) {
                         setBiome(targetBlockX + x, y, targetBlockZ + z, this.biomeType);
                     }
                 }

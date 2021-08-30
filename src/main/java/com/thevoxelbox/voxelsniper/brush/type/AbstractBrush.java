@@ -6,6 +6,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.registry.Keyed;
+import com.sk89q.worldedit.registry.NamespacedRegistry;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.TreeGenerator;
@@ -14,7 +16,10 @@ import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
@@ -23,7 +28,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -31,7 +39,14 @@ import java.util.stream.Stream;
 
 public abstract class AbstractBrush implements Brush {
 
+    protected static final VoxelSniperPlugin PLUGIN = VoxelSniperPlugin.plugin;
+    protected static final VoxelSniperConfig CONFIG = PLUGIN.getVoxelSniperConfig();
+    protected static final File PLUGIN_DATA_FOLDER = PLUGIN.getDataFolder();
+
     protected static final int CHUNK_SIZE = 16;
+    protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
+
+    private BrushProperties properties;
 
     private EditSession editSession;
     private BlockVector3 targetBlock;
@@ -94,10 +109,11 @@ public abstract class AbstractBrush implements Brush {
 
     public int clampY(int y) {
         int clampedY = y;
-        if (clampedY < 0) {
-            clampedY = 0;
+        int minHeight = editSession.getMinY();
+        if (clampedY <= minHeight) {
+            clampedY = minHeight;
         } else {
-            int maxHeight = editSession.getMaxY() + 1;
+            int maxHeight = editSession.getMaxY();
             if (clampedY > maxHeight) {
                 clampedY = maxHeight;
             }
@@ -190,6 +206,17 @@ public abstract class AbstractBrush implements Brush {
         return null;
     }
 
+    public BlockVector3 getRelativeBlock(BlockVector3 origin, Direction direction) {
+        int x = origin.getX();
+        int y = origin.getY();
+        int z = origin.getZ();
+        return getRelativeBlock(x, y, z, direction);
+    }
+
+    public BlockVector3 getRelativeBlock(int x, int y, int z, Direction direction) {
+        return direction.toBlockVector().add(x, y, z);
+    }
+
     public BlockType getBlockType(BlockVector3 position) {
         int x = position.getX();
         int y = position.getY();
@@ -229,7 +256,6 @@ public abstract class AbstractBrush implements Brush {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     public BaseBlock getFullBlock(BlockVector3 position) {
@@ -263,6 +289,144 @@ public abstract class AbstractBrush implements Brush {
 
     public void setBlock(int x, int y, int z, BaseBlock block) {
         editSession.setBlock(x, y, z, block);
+    }
+
+    @Override
+    public BrushProperties getProperties() {
+        return properties;
+    }
+
+    /**
+     * Return a config property associated to a brush, if exists. Otherwise, set the default value and return it.
+     *
+     * @param propertyName the name of the property
+     * @param defaultValue the default value to set and return
+     * @return the associated proprorty, or the default value
+     */
+    public Object getProperty(String propertyName, Object defaultValue) {
+        return getProperty(propertyName, defaultValue, defaultValue);
+    }
+
+    /**
+     * Return a config property associated to a brush, if exists. Otherwise, set the default value and return it.
+     *
+     * @param propertyName       the name of the property
+     * @param defaultValue       the default value to set and return
+     * @param defaultConfigValue the default config value to set, objets such as Enum and Registry values are not serializable
+     * @return the associated property, or the default value
+     */
+    public Object getProperty(String propertyName, Object defaultValue, Object defaultConfigValue) {
+        String brush = this.properties.getName();
+        Object currentPropertyValue = CONFIG.getBrushProperties()
+                .computeIfAbsent(brush, brushName -> new HashMap<>())
+                .putIfAbsent(propertyName, defaultValue);
+        if (currentPropertyValue == null) {
+            CONFIG.saveBrushPropertyToConfig(brush, propertyName, defaultConfigValue);
+        }
+        return currentPropertyValue;
+    }
+
+    public String getStringProperty(String propertyName, String defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue);
+
+        if (propertyValue instanceof String) {
+            return (String) propertyValue;
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing String property '" + propertyName + "' value for '" +
+                this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    public boolean getBooleanProperty(String propertyName, boolean defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue);
+
+        if (propertyValue instanceof Boolean) {
+            return (boolean) propertyValue;
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing Boolean property '" + propertyName + "' value for '" +
+                this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    public int getIntegerProperty(String propertyName, int defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue);
+
+        if (propertyValue instanceof Integer) {
+            return (int) propertyValue;
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing Integer property '" + propertyName + "' value for '" +
+                this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    public double getDoubleProperty(String propertyName, double defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue);
+
+        if (propertyValue instanceof Double) {
+            return (double) propertyValue;
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing Double property '" + propertyName + "' value for '" +
+                this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    public List<?> getListProperty(String propertyName, List<?> defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue);
+
+        if (propertyValue instanceof List) {
+            return (List<?>) propertyValue;
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing List property '" + propertyName + "' value for '" +
+                this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    public Object getRegistryProperty(
+            String propertyName, NamespacedRegistry<? extends Keyed> registry, Keyed
+            defaultValue
+    ) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue, defaultValue.getId());
+
+        if (propertyValue instanceof String) {
+            Object registryValue = registry.get(((String) propertyValue).toLowerCase(Locale.ROOT));
+            if (registryValue != null) {
+                return registryValue;
+            }
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing '" + registry.getName() + "' Registry property '" + propertyName +
+                "' value for '" + this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public Enum<?> getEnumProperty(String propertyName, Class<?> enumClass, Enum<?> defaultValue) {
+        Object propertyValue = this.getProperty(propertyName, defaultValue, defaultValue.name());
+
+        if (propertyValue instanceof String) {
+            try {
+                return Enum.valueOf((Class<Enum>) enumClass, ((String) propertyValue).toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
+        PLUGIN.getLogger().warning("Invalid or missing '" + enumClass.getSimpleName() + "' Enum property '" + propertyName +
+                "' value for '" + this.properties.getName() + "' brush! Setting up the default one...");
+        return defaultValue;
+    }
+
+    @Override
+    public void setProperties(BrushProperties properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public void loadProperties() {
     }
 
     public EditSession getEditSession() {

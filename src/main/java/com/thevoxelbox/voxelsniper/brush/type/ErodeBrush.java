@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -26,13 +27,13 @@ import java.util.stream.Stream;
 
 public class ErodeBrush extends AbstractBrush {
 
-    private static final List<BlockVector3> FACES_TO_CHECK = Arrays.asList(
-            BlockVector3.at(0, 0, 1),
-            BlockVector3.at(0, 0, -1),
-            BlockVector3.at(0, 1, 0),
-            BlockVector3.at(0, -1, 0),
-            BlockVector3.at(1, 0, 0),
-            BlockVector3.at(-1, 0, 0)
+    private static final List<Direction> FACES_TO_CHECK = Arrays.asList(
+            Direction.SOUTH,
+            Direction.NORTH,
+            Direction.UP,
+            Direction.DOWN,
+            Direction.EAST,
+            Direction.WEST
     );
 
     private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
@@ -53,7 +54,7 @@ public class ErodeBrush extends AbstractBrush {
             if (preset != null) {
                 try {
                     this.currentPreset = preset.getPreset();
-                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Brush preset set to " + preset.getName());
+                    messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Brush preset set to: " + preset.getName());
                     return;
                 } catch (IllegalArgumentException exception) {
                     messenger.sendMessage(ChatColor.RED + "Invalid preset.");
@@ -195,8 +196,10 @@ public class ErodeBrush extends AbstractBrush {
                         }
                         int count = 0;
                         Map<BlockWrapper, Integer> blockCount = new HashMap<>();
-                        for (BlockVector3 vector : FACES_TO_CHECK) {
-                            Vector relativePosition = Vectors.toBukkit(Vectors.of(currentPosition).add(vector));
+                        for (Direction direction : FACES_TO_CHECK) {
+                            Vector relativePosition = Vectors.toBukkit(
+                                    getRelativeBlock(Vectors.of(currentPosition), direction)
+                            );
                             BlockWrapper relativeBlock = blockChangeTracker.get(relativePosition, currentIteration);
                             if (!(relativeBlock.isEmpty() || relativeBlock.isLiquid())) {
                                 count++;
@@ -249,7 +252,7 @@ public class ErodeBrush extends AbstractBrush {
                             continue;
                         }
                         int count = (int) FACES_TO_CHECK.stream()
-                                .map(vector -> Vectors.of(currentPosition).add(vector))
+                                .map(direction -> getRelativeBlock(Vectors.of(currentPosition), direction))
                                 .map(Vectors::toBukkit)
                                 .map(relativePosition -> blockChangeTracker.get(relativePosition, currentIteration))
                                 .filter(relativeBlock -> relativeBlock.isEmpty() || relativeBlock.isLiquid())
@@ -272,10 +275,10 @@ public class ErodeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         messenger.sendBrushSizeMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to " + this.currentPreset.getErosionFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to " + this.currentPreset.getFillFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to " + this.currentPreset.getErosionRecursion());
-        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to " + this.currentPreset.getFillRecursion());
+        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces());
+        messenger.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to: " + this.currentPreset.getFillFaces());
+        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion());
+        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion());
     }
 
     private enum Preset {

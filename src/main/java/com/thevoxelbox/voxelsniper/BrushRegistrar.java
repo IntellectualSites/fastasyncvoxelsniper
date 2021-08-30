@@ -841,7 +841,7 @@ public class BrushRegistrar {
                 .alias("sio")
                 .alias("signoverwriter")
                 .alias("sign_overwrite")
-                .creator(() -> new SignOverwriteBrush(this.pluginDataFolder))
+                .creator(() -> new SignOverwriteBrush())
                 .build();
         this.registry.register(properties);
     }

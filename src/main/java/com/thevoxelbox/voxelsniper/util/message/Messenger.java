@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockStateHolder;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class Messenger {
 
-    private static final int BRUSH_SIZE_WARNING_THRESHOLD = 20;
-
+    private final VoxelSniperPlugin plugin;
     private final CommandSender sender;
 
-    public Messenger(CommandSender sender) {
+    public Messenger(VoxelSniperPlugin plugin, CommandSender sender) {
+        this.plugin = plugin;
         this.sender = sender;
     }
 
@@ -45,7 +45,7 @@ public class Messenger {
 
     public void sendBrushSizeMessage(int brushSize) {
         sendMessage(ChatColor.GREEN + "Brush Size: " + ChatColor.DARK_RED + brushSize);
-        if (brushSize >= BRUSH_SIZE_WARNING_THRESHOLD) {
+        if (brushSize >= this.plugin.getVoxelSniperConfig().getBrushSizeWarningThreshold()) {
             sendMessage(ChatColor.RED + "WARNING: Large brush size selected!");
         }
     }
@@ -63,9 +63,10 @@ public class Messenger {
             sendMessage(ChatColor.DARK_GREEN + "No blocks selected!");
         }
         String message = voxelList.stream()
-                .map(BlockStateHolder::getAsString)
-                .map(dataAsString -> dataAsString + " ")
-                .collect(Collectors.joining("", ChatColor.DARK_GREEN + "Block Types Selected: " + ChatColor.AQUA, ""));
+                .map(state -> ChatColor.AQUA + state.getAsString())
+                .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                        ChatColor.DARK_GREEN + "Block Types Selected: ", ""
+                ));
         sendMessage(message);
     }
 

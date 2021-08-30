@@ -20,11 +20,18 @@ import java.util.stream.Stream;
 
 public class EntityBrush extends AbstractBrush {
 
+    private static final EntityType DEFAULT_ENTITY_TYPE = EntityTypes.ZOMBIE;
+
     private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
             .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
 
-    private EntityType entityType = EntityTypes.ZOMBIE;
+    private EntityType entityType;
+
+    @Override
+    public void loadProperties() {
+        this.entityType = (EntityType) getRegistryProperty("default-entity-type", EntityType.REGISTRY, DEFAULT_ENTITY_TYPE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -42,14 +49,16 @@ public class EntityBrush extends AbstractBrush {
                             EntityType.REGISTRY.values().stream()
                                     .map(entityType -> ((entityType == this.entityType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available entity types: ", ""
+                                    ))
                     );
                 } else {
                     EntityType currentEntity = EntityTypes.get(firstParameter);
 
                     if (currentEntity != null) {
                         this.entityType = currentEntity;
-                        messenger.sendMessage(ChatColor.GREEN + "Entity type set to " + ChatColor.DARK_GREEN + this.entityType.getName());
+                        messenger.sendMessage(ChatColor.GREEN + "Entity type set to: " + ChatColor.DARK_GREEN + this.entityType.getName());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid entity type.");
                     }

@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -18,8 +19,14 @@ public class OverlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
 
-    private int depth = DEFAULT_DEPTH;
     private boolean allBlocks;
+
+    private int depth;
+
+    @Override
+    public void loadProperties() {
+        this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -85,6 +92,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 
     private void overlay(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        EditSession editSession = getEditSession();
         int brushSize = toolkitProperties.getBrushSize();
         double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
         for (int z = brushSize; z >= -brushSize; z--) {
@@ -98,7 +106,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
                 BlockType type = getBlockType(blockX + x, blockY + 1, blockZ + z);
                 if (isIgnoredBlock(type)) {
                     if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) {
-                        for (int y = blockY; y > 0; y--) {
+                        for (int y = blockY; y >= editSession.getMinY(); y--) {
                             // check for surface
                             BlockType layerBlockType = getBlockType(blockX + x, y, blockZ + z);
                             if (!isIgnoredBlock(layerBlockType)) {
@@ -136,6 +144,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
 
     private void overlayTwo(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        EditSession editSession = getEditSession();
         int brushSize = toolkitProperties.getBrushSize();
         double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
         int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
@@ -146,7 +155,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
                 int blockX = targetBlock.getX();
                 int blockY = targetBlock.getY();
                 int blockZ = targetBlock.getZ();
-                for (int y = blockY; y > 0 && !surfaceFound; y--) { // start scanning from the height you clicked at
+                for (int y = blockY; y >= editSession.getMinY() && !surfaceFound; y--) { // start scanning from the height you clicked at
                     if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
                             if (!Materials.isEmpty(getBlockType(

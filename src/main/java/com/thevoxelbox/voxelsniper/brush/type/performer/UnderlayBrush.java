@@ -15,8 +15,14 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
 
-    private int depth = DEFAULT_DEPTH;
     private boolean allBlocks;
+
+    private int depth;
+
+    @Override
+    public void loadProperties() {
+        this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -25,11 +31,11 @@ public class UnderlayBrush extends AbstractPerformerBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Underlay Brush Parameters:");
-            messenger.sendMessage(ChatColor.BLUE + "/b over all -- Sets the brush to overlay over ALL materials, not just " +
+            messenger.sendMessage(ChatColor.AQUA + "/b under all -- Sets the brush to overlay over ALL materials, not just " +
                     "natural surface ones (will no longer ignore trees and buildings).");
-            messenger.sendMessage(ChatColor.BLUE + "/b over some -- Sets the brush to overlay over natural surface " +
+            messenger.sendMessage(ChatColor.AQUA + "/b under some -- Sets the brush to overlay over natural surface " +
                     "materials.");
-            messenger.sendMessage(ChatColor.AQUA + "/b over d [n] -- Sets the number of blocks thick to change to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b under d [n] -- Sets the number of blocks thick to change to n.");
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("all")) {

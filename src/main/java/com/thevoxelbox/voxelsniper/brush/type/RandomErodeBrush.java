@@ -14,13 +14,14 @@ import java.util.Random;
 public class RandomErodeBrush extends AbstractBrush {
 
     private static final double TRUE_CIRCLE = 0.5;
+
     private final Random generator = new Random();
     private BlockWrapper[][][] snap;
     private int brushSize;
     private int erodeFace;
     private int fillFace;
-    private int erodeRecursion = 1;
-    private int fillRecursion = 1;
+    private int erodeRecursion;
+    private int fillRecursion;
 
     @Override
     public void handleArrowAction(Snipe snipe) {

@@ -54,7 +54,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Shift Level set to " + this.getYLevel())
+                .message(ChatColor.GREEN + "Shift Level set to: " + this.getYLevel())
                 .send();
     }
 

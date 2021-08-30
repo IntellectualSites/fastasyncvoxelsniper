@@ -14,6 +14,10 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
     private boolean useWorldCoordinates = true;
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];

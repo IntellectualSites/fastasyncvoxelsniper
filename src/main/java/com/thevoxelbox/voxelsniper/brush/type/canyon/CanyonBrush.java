@@ -15,9 +15,23 @@ import java.util.stream.Stream;
 
 public class CanyonBrush extends AbstractBrush {
 
-    private static final int SHIFT_LEVEL_MIN = 10;
+    private static final int SHIFT_LEVEL_MIN = -54;
     private static final int SHIFT_LEVEL_MAX = 60;
-    private int yLevel = 10;
+
+    private static final int DEFAULT_Y_LEVEL = -54;
+
+    private int shiftLevelMin;
+    private int shiftLevelMax;
+
+    private int yLevel;
+
+    @Override
+    public void loadProperties() {
+        this.shiftLevelMin = getIntegerProperty("shift-level-min", SHIFT_LEVEL_MIN);
+        this.shiftLevelMax = getIntegerProperty("shift-level-max", SHIFT_LEVEL_MAX);
+
+        this.yLevel = getIntegerProperty("default-y-level", DEFAULT_Y_LEVEL);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -26,17 +40,22 @@ public class CanyonBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Canyon Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the Level to which the land will be shifted down to n.");
+            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the y-level to which the land will be shifted down to n" +
+                    ".");
         } else {
             if (parameters.length == 2) {
 
                 if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yLevel = NumericParser.parseInteger(parameters[1]);
                     if (yLevel != null) {
-                        if (yLevel < SHIFT_LEVEL_MIN) {
-                            yLevel = SHIFT_LEVEL_MIN;
-                        } else if (yLevel > SHIFT_LEVEL_MAX) {
-                            yLevel = SHIFT_LEVEL_MAX;
+                        if (yLevel < this.shiftLevelMin) {
+                            yLevel = this.shiftLevelMin;
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer greater than or equal to" +
+                                    this.shiftLevelMax + ".");
+                        } else if (yLevel > this.shiftLevelMax) {
+                            yLevel = this.shiftLevelMax;
+                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer less than or equal to " +
+                                    this.shiftLevelMin + ".");
                         }
                         this.yLevel = yLevel;
                         messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);
@@ -87,14 +106,14 @@ public class CanyonBrush extends AbstractBrush {
         for (int x = 0; x < CHUNK_SIZE; x++) {
             for (int z = 0; z < CHUNK_SIZE; z++) {
                 int currentYLevel = this.yLevel;
-                for (int y = 63; y < editSession.getMaxY() + 1; y++) {
+                for (int y = 63; y <= editSession.getMaxY(); y++) {
                     BlockType blockType = getBlockType(blockX + x, y, blockZ + z);
                     setBlockType(blockX + x, currentYLevel, blockZ + z, blockType);
                     setBlockType(blockX + x, y, blockZ + z, BlockTypes.AIR);
                     currentYLevel++;
                 }
-                setBlockType(blockX + x, 0, blockZ + z, BlockTypes.BEDROCK);
-                for (int y = 1; y < SHIFT_LEVEL_MIN; y++) {
+                setBlockType(blockX + x, editSession.getMinY(), blockZ + z, BlockTypes.BEDROCK);
+                for (int y = editSession.getMinY() + 1; y < this.shiftLevelMin; y++) {
                     setBlockType(blockX + x, y, blockZ + z, BlockTypes.STONE);
                 }
             }
@@ -105,7 +124,7 @@ public class CanyonBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Shift Level set to " + this.yLevel)
+                .message(ChatColor.GREEN + "Shift Level set to: " + this.yLevel)
                 .send();
     }
 

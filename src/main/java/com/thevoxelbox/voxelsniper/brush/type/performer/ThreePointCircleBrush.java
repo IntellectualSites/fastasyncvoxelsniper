@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
+    private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
+
     private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
             .map(tolerance -> tolerance.name().toLowerCase(Locale.ROOT))
             .collect(Collectors.toList());
@@ -28,7 +30,13 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     private Vector coordinatesTwo;
     @Nullable
     private Vector coordinatesThree;
-    private Tolerance tolerance = Tolerance.DEFAULT;
+
+    private Tolerance tolerance;
+
+    @Override
+    public void loadProperties() {
+        this.tolerance = (Tolerance) getEnumProperty("default-tolerance", Tolerance.class, DEFAULT_TOLERANCE);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -48,12 +56,14 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                             Arrays.stream(Tolerance.values())
                                     .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             tolerance.name().toLowerCase(Locale.ROOT))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available tolerances: ", ""
+                                    ))
                     );
                 } else {
                     try {
-                        this.tolerance = Tolerance.valueOf(firstParameter);
-                        messenger.sendMessage(ChatColor.AQUA + "Brush set to " + this.tolerance.name()
+                        this.tolerance = Tolerance.valueOf(firstParameter.toUpperCase(Locale.ROOT));
+                        messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.name()
                                 .toLowerCase(Locale.ROOT) + " tolerance.");
                     } catch (IllegalArgumentException exception) {
                         messenger.sendMessage(ChatColor.RED + "Invalid tolerance.");

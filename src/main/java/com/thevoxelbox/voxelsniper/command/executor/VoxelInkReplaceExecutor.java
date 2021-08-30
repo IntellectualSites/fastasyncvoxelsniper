@@ -57,7 +57,7 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
         }
         BlockState blockState = BukkitAdapter.adapt(blockData);
         toolkitProperties.setReplaceBlockData(blockState);
-        Messenger messenger = new Messenger(sender);
+        Messenger messenger = new Messenger(plugin, sender);
         messenger.sendReplaceBlockDataMessage(blockState);
     }
 

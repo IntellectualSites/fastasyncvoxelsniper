@@ -1,3 +1,191 @@
+# The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
 message-on-login-enabled: true
-litesniper-max-brush-size: 5
+default-block-material: minecraft:air
+default-replace-block-material: minecraft:air
+default-brush-size: 3
+litesniper-max-brush-size: 7
 litesniper-restricted-materials:
+    - minecraft:barrier
+    - minecraft:bedrock
+brush-size-warning-threshold: 3
+default-voxel-height: 1
+default-cylinder-center: 0
+brush-properties:
+    Biome:
+        default-biome-type: minecraft:plains
+    Blob:
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        default-growth-percent: 1000
+    Canyon:
+        shift-level-min: -54
+        shift-level-max: 60
+        default-y-level: -54
+    Canyon Selection:
+        shift-level-min: -54
+        shift-level-max: 60
+        default-y-level: -54
+    Clone Stamp:
+        default-stamp-type: DEFAULT
+    Copy Pasta:
+        block-limit: 10000
+    Ellipse:
+        scl-min: 1
+        scl-max: 9999
+        steps-min: 1
+        steps-max: 2000
+        default-x-scl: 10
+        default-y-scl: 10
+        default-steps: 200
+    Ellipsoid:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Entity:
+        default-entity-type: minecraft:zombie
+    Entity Removal:
+        default-exemptions:
+            - org.bukkit.entity.Player
+            - org.bukkit.entity.Hanging
+            - org.bukkit.entity.NPC
+    Flat Ocean:
+        default-water-level: 29
+        default-floor-level: 8
+    Generate Tree:
+        default-leaf-type: minecraft:oak_leaves
+        default-wood-type: minecraft:oak_log
+        default-root-float: false
+        default-start-height: 0
+        default-root-length: 9
+        default-min-roots: 1
+        default-max-roots: 2
+        default-thickness: 1
+        default-slope-chance: 40
+        default-height-min: 14
+        default-height-max: 18
+        default-branch-length: 8
+        default-node-min: 3
+        default-node-max: 4
+    Heat Ray:
+        required-obsidian-density: 0.6
+        required-cobble-density: 0.5
+        required-fire-density: -0.25
+        required-air-density: 0.0
+        default-octaves: 5
+        default-frequency: 1.0
+        default-amplitude: 0.3
+    Jagged Line:
+        recursion-min: 1
+        recursion-max: 10
+        defaut-recursion: 3
+        defaut-spread: 3
+    Jockey:
+        entity-stack-limit: 50
+        default-jockey-type: NORMAL_ALL_ENTITIES
+    Move:
+        max-block-count: 5000000
+    Ocean:
+        water-level-min: 12
+        low-cut-level: 12
+        default-water-lever: 63
+    Overlay:
+        default-depth: 3
+    Punish:
+        max-random-teleportation-range: 400
+        infini-punish-size: -3
+        default-punishment: FIRE
+        default-punish-level: 10
+        default-punish-duration: 60
+    Pull:
+        default-pinch: 1
+        default-bubble: 0
+    Ring:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Splatter Ball:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Scanner:
+        depth-min: 1
+        depth-max: 64
+        default-depth: 24
+    Splatter Disc:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Set:
+        selection-size-max: 5000000
+    Shell Set:
+        max-size: 5000000
+    Stencil List:
+        default-paste-option: 1
+    Splatter Overlay:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+        default-depth: 3
+        default-y-offset: 0
+    Spiral Staircase:
+        default-stair-type: block
+        default-sdirect: c
+        default-sopen: n
+    Splatter Voxel:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Splatter Voxel Disc:
+        seed-percent-min: 1
+        seed-percent-max: 9999
+        growth-percent-min: 1
+        growth-percent-max: 9999
+        splatter-recursions-min: 1
+        splatter-recursions-max: 10
+        default-seed-percent: 1000
+        default-growth-percent: 1000
+        default-splatter-recursions: 3
+    Stencil:
+        default-paste-option: 1
+    Tree Snipe:
+        default-tree-type: TREE
+    Three Point Circle:
+        default-tolerance: DEFAULT
+    Underlay:
+        default-depth: 3

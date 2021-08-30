@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
+
     private static final List<String> BIOMES = BiomeTypes.values().stream()
             .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .collect(Collectors.toList());
@@ -44,7 +45,9 @@ public class RegenerateChunkBrush extends AbstractBrush {
                                     BiomeTypes.values().stream()
                                             .map(biomeType -> ((biomeType == this.biomeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                                     biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-                            ).collect(Collectors.joining(ChatColor.WHITE + ", "))
+                            ).collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                    ChatColor.AQUA + "Available biomes: ", ""
+                            ))
                     );
                 } else {
                     if (firstParameter.equals(DEFAULT_BIOME)) {
@@ -57,7 +60,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
                             messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
                         }
                     }
-                    messenger.sendMessage(ChatColor.GOLD + "Biome type set to " + ChatColor.DARK_GREEN +
+                    messenger.sendMessage(ChatColor.GOLD + "Biome type set to: " + ChatColor.DARK_GREEN +
                             (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
                 }
             } else {

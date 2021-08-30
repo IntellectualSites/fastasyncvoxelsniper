@@ -20,16 +20,31 @@ import java.util.stream.Stream;
 public class JaggedLineBrush extends AbstractPerformerBrush {
 
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
+
     private static final int RECURSION_MIN = 1;
-    private static final int RECURSION_DEFAULT = 3;
     private static final int RECURSION_MAX = 10;
-    private static final int SPREAD_DEFAULT = 3;
+
+    private static final int DEFAULT_RECURSION = 3;
+    private static final int DEFAULT_SPREAD = 3;
 
     private final Random random = new Random();
     private Vector originCoordinates;
     private Vector targetCoordinates = new Vector();
-    private int recursion = RECURSION_DEFAULT;
-    private int spread = SPREAD_DEFAULT;
+
+    private int recursionMin;
+    private int recursionMax;
+
+    private int recursions;
+    private int spread;
+
+    @Override
+    public void loadProperties() {
+        this.recursionMin = getIntegerProperty("recursion-min", RECURSION_MIN);
+        this.recursionMax = getIntegerProperty("recursion-max", RECURSION_MAX);
+
+        this.recursions = getIntegerProperty("defaut-recursion", DEFAULT_RECURSION);
+        this.spread = getIntegerProperty("defaut-spread", DEFAULT_SPREAD);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -40,17 +55,21 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
             messenger.sendMessage(ChatColor.DARK_AQUA + "Right click first point with the arrow. Right click with gunpowder to " +
                     "draw a jagged line to set the second point.");
             messenger.sendMessage(ChatColor.GOLD + "Jagged Line Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b j r [n] - Sets the number of recursions to n. (default 3, must be 1-10)");
-            messenger.sendMessage(ChatColor.AQUA + "/b j s [n] - Sets the spread to n. (default 3, must be 1-10)");
+            messenger.sendMessage(ChatColor.AQUA + "/b j r [n] - Sets the number of recursions to n. Default is " +
+                    getIntegerProperty("defaut-recursion", DEFAULT_RECURSION) + ", must be an integer " + this.recursionMin +
+                    "-" + this.recursionMax + ".");
+            messenger.sendMessage(ChatColor.AQUA + "/b j s [n] - Sets the spread to n. Default is " +
+                    getIntegerProperty("defaut-spread", DEFAULT_SPREAD) + ".");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("r")) {
-                    Integer recursion = NumericParser.parseInteger(parameters[1]);
-                    if (recursion != null && recursion >= RECURSION_MIN && recursion <= RECURSION_MAX) {
-                        this.recursion = recursion;
-                        messenger.sendMessage(ChatColor.GREEN + "Recursion set to: " + this.recursion);
+                    Integer recursions = NumericParser.parseInteger(parameters[1]);
+                    if (recursions != null && recursions >= this.recursionMin && recursions <= this.recursionMax) {
+                        this.recursions = recursions;
+                        messenger.sendMessage(ChatColor.GREEN + "Recursions set to: " + this.recursions);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Recusions must be an integer " + this.recursionMin +
+                                "-" + this.recursionMax + ".");
                     }
                 } else if (firstParameter.equalsIgnoreCase("s")) {
                     Integer spread = NumericParser.parseInteger(parameters[1]);
@@ -126,7 +145,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
             BlockIterator iterator = new BlockIterator(world, originClone, direction, 0, NumberConversions.round(length));
             while (iterator.hasNext()) {
                 Block block = iterator.next();
-                for (int i = 0; i < this.recursion; i++) {
+                for (int i = 0; i < this.recursions; i++) {
                     int x = Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread);
                     int y = Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread);
                     int z = Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread);
@@ -140,7 +159,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GRAY + "Recursion set to: " + this.recursion)
+                .message(ChatColor.GRAY + "Recursion set to: " + this.recursions)
                 .message(ChatColor.GRAY + "Spread set to: " + this.spread)
                 .send();
     }

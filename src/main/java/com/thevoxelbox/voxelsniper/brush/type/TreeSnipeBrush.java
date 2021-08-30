@@ -19,9 +19,18 @@ import java.util.stream.Stream;
 
 public class TreeSnipeBrush extends AbstractBrush {
 
+    private static final TreeGenerator.TreeType DEFAULT_TREE_TYPE = TreeGenerator.TreeType.TREE;
+
     private static final List<String> TREES = new ArrayList<>(TreeGenerator.TreeType.getPrimaryAliases());
 
-    private TreeGenerator.TreeType treeType = TreeGenerator.TreeType.TREE;
+    private TreeGenerator.TreeType treeType;
+
+    @Override
+    public void loadProperties() {
+        this.treeType = (TreeGenerator.TreeType) getEnumProperty("default-tree-type", TreeGenerator.TreeType.class,
+                DEFAULT_TREE_TYPE
+        );
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -39,7 +48,9 @@ public class TreeSnipeBrush extends AbstractBrush {
                             Arrays.stream(TreeGenerator.TreeType.values())
                                     .map(treeType -> ((treeType == this.treeType) ? ChatColor.GOLD : ChatColor.GRAY) +
                                             treeType.lookupKeys.get(0))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", "))
+                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
+                                            ChatColor.AQUA + "Available tree types: ", ""
+                                    ))
                     );
                 } else {
                     TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);

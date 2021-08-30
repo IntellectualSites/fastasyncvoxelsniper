@@ -52,7 +52,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
         if (toolkitProperties == null) {
             return;
         }
-        Messenger messenger = new Messenger(sender);
+        Messenger messenger = new Messenger(plugin, sender);
         VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
         List<BlockType> liteSniperRestrictedMaterials = config.getLitesniperRestrictedMaterials();
         if (arguments.length == 0) {
@@ -70,7 +70,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(
                         targetBlockType)) {
-                    sender.sendMessage("You are not allowed to use " + targetBlockType.getId() + ".");
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + targetBlockType.getId() + ".");
                     return;
                 }
                 toolkitProperties.setBlockType(targetBlockType);
@@ -81,7 +81,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
         BlockType blockType = BlockTypes.get(arguments[0].toLowerCase(Locale.ROOT));
         if (blockType != null) {
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(blockType)) {
-                sender.sendMessage("You are not allowed to use " + blockType.getId() + ".");
+                sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockType.getId() + ".");
                 return;
             }
             toolkitProperties.setBlockType(blockType);

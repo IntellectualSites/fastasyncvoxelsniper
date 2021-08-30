@@ -17,11 +17,16 @@ import java.util.stream.Stream;
 
 public class Rotation3DBrush extends AbstractBrush {
 
+    private static final int DEFAULT_SE_YAW = 0;
+    private static final int DEFAULT_SE_PITCH = 0;
+    private static final int DEFAULT_SE_ROLL = 0;
+
     private int brushSize;
     private BlockState[][][] snap;
-    private double seYaw;
-    private double sePitch;
-    private double seRoll;
+
+    private double seYaw = DEFAULT_SE_YAW;
+    private double sePitch = DEFAULT_SE_PITCH;
+    private double seRoll = DEFAULT_SE_ROLL;
 
     // after all rotations, compare snapshot to new state of world?
     // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that
@@ -33,6 +38,8 @@ public class Rotation3DBrush extends AbstractBrush {
 
         // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
         if (firstParameter.equalsIgnoreCase("info")) {
+            messenger.sendMessage(ChatColor.DARK_AQUA + "The gradian is a unit of angle measurement different from the degree. " +
+                    "On average, 180 degrees = " + DECIMAL_FORMAT.format(Math.PI) + " radians.");
             messenger.sendMessage(ChatColor.GOLD + "Rotate Brush Brush Parameters:");
             messenger.sendMessage(ChatColor.AQUA + "/b rot3 p [n] -- Sets degrees of pitch rotation to n (rotation about the Z" +
                     " axis).");
@@ -42,17 +49,21 @@ public class Rotation3DBrush extends AbstractBrush {
                     " about the Y axis).");
         } else {
             if (parameters.length == 2) {
-                Double value = NumericParser.parseDouble(parameters[1]);
-                if (value != null && value >= 0 && value <= 359) {
+                Double degreesAngle = NumericParser.parseDouble(parameters[1]);
+
+                if (degreesAngle != null && degreesAngle >= 0 && degreesAngle <= 359) {
                     if (firstParameter.equalsIgnoreCase("p")) {
-                        this.sePitch = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to " + this.sePitch + " gradians");
+                        this.sePitch = Math.toRadians(degreesAngle);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.sePitch) + " gradians (" + degreesAngle + " degrees)");
                     } else if (firstParameter.equalsIgnoreCase("r")) {
-                        this.seRoll = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to " + this.seRoll + " gradians");
+                        this.seRoll = Math.toRadians(degreesAngle);
+                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.seRoll) + " gradians (" + degreesAngle + " degrees)");
                     } else if (firstParameter.equalsIgnoreCase("y")) {
-                        this.seYaw = Math.toRadians(value);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to " + this.seYaw + " gradians");
+                        this.seYaw = Math.toRadians(degreesAngle);
+                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to: " +
+                                DECIMAL_FORMAT.format(this.seYaw) + " gradians (" + degreesAngle + " degrees)");
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");

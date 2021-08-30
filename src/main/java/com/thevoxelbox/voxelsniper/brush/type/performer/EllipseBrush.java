@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -14,18 +15,38 @@ import java.util.stream.Stream;
 public class EllipseBrush extends AbstractPerformerBrush {
 
     private static final double TWO_PI = (2 * Math.PI);
+
     private static final int SCL_MIN = 1;
     private static final int SCL_MAX = 9999;
-    private static final int SCL_DEFAULT = 10;
     private static final int STEPS_MIN = 1;
     private static final int STEPS_MAX = 2000;
-    private static final int STEPS_DEFAULT = 200;
+
+    private static final int DEFAULT_SCL = 10;
+    private static final int DEFAULT_STEPS = 200;
+
+    private boolean fill;
+    private double stepSize;
+
+    private int sclMin;
+    private int sclMax;
+    private int stepsMin;
+    private int stepsMax;
 
     private int xscl;
     private int yscl;
     private int steps;
-    private double stepSize;
-    private boolean fill;
+
+    @Override
+    public void loadProperties() {
+        this.sclMin = getIntegerProperty("scl-min", SCL_MIN);
+        this.sclMax = getIntegerProperty("scl-max", SCL_MAX);
+        this.stepsMin = getIntegerProperty("steps-min", STEPS_MIN);
+        this.stepsMax = getIntegerProperty("steps-max", STEPS_MAX);
+
+        this.xscl = getIntegerProperty("default-x-scl", DEFAULT_SCL);
+        this.yscl = getIntegerProperty("default-y-scl", DEFAULT_SCL);
+        this.steps = getIntegerProperty("default-steps", DEFAULT_STEPS);
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -34,7 +55,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Ellipse Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b el fill -- Toggles fill mode.");
+            messenger.sendMessage(ChatColor.AQUA + "/b el fill -- Toggles fill mode. Default is false.");
             messenger.sendMessage(ChatColor.AQUA + "/b el x [n] -- Sets X size modifier to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b el y [n] -- Sets Y size modifier to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b el t [n] -- Sets the amount of time steps.");
@@ -55,7 +76,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("x")) {
                     Integer xscl = NumericParser.parseInteger(parameters[1]);
-                    if (xscl != null && xscl >= SCL_MIN && xscl <= SCL_MAX) {
+                    if (xscl != null && xscl >= this.sclMin && xscl <= this.sclMax) {
                         this.xscl = xscl;
                         messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
                     } else {
@@ -63,7 +84,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     }
                 } else if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yscl = NumericParser.parseInteger(parameters[1]);
-                    if (yscl != null && yscl >= SCL_MIN && yscl <= SCL_MAX) {
+                    if (yscl != null && yscl >= this.sclMin && yscl <= this.sclMax) {
                         this.yscl = yscl;
                         messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
                     } else {
@@ -71,7 +92,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     }
                 } else if (firstParameter.equalsIgnoreCase("t")) {
                     Integer steps = NumericParser.parseInteger(parameters[1]);
-                    if (steps != null && steps >= STEPS_MIN && steps <= STEPS_MAX) {
+                    if (steps != null && steps >= this.stepsMin && steps <= this.stepsMax) {
                         this.steps = steps;
                         messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
                     } else {
@@ -175,15 +196,16 @@ public class EllipseBrush extends AbstractPerformerBrush {
     }
 
     private void ellipseFill(Snipe snipe, BlockVector3 targetBlock) {
+        EditSession editSession = getEditSession();
         int ix = this.xscl;
         int iy = this.yscl;
         int blockX = targetBlock.getX();
         int blockY = targetBlock.getY();
         int blockZ = targetBlock.getZ();
-        this.performer.perform(getEditSession(), blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
+        this.performer.perform(editSession, blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
         try {
             if (ix >= iy) { // Need this unless you want weird holes
-                for (iy = this.yscl; iy > 0; iy--) {
+                for (iy = this.yscl; iy >= editSession.getMinY(); iy--) {
                     for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
                         int x = (int) Math.round(ix * Math.cos(steps));
                         int y = (int) Math.round(iy * Math.sin(steps));
@@ -232,7 +254,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     ix--;
                 }
             } else {
-                for (ix = this.xscl; ix > 0; ix--) {
+                for (ix = this.xscl; ix >= editSession.getMinY(); ix--) {
                     for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
                         int x = (int) Math.round(ix * Math.cos(steps));
                         int y = (int) Math.round(iy * Math.sin(steps));
@@ -289,14 +311,14 @@ public class EllipseBrush extends AbstractPerformerBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        if (this.xscl < SCL_MIN || this.xscl > SCL_MAX) {
-            this.xscl = SCL_DEFAULT;
+        if (this.xscl < this.sclMin || this.xscl > this.sclMax) {
+            this.xscl = getIntegerProperty("scl-default", DEFAULT_SCL);
         }
-        if (this.yscl < SCL_MIN || this.yscl > SCL_MAX) {
-            this.yscl = SCL_DEFAULT;
+        if (this.yscl < this.sclMin || this.yscl > this.sclMax) {
+            this.yscl = getIntegerProperty("scl-default", DEFAULT_SCL);
         }
-        if (this.steps < STEPS_MIN || this.steps > STEPS_MAX) {
-            this.steps = STEPS_DEFAULT;
+        if (this.steps < this.stepsMin || this.steps > this.stepsMax) {
+            this.steps = getIntegerProperty("default-steps", DEFAULT_STEPS);
         }
         SnipeMessageSender messageSender = snipe.createMessageSender();
         messageSender.brushNameMessage()

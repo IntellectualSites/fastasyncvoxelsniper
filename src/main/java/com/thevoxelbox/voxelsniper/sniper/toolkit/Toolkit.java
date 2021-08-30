@@ -67,6 +67,8 @@ public class Toolkit {
     private Brush createBrush(BrushProperties properties) {
         BrushCreator creator = properties.getCreator();
         Brush brush = creator.create();
+        brush.setProperties(properties);
+        brush.loadProperties();
         this.brushes.put(properties, brush);
         return brush;
     }

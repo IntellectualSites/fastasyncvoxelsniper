@@ -16,9 +16,14 @@ import org.bukkit.util.Vector;
 public class LineBrush extends AbstractPerformerBrush {
 
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
+
     private Vector originCoordinates;
     private Vector targetCoordinates = new Vector();
     private World targetWorld;
+
+    @Override
+    public void loadProperties() {
+    }
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {

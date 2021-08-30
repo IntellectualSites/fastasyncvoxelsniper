@@ -1,14 +1,16 @@
 package com.thevoxelbox.voxelsniper;
 
-import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
+import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import io.papermc.lib.PaperLib;
 import org.bstats.bukkit.Metrics;
@@ -19,18 +21,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.serverlib.ServerLib;
 
 import java.io.File;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
     public static VoxelSniperPlugin plugin;
-    private VoxelSniperConfig voxelSniperConfig;
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
+    private VoxelSniperConfig voxelSniperConfig;
 
     public static JavaPlugin getPlugin() {
         return plugin;
@@ -43,6 +41,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.brushRegistry = loadBrushRegistry();
         this.performerRegistry = loadPerformerRegistry();
         this.sniperRegistry = new SniperRegistry();
+        testRegistries();
         loadCommands();
         loadListeners();
         new FastAsyncVoxelSniper(this);
@@ -57,16 +56,20 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private VoxelSniperConfig loadConfig() {
         saveDefaultConfig();
         FileConfiguration config = getConfig();
-        VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(config);
-        boolean messageOnLoginEnabled = voxelSniperConfigLoader.isMessageOnLoginEnabled();
-        int litesniperMaxBrushSize = voxelSniperConfigLoader.getLitesniperMaxBrushSize();
-        List<BlockType> litesniperRestrictedMaterials = voxelSniperConfigLoader.getLitesniperRestrictedMaterials()
-                .stream()
-                .map(key -> key.toLowerCase(Locale.ROOT))
-                .map(BlockTypes::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        return new VoxelSniperConfig(messageOnLoginEnabled, litesniperMaxBrushSize, litesniperRestrictedMaterials);
+        VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(this, config);
+
+        return new VoxelSniperConfig(
+                voxelSniperConfigLoader.isMessageOnLoginEnabled(),
+                voxelSniperConfigLoader.getDefaultBlockMaterial(),
+                voxelSniperConfigLoader.getDefaultReplaceBlockMaterial(),
+                voxelSniperConfigLoader.getDefaultBrushSize(),
+                voxelSniperConfigLoader.getLitesniperMaxBrushSize(),
+                voxelSniperConfigLoader.getLitesniperRestrictedMaterials(),
+                voxelSniperConfigLoader.getBrushSizeWarningThreshold(),
+                voxelSniperConfigLoader.getDefaultVoxelHeight(),
+                voxelSniperConfigLoader.getDefaultCylinderCenter(),
+                voxelSniperConfigLoader.getBrushProperties()
+        );
     }
 
     private BrushRegistry loadBrushRegistry() {
@@ -94,6 +97,28 @@ public class VoxelSniperPlugin extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
+    }
+
+    public void reload() {
+        this.reloadConfig();
+        this.voxelSniperConfig = loadConfig();
+        testRegistries();
+    }
+
+    private void testRegistries() {
+        // Load brushes and performers to ensure their configuration is up-to-date.
+        this.brushRegistry.getBrushesProperties().keySet().stream().sorted().forEachOrdered(key -> {
+            BrushProperties properties = this.brushRegistry.getBrushProperties(key);
+            Brush brush = properties.getCreator().create();
+            brush.setProperties(properties);
+            brush.loadProperties();
+        });
+        this.performerRegistry.getPerformerProperties().keySet().stream().sorted().forEachOrdered(key -> {
+            PerformerProperties properties = this.performerRegistry.getPerformerProperties(key);
+            Performer performer = properties.getCreator().create();
+            performer.setProperties(properties);
+            performer.loadProperties();
+        });
     }
 
     public VoxelSniperConfig getVoxelSniperConfig() {

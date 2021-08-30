@@ -18,6 +18,10 @@ public class FillDownBrush extends AbstractPerformerBrush {
     private boolean fromExisting;
 
     @Override
+    public void loadProperties() {
+    }
+
+    @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];

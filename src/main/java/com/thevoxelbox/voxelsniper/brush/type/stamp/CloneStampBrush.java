@@ -16,6 +16,13 @@ import java.util.stream.Stream;
  */
 public class CloneStampBrush extends AbstractStampBrush {
 
+    private static final StampType DEFAULT_STAMP_TYPE = StampType.DEFAULT;
+
+    @Override
+    public void loadProperties() {
+        this.setStamp((StampType) getEnumProperty("default-stamp-type", StampType.class, DEFAULT_STAMP_TYPE));
+    }
+
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
@@ -51,7 +58,7 @@ public class CloneStampBrush extends AbstractStampBrush {
                     Integer cylinderCenter = NumericParser.parseInteger(parameters[1]);
                     if (cylinderCenter != null) {
                         toolkitProperties.setCylinderCenter(cylinderCenter);
-                        messenger.sendMessage(ChatColor.BLUE + "Center set to " + toolkitProperties.getCylinderCenter());
+                        messenger.sendMessage(ChatColor.BLUE + "Center set to: " + toolkitProperties.getCylinderCenter());
                     } else {
                         messenger.sendMessage(ChatColor.RED + "Invalid number.");
                     }
@@ -98,19 +105,26 @@ public class CloneStampBrush extends AbstractStampBrush {
         int yStartingPoint = targetBlockY + toolkitProperties.getCylinderCenter();
         int yEndPoint = targetBlockY + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
         EditSession editSession = getEditSession();
-        if (yStartingPoint < 0) {
-            yStartingPoint = 0;
+        int minHeight = editSession.getMinY();
+        if (yStartingPoint < minHeight) {
+            yStartingPoint = minHeight;
             messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
-        } else if (yStartingPoint > editSession.getMaxY()) {
-            yStartingPoint = editSession.getMaxY();
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+        } else {
+            int maxHeight = editSession.getMaxY();
+            if (yStartingPoint > maxHeight) {
+                yStartingPoint = maxHeight;
+                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            }
         }
-        if (yEndPoint < 0) {
-            yEndPoint = 0;
+        if (yEndPoint < minHeight) {
+            yEndPoint = minHeight;
             messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
-        } else if (yEndPoint > editSession.getMaxY()) {
-            yEndPoint = editSession.getMaxY();
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+        } else {
+            int maxHeight = editSession.getMaxY();
+            if (yEndPoint > maxHeight) {
+                yEndPoint = maxHeight;
+                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            }
         }
         double bSquared = Math.pow(brushSize, 2);
         int targetBlockX = targetBlock.getX();

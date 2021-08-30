@@ -11,10 +11,15 @@ import java.util.stream.Stream;
 
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
-    private double xRad;
-    private double yRad;
-    private double zRad;
+    private static final int DEFAULT_X_RAD = 0;
+    private static final int DEFAULT_Y_RAD = 0;
+    private static final int DEFAULT_Z_RAD = 0;
+
     private boolean offset;
+
+    private double xRad = DEFAULT_X_RAD;
+    private double yRad = DEFAULT_Y_RAD;
+    private double zRad = DEFAULT_Z_RAD;
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -23,7 +28,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Ellipse Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b elo [true|false] -- Toggles offset.");
+            messenger.sendMessage(ChatColor.AQUA + "/b elo [true|false] -- Toggles offset. Default is false.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo x [n] -- Sets X radius to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo y [n] -- Sets Y radius to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b elo z [n] -- Sets Z radius to n.");
