@@ -14,35 +14,26 @@ This is a fork of [Voxel Sniper](https://github.com/TVPT/VoxelSniper). It adds s
 See [here](https://github.com/IntellectualSites/FastAsyncVoxelSniper/blob/main/CONTRIBUTING.md)
 
 ## Maven Deployment
-For hosted javadocs, see above.
+Releases are published to the central repository, snapshots are published to S01 OSS Sonatype.
 
 ###Gradle
 ```kotlin
 repositories {
-    maven {
-        name = "IntellectualSites"
-        url = uri("https://mvn.intellectualsites.com/content/groups/public/")
-    }
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly("com.thevoxelbox:FastAsyncVoxelSniper:2.2.0")
+    compileOnly("com.fastasyncvoxelsniper:FastAsyncVoxelSniper:2.2.1")
 }
 ```
 
 ###Maven
 ```xml
-<!-- FastAsyncVoxelSniper -->
-<repository>
-    <id>IntellectualSites</id>
-    <url>https://mvn.intellectualsites.com/content/groups/public/</url>
-</repository>
-
 <!-- FastAsyncVoxelSniper API -->
 <dependency>
-    <groupId>com.thevoxelbox</groupId>
+    <groupId>com.fastasyncvoxelsniper</groupId>
     <artifactId>FastAsyncVoxelSniper</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
     <scope>provided</scope>
 </dependency>
 ```

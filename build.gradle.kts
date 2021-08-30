@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.ajoberstar.grgit.Grgit
 
 plugins {
 	java
@@ -46,21 +45,14 @@ configurations.all {
 	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
-var buildNumber by extra("")
-ext {
-    val git: Grgit = Grgit.open {
-        dir = File("$rootDir/.git")
-    }
-    val commit: String? = git.head().abbreviatedId
-    buildNumber = if (project.hasProperty("buildnumber")) {
-        project.properties["buildnumber"] as String
-    } else {
-        commit.toString()
-    }
-}
+group = "com.fastasyncvoxelsniper"
 
-group = "com.thevoxelbox"
-version = String.format("%s-%s", rootProject.version, buildNumber)
+var versuffix by extra("SNAPSHOT")
+version = if (!project.hasProperty("release")) {
+    String.format("%s-%s", rootProject.version, versuffix)
+} else {
+    String.format(rootProject.version as String)
+}
 
 bukkit {
 	name = "FastAsyncVoxelSniper"
@@ -164,6 +156,11 @@ publishing {
                     connection.set("scm:https://IntellectualSites@github.com/IntellectualSites/FastAsyncVoxelSniper.git")
                     developerConnection.set("scm:git://github.com/IntellectualSites/FastAsyncVoxelSniper.git")
                 }
+
+                issueManagement{
+                    system.set("GitHub")
+                    url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues")
+                }
             }
         }
     }
@@ -174,8 +171,8 @@ publishing {
         val nexusPassword: String? by project
         if (nexusUsername != null && nexusPassword != null) {
             maven {
-                val releasesRepositoryUrl = "https://mvn.intellectualsites.com/content/repositories/releases/"
-                val snapshotRepositoryUrl = "https://mvn.intellectualsites.com/content/repositories/snapshots/"
+                val releasesRepositoryUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                val snapshotRepositoryUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
                 url = uri(
                         if (version.toString().endsWith("-SNAPSHOT")) snapshotRepositoryUrl
                         else releasesRepositoryUrl
