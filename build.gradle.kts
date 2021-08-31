@@ -4,6 +4,7 @@ plugins {
 	java
 	`java-library`
     `maven-publish`
+    signing
 
     alias(libs.plugins.pluginyml)
 	alias(libs.plugins.shadow)
@@ -95,6 +96,7 @@ tasks {
     }
 
     javadoc {
+        title = project.name + " " + rootProject.version
         val opt = options as StandardJavadocDocletOptions
         opt.addStringOption("Xdoclint:none", "-quiet")
         opt.tags(
@@ -133,12 +135,30 @@ java {
     withJavadocJar()
 }
 
+signing {
+    if (!version.toString().endsWith("-SNAPSHOT")) {
+        signing.isRequired
+        sign(publishing.publications)
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
 
             pom {
+
+                name.set(project.name + " " + rootProject.version)
+                description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
+                url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
+
+                licenses {
+                    license {
+                        name.set("Creative Commons Public License")
+                        distribution.set("repo")
+                    }
+                }
 
                 developers {
                     developer {
