@@ -47,12 +47,13 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
+version = "2.2.2"
 
 var versuffix by extra("SNAPSHOT")
 version = if (!project.hasProperty("release")) {
-    String.format("%s-%s", rootProject.version, versuffix)
+    String.format("%s-%s", project.version, versuffix)
 } else {
-    String.format(rootProject.version as String)
+    String.format(project.version as String)
 }
 
 bukkit {
@@ -61,7 +62,7 @@ bukkit {
 	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
             "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
 	apiVersion = "1.13"
-	version = rootProject.version.toString()
+	version = project.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
 	depend = listOf("FastAsyncWorldEdit")
 	website = "https://dev.bukkit.org/projects/favs"
@@ -96,7 +97,7 @@ tasks {
     }
 
     javadoc {
-        title = project.name + " " + rootProject.version
+        title = project.name + " " + project.version
         val opt = options as StandardJavadocDocletOptions
         opt.addStringOption("Xdoclint:none", "-quiet")
         opt.tags(
@@ -149,7 +150,7 @@ publishing {
 
             pom {
 
-                name.set(project.name + " " + rootProject.version)
+                name.set(project.name + " " + project.version)
                 description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
                 url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
 
