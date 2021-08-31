@@ -69,7 +69,6 @@ bukkit {
 	description = "World editing from ingame using 3D brushes"
 }
 
-val javadocDir = rootDir.resolve("docs").resolve("javadoc")
 tasks {
     val assembleTargetDir = create<Copy>("assembleTargetDirectory") {
         destinationDir = rootDir.resolve("target")
@@ -78,13 +77,6 @@ tasks {
     }
     named("build") {
         dependsOn(assembleTargetDir)
-    }
-
-    named<Delete>("clean") {
-        doFirst {
-            rootDir.resolve("target").deleteRecursively()
-            javadocDir.deleteRecursively()
-        }
     }
 
     compileJava {
@@ -105,7 +97,6 @@ tasks {
                 "implSpec:a:Implementation Requirements:",
                 "implNote:a:Implementation Note:"
         )
-        opt.destinationDirectory = javadocDir
         opt.addBooleanOption("html5", true)
         opt.links("https://papermc.io/javadocs/paper/1.17/")
         opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Core-Javadocs/javadoc/")
