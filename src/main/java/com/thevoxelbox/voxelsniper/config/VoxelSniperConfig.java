@@ -11,6 +11,7 @@ public class VoxelSniperConfig {
     private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
     private final boolean messageOnLoginEnabled;
+    private final boolean persistSessionsOnLogout;
     private final BlockType defaultBlockMaterial;
     private final BlockType defaultReplaceBlockMaterial;
     private final int defaultBrushSize;
@@ -26,6 +27,7 @@ public class VoxelSniperConfig {
      * Create a new cached voxel configuration, used runtime.
      *
      * @param messageOnLoginEnabled         if message on login is enabled
+     * @param persistSessionsOnLogout       if snipers shall be removed on logout
      * @param defaultBlockMaterial          default block material
      * @param defaultReplaceBlockMaterial   default replace block material
      * @param defaultBrushSize              default brush size
@@ -38,6 +40,7 @@ public class VoxelSniperConfig {
      */
     public VoxelSniperConfig(
             boolean messageOnLoginEnabled,
+            boolean persistSessionsOnLogout,
             BlockType defaultBlockMaterial,
             BlockType defaultReplaceBlockMaterial,
             int defaultBrushSize,
@@ -49,6 +52,7 @@ public class VoxelSniperConfig {
             Map<String, Map<String, Object>> brushProperties
     ) {
         this.messageOnLoginEnabled = messageOnLoginEnabled;
+        this.persistSessionsOnLogout = persistSessionsOnLogout;
         this.defaultBlockMaterial = defaultBlockMaterial;
         this.defaultReplaceBlockMaterial = defaultReplaceBlockMaterial;
         this.defaultBrushSize = defaultBrushSize;
@@ -68,6 +72,16 @@ public class VoxelSniperConfig {
      */
     public boolean isMessageOnLoginEnabled() {
         return this.messageOnLoginEnabled;
+    }
+
+    /**
+     * Return if persistent sessions are enabled.
+     *
+     * @return {@code true} if persistent session are enabled, {@code false} otherwise.
+     * @see VoxelSniperConfigLoader#arePersistentSessionsEnabled()
+     */
+    public boolean arePersistentSessionsEnabled() {
+        return this.persistSessionsOnLogout;
     }
 
     /**

@@ -1,5 +1,6 @@
 # The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
 message-on-login-enabled: true
+persist-sessions-on-logout: true
 default-block-material: minecraft:air
 default-replace-block-material: minecraft:air
 default-brush-size: 3

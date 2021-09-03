@@ -8,6 +8,7 @@ import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
 import com.thevoxelbox.voxelsniper.listener.PlayerJoinListener;
+import com.thevoxelbox.voxelsniper.listener.PlayerQuitListener;
 import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
@@ -60,6 +61,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
         return new VoxelSniperConfig(
                 voxelSniperConfigLoader.isMessageOnLoginEnabled(),
+                voxelSniperConfigLoader.arePersistentSessionsEnabled(),
                 voxelSniperConfigLoader.getDefaultBlockMaterial(),
                 voxelSniperConfigLoader.getDefaultReplaceBlockMaterial(),
                 voxelSniperConfigLoader.getDefaultBrushSize(),
@@ -96,6 +98,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private void loadListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(this), this);
+        pluginManager.registerEvents(new PlayerQuitListener(this), this);
         pluginManager.registerEvents(new PlayerInteractListener(this), this);
     }
 

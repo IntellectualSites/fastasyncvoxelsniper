@@ -17,6 +17,11 @@ public class SniperRegistry {
         this.snipers.put(uuid, sniper);
     }
 
+    public void unregister(Sniper sniper) {
+        UUID uuid = sniper.getUuid();
+        this.snipers.remove(uuid);
+    }
+
     @Nullable
     public Sniper getSniper(Player player) {
         UUID uuid = player.getUniqueId();
