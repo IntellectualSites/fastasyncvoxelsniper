@@ -1,6 +1,5 @@
 # The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
 message-on-login-enabled: true
-disable-sniping-on-login: false
 default-block-material: minecraft:air
 default-replace-block-material: minecraft:air
 default-brush-size: 3
