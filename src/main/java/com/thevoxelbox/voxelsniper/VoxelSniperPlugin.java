@@ -60,6 +60,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
         return new VoxelSniperConfig(
                 voxelSniperConfigLoader.isMessageOnLoginEnabled(),
+                voxelSniperConfigLoader.isDisableSnipingOnLoginEnabled(),
                 voxelSniperConfigLoader.getDefaultBlockMaterial(),
                 voxelSniperConfigLoader.getDefaultReplaceBlockMaterial(),
                 voxelSniperConfigLoader.getDefaultBrushSize(),

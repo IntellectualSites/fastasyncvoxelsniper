@@ -22,6 +22,7 @@ public class VoxelSniperConfigLoader {
 
     private static final String CONFIG_VERSION = "config-version";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
+    private static final String DISABLE_SNIPING_ON_LOGIN = "disable-sniping-on-login";
     private static final String DEFAULT_BLOCK_MATERIAL = "default-block-material";
     private static final String DEFAULT_REPLACE_BLOCK_MATERIAL = "default-replace-block-material";
     private static final String DEFAULT_BRUSH_SIZE = "default-brush-size";
@@ -34,6 +35,7 @@ public class VoxelSniperConfigLoader {
 
     private static final int CONFIG_VERSION_VALUE = 1;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
+    private static final boolean DEFAULT_DISABLE_SNIPING_ON_LOGIN = false;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final int DEFAULT_BRUSH_SIZE_VALUE = 3;
@@ -87,6 +89,7 @@ public class VoxelSniperConfigLoader {
                         MESSAGE_ON_LOGIN_ENABLED,
                         DEFAULT_MESSAGE_ON_LOGIN_ENABLED
                 ));
+                setDisableSnipingOnLoginEnabled(isDisableSnipingOnLoginEnabled());
                 setDefaultBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultReplaceBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultBrushSize(getDefaultBrushSize());
@@ -144,6 +147,24 @@ public class VoxelSniperConfigLoader {
      */
     protected void setMessageOnLoginEnabled(boolean enabled) {
         this.config.set(MESSAGE_ON_LOGIN_ENABLED, enabled);
+    }
+
+    /**
+     * Return when sniping shall be disabled on login.
+     *
+     * @return {@code true} if sniping shall be disabled on login, {@code false} otherwise.
+     */
+    public boolean isDisableSnipingOnLoginEnabled() {
+        return this.config.getBoolean(DISABLE_SNIPING_ON_LOGIN, DEFAULT_DISABLE_SNIPING_ON_LOGIN);
+    }
+
+    /**
+     * Set sniping on login to be enabled or disabled.
+     *
+     * @param enabled Disable sniping on login
+     */
+    protected void setDisableSnipingOnLoginEnabled(boolean enabled) {
+        this.config.set(DISABLE_SNIPING_ON_LOGIN, enabled);
     }
 
     /**
