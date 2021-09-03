@@ -17,6 +17,13 @@ public class SniperRegistry {
         this.snipers.put(uuid, sniper);
     }
 
+    /**
+     * Register the player as a sniper if not already done.
+     * Return the sniper directly or after registration.
+     *
+     * @param player player to register and or get as sniper
+     * @return sniper
+     */
     public Sniper registerAndGetSniper(Player player) {
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniper(uuid);
