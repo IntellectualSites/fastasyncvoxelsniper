@@ -23,7 +23,7 @@ public class VoxelHeightExecutor implements CommandExecutor {
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
         Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.getSniper(player);
+        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
             return;
         }

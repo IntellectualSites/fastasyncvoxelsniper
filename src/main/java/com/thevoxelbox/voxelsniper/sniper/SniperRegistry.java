@@ -17,6 +17,16 @@ public class SniperRegistry {
         this.snipers.put(uuid, sniper);
     }
 
+    public Sniper registerAndGetSniper(Player player) {
+        UUID uuid = player.getUniqueId();
+        Sniper sniper = getSniper(uuid);
+        if (sniper == null) {
+            sniper = new Sniper(uuid);
+            register(sniper);
+        }
+        return sniper;
+    }
+
     @Nullable
     public Sniper getSniper(Player player) {
         UUID uuid = player.getUniqueId();
