@@ -89,6 +89,7 @@ public class VoxelSniperConfigLoader {
                         MESSAGE_ON_LOGIN_ENABLED,
                         DEFAULT_MESSAGE_ON_LOGIN_ENABLED
                 ));
+                setPersistentSessions(arePersistentSessionsEnabled());
                 setDefaultBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultReplaceBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultBrushSize(getDefaultBrushSize());
