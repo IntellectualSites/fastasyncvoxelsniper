@@ -34,7 +34,7 @@ public class VoxelSniperConfigLoader {
     protected static final String BRUSH_PROPERTIES = "brush-properties";
 
     private static final int CONFIG_VERSION_VALUE = 1;
-    private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = false;
+    private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
