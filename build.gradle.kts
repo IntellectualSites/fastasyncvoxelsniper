@@ -4,6 +4,7 @@ plugins {
 	java
 	`java-library`
     `maven-publish`
+    signing
 
     alias(libs.plugins.pluginyml)
 	alias(libs.plugins.shadow)
@@ -46,12 +47,13 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
+version = "2.2.2"
 
 var versuffix by extra("SNAPSHOT")
 version = if (!project.hasProperty("release")) {
-    String.format("%s-%s", rootProject.version, versuffix)
+    String.format("%s-%s", project.version, versuffix)
 } else {
-    String.format(rootProject.version as String)
+    String.format(project.version as String)
 }
 
 bukkit {
@@ -60,30 +62,14 @@ bukkit {
 	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
             "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
 	apiVersion = "1.13"
-	version = rootProject.version.toString()
+	version = project.version.toString()
 	softDepend = listOf("VoxelModPackPlugin")
 	depend = listOf("FastAsyncWorldEdit")
 	website = "https://dev.bukkit.org/projects/favs"
 	description = "World editing from ingame using 3D brushes"
 }
 
-val javadocDir = rootDir.resolve("docs").resolve("javadoc")
 tasks {
-    val assembleTargetDir = create<Copy>("assembleTargetDirectory") {
-        destinationDir = rootDir.resolve("target")
-        into(destinationDir)
-        from(withType<Jar>())
-    }
-    named("build") {
-        dependsOn(assembleTargetDir)
-    }
-
-    named<Delete>("clean") {
-        doFirst {
-            rootDir.resolve("target").deleteRecursively()
-            javadocDir.deleteRecursively()
-        }
-    }
 
     compileJava {
         options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000"))
@@ -95,6 +81,7 @@ tasks {
     }
 
     javadoc {
+        title = project.name + " " + project.version
         val opt = options as StandardJavadocDocletOptions
         opt.addStringOption("Xdoclint:none", "-quiet")
         opt.tags(
@@ -102,7 +89,6 @@ tasks {
                 "implSpec:a:Implementation Requirements:",
                 "implNote:a:Implementation Note:"
         )
-        opt.destinationDirectory = javadocDir
         opt.addBooleanOption("html5", true)
         opt.links("https://papermc.io/javadocs/paper/1.17/")
         opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Core-Javadocs/javadoc/")
@@ -133,12 +119,30 @@ java {
     withJavadocJar()
 }
 
+signing {
+    if (!version.toString().endsWith("-SNAPSHOT")) {
+        signing.isRequired
+        sign(publishing.publications)
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
 
             pom {
+
+                name.set(project.name + " " + project.version)
+                description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
+                url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
+
+                licenses {
+                    license {
+                        name.set("Creative Commons Public License")
+                        distribution.set("repo")
+                    }
+                }
 
                 developers {
                     developer {

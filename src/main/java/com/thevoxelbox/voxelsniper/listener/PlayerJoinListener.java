@@ -7,6 +7,7 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -25,24 +26,19 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniperFromRegistry(uuid);
+        if (sniper == null) {
+            return;
+        }
         if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
             sniper.sendInfo(player);
         }
     }
 
+    @Nullable
     private Sniper getSniperFromRegistry(UUID uuid) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
         Sniper sniper = sniperRegistry.getSniper(uuid);
-        if (sniper == null) {
-            return registerNewSniper(uuid, sniperRegistry);
-        }
         return sniper;
-    }
-
-    private Sniper registerNewSniper(UUID uuid, SniperRegistry sniperRegistry) {
-        Sniper newSniper = new Sniper(uuid);
-        sniperRegistry.register(newSniper);
-        return newSniper;
     }
 
 }

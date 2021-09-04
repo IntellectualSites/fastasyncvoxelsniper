@@ -16,7 +16,7 @@ See [here](https://github.com/IntellectualSites/FastAsyncVoxelSniper/blob/main/C
 ## Maven Deployment
 Releases are published to the central repository, snapshots are published to S01 OSS Sonatype.
 
-###Gradle
+### Gradle
 ```kotlin
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ dependencies {
 }
 ```
 
-###Maven
+### Maven
 ```xml
 <!-- FastAsyncVoxelSniper API -->
 <dependency>

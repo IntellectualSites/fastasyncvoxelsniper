@@ -37,7 +37,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
         Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.getSniper(player);
+        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
             sender.sendMessage(ChatColor.RED + "Sniper not found.");
             return;
@@ -117,7 +117,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         if (arguments.length > 1) {
             SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
             Player player = (Player) sender;
-            Sniper sniper = sniperRegistry.getSniper(player);
+            Sniper sniper = sniperRegistry.registerAndGetSniper(player);
             if (sniper == null) {
                 return Collections.emptyList();
             }

@@ -12,14 +12,41 @@ public class SniperRegistry {
 
     private final Map<UUID, Sniper> snipers = new HashMap<>();
 
+    /**
+     * Register sniper in registry.
+     *
+     * @param sniper sniper to register
+     */
     public void register(Sniper sniper) {
         UUID uuid = sniper.getUuid();
         this.snipers.put(uuid, sniper);
     }
 
+    /**
+     * Unregister sniper from registry.
+     *
+     * @param sniper sniper to unregister
+     */
     public void unregister(Sniper sniper) {
         UUID uuid = sniper.getUuid();
         this.snipers.remove(uuid);
+    }
+
+    /**
+     * Register the player as a sniper if not already done.
+     * Return the sniper directly or after registration.
+     *
+     * @param player player to register and or get as sniper
+     * @return sniper
+     */
+    public Sniper registerAndGetSniper(Player player) {
+        UUID uuid = player.getUniqueId();
+        Sniper sniper = getSniper(uuid);
+        if (sniper == null) {
+            sniper = new Sniper(uuid);
+            register(sniper);
+        }
+        return sniper;
     }
 
     @Nullable
