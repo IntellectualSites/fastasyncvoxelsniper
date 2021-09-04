@@ -70,14 +70,6 @@ bukkit {
 }
 
 tasks {
-    val assembleTargetDir = create<Copy>("assembleTargetDirectory") {
-        destinationDir = rootDir.resolve("target")
-        into(destinationDir)
-        from(withType<Jar>())
-    }
-    named("build") {
-        dependsOn(assembleTargetDir)
-    }
 
     compileJava {
         options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000"))
