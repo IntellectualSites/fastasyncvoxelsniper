@@ -13,12 +13,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "16"
-      - name: Generate versions
-        uses: HardNorth/github-version-generate@v1.1.1
-        with:
-          version-source: "file"
-          version-file: "gradle.properties"
-          version-file-extraction-pattern: "(?<=version=).+"
       - name: "Clean Build"
         run: "./gradlew clean build"
       - name : Archive Artifacts
