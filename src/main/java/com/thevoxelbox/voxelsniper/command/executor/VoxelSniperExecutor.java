@@ -30,7 +30,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Sniper sniper = (sender instanceof Player) ? sniperRegistry.getSniper((Player) sender) : null;
+        Sniper sniper = (sender instanceof Player) ? sniperRegistry.registerAndGetSniper((Player) sender) : null;
 
         if (arguments.length >= 1) {
             String firstArgument = arguments[0];
