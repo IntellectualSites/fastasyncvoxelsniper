@@ -89,7 +89,6 @@ public class VoxelSniperConfigLoader {
                         MESSAGE_ON_LOGIN_ENABLED,
                         DEFAULT_MESSAGE_ON_LOGIN_ENABLED
                 ));
-                setPersistentSessions(arePersistentSessionsEnabled());
                 setDefaultBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultReplaceBlockMaterial(getDefaultReplaceBlockMaterial());
                 setDefaultBrushSize(getDefaultBrushSize());
@@ -105,6 +104,9 @@ public class VoxelSniperConfigLoader {
                 setDefaultVoxelHeight(getDefaultVoxelHeight());
                 setDefaultCylinderCenter(getDefaultCylinderCenter());
                 setBrushProperties(getBrushProperties());
+            }
+            if (currentConfigVersion < 2) {
+                setPersistentSessions(arePersistentSessionsEnabled()); 
             }
 
             plugin.saveConfig();
