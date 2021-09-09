@@ -22,6 +22,7 @@ public class VoxelSniperConfigLoader {
 
     private static final String CONFIG_VERSION = "config-version";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
+    private static final String PERSIST_SESSIONS_ON_LOGOUT = "persist-sessions-on-logout";
     private static final String DEFAULT_BLOCK_MATERIAL = "default-block-material";
     private static final String DEFAULT_REPLACE_BLOCK_MATERIAL = "default-replace-block-material";
     private static final String DEFAULT_BRUSH_SIZE = "default-brush-size";
@@ -32,8 +33,9 @@ public class VoxelSniperConfigLoader {
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
     protected static final String BRUSH_PROPERTIES = "brush-properties";
 
-    private static final int CONFIG_VERSION_VALUE = 1;
+    private static final int CONFIG_VERSION_VALUE = 2;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
+    private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final int DEFAULT_BRUSH_SIZE_VALUE = 3;
@@ -103,6 +105,9 @@ public class VoxelSniperConfigLoader {
                 setDefaultCylinderCenter(getDefaultCylinderCenter());
                 setBrushProperties(getBrushProperties());
             }
+            if (currentConfigVersion < 2) {
+                setPersistentSessions(arePersistentSessionsEnabled()); 
+            }
 
             plugin.saveConfig();
             plugin.getLogger().info("Your config file is now up-to-date! (v" + CONFIG_VERSION_VALUE + ")");
@@ -144,6 +149,24 @@ public class VoxelSniperConfigLoader {
      */
     protected void setMessageOnLoginEnabled(boolean enabled) {
         this.config.set(MESSAGE_ON_LOGIN_ENABLED, enabled);
+    }
+
+    /**
+     * Return if persistent sessions are enabled.
+     *
+     * @return {@code true} if persistent session are enabled, {@code false} otherwise.
+     */
+    public boolean arePersistentSessionsEnabled() {
+        return this.config.getBoolean(PERSIST_SESSIONS_ON_LOGOUT, DEFAULT_PERSIST_SESSIONS_ON_LOGOUT);
+    }
+
+    /**
+     * Set option for sniping sessions to be persisted on logout or not.
+     *
+     * @param enabled Save sniping session upon logout
+     */
+    protected void setPersistentSessions(boolean enabled) {
+        this.config.set(PERSIST_SESSIONS_ON_LOGOUT, enabled);
     }
 
     /**

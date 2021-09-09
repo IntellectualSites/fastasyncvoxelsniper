@@ -12,9 +12,24 @@ public class SniperRegistry {
 
     private final Map<UUID, Sniper> snipers = new HashMap<>();
 
+    /**
+     * Register sniper in registry.
+     *
+     * @param sniper sniper to register
+     */
     public void register(Sniper sniper) {
         UUID uuid = sniper.getUuid();
         this.snipers.put(uuid, sniper);
+    }
+
+    /**
+     * Unregister sniper from registry.
+     *
+     * @param sniper sniper to unregister
+     */
+    public void unregister(Sniper sniper) {
+        UUID uuid = sniper.getUuid();
+        this.snipers.remove(uuid);
     }
 
     /**
