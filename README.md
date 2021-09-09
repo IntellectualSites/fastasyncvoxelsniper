@@ -8,7 +8,7 @@ This is a fork of [Voxel Sniper](https://github.com/TVPT/VoxelSniper). It adds s
 * [Discord](https://discord.gg/intellectualsites)
 * [Issues](https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues)
 * [Wiki](https://voxelsniper.fandom.com/wiki/VoxelSniper_Wiki) (Not maintained by IntellectualSites)
-* [JavaDocs](https://ci.athion.net/job/FastAsyncVoxelSniper-Javadocs/)
+* [JavaDocs](https://javadoc.io/doc/com.fastasyncvoxelsniper/FastAsyncVoxelSniper)
 
 ## Contributing
 See [here](https://github.com/IntellectualSites/FastAsyncVoxelSniper/blob/main/CONTRIBUTING.md)
