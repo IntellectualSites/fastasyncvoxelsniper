@@ -49,6 +49,17 @@ public class ErodeBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.AQUA + "/b e e [n] -- Sets fill faces to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b e F [n] -- Sets erosion recursions to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b e E [n] -- Sets fill recursions to n.");
+            messenger.sendMessage(ChatColor.GOLD + "Erode Brush Presets:");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb melt -- Sets erosion faces to 2, erosion recursions to 1, fill faces to " +
+                    "5 and fill recursions to 1.");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb fill -- Sets erosion faces to 5, erosion recursions to 1, fill faces to " +
+                    "2 and fill recursions to 1.");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb smooth -- Sets erosion faces to 3, erosion recursions to 1, fill " +
+                    "faces to 3 and fill recursions to 1.");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb lift -- Sets erosion faces to 6, erosion recursions to 0, fill faces " +
+                    "to 1 and fill recursions to 1.");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb floatclean -- Sets erosion faces to 0, erosion recursions to 1, fill " +
+                    "faces to 6 and fill recursions to 1.");
         } else {
             Preset preset = Preset.getPreset(firstParameter);
             if (preset != null) {
@@ -141,7 +152,9 @@ public class ErodeBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("f", "e", "F", "E"), parameter, 0);
+            return super.sortCompletions(Stream.of("f", "e", "F", "E", "melt", "fill", "smooth", "lift", "floatclean"), parameter,
+                    0
+            );
         }
         return super.handleCompletions(parameters, snipe);
     }
@@ -276,7 +289,7 @@ public class ErodeBrush extends AbstractBrush {
         messenger.sendBrushNameMessage();
         messenger.sendBrushSizeMessage();
         messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Fill minumum touching faces set to: " + this.currentPreset.getFillFaces());
+        messenger.sendMessage(ChatColor.BLUE + "Fill minimum touching faces set to: " + this.currentPreset.getFillFaces());
         messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion());
         messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion());
     }
