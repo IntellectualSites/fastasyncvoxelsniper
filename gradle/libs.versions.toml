@@ -9,7 +9,7 @@ annotations = "22.0.0"
 fawe-bukkit = "1.17-201"
 
 # Third party
-serverlib = "2.2.1"
+serverlib = "2.3.0"
 bstats = "2.2.1"
 paperlib = "1.0.6"
 
@@ -29,7 +29,7 @@ annotations = { group = "org.jetbrains", name = "annotations", version.ref = "an
 faweBukkit = { group = "com.fastasyncworldedit", name = "FAWE-Bukkit", version.ref = "fawe-bukkit" }
 
 # Third party
-serverlib = { group = "org.incendo.serverlib", name = "ServerLib", version.ref = "serverlib" }
+serverlib = { group = "dev.notmyfault.serverlib", name = "ServerLib", version.ref = "serverlib" }
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
