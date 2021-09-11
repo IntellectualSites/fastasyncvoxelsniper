@@ -47,7 +47,7 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
-version = "2.2.2"
+version = "2.2.3"
 
 var versuffix by extra("SNAPSHOT")
 version = if (!project.hasProperty("release")) {
