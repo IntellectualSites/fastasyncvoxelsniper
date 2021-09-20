@@ -29,7 +29,7 @@ dependencies {
 	compileOnly(libs.annotations)
 
     // Plugins
-	compileOnlyApi(libs.faweBukkit)
+	compileOnly(libs.bundles.fawe)
 
     // Third party
 	implementation(libs.serverlib)

@@ -6,7 +6,7 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 annotations = "22.0.0"
 
 # Plugins
-fawe-bukkit = "1.17-288"
+fawe = "1.17-291"
 
 # Third party
 serverlib = "2.3.0"
@@ -26,13 +26,18 @@ paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" 
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 
 # Plugins
-faweBukkit = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Bukkit", version.ref = "fawe-bukkit" }
+faweBukkit = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Bukkit", version.ref = "fawe" }
+faweCore = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Core", version.ref = "fawe" }
+faweLibsCore = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Libs-Core", version.ref = "fawe" }
 
 # Third party
 serverlib = { group = "dev.notmyfault.serverlib", name = "ServerLib", version.ref = "serverlib" }
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
+
+[bundles]
+fawe = ["faweBukkit", "faweCore", "faweLibsCore"]
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
