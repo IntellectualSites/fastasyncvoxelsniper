@@ -6,7 +6,7 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 annotations = "22.0.0"
 
 # Plugins
-fawe-bukkit = "1.17-226"
+fawe-bukkit = "1.17-288"
 
 # Third party
 serverlib = "2.3.0"
@@ -26,7 +26,7 @@ paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" 
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 
 # Plugins
-faweBukkit = { group = "com.fastasyncworldedit", name = "FAWE-Bukkit", version.ref = "fawe-bukkit" }
+faweBukkit = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Bukkit", version.ref = "fawe-bukkit" }
 
 # Third party
 serverlib = { group = "dev.notmyfault.serverlib", name = "ServerLib", version.ref = "serverlib" }

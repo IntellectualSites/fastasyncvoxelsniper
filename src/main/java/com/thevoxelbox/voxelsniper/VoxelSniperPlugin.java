@@ -50,7 +50,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         Metrics metrics = new Metrics(this, 6405);
         // Check if we are in a safe environment
         ServerLib.checkUnsafeForks();
-        ServerLib.checkJavaLTS();
+        ServerLib.isJavaSixteen();
         PaperLib.suggestPaper(this);
     }
 
