@@ -74,8 +74,8 @@ body:
 
   - type: input
     attributes:
-      label: Fawe Debugpaste
-      description: Run `/fawe debugpaste` in your console or ingame and provide the output link here.
+      label: Favs Debugpaste
+      description: Run `/vs debugpaste` in your console and provide the output link here.
     validations:
       required: true
 
