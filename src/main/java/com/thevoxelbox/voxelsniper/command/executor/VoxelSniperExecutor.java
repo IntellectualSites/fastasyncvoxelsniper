@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.Fawe;
+import com.intellectualsites.paster.IncendoPaster;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
@@ -13,6 +15,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -134,6 +138,24 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                     sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
                             "node 'voxelsniper.admin'");
                 }
+                return;
+            } else if (firstArgument.equalsIgnoreCase("debugpaste")) {
+                if (sender.hasPermission("voxelsniper.admin")) {
+                    String destination;
+                    try {
+                        final File logFile = new File("logs/latest.log");
+                        final File config = new File(plugin.getDataFolder(), "config.yml");
+                        destination = IncendoPaster.debugPaste(logFile, Fawe.imp().getDebugInfo(), config);
+                    } catch (IOException e) {
+                        sender.sendMessage(ChatColor.RED + "Failed to upload debugpaste because of " + e);
+                        return;
+                    }
+                    sender.sendMessage(destination);
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use this command. You're missing the permission " +
+                            "node 'voxelsniper.admin'");
+                }
+                return;
             }
         }
         if (sniper != null) {
@@ -149,7 +171,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return Stream.concat(
                             Stream.of("brushes", "range", "perf", "perflong", "enable", "disable", "toggle", "info"),
-                            sender.hasPermission("voxelsniper.admin") ? Stream.of("reload") : Stream.empty()
+                            sender.hasPermission("voxelsniper.admin") ? Stream.of("reload", "debugpaste") : Stream.empty()
                     )
                     .filter(subCommand -> subCommand.startsWith(argumentLowered))
                     .collect(Collectors.toList());
