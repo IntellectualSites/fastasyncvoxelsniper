@@ -19,6 +19,7 @@ shadow = "7.0.0"
 grgit = "4.1.0"
 pluginyml = "0.5.0"
 editorconfig = "0.0.3"
+nexus = "1.1.0"
 
 [libraries]
 # Platform expectations
@@ -45,4 +46,5 @@ fawe = ["faweBukkit", "faweCore"]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
+nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
 editorconfig = { id = "org.ec4j.editorconfig", version.ref = "editorconfig" }
