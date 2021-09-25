@@ -7,5 +7,6 @@
   "schedule": [
     "on monday after 9am"
   ],
-  "labels": ["Renovate"]
+  "labels": ["Renovate"],
+  "commitMessagePrefix": "chore: "
 }

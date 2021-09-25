@@ -1,4 +1,5 @@
 import java.net.URI
+import org.ec4j.gradle.EditorconfigExtension
 
 plugins {
 	java
@@ -10,6 +11,7 @@ plugins {
 	alias(libs.plugins.shadow)
 	alias(libs.plugins.grgit)
     alias(libs.plugins.nexus)
+    alias(libs.plugins.editorconfig)
 }
 
 java {
@@ -37,6 +39,7 @@ dependencies {
 	implementation(libs.bstatsBase)
 	implementation(libs.bstatsBukkit)
     implementation(libs.paperlib)
+    implementation(libs.paster)
 }
 
 tasks.compileJava.configure {
@@ -100,6 +103,7 @@ tasks {
         relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper.serverlib")
         relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
         relocate("io.papermc.lib", "com.thevoxelbox.voxelsniper.paperlib")
+        relocate("com.intellectualsites.paster", "com.thevoxelbox.voxelsniper.paster")
         minimize()
     }
 
@@ -182,4 +186,12 @@ nexusPublishing {
             snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
+}
+
+configure<EditorconfigExtension> {
+    includes = listOf("**/*.java")
+}
+
+tasks.named("build").configure {
+    dependsOn("editorconfigCheck")
 }

@@ -1,17 +1,19 @@
 categories:
   - title: '🐛 Fixes'
     label: 'Bugfix'
-  - title: '🚀 Additions'
+  - title: '✨ Features'
     label: 'Feature'
   - title: '🧭 Changes'
     label: 'Enhancement'
-  - title: '🤖 Dependency updates'
-    label: 'Renovate'
+  - title: '📦 Dependency updates'
+    labels:
+      - 'Renovate'
+      - 'Dependency updates'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&@'
 exclude-contributors:
   - 'renovate'
 template: |
-  ## Changes
+  ## FastAsyncVoxelSniper v
 
   $CHANGES
