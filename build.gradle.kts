@@ -1,4 +1,4 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import java.net.URI
 
 plugins {
 	java
@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.pluginyml)
 	alias(libs.plugins.shadow)
 	alias(libs.plugins.grgit)
+    alias(libs.plugins.nexus)
 }
 
 java {
@@ -47,14 +48,7 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
-version = "2.2.3"
-
-var versuffix by extra("SNAPSHOT")
-version = if (!project.hasProperty("release")) {
-    String.format("%s-%s", project.version, versuffix)
-} else {
-    String.format(project.version as String)
-}
+version = "2.2.3-SNAPSHOT"
 
 bukkit {
 	name = "FastAsyncVoxelSniper"
@@ -126,6 +120,9 @@ javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElement
 
 signing {
     if (!version.toString().endsWith("-SNAPSHOT")) {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
         signing.isRequired
         sign(publishing.publications)
     }
@@ -153,10 +150,13 @@ publishing {
                     developer {
                         id.set("NotMyFault")
                         name.set("NotMyFault")
+                        organization.set("IntellectualSites")
+                        email.set("contact@notmyfault.dev")
                     }
                     developer {
                         id.set("Aurelien30000")
                         name.set("Aurelien30000")
+                        organization.set("IntellectualSites")
                     }
                 }
 
@@ -166,34 +166,20 @@ publishing {
                     developerConnection.set("scm:git://github.com/IntellectualSites/FastAsyncVoxelSniper.git")
                 }
 
-                issueManagement{
+                issueManagement {
                     system.set("GitHub")
                     url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues")
                 }
             }
         }
     }
+}
 
+nexusPublishing {
     repositories {
-        mavenLocal()
-        val nexusUsername: String? by project
-        val nexusPassword: String? by project
-        if (nexusUsername != null && nexusPassword != null) {
-            maven {
-                val releasesRepositoryUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                val snapshotRepositoryUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                url = uri(
-                        if (version.toString().endsWith("-SNAPSHOT")) snapshotRepositoryUrl
-                        else releasesRepositoryUrl
-                )
-
-                credentials {
-                    username = nexusUsername
-                    password = nexusPassword
-                }
-            }
-        } else {
-            logger.warn("No nexus repository is added; nexusUsername or nexusPassword is null.")
+        sonatype {
+            nexusUrl.set(URI.create("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
