@@ -18,6 +18,7 @@ paster = "1.1.1"
 shadow = "7.0.0"
 grgit = "4.1.0"
 pluginyml = "0.5.0"
+editorconfig = "0.0.3"
 
 [libraries]
 # Platform expectations
@@ -44,3 +45,4 @@ fawe = ["faweBukkit", "faweCore"]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
+editorconfig = { id = "org.ec4j.editorconfig", version.ref = "editorconfig" }

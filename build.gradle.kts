@@ -1,4 +1,4 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.ec4j.gradle.EditorconfigExtension
 
 plugins {
 	java
@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.pluginyml)
 	alias(libs.plugins.shadow)
 	alias(libs.plugins.grgit)
+	alias(libs.plugins.editorconfig)
 }
 
 java {
@@ -198,4 +199,12 @@ publishing {
             logger.warn("No nexus repository is added; nexusUsername or nexusPassword is null.")
         }
     }
+}
+
+configure<EditorconfigExtension> {
+    includes = listOf("**/*.java")
+}
+
+tasks.named("build").configure {
+    dependsOn("editorconfigCheck")
 }
