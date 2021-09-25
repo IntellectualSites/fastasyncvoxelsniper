@@ -12,6 +12,7 @@ fawe = "1.17-291"
 serverlib = "2.3.0"
 bstats = "2.2.1"
 paperlib = "1.0.6"
+paster = "1.1.1"
 
 # Gradle plugins
 shadow = "7.0.0"
@@ -29,16 +30,16 @@ annotations = { group = "org.jetbrains", name = "annotations", version.ref = "an
 # Plugins
 faweBukkit = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Bukkit", version.ref = "fawe" }
 faweCore = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Core", version.ref = "fawe" }
-faweLibsCore = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Libs-Core", version.ref = "fawe" }
 
 # Third party
 serverlib = { group = "dev.notmyfault.serverlib", name = "ServerLib", version.ref = "serverlib" }
 bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
 bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
 paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
+paster = { group = "com.intellectualsites.paster", name = "Paster", version.ref = "paster" }
 
 [bundles]
-fawe = ["faweBukkit", "faweCore", "faweLibsCore"]
+fawe = ["faweBukkit", "faweCore"]
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
