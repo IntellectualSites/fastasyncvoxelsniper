@@ -36,7 +36,7 @@ public class ErodeBrush extends AbstractBrush {
             Direction.WEST
     );
 
-    private ErosionPreset currentPreset = new ErosionPreset(0, 1, 0, 1);
+    private ErosionPreset currentPreset = Preset.DEFAULT.getPreset();
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
@@ -50,6 +50,8 @@ public class ErodeBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.AQUA + "/b e F [n] -- Sets erosion recursions to n.");
             messenger.sendMessage(ChatColor.AQUA + "/b e E [n] -- Sets fill recursions to n.");
             messenger.sendMessage(ChatColor.GOLD + "Erode Brush Presets:");
+            messenger.sendMessage(ChatColor.AQUA + "/b eb default -- Sets erosion faces to 0, erosion recursions to 1, fill " +
+                    "faces to 0 and fill recursions to 1.");
             messenger.sendMessage(ChatColor.AQUA + "/b eb melt -- Sets erosion faces to 2, erosion recursions to 1, fill faces to " +
                     "5 and fill recursions to 1.");
             messenger.sendMessage(ChatColor.AQUA + "/b eb fill -- Sets erosion faces to 5, erosion recursions to 1, fill faces to " +
@@ -152,8 +154,8 @@ public class ErodeBrush extends AbstractBrush {
     public List<String> handleCompletions(String[] parameters, Snipe snipe) {
         if (parameters.length == 1) {
             String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("f", "e", "F", "E", "melt", "fill", "smooth", "lift", "floatclean"), parameter,
-                    0
+            return super.sortCompletions(Stream.of("f", "e", "F", "E", "default", "melt", "fill", "smooth", "lift", "floatclean"),
+                    parameter, 0
             );
         }
         return super.handleCompletions(parameters, snipe);
@@ -296,6 +298,7 @@ public class ErodeBrush extends AbstractBrush {
 
     private enum Preset {
 
+        DEFAULT("default", new ErosionPreset(0, 1, 0, 1)),
         MELT("melt", new ErosionPreset(2, 1, 5, 1)),
         FILL("fill", new ErosionPreset(5, 1, 2, 1)),
         SMOOTH("smooth", new ErosionPreset(3, 1, 3, 1)),

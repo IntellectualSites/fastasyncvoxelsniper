@@ -21,8 +21,13 @@ public class ErodeBlendBrush extends AbstractBrush {
 
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
-        this.blendBall.handleCommand(parameters, snipe);
-        this.erode.handleCommand(parameters, snipe);
+        String firstParameter = parameters[0];
+
+        if (firstParameter.equalsIgnoreCase("water")) {
+            this.blendBall.handleCommand(parameters, snipe);
+        } else {
+            this.erode.handleCommand(parameters, snipe);
+        }
     }
 
     @Override
@@ -43,9 +48,9 @@ public class ErodeBlendBrush extends AbstractBrush {
         BlockVector3 targetBlock = getTargetBlock();
         BlockVector3 lastBlock = getLastBlock();
 
+        this.erode.perform(snipe, ToolAction.ARROW, editSession, targetBlock, lastBlock);
         this.blendBall.setAirExcluded(false);
         this.blendBall.perform(snipe, ToolAction.ARROW, editSession, targetBlock, lastBlock);
-        this.erode.perform(snipe, ToolAction.ARROW, editSession, targetBlock, lastBlock);
     }
 
     @Override
@@ -54,9 +59,9 @@ public class ErodeBlendBrush extends AbstractBrush {
         BlockVector3 targetBlock = getTargetBlock();
         BlockVector3 lastBlock = getLastBlock();
 
+        this.erode.perform(snipe, ToolAction.GUNPOWDER, editSession, targetBlock, lastBlock);
         this.blendBall.setAirExcluded(false);
         this.blendBall.perform(snipe, ToolAction.GUNPOWDER, editSession, targetBlock, lastBlock);
-        this.erode.perform(snipe, ToolAction.GUNPOWDER, editSession, targetBlock, lastBlock);
     }
 
     @Override
