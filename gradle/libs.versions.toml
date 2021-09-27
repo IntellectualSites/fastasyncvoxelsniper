@@ -6,7 +6,7 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 annotations = "22.0.0"
 
 # Plugins
-fawe = "1.17-291"
+fawe = "1.17-331"
 
 # Third party
 serverlib = "2.3.0"
