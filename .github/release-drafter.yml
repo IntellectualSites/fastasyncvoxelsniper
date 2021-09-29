@@ -13,6 +13,7 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&@'
 exclude-contributors:
   - 'renovate'
+  - 'renovate-bot'
 template: |
   ## FastAsyncVoxelSniper v
 
