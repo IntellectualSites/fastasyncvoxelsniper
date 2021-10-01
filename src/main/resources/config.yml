@@ -9,7 +9,7 @@ litesniper-max-brush-size: 7
 litesniper-restricted-materials:
     - minecraft:barrier
     - minecraft:bedrock
-brush-size-warning-threshold: 3
+brush-size-warning-threshold: 100
 default-voxel-height: 1
 default-cylinder-center: 0
 brush-properties:
