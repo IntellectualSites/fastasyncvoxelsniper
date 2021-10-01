@@ -92,10 +92,6 @@ tasks {
         opt.links("https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/")
     }
 
-    jar {
-        this.archiveClassifier.set("jar")
-    }
-
     shadowJar {
         this.archiveClassifier.set(null as String?)
         this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
