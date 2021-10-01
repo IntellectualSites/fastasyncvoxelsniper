@@ -44,7 +44,7 @@ public class VoxelSniperConfigLoader {
             BlockTypes.BARRIER,
             BlockTypes.BEDROCK
     );
-    private static final int DEFAULT_BRUSH_SIZE_WARNING_THRESHOLD = 20;
+    private static final int DEFAULT_BRUSH_SIZE_WARNING_THRESHOLD = 100;
     private static final int DEFAULT_VOXEL_HEIGHT_VALUE = 1;
     private static final int DEFAULT_CYLINDER_CENTER_VALUE = 0;
     private static final Map<String, Map<String, Object>> DEFAULT_BRUSH_PROPERTIES = null;
