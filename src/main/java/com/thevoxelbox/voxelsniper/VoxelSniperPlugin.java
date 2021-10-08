@@ -90,7 +90,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
         }, 0L, 432000);
     }
 
-
     private VoxelSniperConfig loadConfig() {
         saveDefaultConfig();
         FileConfiguration config = getConfig();

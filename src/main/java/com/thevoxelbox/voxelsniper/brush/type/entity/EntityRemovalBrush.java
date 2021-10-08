@@ -33,14 +33,6 @@ public class EntityRemovalBrush extends AbstractBrush {
 
     private List<String> exemptions;
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void loadProperties() {
-        this.exemptions = new ArrayList<>(
-                (List<String>) getListProperty("default-exemptions", DEFAULT_EXEMPTIONS)
-        );
-    }
-
     private static List<Class<?>> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
         List<Class<?>> entityClassHierarchy = new ArrayList<>(10);
         entityClassHierarchy.add(Entity.class);
@@ -53,6 +45,14 @@ public class EntityRemovalBrush extends AbstractBrush {
             currentClass = currentClass.getSuperclass();
         }
         return entityClassHierarchy;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void loadProperties() {
+        this.exemptions = new ArrayList<>(
+                (List<String>) getListProperty("default-exemptions", DEFAULT_EXEMPTIONS)
+        );
     }
 
     @Override

@@ -1,70 +1,68 @@
 import java.net.URI
-import org.ec4j.gradle.EditorconfigExtension
 
 plugins {
-	java
-	`java-library`
+    java
+    `java-library`
     `maven-publish`
     signing
 
     alias(libs.plugins.pluginyml)
-	alias(libs.plugins.shadow)
-	alias(libs.plugins.grgit)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.grgit)
     alias(libs.plugins.nexus)
-    alias(libs.plugins.editorconfig)
 }
 
 java {
-	toolchain.languageVersion.set(JavaLanguageVersion.of(16))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(16))
 }
 
 repositories {
-	mavenCentral()
-	maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
-	maven { url = uri("https://mvn.intellectualsites.com/content/groups/public/") }
+    mavenCentral()
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+    maven { url = uri("https://mvn.intellectualsites.com/content/groups/public/") }
 }
 
 dependencies {
     // Platform expectations
-	compileOnlyApi(libs.paper)
+    compileOnlyApi(libs.paper)
     compileOnlyApi(libs.log4j)
 
     // Annotations
-	compileOnly(libs.annotations)
+    compileOnly(libs.annotations)
 
     // Plugins
-	compileOnly(libs.bundles.fawe)
+    compileOnly(libs.bundles.fawe)
 
     // Third party
-	implementation(libs.serverlib)
-	implementation(libs.bstatsBase)
-	implementation(libs.bstatsBukkit)
+    implementation(libs.serverlib)
+    implementation(libs.bstatsBase)
+    implementation(libs.bstatsBukkit)
     implementation(libs.paperlib)
     implementation(libs.paster)
 }
 
 tasks.compileJava.configure {
-	options.release.set(11)
+    options.release.set(11)
 }
 
 configurations.all {
-	attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 16)
 }
 
 group = "com.fastasyncvoxelsniper"
 version = "2.2.5-SNAPSHOT"
 
 bukkit {
-	name = "FastAsyncVoxelSniper"
-	main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
-	authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
+    name = "FastAsyncVoxelSniper"
+    main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
+    authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
             "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
-	apiVersion = "1.13"
-	version = project.version.toString()
-	softDepend = listOf("VoxelModPackPlugin")
-	depend = listOf("FastAsyncWorldEdit")
-	website = "https://dev.bukkit.org/projects/favs"
-	description = "World editing from ingame using 3D brushes"
+    apiVersion = "1.13"
+    version = project.version.toString()
+    softDepend = listOf("VoxelModPackPlugin")
+    depend = listOf("FastAsyncWorldEdit")
+    website = "https://dev.bukkit.org/projects/favs"
+    description = "World editing from ingame using 3D brushes"
 }
 
 tasks {
@@ -183,12 +181,4 @@ nexusPublishing {
             snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
-}
-
-configure<EditorconfigExtension> {
-    includes = listOf("**/*.java")
-}
-
-tasks.named("build").configure {
-    dependsOn("editorconfigCheck")
 }
