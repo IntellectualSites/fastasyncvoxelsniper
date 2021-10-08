@@ -18,15 +18,14 @@ public class ShellSetBrush extends AbstractBrush {
     private static final int MAX_SIZE = 5000000;
 
     private int maxSize;
+    @Nullable
+    private BlockVector3 block;
+    private World world;
 
     @Override
     public void loadProperties() {
         this.maxSize = getIntegerProperty("max-size", MAX_SIZE);
     }
-
-    @Nullable
-    private BlockVector3 block;
-    private World world;
 
     @Override
     public void handleArrowAction(Snipe snipe) {

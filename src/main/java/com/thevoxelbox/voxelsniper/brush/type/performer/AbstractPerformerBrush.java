@@ -29,18 +29,16 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
     protected final Random generator = new Random();
 
     protected Performer performer;
-    private PerformerProperties performerProperties;
-
     protected int seedPercentMin;
     protected int seedPercentMax;
     protected int growthPercentMin;
     protected int growthPercentMax;
     protected int splatterRecursionsMin;
     protected int splatterRecursionsMax;
-
     protected int seedPercent;
     protected int growthPercent;
     protected int splatterRecursions;
+    private PerformerProperties performerProperties;
 
     public AbstractPerformerBrush() {
         this.performerProperties = PerformerRegistrar.DEFAULT_PERFORMER_PROPERTIES;

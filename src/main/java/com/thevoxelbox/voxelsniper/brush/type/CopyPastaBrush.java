@@ -14,13 +14,11 @@ import java.util.stream.Stream;
 public class CopyPastaBrush extends AbstractBrush {
 
     private static final int BLOCK_LIMIT = 10000;
-
-    private int blockLimit;
-
     private final int[] pastePoint = new int[3];
     private final int[] minPoint = new int[3];
     private final int[] offsetPoint = new int[3];
     private final int[] arraySize = new int[3];
+    private int blockLimit;
     private boolean pasteAir = true; // False = no air, true = air
     private int points; //
     private int numBlocks;
