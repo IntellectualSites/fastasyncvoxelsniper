@@ -24,6 +24,8 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -42,10 +44,9 @@ public abstract class AbstractBrush implements Brush {
     protected static final VoxelSniperPlugin PLUGIN = VoxelSniperPlugin.plugin;
     protected static final VoxelSniperConfig CONFIG = PLUGIN.getVoxelSniperConfig();
     protected static final File PLUGIN_DATA_FOLDER = PLUGIN.getDataFolder();
-
     protected static final int CHUNK_SIZE = 16;
     protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
-
+    private static final Logger LOGGER = LogManager.getLogger("FastAsyncVoxelSniper/" + AbstractBrush.class.getSimpleName());
     private BrushProperties properties;
 
     private EditSession editSession;
@@ -296,6 +297,11 @@ public abstract class AbstractBrush implements Brush {
         return properties;
     }
 
+    @Override
+    public void setProperties(BrushProperties properties) {
+        this.properties = properties;
+    }
+
     /**
      * Return a config property associated to a brush, if exists. Otherwise, set the default value and return it.
      *
@@ -333,8 +339,9 @@ public abstract class AbstractBrush implements Brush {
             return (String) propertyValue;
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing String property '" + propertyName + "' value for '" +
-                this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing String property '{}' value for '{}' brush! Setting up the default one...",
+                propertyName, this.properties.getName()
+        );
         return defaultValue;
     }
 
@@ -345,8 +352,9 @@ public abstract class AbstractBrush implements Brush {
             return (boolean) propertyValue;
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing Boolean property '" + propertyName + "' value for '" +
-                this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing Boolean property '{}' value for '{}' brush! Setting up the default one...",
+                propertyName, this.properties.getName()
+        );
         return defaultValue;
     }
 
@@ -357,8 +365,9 @@ public abstract class AbstractBrush implements Brush {
             return (int) propertyValue;
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing Integer property '" + propertyName + "' value for '" +
-                this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or Integer String property '{}' value for '{}' brush! Setting up the default one...",
+                propertyName, this.properties.getName()
+        );
         return defaultValue;
     }
 
@@ -369,8 +378,9 @@ public abstract class AbstractBrush implements Brush {
             return (double) propertyValue;
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing Double property '" + propertyName + "' value for '" +
-                this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing Double property '{}' value for '{}' brush! Setting up the default one...",
+                propertyName, this.properties.getName()
+        );
         return defaultValue;
     }
 
@@ -381,8 +391,9 @@ public abstract class AbstractBrush implements Brush {
             return (List<?>) propertyValue;
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing List property '" + propertyName + "' value for '" +
-                this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing List property '{}' value for '{}' brush! Setting up the default one...",
+                propertyName, this.properties.getName()
+        );
         return defaultValue;
     }
 
@@ -399,8 +410,8 @@ public abstract class AbstractBrush implements Brush {
             }
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing '" + registry.getName() + "' Registry property '" + propertyName +
-                "' value for '" + this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing '{}' Registry property '{}' value for '{}' brush! " +
+                "Setting up the default one...", registry.getName(), propertyName, this.properties.getName());
         return defaultValue;
     }
 
@@ -415,14 +426,10 @@ public abstract class AbstractBrush implements Brush {
             }
         }
 
-        PLUGIN.getLogger().warning("Invalid or missing '" + enumClass.getSimpleName() + "' Enum property '" + propertyName +
-                "' value for '" + this.properties.getName() + "' brush! Setting up the default one...");
+        LOGGER.warn("Invalid or missing '{}' Enum property '{}' value for '{}' brush! Setting up the default one...",
+                enumClass.getSimpleName(), propertyName, this.properties.getName()
+        );
         return defaultValue;
-    }
-
-    @Override
-    public void setProperties(BrushProperties properties) {
-        this.properties = properties;
     }
 
     @Override

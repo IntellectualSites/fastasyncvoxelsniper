@@ -3,6 +3,8 @@ package com.thevoxelbox.voxelsniper.config;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -20,6 +22,9 @@ import java.util.stream.Stream;
  */
 public class VoxelSniperConfigLoader {
 
+    protected static final String BRUSH_PROPERTIES = "brush-properties";
+    private static final Logger LOGGER =
+            LogManager.getLogger("FastAsyncVoxelSniper/" + VoxelSniperConfigLoader.class.getSimpleName());
     private static final String CONFIG_VERSION = "config-version";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
     private static final String PERSIST_SESSIONS_ON_LOGOUT = "persist-sessions-on-logout";
@@ -31,8 +36,6 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    protected static final String BRUSH_PROPERTIES = "brush-properties";
-
     private static final int CONFIG_VERSION_VALUE = 2;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
@@ -70,7 +73,7 @@ public class VoxelSniperConfigLoader {
     private void updateConfig() {
         int currentConfigVersion = getConfigVersion();
         if (currentConfigVersion != CONFIG_VERSION_VALUE) {
-            plugin.getLogger().warning("Invalid config file found! Trying to apply required changes...");
+            LOGGER.warn("Invalid config file found! Trying to apply required changes...");
             setConfigVersion(CONFIG_VERSION_VALUE);
 
             if (currentConfigVersion < 1) {
@@ -106,11 +109,11 @@ public class VoxelSniperConfigLoader {
                 setBrushProperties(getBrushProperties());
             }
             if (currentConfigVersion < 2) {
-                setPersistentSessions(arePersistentSessionsEnabled()); 
+                setPersistentSessions(arePersistentSessionsEnabled());
             }
 
             plugin.saveConfig();
-            plugin.getLogger().info("Your config file is now up-to-date! (v" + CONFIG_VERSION_VALUE + ")");
+            LOGGER.info("Your config file is now up-to-date! (v{})", CONFIG_VERSION_VALUE);
         }
 
     }
