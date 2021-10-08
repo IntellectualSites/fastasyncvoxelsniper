@@ -20,8 +20,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.serverlib.ServerLib;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
@@ -30,6 +38,11 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
     private VoxelSniperConfig voxelSniperConfig;
+    public static String newVersionTitle = "";
+    private double newVersion = 0;
+    private double currentVersion = 0;
+    private static String currentVersionTitle = "";
+    public static boolean hasUpdate;
 
     public static JavaPlugin getPlugin() {
         return plugin;
@@ -52,7 +65,27 @@ public class VoxelSniperPlugin extends JavaPlugin {
         ServerLib.checkUnsafeForks();
         ServerLib.isJavaSixteen();
         PaperLib.suggestPaper(this);
+        currentVersionTitle = getDescription().getVersion().split("-")[0];
+        currentVersion = Double.parseDouble(currentVersionTitle.replaceFirst("\\.", ""));
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+            try {
+                newVersion = updateCheck(currentVersion);
+                if (newVersion > currentVersion) {
+                    hasUpdate = true;
+                    this.getLogger().info("An update for FastAsyncVoxelSniper is available.");
+                    this.getLogger().info("You are running version " + currentVersionTitle + ", the latest version is " + newVersionTitle);
+                    this.getLogger().info("Update at https://dev.bukkit.org/projects/favs");
+                } else if (currentVersion == newVersion) {
+                    this.getLogger().info("Your version is up to date.");
+                } else if (currentVersion > newVersion) {
+                    this.getLogger().info("You are using a snapshot release or a custom version. This is not a stable release.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0L, 432000);
     }
+
 
     private VoxelSniperConfig loadConfig() {
         saveDefaultConfig();
@@ -138,6 +171,31 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
     public SniperRegistry getSniperRegistry() {
         return this.sniperRegistry;
+    }
+
+    // Borrowed from Vault
+    private double updateCheck(double currentVersion) {
+        try {
+            URL url = new URL("https://api.curseforge.com/servermods/files?projectids=454430");
+            URLConnection conn = url.openConnection();
+            conn.setReadTimeout(5000);
+            conn.addRequestProperty("User-Agent", "FastAsyncVoxelSniper Update Checker");
+            conn.setDoOutput(true);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            final String response = reader.readLine();
+            final JSONArray array = (JSONArray) JSONValue.parse(response);
+
+            if (array.size() == 0) {
+                this.getLogger().warning("No files found, or Feed URL is bad.");
+                return currentVersion;
+            }
+            newVersionTitle =
+                    ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("FastAsyncVoxelSniper", "").trim();
+            return Double.parseDouble(newVersionTitle.replaceFirst("\\.", "").trim());
+        } catch (IOException ignored) {
+            this.getLogger().severe("Unable to check for updates. Improper firewall configuration?");
+        }
+        return currentVersion;
     }
 
 }
