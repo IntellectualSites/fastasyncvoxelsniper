@@ -14,6 +14,8 @@ import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import io.papermc.lib.PaperLib;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,16 +35,17 @@ import java.net.URLConnection;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
+    private static final Logger LOGGER = LogManager.getLogger("FastAsyncVoxelSniper/" + VoxelSniperPlugin.class.getSimpleName());
     public static VoxelSniperPlugin plugin;
+    public static String newVersionTitle = "";
+    public static boolean hasUpdate;
+    private static String currentVersionTitle = "";
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
     private VoxelSniperConfig voxelSniperConfig;
-    public static String newVersionTitle = "";
     private double newVersion = 0;
     private double currentVersion = 0;
-    private static String currentVersionTitle = "";
-    public static boolean hasUpdate;
 
     public static JavaPlugin getPlugin() {
         return plugin;
@@ -72,13 +75,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
                 newVersion = updateCheck(currentVersion);
                 if (newVersion > currentVersion) {
                     hasUpdate = true;
-                    this.getLogger().info("An update for FastAsyncVoxelSniper is available.");
-                    this.getLogger().info("You are running version " + currentVersionTitle + ", the latest version is " + newVersionTitle);
-                    this.getLogger().info("Update at https://dev.bukkit.org/projects/favs");
+                    LOGGER.info("An update for FastAsyncVoxelSniper is available.");
+                    LOGGER.info("You are running version {}, the latest version is {}", currentVersionTitle, newVersionTitle);
+                    LOGGER.info("Update at https://dev.bukkit.org/projects/favs");
                 } else if (currentVersion == newVersion) {
-                    this.getLogger().info("Your version is up to date.");
+                    LOGGER.info("Your version is up to date.");
                 } else if (currentVersion > newVersion) {
-                    this.getLogger().info("You are using a snapshot release or a custom version. This is not a stable release.");
+                    LOGGER.info(
+                            "You are using a snapshot release or a custom version. This is not a stable release found on https://dev.bukkit.org/projects/favs.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -186,14 +190,14 @@ public class VoxelSniperPlugin extends JavaPlugin {
             final JSONArray array = (JSONArray) JSONValue.parse(response);
 
             if (array.size() == 0) {
-                this.getLogger().warning("No files found, or Feed URL is bad.");
+                LOGGER.warn("No files found, or Feed URL is bad.");
                 return currentVersion;
             }
             newVersionTitle =
                     ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("FastAsyncVoxelSniper", "").trim();
             return Double.parseDouble(newVersionTitle.replaceFirst("\\.", "").trim());
         } catch (IOException ignored) {
-            this.getLogger().severe("Unable to check for updates. Improper firewall configuration?");
+            LOGGER.error("Unable to connect to dev.bukkit.org to check for updates. Improper firewall configuration?");
         }
         return currentVersion;
     }
