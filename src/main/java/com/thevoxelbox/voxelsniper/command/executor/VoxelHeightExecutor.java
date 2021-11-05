@@ -39,7 +39,7 @@ public class VoxelHeightExecutor implements CommandExecutor {
         try {
             height = Integer.parseInt(arguments[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-            sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number.");
+            sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number, not: " + arguments[0]);
             return;
         }
         toolkitProperties.setVoxelHeight(height);

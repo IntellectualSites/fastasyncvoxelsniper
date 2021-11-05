@@ -73,7 +73,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                             toolkitProperties.setBlockTracerRange(range);
                         }
                     } else {
-                        sender.sendMessage(ChatColor.RED + "Invalid number.");
+                        sender.sendMessage(ChatColor.RED + "Invalid number: " + arguments[1]);
                         return;
                     }
                 } else {

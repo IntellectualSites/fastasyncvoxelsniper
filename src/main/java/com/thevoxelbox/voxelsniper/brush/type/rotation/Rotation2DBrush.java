@@ -33,13 +33,13 @@ public class Rotation2DBrush extends AbstractBrush {
             messenger.sendMessage(ChatColor.AQUA + "/b rot2 [n] -- Sets rotation angle to n.");
         } else {
             if (parameters.length == 1) {
-                Double degreesAngle = NumericParser.parseDouble(parameters[0]);
+                Double degreesAngle = NumericParser.parseDouble(firstParameter);
                 if (degreesAngle != null) {
                     this.angle = Math.toRadians(degreesAngle);
                     messenger.sendMessage(ChatColor.GREEN + "Angle set to: " + DECIMAL_FORMAT.format(this.angle) + " gradians " +
                             "(" + degreesAngle + " degrees)");
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    messenger.sendMessage(ChatColor.RED + "Invalid number: " + firstParameter);
                 }
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +

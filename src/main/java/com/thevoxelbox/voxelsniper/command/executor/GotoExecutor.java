@@ -19,7 +19,7 @@ public class GotoExecutor implements CommandExecutor {
             x = Integer.parseInt(arguments[0]);
             z = Integer.parseInt(arguments[1]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-            sender.sendMessage(ChatColor.RED + "Invalid syntax. Must be a coordinate");
+            sender.sendMessage(ChatColor.RED + "Invalid syntax. Must be a coordinate, not: " + arguments[0] + ", " + arguments[1]);
             return;
         }
         player.teleport(new Location(world, x, world.getHighestBlockYAt(x, z), z));

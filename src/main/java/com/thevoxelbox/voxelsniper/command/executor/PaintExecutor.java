@@ -30,7 +30,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
             } else {
                 Art art = Art.getByName(arguments[0]);
                 if (art == null) {
-                    sender.sendMessage(ChatColor.RED + "Invalid art name.");
+                    sender.sendMessage(ChatColor.RED + "Invalid art name: " + arguments[0]);
                     return;
                 }
                 ArtHelper.paint(player, art);

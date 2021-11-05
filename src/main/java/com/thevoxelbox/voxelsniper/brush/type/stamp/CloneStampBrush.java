@@ -60,7 +60,7 @@ public class CloneStampBrush extends AbstractStampBrush {
                         toolkitProperties.setCylinderCenter(cylinderCenter);
                         messenger.sendMessage(ChatColor.BLUE + "Center set to: " + toolkitProperties.getCylinderCenter());
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");

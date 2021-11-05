@@ -106,7 +106,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                         messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
                                 .toLowerCase(Locale.ROOT) + " punishment selected.");
                     } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(ChatColor.AQUA + "Invalid Punishment.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid Punishment: " + firstParameter);
                     }
                 }
             } else if (parameters.length == 2) {
@@ -119,7 +119,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                             messenger.sendMessage(ChatColor.AQUA + "Your punishments will now only affect: " + this.punishPlayerName);
                         }
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid player name.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid player name: " + punishPlayerName);
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +

@@ -80,7 +80,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         this.xscl = xscl;
                         messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yscl = NumericParser.parseInteger(parameters[1]);
@@ -88,7 +88,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         this.yscl = yscl;
                         messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("t")) {
                     Integer steps = NumericParser.parseInteger(parameters[1]);
@@ -96,7 +96,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         this.steps = steps;
                         messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number : " + parameters[1]);
                     }
 
                 } else {

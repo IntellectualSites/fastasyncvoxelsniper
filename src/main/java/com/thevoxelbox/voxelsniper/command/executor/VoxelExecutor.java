@@ -87,7 +87,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
             toolkitProperties.setBlockType(blockType);
             messenger.sendBlockTypeMessage(blockType);
         } else {
-            sender.sendMessage(ChatColor.RED + "You have entered an invalid Item name.");
+            sender.sendMessage(ChatColor.RED + "You have entered an invalid item name: " + arguments[0]);
         }
     }
 

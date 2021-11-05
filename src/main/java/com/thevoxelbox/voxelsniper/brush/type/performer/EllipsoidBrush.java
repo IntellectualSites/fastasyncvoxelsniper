@@ -51,7 +51,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
                         this.xRad = xRad;
                         messenger.sendMessage(ChatColor.AQUA + "X radius set to: " + this.xRad);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yRad = NumericParser.parseInteger(parameters[1]);
@@ -59,7 +59,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
                         this.yRad = yRad;
                         messenger.sendMessage(ChatColor.AQUA + "Y radius set to: " + this.yRad);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("z")) {
                     Integer zRad = NumericParser.parseInteger(parameters[1]);
@@ -67,7 +67,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
                         this.zRad = zRad;
                         messenger.sendMessage(ChatColor.AQUA + "Z radius set to: " + this.zRad);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");

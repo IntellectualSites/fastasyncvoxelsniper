@@ -66,7 +66,7 @@ public class Rotation3DBrush extends AbstractBrush {
                                 DECIMAL_FORMAT.format(this.seYaw) + " gradians (" + degreesAngle + " degrees)");
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359.");
+                    messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359. Input provided: " + degreesAngle);
                 }
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
