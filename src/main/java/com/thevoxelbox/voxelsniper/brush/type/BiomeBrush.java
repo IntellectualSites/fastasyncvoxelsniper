@@ -56,7 +56,7 @@ public class BiomeBrush extends AbstractBrush {
                         this.biomeType = biomeType;
                         messenger.sendMessage(ChatColor.GOLD + "Biome type set to: " + ChatColor.DARK_GREEN + this.biomeType.getId());
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid biome type.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid biome type: " + firstParameter);
                     }
                 }
             } else {

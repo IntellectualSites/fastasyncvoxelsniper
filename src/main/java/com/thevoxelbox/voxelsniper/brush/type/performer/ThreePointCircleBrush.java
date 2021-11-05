@@ -66,7 +66,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                         messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.name()
                                 .toLowerCase(Locale.ROOT) + " tolerance.");
                     } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(ChatColor.RED + "Invalid tolerance.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid tolerance:" + firstParameter);
                     }
                 }
             } else {
@@ -126,7 +126,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         // Redundant data check
         if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne
                 .angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0) {
-            messenger.sendMessage(ChatColor.RED + "ERROR: Invalid points, try again.");
+            messenger.sendMessage(ChatColor.RED + "Invalid points: " + this.coordinatesOne + ", " + this.coordinatesTwo + ", " + this.coordinatesThree);
             this.coordinatesOne = null;
             this.coordinatesTwo = null;
             this.coordinatesThree = null;

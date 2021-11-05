@@ -60,7 +60,7 @@ public class EntityBrush extends AbstractBrush {
                         this.entityType = currentEntity;
                         messenger.sendMessage(ChatColor.GREEN + "Entity type set to: " + ChatColor.DARK_GREEN + this.entityType.getName());
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid entity type.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid entity type: " + firstParameter);
                     }
                 }
             } else {

@@ -76,7 +76,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         this.depth = depth < 1 ? 1 : depth;
                         messenger.sendMessage(ChatColor.AQUA + "Depth set to: " + this.depth);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("s")) {
                     Integer seedPercent = NumericParser.parseInteger(parameters[1]);
@@ -112,7 +112,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         this.yOffset = yOffset;
                         messenger.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + this.yOffset);
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");

@@ -76,7 +76,7 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
             toolkitProperties.setReplaceBlockType(blockType);
             messenger.sendReplaceBlockTypeMessage(blockType);
         } else {
-            sender.sendMessage(ChatColor.RED + "You have entered an invalid Item name.");
+            sender.sendMessage(ChatColor.RED + "You have entered an invalid item name: " + arguments[0]);
         }
     }
 

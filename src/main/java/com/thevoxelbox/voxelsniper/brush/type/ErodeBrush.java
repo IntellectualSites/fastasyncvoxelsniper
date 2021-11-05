@@ -70,7 +70,7 @@ public class ErodeBrush extends AbstractBrush {
                     messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Brush preset set to: " + preset.getName());
                     return;
                 } catch (IllegalArgumentException exception) {
-                    messenger.sendMessage(ChatColor.RED + "Invalid preset.");
+                    messenger.sendMessage(ChatColor.RED + "Invalid preset: " + preset.getName());
                     return;
                 }
             }
@@ -87,7 +87,7 @@ public class ErodeBrush extends AbstractBrush {
                                 this.currentPreset.getFillRecursion()
                         );
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("e")) {
                     Integer erosionFaces = NumericParser.parseInteger(parameters[1]);
@@ -99,7 +99,7 @@ public class ErodeBrush extends AbstractBrush {
                                 this.currentPreset.getFillRecursion()
                         );
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("F")) {
                     Integer fillRecursion = NumericParser.parseInteger(parameters[1]);
@@ -111,7 +111,7 @@ public class ErodeBrush extends AbstractBrush {
                                 fillRecursion
                         );
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 } else if (firstParameter.equalsIgnoreCase("E")) {
                     Integer erosionRecursion = NumericParser.parseInteger(parameters[1]);
@@ -123,7 +123,7 @@ public class ErodeBrush extends AbstractBrush {
                                 this.currentPreset.getFillRecursion()
                         );
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
                     }
                 }
             } else {

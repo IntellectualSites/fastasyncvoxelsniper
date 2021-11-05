@@ -86,7 +86,7 @@ public class EntityRemovalBrush extends AbstractBrush {
                         this.exemptions.add(exemptionToAdd);
                         messenger.sendMessage(ChatColor.GREEN + "Added \"" + exemptionToAdd + "\" to entity exemptions list.");
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid entity class.");
+                        messenger.sendMessage(ChatColor.RED + "Invalid entity class: " + exemptionToAdd);
                     }
                 } else if (firstParameter.equalsIgnoreCase("-")) {
                     String exemptionToRemove = parameters[1];
