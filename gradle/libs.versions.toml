@@ -4,7 +4,7 @@ paper = "1.17.1-R0.1-SNAPSHOT"
 log4j = "2.14.1"
 
 # Annotations
-annotations = "22.0.0"
+annotations = "23.0.0"
 
 # Plugins
 fawe = "1.17-381"
