@@ -24,8 +24,8 @@ repositories {
 
 dependencies {
     // Platform expectations
-    compileOnlyApi(libs.paper)
-    compileOnlyApi(libs.log4j)
+    compileOnly(libs.paper)
+    compileOnly(libs.log4j)
 
     // Annotations
     compileOnly(libs.annotations)
