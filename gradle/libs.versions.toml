@@ -7,7 +7,7 @@ log4j = "2.14.1"
 annotations = "23.0.0"
 
 # Plugins
-fawe = "1.17-396"
+fawe = "1.17-410"
 
 # Third party
 serverlib = "2.3.1"
