@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -14,7 +15,6 @@ import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import io.papermc.lib.PaperLib;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ import java.net.URLConnection;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
-    private static final Logger LOGGER = LogManager.getLogger("FastAsyncVoxelSniper/" + VoxelSniperPlugin.class.getSimpleName());
+    private static final Logger LOGGER = LogManagerCompat.getLogger();
     public static VoxelSniperPlugin plugin;
     public static String newVersionTitle = "";
     public static boolean hasUpdate;

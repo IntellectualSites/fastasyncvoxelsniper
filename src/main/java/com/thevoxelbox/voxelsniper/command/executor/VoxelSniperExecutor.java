@@ -129,6 +129,8 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 sender.sendMessage(plugin.getDescription().getName() + " version " + plugin.getDescription().getVersion());
                 sender.sendMessage(plugin.getDescription().getDescription());
                 sender.sendMessage("Website: " + plugin.getDescription().getWebsite());
+                sender.sendMessage("Wiki: https://voxelsniper.fandom.com/wiki/VoxelSniper_Wiki");
+                sender.sendMessage("Discord: https://discord.gg/intellectualsites");
                 return;
             } else if (firstArgument.equalsIgnoreCase("reload")) {
                 if (sender.hasPermission("voxelsniper.admin")) {
