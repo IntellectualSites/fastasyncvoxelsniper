@@ -153,7 +153,7 @@ public class EntityRemovalBrush extends AbstractBrush {
     }
 
     private int removeEntities(int chunkX, int chunkZ) {
-        return TaskManager.IMP.sync(() -> {
+        return TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             if (!world.isChunkLoaded(chunkX, chunkZ)) {
                 return 0;

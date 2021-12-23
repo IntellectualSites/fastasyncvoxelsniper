@@ -41,7 +41,7 @@ public class VoltmeterBrush extends AbstractBrush {
     private void volt(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             Block block = world.getBlockAt(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ());
             boolean indirect = block.isBlockIndirectlyPowered();

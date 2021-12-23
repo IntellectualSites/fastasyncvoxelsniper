@@ -40,7 +40,7 @@ public class LineBrush extends AbstractPerformerBrush {
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         this.originCoordinates = Vectors.toBukkit(targetBlock);
-        this.targetWorld = TaskManager.IMP.sync(() -> BukkitAdapter.adapt(getEditSession().getWorld()));
+        this.targetWorld = TaskManager.taskManager().sync(() -> BukkitAdapter.adapt(getEditSession().getWorld()));
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
     }
