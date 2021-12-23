@@ -19,7 +19,7 @@ java {
 repositories {
     mavenCentral()
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
-    maven { url = uri("https://mvn.intellectualsites.com/content/groups/public/") }
+    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") }
 }
 
 dependencies {
@@ -86,9 +86,9 @@ tasks {
                 "implNote:a:Implementation Note:"
         )
         opt.addBooleanOption("html5", true)
-        opt.links("https://papermc.io/javadocs/paper/1.17/")
+        opt.links("https://papermc.io/javadocs/paper/1.18/")
         opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Core-Javadocs/javadoc/")
-        opt.links("https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/")
+        opt.links("https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/")
     }
 
     shadowJar {

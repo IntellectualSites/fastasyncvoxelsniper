@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.registry.Keyed;
@@ -24,7 +25,6 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -46,7 +46,7 @@ public abstract class AbstractBrush implements Brush {
     protected static final File PLUGIN_DATA_FOLDER = PLUGIN.getDataFolder();
     protected static final int CHUNK_SIZE = 16;
     protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
-    private static final Logger LOGGER = LogManager.getLogger("FastAsyncVoxelSniper/" + AbstractBrush.class.getSimpleName());
+    private static final Logger LOGGER = LogManagerCompat.getLogger();
     private BrushProperties properties;
 
     private EditSession editSession;
