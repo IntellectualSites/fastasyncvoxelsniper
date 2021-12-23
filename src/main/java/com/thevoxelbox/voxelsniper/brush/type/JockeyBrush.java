@@ -141,7 +141,7 @@ public class JockeyBrush extends AbstractBrush {
         }
         if (closest != null) {
             Entity finalClosest = closest;
-            Fawe.get().getQueueHandler().sync(() -> {
+            Fawe.instance().getQueueHandler().sync(() -> {
                 PlayerTeleportEvent playerTeleportEvent = new PlayerTeleportEvent(
                         player,
                         player.getLocation(),

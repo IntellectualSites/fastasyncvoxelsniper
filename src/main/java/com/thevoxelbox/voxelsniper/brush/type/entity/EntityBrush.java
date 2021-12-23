@@ -103,7 +103,7 @@ public class EntityBrush extends AbstractBrush {
         EditSession editSession = getEditSession();
         BlockVector3 lastBlock = getLastBlock();
 
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             try {
                 for (int x = 0; x < toolkitProperties.getBrushSize(); x++) {
                     World world = BukkitAdapter.adapt(editSession.getWorld());

@@ -87,7 +87,7 @@ public class CometBrush extends AbstractBrush {
         Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             Location playerLocation = player.getEyeLocation();
             Vector slope = targetCoordinates.subtract(playerLocation.toVector());
             Vector normalizedSlope = slope.normalize();
