@@ -167,7 +167,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         this.punishDuration = toolkitProperties.getVoxelHeight();
         this.punishLevel = toolkitProperties.getCylinderCenter();
         if (this.specificPlayer) {
-            TaskManager.IMP.sync(() -> {
+            TaskManager.taskManager().sync(() -> {
                 Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
                 if (punishedPlayer == null) {
                     messenger.sendMessage("No player " + this.punishPlayerName + " found.");
@@ -181,7 +181,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         int brushSize = toolkitProperties.getBrushSize();
         int brushSizeSquare = brushSize * brushSize;
         BlockVector3 targetBlock = getTargetBlock();
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
             List<LivingEntity> entities = world.getLivingEntities();

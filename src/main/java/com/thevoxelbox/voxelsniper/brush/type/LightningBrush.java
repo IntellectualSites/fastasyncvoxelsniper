@@ -13,7 +13,7 @@ public class LightningBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
             return null;
@@ -23,7 +23,7 @@ public class LightningBrush extends AbstractBrush {
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        TaskManager.IMP.sync(() -> {
+        TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
             world.strikeLightning(BukkitAdapter.adapt(world, targetBlock));
             return null;

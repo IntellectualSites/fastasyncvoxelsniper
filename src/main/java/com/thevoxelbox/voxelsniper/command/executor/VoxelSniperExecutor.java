@@ -147,7 +147,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                     try {
                         final File logFile = new File("logs/latest.log");
                         final File config = new File(plugin.getDataFolder(), "config.yml");
-                        destination = IncendoPaster.debugPaste(logFile, Fawe.imp().getDebugInfo(), config);
+                        destination = IncendoPaster.debugPaste(logFile, Fawe.platform().getDebugInfo(), config);
                     } catch (IOException e) {
                         sender.sendMessage(ChatColor.RED + "Failed to upload debugpaste because of " + e);
                         return;
