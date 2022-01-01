@@ -96,6 +96,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(this, config);
 
         return new VoxelSniperConfig(
+                voxelSniperConfigLoader.areUpdateNotificationsEnabled(),
                 voxelSniperConfigLoader.isMessageOnLoginEnabled(),
                 voxelSniperConfigLoader.arePersistentSessionsEnabled(),
                 voxelSniperConfigLoader.getDefaultBlockMaterial(),

@@ -30,7 +30,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniperFromRegistry(uuid);
-        if (player.hasPermission("voxelsniper.admin") && hasUpdate) {
+        if (player.hasPermission("voxelsniper.admin") && hasUpdate && config.areUpdateNotificationsEnabled()) {
             player.sendMessage(ChatColor.GOLD + "An update for FastAsyncVoxelSniper is available.");
             player.sendMessage(ChatColor.GOLD + "You are running version " +
                     ChatColor.AQUA + this.plugin.getDescription().getVersion() + ChatColor.GOLD + ", the latest version is " +

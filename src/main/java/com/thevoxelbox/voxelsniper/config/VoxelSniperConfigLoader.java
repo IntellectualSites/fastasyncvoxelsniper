@@ -25,6 +25,7 @@ public class VoxelSniperConfigLoader {
     protected static final String BRUSH_PROPERTIES = "brush-properties";
     private static final Logger LOGGER = LogManagerCompat.getLogger();
     private static final String CONFIG_VERSION = "config-version";
+    private static final String UPDATE_NOTIFICATIONS_ENABLED = "update-notifications";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
     private static final String PERSIST_SESSIONS_ON_LOGOUT = "persist-sessions-on-logout";
     private static final String DEFAULT_BLOCK_MATERIAL = "default-block-material";
@@ -35,7 +36,8 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    private static final int CONFIG_VERSION_VALUE = 2;
+    private static final int CONFIG_VERSION_VALUE = 3;
+    private static final boolean DEFAULT_UPDATE_NOTIFICATIONS_ENABLED = true;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
@@ -110,6 +112,9 @@ public class VoxelSniperConfigLoader {
             if (currentConfigVersion < 2) {
                 setPersistentSessions(arePersistentSessionsEnabled());
             }
+            if (currentConfigVersion < 3) {
+                setUpdateNotificationsEnabled(areUpdateNotificationsEnabled());
+            }
 
             plugin.saveConfig();
             LOGGER.info("Your config file is now up-to-date! (v{})", CONFIG_VERSION_VALUE);
@@ -133,6 +138,24 @@ public class VoxelSniperConfigLoader {
      */
     protected void setConfigVersion(int version) {
         this.config.set(CONFIG_VERSION, version);
+    }
+
+    /**
+     * Return if update notifications are enabled.
+     *
+     * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
+     */
+    public boolean areUpdateNotificationsEnabled() {
+        return this.config.getBoolean(UPDATE_NOTIFICATIONS_ENABLED, DEFAULT_UPDATE_NOTIFICATIONS_ENABLED);
+    }
+
+    /**
+     * Set the update notifier be enabled or disabled.
+     *
+     * @param enabled Update notifications enabled
+     */
+    protected void setUpdateNotificationsEnabled(boolean enabled) {
+        this.config.set(UPDATE_NOTIFICATIONS_ENABLED, enabled);
     }
 
     /**
