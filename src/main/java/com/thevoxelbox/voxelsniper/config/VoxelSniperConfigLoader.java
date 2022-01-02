@@ -113,7 +113,7 @@ public class VoxelSniperConfigLoader {
                 setPersistentSessions(arePersistentSessionsEnabled());
             }
             if (currentConfigVersion < 3) {
-                setUpdateNotificationsEnabled(areUpdateNotificationsEnabled());
+                enableUpdateNotifications(areUpdateNotificationsEnabled());
             }
 
             plugin.saveConfig();
@@ -154,7 +154,7 @@ public class VoxelSniperConfigLoader {
      *
      * @param enabled Update notifications enabled
      */
-    protected void setUpdateNotificationsEnabled(boolean enabled) {
+    protected void enableUpdateNotifications(boolean enabled) {
         this.config.set(UPDATE_NOTIFICATIONS_ENABLED, enabled);
     }
 
