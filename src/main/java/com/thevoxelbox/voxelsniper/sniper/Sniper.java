@@ -150,7 +150,7 @@ public class Sniper {
         {
             BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
             LocalSession session = wePlayer.getSession();
-            QueueHandler queue = Fawe.get().getQueueHandler();
+            QueueHandler queue = Fawe.instance().getQueueHandler();
             queue.async(() -> {
                 synchronized (session) {
                     if (!player.isValid()) {
