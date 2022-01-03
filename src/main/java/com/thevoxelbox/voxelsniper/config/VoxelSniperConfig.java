@@ -27,7 +27,7 @@ public class VoxelSniperConfig {
     /**
      * Create a new cached voxel configuration, used runtime.
      *
-     * @oaram updateNotificationsEnabled    if to notify about updates
+     * @param updateNotificationsEnabled    notify whether updates are available or not
      * @param messageOnLoginEnabled         if message on login is enabled
      * @param persistSessionsOnLogout       if snipers shall be removed on logout
      * @param defaultBlockMaterial          default block material
