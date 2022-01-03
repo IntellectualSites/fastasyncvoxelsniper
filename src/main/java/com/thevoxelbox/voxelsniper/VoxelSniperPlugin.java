@@ -39,6 +39,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     public static VoxelSniperPlugin plugin;
     public static String newVersionTitle = "";
     public static boolean hasUpdate;
+    public static boolean updateCheckFailed;
     private static String currentVersionTitle = "";
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
@@ -73,7 +74,9 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             try {
                 newVersion = updateCheck(currentVersion);
-                if (newVersion > currentVersion) {
+                if (Double.isNaN(newVersion)) {
+                    updateCheckFailed = true;
+                } else if (newVersion > currentVersion) {
                     hasUpdate = true;
                     LOGGER.info("An update for FastAsyncVoxelSniper is available.");
                     LOGGER.info("You are running version {}, the latest version is {}", currentVersionTitle, newVersionTitle);
@@ -199,7 +202,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         } catch (IOException ignored) {
             LOGGER.error("Unable to connect to dev.bukkit.org to check for updates. Improper firewall configuration?");
         }
-        return currentVersion;
+        return Double.NaN;
     }
 
 }
