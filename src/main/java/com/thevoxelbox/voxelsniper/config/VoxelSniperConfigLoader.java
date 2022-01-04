@@ -144,6 +144,7 @@ public class VoxelSniperConfigLoader {
      * Return if update notifications are enabled.
      *
      * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
+     * @since 2.3.0
      */
     public boolean areUpdateNotificationsEnabled() {
         return this.config.getBoolean(UPDATE_NOTIFICATIONS_ENABLED, DEFAULT_UPDATE_NOTIFICATIONS_ENABLED);
@@ -153,6 +154,7 @@ public class VoxelSniperConfigLoader {
      * Set the update notifier be enabled or disabled.
      *
      * @param enabled Update notifications enabled
+     * @since 2.3.0
      */
     protected void enableUpdateNotifications(boolean enabled) {
         this.config.set(UPDATE_NOTIFICATIONS_ENABLED, enabled);

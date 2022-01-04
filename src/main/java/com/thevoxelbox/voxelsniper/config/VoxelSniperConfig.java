@@ -73,6 +73,7 @@ public class VoxelSniperConfig {
      *
      * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
      * @see VoxelSniperConfigLoader#areUpdateNotificationsEnabled()
+     * @since 2.3.0
      */
     public boolean areUpdateNotificationsEnabled() {
         return this.updateNotificationsEnabled;
