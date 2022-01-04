@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static com.thevoxelbox.voxelsniper.VoxelSniperPlugin.hasUpdate;
 import static com.thevoxelbox.voxelsniper.VoxelSniperPlugin.newVersionTitle;
+import static com.thevoxelbox.voxelsniper.VoxelSniperPlugin.updateCheckFailed;
 
 public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
 
@@ -30,12 +31,16 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniperFromRegistry(uuid);
-        if (player.hasPermission("voxelsniper.admin") && hasUpdate) {
-            player.sendMessage(ChatColor.GOLD + "An update for FastAsyncVoxelSniper is available.");
-            player.sendMessage(ChatColor.GOLD + "You are running version " +
-                    ChatColor.AQUA + this.plugin.getDescription().getVersion() + ChatColor.GOLD + ", the latest version is " +
-                    ChatColor.AQUA + newVersionTitle);
-            player.sendMessage(ChatColor.GOLD + "Update at https://dev.bukkit.org/projects/favs");
+        if (player.hasPermission("voxelsniper.admin") && (hasUpdate || updateCheckFailed) && config.areUpdateNotificationsEnabled()) {
+            if (updateCheckFailed) {
+                player.sendMessage(ChatColor.RED + "Could not check for FastAsyncVoxelSniper updates.");
+            } else {
+                player.sendMessage(ChatColor.GOLD + "An update for FastAsyncVoxelSniper is available.");
+                player.sendMessage(ChatColor.GOLD + "You are running version " +
+                        ChatColor.AQUA + this.plugin.getDescription().getVersion() + ChatColor.GOLD + ", the latest version is " +
+                        ChatColor.AQUA + newVersionTitle);
+                player.sendMessage(ChatColor.GOLD + "Update at https://dev.bukkit.org/projects/favs");
+            }
         }
         if (sniper == null) {
             return;

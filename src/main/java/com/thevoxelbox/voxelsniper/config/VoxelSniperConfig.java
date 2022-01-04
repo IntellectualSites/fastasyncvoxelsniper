@@ -10,6 +10,7 @@ public class VoxelSniperConfig {
 
     private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
+    private final boolean updateNotificationsEnabled;
     private final boolean messageOnLoginEnabled;
     private final boolean persistSessionsOnLogout;
     private final BlockType defaultBlockMaterial;
@@ -26,6 +27,7 @@ public class VoxelSniperConfig {
     /**
      * Create a new cached voxel configuration, used runtime.
      *
+     * @param updateNotificationsEnabled    notify whether updates are available or not
      * @param messageOnLoginEnabled         if message on login is enabled
      * @param persistSessionsOnLogout       if snipers shall be removed on logout
      * @param defaultBlockMaterial          default block material
@@ -39,6 +41,7 @@ public class VoxelSniperConfig {
      * @param brushProperties               brush properties
      */
     public VoxelSniperConfig(
+            boolean updateNotificationsEnabled,
             boolean messageOnLoginEnabled,
             boolean persistSessionsOnLogout,
             BlockType defaultBlockMaterial,
@@ -51,6 +54,7 @@ public class VoxelSniperConfig {
             int defaultCylinderCenter,
             Map<String, Map<String, Object>> brushProperties
     ) {
+        this.updateNotificationsEnabled = updateNotificationsEnabled;
         this.messageOnLoginEnabled = messageOnLoginEnabled;
         this.persistSessionsOnLogout = persistSessionsOnLogout;
         this.defaultBlockMaterial = defaultBlockMaterial;
@@ -62,6 +66,16 @@ public class VoxelSniperConfig {
         this.defaultVoxelHeight = defaultVoxelHeight;
         this.defaultCylinderCenter = defaultCylinderCenter;
         this.brushProperties = brushProperties;
+    }
+
+    /**
+     * Return if update notifications are enabled.
+     *
+     * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
+     * @see VoxelSniperConfigLoader#areUpdateNotificationsEnabled()
+     */
+    public boolean areUpdateNotificationsEnabled() {
+        return this.updateNotificationsEnabled;
     }
 
     /**
