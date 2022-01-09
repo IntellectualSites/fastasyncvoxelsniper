@@ -26,6 +26,7 @@ public final class Command extends org.bukkit.command.Command {
         }
     }
 
+    @SuppressWarnings("deprecation") // Deprecated on Paper in favor of adventure
     private void setupPermission(CommandProperties properties) {
         String permission = properties.getPermission();
         setPermission(permission);

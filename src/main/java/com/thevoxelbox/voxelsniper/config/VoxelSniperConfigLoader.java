@@ -71,6 +71,7 @@ public class VoxelSniperConfigLoader {
     /**
      * Update config settings the current config version and apply changes.
      */
+    @SuppressWarnings("unchecked")
     private void updateConfig() {
         int currentConfigVersion = getConfigVersion();
         if (currentConfigVersion != CONFIG_VERSION_VALUE) {
