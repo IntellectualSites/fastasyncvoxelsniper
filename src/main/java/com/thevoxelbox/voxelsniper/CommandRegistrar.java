@@ -223,7 +223,10 @@ public class CommandRegistrar {
                 .description("FastAsyncVoxelSniper Settings.")
                 .permission("voxelsniper.sniper")
                 .alias("vs")
+                .alias("favs")
+                .alias("fastasyncvoxelsniper")
                 .usage("/vs")
+                .usage("/favs")
                 .usage("Example: /vs -- Returns the current brush settings.")
                 .sender(CommandSender.class)
                 .build();
