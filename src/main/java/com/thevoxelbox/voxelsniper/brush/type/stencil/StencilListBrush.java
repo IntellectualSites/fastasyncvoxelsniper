@@ -114,7 +114,7 @@ public class StencilListBrush extends AbstractBrush {
     }
 
     private String readRandomStencil() {
-        double rand = Math.random() * (this.stencilList.size());
+        double rand = Math.random() * this.stencilList.size();
         int choice = (int) rand;
         return this.stencilList.get(choice);
     }
