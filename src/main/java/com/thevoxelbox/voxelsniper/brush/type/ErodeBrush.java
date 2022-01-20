@@ -462,33 +462,34 @@ public class ErodeBrush extends AbstractBrush {
         }
 
         /**
-         * @return the erosionFaces
+         * Returns the erosion faces
          */
         public int getErosionFaces() {
             return this.erosionFaces;
         }
 
         /**
-         * @return the erosionRecursion
+         * Returns the erosion recursion
          */
         public int getErosionRecursion() {
             return this.erosionRecursion;
         }
 
         /**
-         * @return the fillFaces
+         * Returns the fill faces
          */
         public int getFillFaces() {
             return this.fillFaces;
         }
 
         /**
-         * @return the fillRecursion
+         * Returns the fill recursion
          */
         public int getFillRecursion() {
             return this.fillRecursion;
         }
 
+        @SuppressWarnings("ArgumentSelectionDefectChecker") // This is explicit inverted
         public ErosionPreset getInverted() {
             return new ErosionPreset(this.fillFaces, this.fillRecursion, this.erosionFaces, this.erosionRecursion);
         }

@@ -92,7 +92,7 @@ public class ExtrudeBrush extends AbstractBrush {
             double xSquared = Math.pow(x, 2);
             for (int y = -brushSize; y <= brushSize; y++) {
                 if ((xSquared + Math.pow(y, 2)) <= brushSizeSquared) {
-                    int direction = (isSouth) ? 1 : -1;
+                    int direction = isSouth ? 1 : -1;
                     for (int z = 0; z < Math.abs(toolkitProperties.getVoxelHeight()); z++) {
                         int tempZ = z * direction;
                         BlockVector3 targetBlock = this.getTargetBlock();

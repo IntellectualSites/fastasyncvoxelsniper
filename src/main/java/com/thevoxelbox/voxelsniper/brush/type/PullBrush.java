@@ -186,7 +186,7 @@ public class PullBrush extends AbstractBrush {
                                     clampY(targetBlock.getY() + y),
                                     actualZ,
                                     this.clampY(actualX, targetBlock.getY() + y, actualZ),
-                                    this.getStr(((volume / bSquared)))
+                                    this.getStr(volume / bSquared)
                             ));
                         }
                     }

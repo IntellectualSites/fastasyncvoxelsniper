@@ -52,7 +52,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return plugin;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "StringSplitter"})
     @Override
     public void onEnable() {
         plugin = this;
