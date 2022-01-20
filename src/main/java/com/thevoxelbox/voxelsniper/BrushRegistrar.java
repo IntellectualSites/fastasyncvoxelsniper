@@ -94,6 +94,7 @@ public class BrushRegistrar {
             .build();
 
     private final BrushRegistry registry;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final File pluginDataFolder;
 
     public BrushRegistrar(BrushRegistry registry, File pluginDataFolder) {

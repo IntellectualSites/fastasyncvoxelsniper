@@ -52,6 +52,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return plugin;
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void onEnable() {
         plugin = this;
@@ -80,12 +81,12 @@ public class VoxelSniperPlugin extends JavaPlugin {
                     hasUpdate = true;
                     LOGGER.info("An update for FastAsyncVoxelSniper is available.");
                     LOGGER.info("You are running version {}, the latest version is {}", currentVersionTitle, newVersionTitle);
-                    LOGGER.info("Update at https://dev.bukkit.org/projects/favs");
+                    LOGGER.info("Update at https://dev.bukkit.org/projects/favs/");
                 } else if (currentVersion == newVersion) {
                     LOGGER.info("Your version is up to date.");
                 } else if (currentVersion > newVersion) {
                     LOGGER.info(
-                            "You are using a snapshot release or a custom version. This is not a stable release found on https://dev.bukkit.org/projects/favs.");
+                            "You are using a snapshot release or a custom version. This is not a stable release found on https://dev.bukkit.org/projects/favs/.");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
