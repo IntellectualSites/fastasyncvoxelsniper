@@ -123,7 +123,7 @@ public class CopyPastaBrush extends AbstractBrush {
             this.minPoint[i] = Math.min(this.firstPoint[i], this.secondPoint[i]);
             this.offsetPoint[i] = this.minPoint[i] - this.firstPoint[i]; // will always be negative or zero
         }
-        this.numBlocks = (this.arraySize[0]) * (this.arraySize[1]) * (this.arraySize[2]);
+        this.numBlocks = this.arraySize[0] * this.arraySize[1] * this.arraySize[2];
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.numBlocks > 0 && this.numBlocks < this.blockLimit) {
             this.blockArray = new BlockType[this.numBlocks];

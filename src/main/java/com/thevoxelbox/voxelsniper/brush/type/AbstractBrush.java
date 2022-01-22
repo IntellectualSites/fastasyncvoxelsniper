@@ -449,7 +449,7 @@ public abstract class AbstractBrush implements Brush {
     }
 
     /**
-     * @return Block before target Block.
+     * Returns the Block before target Block.
      */
     public BlockVector3 getLastBlock() {
         return this.lastBlock;

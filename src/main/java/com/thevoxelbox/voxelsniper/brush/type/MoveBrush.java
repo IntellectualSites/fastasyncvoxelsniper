@@ -241,7 +241,7 @@ public class MoveBrush extends AbstractBrush {
         }
 
         /**
-         * @return calculated Locations of defined region.
+         * Returns the calculated locations of defined region.
          */
         public List<BlockVector3> getLocations() {
             return this.locations;

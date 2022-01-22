@@ -146,6 +146,7 @@ public class RandomErodeBrush extends AbstractBrush {
         }
     }
 
+    @SuppressWarnings("unused")
     private void randomErosion(Snipe snipe) {
         if (this.erodeFace >= 0 && this.erodeFace <= 6) {
             for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
@@ -189,6 +190,7 @@ public class RandomErodeBrush extends AbstractBrush {
         }
     }
 
+    @SuppressWarnings("unused")
     private void randomFilling(Snipe snipe) {
         if (this.fillFace >= 0 && this.fillFace <= 6) {
             double bSquared = Math.pow(this.brushSize + 0.5, 2);

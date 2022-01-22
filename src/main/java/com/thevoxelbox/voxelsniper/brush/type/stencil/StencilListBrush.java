@@ -114,7 +114,7 @@ public class StencilListBrush extends AbstractBrush {
     }
 
     private String readRandomStencil() {
-        double rand = Math.random() * (this.stencilList.size());
+        double rand = Math.random() * this.stencilList.size();
         int choice = (int) rand;
         return this.stencilList.get(choice);
     }
@@ -263,7 +263,7 @@ public class StencilListBrush extends AbstractBrush {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
                             blockData = readBlockData(in);
-                            for (int j = 0; j < (numLoops); j++) {
+                            for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
                                             targetBlock.getX() + currX,
@@ -439,7 +439,7 @@ public class StencilListBrush extends AbstractBrush {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
                             blockData = readBlockData(in);
-                            for (int j = 0; j < (numLoops); j++) {
+                            for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
                                             targetBlock.getX() + currX,
@@ -623,7 +623,7 @@ public class StencilListBrush extends AbstractBrush {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
                             blockData = readBlockData(in);
-                            for (int j = 0; j < (numLoops); j++) {
+                            for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
                                             targetBlock.getX() + currX,
@@ -799,7 +799,7 @@ public class StencilListBrush extends AbstractBrush {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
                             blockData = readBlockData(in);
-                            for (int j = 0; j < (numLoops); j++) {
+                            for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
                                             targetBlock.getX() + currX,

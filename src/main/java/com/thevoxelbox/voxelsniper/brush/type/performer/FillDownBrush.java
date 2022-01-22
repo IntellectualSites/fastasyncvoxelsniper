@@ -50,7 +50,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
                     messenger.sendMessage(ChatColor.AQUA + "Now only filling air.");
                 } else if (firstParameter.equalsIgnoreCase("e")) {
                     this.fromExisting = !this.fromExisting;
-                    messenger.sendMessage(ChatColor.AQUA + "Now filling down from " + ((this.fromExisting)
+                    messenger.sendMessage(ChatColor.AQUA + "Now filling down from " + (this.fromExisting
                             ? "existing"
                             : "all") + " blocks.");
                 } else {

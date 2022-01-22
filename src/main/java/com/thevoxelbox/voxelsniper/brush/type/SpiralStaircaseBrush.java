@@ -272,7 +272,6 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                             blockPositionY + i,
                             blockPositionZ - brushSize + z
                     );
-                    BlockType blockType = getBlockType(position);
                     if (spiral[x][i][z] == 0) {
                         if (i == voxelHeight - 1) {
                             setBlockType(position, BlockTypes.AIR);
@@ -521,7 +520,6 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                             blockPositionY - i,
                             blockPositionZ - brushSize + z
                     );
-                    BlockType blockType = getBlockType(position);
                     if (spiral[x][i][z] == 0) {
                         setBlockType(position, BlockTypes.AIR);
                     } else if (spiral[x][i][z] == 1) {

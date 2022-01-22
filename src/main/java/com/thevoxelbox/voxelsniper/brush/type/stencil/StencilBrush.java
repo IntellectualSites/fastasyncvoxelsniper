@@ -282,7 +282,7 @@ public class StencilBrush extends AbstractBrush {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
                             blockData = readBlockData(in);
-                            for (int j = 0; j < (numLoops); j++) {
+                            for (int j = 0; j < numLoops; j++) {
                                 BlockType type = blockData.getBlockType();
                                 if (!Materials.isEmpty(type)) {
                                     setBlockData(

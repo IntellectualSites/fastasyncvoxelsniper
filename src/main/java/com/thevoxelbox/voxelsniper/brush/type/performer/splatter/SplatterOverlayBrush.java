@@ -161,7 +161,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         int gref = this.growthPercent;
         int[][] tempSplat = new int[2 * brushSize + 1][2 * brushSize + 1];
         for (int r = 0; r < this.splatterRecursions; r++) {
-            this.growthPercent = gref - ((gref / this.splatterRecursions) * (r));
+            this.growthPercent = gref - ((gref / this.splatterRecursions) * r);
             for (int x = 2 * brushSize; x >= 0; x--) {
                 for (int y = 2 * brushSize; y >= 0; y--) {
                     tempSplat[x][y] = splat[x][y]; // prime tempsplat
@@ -272,7 +272,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         int gref = this.growthPercent;
         int[][] tempsplat = new int[2 * brushSize + 1][2 * brushSize + 1];
         for (int r = 0; r < this.splatterRecursions; r++) {
-            this.growthPercent = gref - ((gref / this.splatterRecursions) * (r));
+            this.growthPercent = gref - ((gref / this.splatterRecursions) * r);
             for (int x = 2 * brushSize; x >= 0; x--) {
                 for (int y = 2 * brushSize; y >= 0; y--) {
                     tempsplat[x][y] = splat[x][y]; // prime tempsplat
