@@ -8,7 +8,6 @@ plugins {
 
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
-    alias(libs.plugins.grgit)
     alias(libs.plugins.nexus)
 }
 

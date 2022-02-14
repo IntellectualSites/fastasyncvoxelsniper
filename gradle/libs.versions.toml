@@ -17,7 +17,6 @@ paster = "1.1.4"
 
 # Gradle plugins
 shadow = "7.1.2"
-grgit = "4.1.1"
 pluginyml = "0.5.1"
 nexus = "1.1.0"
 
@@ -45,6 +44,5 @@ fawe = ["faweBukkit", "faweCore"]
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
-grgit = { id = "org.ajoberstar.grgit", version.ref = "grgit" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
