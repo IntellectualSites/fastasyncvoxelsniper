@@ -17,7 +17,7 @@ paster = "1.1.4"
 
 # Gradle plugins
 shadow = "7.1.2"
-grgit = "4.1.1"
+grgit = "5.0.0"
 pluginyml = "0.5.1"
 nexus = "1.1.0"
 
