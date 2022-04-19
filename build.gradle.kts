@@ -49,7 +49,7 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
-version = "2.3.1"
+version = "2.3.2-SNAPSHOT"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -86,7 +86,7 @@ tasks {
         )
         opt.addBooleanOption("html5", true)
         opt.links("https://papermc.io/javadocs/paper/1.18/")
-        opt.links("https://javadoc.io/doc/com.fastasyncworldedit/FastAsyncWorldEdit-Core/")
+        opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Core-Javadocs/javadoc/")
         opt.links("https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/")
     }
 
