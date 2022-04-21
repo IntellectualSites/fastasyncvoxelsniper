@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.fastasyncvoxelsniper:FastAsyncVoxelSniper:2.2.5")
+    compileOnly("com.fastasyncvoxelsniper:FastAsyncVoxelSniper:2.3.1")
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>com.fastasyncvoxelsniper</groupId>
     <artifactId>FastAsyncVoxelSniper</artifactId>
-    <version>2.2.5</version>
+    <version>2.3.1</version>
     <scope>provided</scope>
 </dependency>
 ```
