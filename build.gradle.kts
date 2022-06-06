@@ -22,22 +22,24 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.4"))
     // Platform expectations
-    compileOnly(libs.paper)
-    compileOnly(libs.log4j)
+    compileOnly("io.papermc.paper:paper-api")
+    compileOnly("org.apache.logging.log4j:log4j-api")
 
     // Annotations
     compileOnly(libs.annotations)
 
     // Plugins
-    compileOnly(libs.bundles.fawe)
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
 
     // Third party
-    implementation(libs.serverlib)
-    implementation(libs.bstatsBase)
-    implementation(libs.bstatsBukkit)
-    implementation(libs.paperlib)
-    implementation(libs.paster)
+    implementation("dev.notmyfault.serverlib:ServerLib")
+    implementation("org.bstats:bstats-base")
+    implementation("org.bstats:bstats-bukkit")
+    implementation("io.papermc:paperlib")
+    implementation("com.intellectualsites.paster:Paster")
 }
 
 tasks.compileJava.configure {
@@ -85,8 +87,8 @@ tasks {
                 "implNote:a:Implementation Note:"
         )
         opt.addBooleanOption("html5", true)
-        opt.links("https://papermc.io/javadocs/paper/1.18/")
-        opt.links("https://ci.athion.net/job/FastAsyncWorldEdit-1.17-Core-Javadocs/javadoc/")
+        opt.links("https://jd.papermc.io/paper/1.18/")
+        opt.links("https://javadoc.io/doc/com.fastasyncworldedit/FastAsyncWorldEdit-Core/latest/")
         opt.links("https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/")
     }
 

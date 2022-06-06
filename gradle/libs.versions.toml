@@ -1,19 +1,6 @@
 [versions]
-# Platform expectations
-paper = "1.18.2-R0.1-SNAPSHOT"
-log4j = "2.17.1"
-
 # Annotations
 annotations = "23.0.0"
-
-# Plugins
-fawe = "2.2.0"
-
-# Third party
-serverlib = "2.3.1"
-bstats = "3.0.0"
-paperlib = "1.0.7"
-paster = "1.1.4"
 
 # Gradle plugins
 shadow = "7.1.2"
@@ -21,26 +8,9 @@ pluginyml = "0.5.1"
 nexus = "1.1.0"
 
 [libraries]
-# Platform expectations
-paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
-log4j = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
 
 # Annotations
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
-
-# Plugins
-faweBukkit = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Bukkit", version.ref = "fawe" }
-faweCore = { group = "com.fastasyncworldedit", name = "FastAsyncWorldEdit-Core", version.ref = "fawe" }
-
-# Third party
-serverlib = { group = "dev.notmyfault.serverlib", name = "ServerLib", version.ref = "serverlib" }
-bstatsBase = { group = "org.bstats", name = "bstats-base", version.ref = "bstats" }
-bstatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bstats" }
-paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
-paster = { group = "com.intellectualsites.paster", name = "Paster", version.ref = "paster" }
-
-[bundles]
-fawe = ["faweBukkit", "faweCore"]
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
