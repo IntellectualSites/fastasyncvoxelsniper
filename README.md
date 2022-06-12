@@ -7,7 +7,7 @@ This is a fork of [VoxelSniper](https://github.com/TVPT/VoxelSniper). It adds su
 * [Download](https://dev.bukkit.org/projects/favs)
 * [Discord](https://discord.gg/intellectualsites)
 * [Issues](https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues)
-* [Wiki](https://voxelsniper.fandom.com/wiki/VoxelSniper_Wiki) (Not maintained by IntellectualSites)
+* [Wiki](https://intellectualsites.github.io/FastasyncVoxelSniper-Documentation/)
 * [JavaDocs](https://javadoc.io/doc/com.fastasyncvoxelsniper/FastAsyncVoxelSniper)
 
 ## Contributing
@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.fastasyncvoxelsniper:FastAsyncVoxelSniper:2.3.1")
+    compileOnly("com.fastasyncvoxelsniper:FastAsyncVoxelSniper:2.3.2")
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>com.fastasyncvoxelsniper</groupId>
     <artifactId>FastAsyncVoxelSniper</artifactId>
-    <version>2.3.1</version>
+    <version>2.3.2</version>
     <scope>provided</scope>
 </dependency>
 ```

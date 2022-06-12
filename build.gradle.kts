@@ -51,7 +51,7 @@ configurations.all {
 }
 
 group = "com.fastasyncvoxelsniper"
-version = "2.3.2-SNAPSHOT"
+version = "2.3.2"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -87,7 +87,7 @@ tasks {
                 "implNote:a:Implementation Note:"
         )
         opt.addBooleanOption("html5", true)
-        opt.links("https://jd.papermc.io/paper/1.18/")
+        opt.links("https://jd.papermc.io/paper/1.19/")
         opt.links("https://javadoc.io/doc/com.fastasyncworldedit/FastAsyncWorldEdit-Core/latest/")
         opt.links("https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/")
     }
