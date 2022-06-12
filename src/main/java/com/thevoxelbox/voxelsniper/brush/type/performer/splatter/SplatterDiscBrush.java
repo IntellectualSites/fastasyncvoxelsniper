@@ -159,6 +159,7 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
         }
         // Make the changes
         int blockX = targetBlock.getX();
+        int blockY = targetBlock.getY();
         int blockZ = targetBlock.getZ();
         double rSquared = Math.pow(brushSize + 1, 2);
         for (int x = 2 * brushSize; x >= 0; x--) {
@@ -167,10 +168,10 @@ public class SplatterDiscBrush extends AbstractPerformerBrush {
                 if (splat[x][y] == 1 && xSquared + Math.pow(y - brushSize - 1, 2) <= rSquared) {
                     this.performer.perform(
                             getEditSession(),
-                            blockX + x - brushSize,
-                            0,
-                            blockZ + y - brushSize,
-                            getBlock(blockX + x - brushSize, 0, blockZ + y - brushSize)
+                            blockX - brushSize + x,
+                            clampY(blockY),
+                            blockZ - brushSize + y,
+                            clampY(blockX - brushSize + x, blockY, blockZ - brushSize + y)
                     );
                 }
             }
