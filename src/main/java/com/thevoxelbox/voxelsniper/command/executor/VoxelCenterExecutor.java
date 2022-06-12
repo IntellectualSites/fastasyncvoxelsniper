@@ -38,8 +38,11 @@ public class VoxelCenterExecutor implements CommandExecutor {
         int center;
         try {
             center = Integer.parseInt(arguments[0]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
+        } catch (NumberFormatException ignored) {
             sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number, not: " + arguments[0]);
+            return;
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+            sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number.");
             return;
         }
         toolkitProperties.setCylinderCenter(center);
