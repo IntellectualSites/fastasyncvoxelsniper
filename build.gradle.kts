@@ -50,7 +50,7 @@ configurations.all {
     attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
 }
 
-group = "com.fastasyncvoxelsniper"
+group = "com.intellectualsites.fastasyncvoxelsniper"
 version = "2.3.3-SNAPSHOT"
 
 bukkit {
@@ -137,11 +137,12 @@ publishing {
 
                 name.set(project.name + " " + project.version)
                 description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
-                url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
+                url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
 
                 licenses {
                     license {
-                        name.set("Creative Commons Public License")
+                        name.set("GNU General Public License, Version 3.0")
+                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
                         distribution.set("repo")
                     }
                 }
@@ -161,14 +162,14 @@ publishing {
                 }
 
                 scm {
-                    url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper")
-                    connection.set("scm:https://IntellectualSites@github.com/IntellectualSites/FastAsyncVoxelSniper.git")
-                    developerConnection.set("scm:git://github.com/IntellectualSites/FastAsyncVoxelSniper.git")
+                    url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
+                    connection.set("scm:https://IntellectualSites@github.com/IntellectualSites/fastasyncvoxelsniper.git")
+                    developerConnection.set("scm:git://github.com/IntellectualSites/fastasyncvoxelsniper.git")
                 }
 
                 issueManagement {
                     system.set("GitHub")
-                    url.set("https://github.com/IntellectualSites/FastAsyncVoxelSniper/issues")
+                    url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper/issues/")
                 }
             }
         }
