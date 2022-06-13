@@ -23,16 +23,16 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.fastasyncvoxelsniper:fastasyncvoxelsniper:2.3.2")
+    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.4.0")
 }
 ```
 
 ### Maven
 ```xml
 <dependency>
-    <groupId>com.fastasyncvoxelsniper</groupId>
+    <groupId>com.intellectualsites.fastasyncvoxelsniper</groupId>
     <artifactId>fastasyncvoxelsniper</artifactId>
-    <version>2.3.2</version>
+    <version>2.4.0</version>
     <scope>provided</scope>
 </dependency>
 ```

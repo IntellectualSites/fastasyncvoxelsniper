@@ -23,3 +23,25 @@ jobs:
         with :
           name : FastAsyncVoxelSniper-SNAPSHOT
           path : build/libs/*-SNAPSHOT.jar
+      - name: Determine release status
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          if [ "$(./gradlew properties | awk '/^version:/ { print $2; }' | grep '\-SNAPSHOT')" ]; then
+            echo "STATUS=snapshot" >> $GITHUB_ENV
+          else
+            echo "STATUS=release" >> $GITHUB_ENV
+          fi
+      - name: Publish Release
+        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+        env :
+          ORG_GRADLE_PROJECT_sonatypeUsername : ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey : ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword : ${{ secrets.SIGNING_PASSWORD }}
+      - name : Publish Snapshot
+        if : ${{ runner.os == 'Linux' && env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run : ./gradlew publishToSonatype
+        env :
+          ORG_GRADLE_PROJECT_sonatypeUsername : ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
