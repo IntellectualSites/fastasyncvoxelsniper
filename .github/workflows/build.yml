@@ -45,3 +45,14 @@ jobs:
         env :
           ORG_GRADLE_PROJECT_sonatypeUsername : ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
+      - name: Publish javadocs
+#        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+        with:
+          source-directory: 'build/docs/javadoc'
+          destination-github-username: 'IntellectualSites'
+          destination-repository-name: 'fastasyncvoxelsniper-javadocs'
+          user-email: ${{ secrets.USER_EMAIL }}
+          target-branch: main
