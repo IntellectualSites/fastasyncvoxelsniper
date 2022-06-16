@@ -88,8 +88,7 @@ tasks {
         )
         opt.addBooleanOption("html5", true)
         opt.links("https://jd.papermc.io/paper/1.19/")
-        opt.links("https://javadoc.io/doc/com.fastasyncworldedit/FastAsyncWorldEdit-Core/latest/")
-        opt.links("https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/")
+        opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
     }
 
     shadowJar {
