@@ -21,7 +21,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
 
     private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
-            .map(tolerance -> tolerance.name().toLowerCase(Locale.ROOT))
+            .map(Tolerance::getName)
             .collect(Collectors.toList());
 
     @Nullable
@@ -63,7 +63,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                 } else {
                     try {
                         this.tolerance = Tolerance.valueOf(firstParameter.toUpperCase(Locale.ROOT));
-                        messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.name()
+                        messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.getName()
                                 .toLowerCase(Locale.ROOT) + " tolerance.");
                     } catch (IllegalArgumentException exception) {
                         messenger.sendMessage(ChatColor.RED + "Invalid tolerance:" + firstParameter);
@@ -206,14 +206,10 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         SnipeMessageSender messageSender = snipe.createMessageSender()
                 .brushNameMessage();
         switch (this.tolerance) {
-            case ACCURATE:
-                messageSender.message(ChatColor.GOLD + "Mode: Accurate");
-                break;
             case DEFAULT:
-                messageSender.message(ChatColor.GOLD + "Mode: Default");
-                break;
+            case ACCURATE:
             case SMOOTH:
-                messageSender.message(ChatColor.GOLD + "Mode: Smooth");
+                messageSender.message(ChatColor.GOLD + "Mode: " + this.tolerance.getName());
                 break;
             default:
                 messageSender.message(ChatColor.GOLD + "Mode: Unknown");
@@ -224,14 +220,20 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
     private enum Tolerance {
 
-        DEFAULT(1000),
-        ACCURATE(10),
-        SMOOTH(2000);
+        DEFAULT("Default", 1000),
+        ACCURATE("Accurate", 10),
+        SMOOTH("Smooth", 2000);
 
+        private final String name;
         private final int value;
 
-        Tolerance(int value) {
+        Tolerance(String name, int value) {
+            this.name = name;
             this.value = value;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public int getValue() {
