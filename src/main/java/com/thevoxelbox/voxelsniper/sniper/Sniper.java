@@ -298,6 +298,9 @@ public class Sniper {
                     }
                 }
                 return false;
+            } catch (Throwable t) {
+                t.printStackTrace();
+                return false;
             } finally {
                 session.remember(editSession);
                 editSession.flushQueue();

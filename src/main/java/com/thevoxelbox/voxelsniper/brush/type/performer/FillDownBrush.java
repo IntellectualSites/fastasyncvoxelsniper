@@ -110,7 +110,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         }
                         y--;
                     }
-                    for (; y >= -targetBlock.getY(); --y) {
+                    for (; y >= -(targetBlock.getY() - getEditSession().getMinY()); --y) {
                         BlockType currentBlockType = getBlockType(
                                 targetBlock.getX() + x,
                                 targetBlock.getY() + y,
