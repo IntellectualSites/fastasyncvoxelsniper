@@ -8,3 +8,4 @@ out/
 *.bat
 target/
 docs/
+.DS_Store

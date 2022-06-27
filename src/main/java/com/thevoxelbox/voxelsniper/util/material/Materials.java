@@ -22,7 +22,7 @@ public final class Materials {
      *
      * @param blockType the block type to check
      * @return {@code true} if block type is a slab, {@code false} otherwise.
-     * @since TODO
+     * @since 2.5.0
      */
     public static boolean isSlab(BlockType blockType) {
         return BlockCategories.SLABS.contains(blockType);
@@ -33,7 +33,7 @@ public final class Materials {
      *
      * @param blockType the block type to check
      * @return {@code true} if block type is a stair, {@code false} otherwise.
-     * @since TODO
+     * @since 2.5.0
      */
     public static boolean isStair(BlockType blockType) {
         return BlockCategories.STAIRS.contains(blockType);
