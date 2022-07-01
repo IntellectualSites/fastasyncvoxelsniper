@@ -34,8 +34,6 @@ public abstract class AbstractPerformer implements Performer {
     }
 
     public BaseBlock simulateSetBlock(int x, int y, int z, Pattern pattern) {
-        // TODO fix pattern usage with as... in performers
-        // TODO replace hard asblocktype to check type with simulate method
         return pattern.applyBlock(BlockVector3.at(x, y, z));
     }
 
