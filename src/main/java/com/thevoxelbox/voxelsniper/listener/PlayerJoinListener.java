@@ -53,8 +53,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
     @Nullable
     private Sniper getSniperFromRegistry(UUID uuid) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Sniper sniper = sniperRegistry.getSniper(uuid);
-        return sniper;
+        return sniperRegistry.getSniper(uuid);
     }
 
 }

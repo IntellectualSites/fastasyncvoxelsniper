@@ -102,7 +102,7 @@ public class PullBrush extends AbstractBrush {
                             double str = this.getStr(volume / brushSizeSquared);
                             int lastStr = (int) (this.voxelHeight * str);
                             lastY = actualY + lastStr;
-                            setBlockType(actualX, clampY(lastY), actualZ,
+                            setBlock(actualX, clampY(lastY), actualZ,
                                     getBlockType(actualX, actualY, actualZ)
                             );
                             if (Double.compare(str, 1.0) == 0) {
@@ -116,7 +116,7 @@ public class PullBrush extends AbstractBrush {
                                 int newY = actualY + lastStr;
                                 BlockType blockType = getBlockType(actualX, actualY, actualZ);
                                 for (int i = newY; i < lastY; i++) {
-                                    setBlockType(actualX, clampY(i), actualZ, blockType);
+                                    setBlock(actualX, clampY(i), actualZ, blockType);
                                 }
                                 lastY = newY;
                                 actualY--;
@@ -138,7 +138,7 @@ public class PullBrush extends AbstractBrush {
                         if (volume <= brushSizeSquared && !getBlock(actualX, targetBlock.getY() + y, actualZ).isAir()) {
                             int actualY = targetBlock.getY() + y;
                             lastY = actualY + (int) (this.voxelHeight * this.getStr(volume / brushSizeSquared));
-                            setBlockType(actualX, clampY(lastY), actualZ,
+                            setBlock(actualX, clampY(lastY), actualZ,
                                     getBlockType(actualX, actualY, actualZ)
                             );
                             y++;
@@ -147,7 +147,7 @@ public class PullBrush extends AbstractBrush {
                                 int blockY = targetBlock.getY() + y + (int) (this.voxelHeight * this.getStr(volume2 / brushSizeSquared));
                                 BlockType blockType = getBlockType(actualX, targetBlock.getY() + y, actualZ);
                                 for (int i = blockY; i < lastY; i++) {
-                                    setBlockType(actualX, clampY(i), actualZ, blockType);
+                                    setBlock(actualX, clampY(i), actualZ, blockType);
                                 }
                                 lastY = blockY;
                                 y++;
@@ -212,7 +212,7 @@ public class PullBrush extends AbstractBrush {
         if (Materials.isEmpty(getBlockType(block.getX(), block.getY() - 1, block.getZ()))) {
             setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
             for (int y = block.getY(); y < blockY; y++) {
-                setBlockType(block.getX(), y, block.getZ(), BlockTypes.AIR);
+                setBlock(block.getX(), y, block.getZ(), BlockTypes.AIR);
             }
         } else {
             setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
@@ -226,7 +226,7 @@ public class PullBrush extends AbstractBrush {
         int blockY = clampY(block.getY() + (int) (this.voxelHeight * block.getStr()));
         setBlockData(block.getX(), blockY, block.getZ(), block.getBlockData());
         for (int y = block.getY(); y > blockY; y--) {
-            this.setBlockType(block.getX(), y, block.getZ(), BlockTypes.AIR);
+            this.setBlock(block.getX(), y, block.getZ(), BlockTypes.AIR);
         }
     }
 

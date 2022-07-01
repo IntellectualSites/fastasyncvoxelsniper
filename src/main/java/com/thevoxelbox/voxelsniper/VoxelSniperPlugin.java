@@ -1,10 +1,12 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
+import com.thevoxelbox.voxelsniper.command.PatternParser;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
@@ -45,6 +47,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
+    private PatternParser patternParser;
     private double newVersion = 0;
     private double currentVersion = 0;
 
@@ -60,6 +63,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.brushRegistry = loadBrushRegistry();
         this.performerRegistry = loadPerformerRegistry();
         this.sniperRegistry = new SniperRegistry();
+        this.patternParser = new PatternParser(WorldEdit.getInstance());
         testRegistries();
         loadCommands();
         loadListeners();
@@ -179,6 +183,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
     public SniperRegistry getSniperRegistry() {
         return this.sniperRegistry;
+    }
+
+    public PatternParser getPatternParser() {
+        return patternParser;
     }
 
     // Borrowed from Vault

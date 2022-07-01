@@ -10,12 +10,17 @@ public class BrushProperties {
     @Nullable
     private final String permission;
     private final List<String> aliases;
+    private final BrushPatternType brushPatternType;
     private final BrushCreator creator;
 
-    BrushProperties(String name, @Nullable String permission, List<String> aliases, BrushCreator creator) {
+    BrushProperties(
+            String name, @Nullable String permission, List<String> aliases, BrushPatternType brushPatternType,
+            BrushCreator creator
+    ) {
         this.name = name;
         this.permission = permission;
         this.aliases = aliases;
+        this.brushPatternType = brushPatternType;
         this.creator = creator;
     }
 
@@ -34,6 +39,10 @@ public class BrushProperties {
 
     public List<String> getAliases() {
         return this.aliases;
+    }
+
+    public BrushPatternType getBrushPatternType() {
+        return brushPatternType;
     }
 
     public BrushCreator getCreator() {

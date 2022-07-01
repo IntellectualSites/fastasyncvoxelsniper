@@ -79,7 +79,7 @@ public class Rotation2DBrush extends AbstractBrush {
                     for (int z = 0; z < this.snap.length; z++) {
                         // why is this not sx + x, sy + y sz + z?
                         this.snap[x][z][y] = getBlock(sx, clampY(sy), sz);
-                        setBlockType(sx, clampY(sy), sz, BlockTypes.AIR);
+                        setBlock(sx, clampY(sy), sz, BlockTypes.AIR);
                         sy++;
                     }
                 }

@@ -4,11 +4,12 @@ import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -43,10 +44,12 @@ public class VoxelSniperConfigLoader {
     private static final BlockType DEFAULT_REPLACE_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
     private static final int DEFAULT_BRUSH_SIZE_VALUE = 3;
     private static final int DEFAULT_LITESNIPER_MAX_BRUSH_SIZE = 5;
-    private static final List<BlockType> DEFAULT_LITESNIPER_RESTRICTED_MATERIALS = Arrays.asList(
-            BlockTypes.BARRIER,
-            BlockTypes.BEDROCK
-    );
+    private static final List<String> DEFAULT_LITESNIPER_RESTRICTED_MATERIALS = Stream.of(
+                    BlockTypes.BARRIER,
+                    BlockTypes.BEDROCK
+            ).filter(Objects::nonNull)
+            .map(BlockType::getResource)
+            .toList();
     private static final int DEFAULT_BRUSH_SIZE_WARNING_THRESHOLD = 100;
     private static final int DEFAULT_VOXEL_HEIGHT_VALUE = 1;
     private static final int DEFAULT_CYLINDER_CENTER_VALUE = 0;
@@ -100,7 +103,7 @@ public class VoxelSniperConfigLoader {
                         LITESNIPER_MAX_BRUSH_SIZE,
                         DEFAULT_LITESNIPER_MAX_BRUSH_SIZE
                 ));
-                setLitesniperRestrictedMaterials((List<BlockType>) oldEntries.getOrDefault(
+                setLitesniperRestrictedMaterials((List<String>) oldEntries.getOrDefault(
                         LITESNIPER_RESTRICTED_MATERIALS,
                         DEFAULT_LITESNIPER_RESTRICTED_MATERIALS
                 ));
@@ -285,11 +288,12 @@ public class VoxelSniperConfigLoader {
      *
      * @return List of restricted Litesniper materials
      */
-    public List<BlockType> getLitesniperRestrictedMaterials() {
+    public List<String> getLitesniperRestrictedMaterials() {
         return this.config.getStringList(LITESNIPER_RESTRICTED_MATERIALS).stream()
                 .map(key -> key.toLowerCase(Locale.ROOT))
-                .map(BlockTypes::get)
-                .filter(Objects::nonNull)
+                .map(key -> key.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
+                        ? key.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
+                        : key)
                 .toList();
     }
 
@@ -298,10 +302,8 @@ public class VoxelSniperConfigLoader {
      *
      * @param restrictedMaterials List of restricted Litesniper materials
      */
-    protected void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
-        this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
-                .map(BlockType::getId)
-                .toList());
+    protected void setLitesniperRestrictedMaterials(List<String> restrictedMaterials) {
+        this.config.set(LITESNIPER_RESTRICTED_MATERIALS, new ArrayList<>(restrictedMaterials));
     }
 
     /**

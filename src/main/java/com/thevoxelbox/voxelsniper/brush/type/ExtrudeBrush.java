@@ -163,7 +163,7 @@ public class ExtrudeBrush extends AbstractBrush {
             ToolkitProperties toolkitProperties
     ) {
         if (toolkitProperties.isVoxelListContains(getBlock(x1, y1, z1))) {
-            setBlockType(x2, y2, z2, getBlockType(x1, y1, z1));
+            setBlock(x2, y2, z2, getBlockType(x1, y1, z1));
             setBlockData(x2, clampY(y2), z2, clampY(x1, y1, z1));
         }
     }

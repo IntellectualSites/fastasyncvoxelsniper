@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -79,7 +80,7 @@ public class ShellSetBrush extends AbstractBrush {
                 for (int y = lowY; y <= highY; y++) {
                     for (int x = lowX; x <= highX; x++) {
                         for (int z = lowZ; z <= highZ; z++) {
-                            BlockType replaceBlockDataType = toolkitProperties.getReplaceBlockType();
+                            BlockType replaceBlockDataType = toolkitProperties.getReplacePattern().asBlockType();
                             if (isBlockTypeNotEqual(y, x, z, replaceBlockDataType) && isBlockTypeNotEqual(
                                     y,
                                     x + 1,
@@ -102,11 +103,8 @@ public class ShellSetBrush extends AbstractBrush {
                     }
                 }
                 for (BlockVector3 currentBlock : blocks) {
-                    BlockType currentBlockType = getBlockType(currentBlock);
-                    BlockType blockType = toolkitProperties.getBlockType();
-                    if (currentBlockType != blockType) {
-                        setBlockType(currentBlock, blockType);
-                    }
+                    Pattern pattern = toolkitProperties.getPattern().getPattern();
+                    setBlock(currentBlock, pattern);
                 }
                 messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
             }
@@ -125,8 +123,8 @@ public class ShellSetBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
-                .replaceBlockTypeMessage()
+                .patternMessage()
+                .replacePatternMessage()
                 .send();
     }
 

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -27,20 +27,12 @@ public class Messenger {
         sendMessage(ChatColor.DARK_PURPLE + "Performer: " + ChatColor.DARK_GREEN + performerName);
     }
 
-    public void sendBlockTypeMessage(BlockType blockType) {
-        sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getId());
+    public void sendPatternMessage(BrushPattern brushPattern) {
+        sendMessage(ChatColor.GOLD + "Voxel: " + ChatColor.RED + brushPattern.getName());
     }
 
-    public void sendBlockDataMessage(BlockState blockData) {
-        sendMessage(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString());
-    }
-
-    public void sendReplaceBlockTypeMessage(BlockType replaceBlockType) {
-        sendMessage(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getId());
-    }
-
-    public void sendReplaceBlockDataMessage(BlockState replaceBlockData) {
-        sendMessage(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString());
+    public void sendReplacePatternMessage(BrushPattern replaceBrushPattern) {
+        sendMessage(ChatColor.AQUA + "Replace: " + ChatColor.RED + replaceBrushPattern.getName());
     }
 
     public void sendBrushSizeMessage(int brushSize) {

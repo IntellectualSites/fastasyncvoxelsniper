@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -59,11 +59,8 @@ public class DomeBrush extends AbstractBrush {
             }
         }
         for (Vector vector : changeablePositions) {
-            BlockState currentTargetBlock = getBlock(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());
-            BlockState snipeBlockData = toolkitProperties.getBlockData();
-            if (!currentTargetBlock.equals(snipeBlockData)) {
-                setBlockData(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), snipeBlockData);
-            }
+            Pattern pattern = toolkitProperties.getPattern().getPattern();
+            setBlock(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ(), pattern);
         }
     }
 
@@ -72,7 +69,7 @@ public class DomeBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
+                .patternMessage()
                 .voxelHeightMessage()
                 .send();
     }

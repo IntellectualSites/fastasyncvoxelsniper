@@ -89,19 +89,19 @@ public class DrainBrush extends AbstractBrush {
                     if (xSquared + ySquared <= brushSizeSquared) {
                         BlockType typePlusPlus = getBlockType(targetBlock.add(x, 0, y));
                         if (Materials.isLiquid(typePlusPlus)) {
-                            setBlockType(targetBlock.add(x, 0, y), BlockTypes.AIR);
+                            setBlock(targetBlock.add(x, 0, y), BlockTypes.AIR);
                         }
                         BlockType typePlusMinus = getBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y);
                         if (Materials.isLiquid(typePlusMinus)) {
-                            setBlockType(targetBlockX + x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
+                            setBlock(targetBlockX + x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
                         }
                         BlockType typeMinusPlus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y);
                         if (Materials.isLiquid(typeMinusPlus)) {
-                            setBlockType(targetBlockX - x, targetBlockY, targetBlockZ + y, BlockTypes.AIR);
+                            setBlock(targetBlockX - x, targetBlockY, targetBlockZ + y, BlockTypes.AIR);
                         }
                         BlockType typeMinusMinus = getBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y);
                         if (Materials.isLiquid(typeMinusMinus)) {
-                            setBlockType(targetBlockX - x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
+                            setBlock(targetBlockX - x, targetBlockY, targetBlockZ - y, BlockTypes.AIR);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ public class DrainBrush extends AbstractBrush {
                                     targetBlockZ + y - brushSize
                             );
                             if (Materials.isLiquid(type)) {
-                                setBlockType(
+                                setBlock(
                                         targetBlockX + x - brushSize,
                                         targetBlockY + z - brushSize,
                                         targetBlockZ + y - brushSize,

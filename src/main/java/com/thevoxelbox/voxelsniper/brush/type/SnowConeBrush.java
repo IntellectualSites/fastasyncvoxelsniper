@@ -124,7 +124,7 @@ public class SnowConeBrush extends AbstractBrush {
         }
         for (int x = 0; x <= brushSizeDoubled; x++) {
             for (int z = 0; z <= brushSizeDoubled; z++) {
-                setBlockType(
+                setBlock(
                         blockPositionX - brushSize + x,
                         blockPositionY - yOffset[x][z],
                         blockPositionZ - brushSize + z,

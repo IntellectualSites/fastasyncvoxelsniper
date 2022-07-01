@@ -269,22 +269,22 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                     if (spiral[x][i][z] == 0) {
                         if (up) {
                             if (i == voxelHeight - 1) {
-                                setBlockType(position, BlockTypes.AIR);
+                                setBlock(position, BlockTypes.AIR);
                             } else {
                                 if (!((stairType == StairType.STAIR) && spiral[x][i + 1][z] == 1)) {
-                                    setBlockType(position, BlockTypes.AIR);
+                                    setBlock(position, BlockTypes.AIR);
                                 }
                             }
                         } else {
-                            setBlockType(position, BlockTypes.AIR);
+                            setBlock(position, BlockTypes.AIR);
                         }
                     } else if (spiral[x][i][z] == 1) {
                         if (stairType == StairType.BLOCK) {
-                            setBlockType(position, toolkitProperties.getBlockType());
+                            setBlock(position, toolkitProperties.getPattern().asBlockType());
                         } else if (stairType == StairType.STEP) {
-                            setBlockType(position, toolkitProperties.getBlockType());
+                            setBlock(position, toolkitProperties.getPattern().asBlockType());
                         } else if (stairType == StairType.STAIR) {
-                            BlockType newState = BlockTypes.get(toolkitProperties.getBlockType().getId()
+                            BlockType newState = BlockTypes.get(toolkitProperties.getPattern().asBlockType().getId()
                                     .replace("stairs", "slab"));
                             setBlockData(
                                     up ? BlockVector3.at(
@@ -292,7 +292,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                                             blockPositionY + i - 1,
                                             blockPositionZ - brushSize + z
                                     ) : position,
-                                    newState == null ? toolkitProperties.getBlockType().getDefaultState() :
+                                    newState == null ? toolkitProperties.getPattern().asBlockType().getDefaultState() :
                                             newState.getDefaultState().with(PropertyKey.TYPE, "top")
                             );
                         }
@@ -300,19 +300,24 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                         if (stairType == StairType.STEP) {
                             setBlockData(
                                     position,
-                                    toolkitProperties.getBlockType().getDefaultState().with(PropertyKey.TYPE, "top")
+                                    toolkitProperties.getPattern().asBlockType().getDefaultState().with(PropertyKey.TYPE, "top")
                             );
                         } else if (stairType == StairType.STAIR) {
                             setBlockData(
                                     position,
-                                    toolkitProperties.getBlockType().getDefaultState().with(PropertyKey.FACING, Direction.EAST)
+                                    toolkitProperties
+                                            .getPattern()
+                                            .asBlockType()
+                                            .getDefaultState()
+                                            .with(PropertyKey.FACING, Direction.EAST)
                             );
                         }
                     } else if (stairType == StairType.STAIR) {
                         setBlockData(
                                 position,
                                 toolkitProperties
-                                        .getBlockType()
+                                        .getPattern()
+                                        .asBlockType()
                                         .getDefaultState()
                                         .with(PropertyKey.FACING, dataToDirection(spiral[x][i][z] - 2))
                         );
@@ -332,7 +337,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     }
 
     private static StairType getStairType(Snipe snipe) {
-        BlockType blockType = snipe.getToolkitProperties().getBlockType();
+        BlockType blockType = snipe.getToolkitProperties().getPattern().asBlockType();
         if (Materials.isSlab(blockType)) {
             return StairType.STEP;
         }
@@ -347,8 +352,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
-                .blockDataMessage()
+                .patternMessage()
                 .voxelHeightMessage()
                 .message(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName())
                 .message(ChatColor.BLUE + "Staircase turns: " + this.sdirect)

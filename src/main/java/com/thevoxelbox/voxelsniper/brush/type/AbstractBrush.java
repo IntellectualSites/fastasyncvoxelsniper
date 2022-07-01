@@ -4,6 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -229,15 +230,19 @@ public abstract class AbstractBrush implements Brush {
         return block.getBlockType();
     }
 
-    public void setBlockType(BlockVector3 position, BlockType type) {
+    public void setBlock(BlockVector3 position, Pattern pattern) {
         int x = position.getX();
         int y = position.getY();
         int z = position.getZ();
-        setBlockType(x, y, z, type);
+        setBlock(x, y, z, pattern);
     }
 
-    public void setBlockType(int x, int y, int z, BlockType type) {
-        setBlockData(x, y, z, type.getDefaultState());
+    public void setBlock(int x, int y, int z, Pattern pattern) {
+        if (pattern instanceof BlockType blockType) {
+            setBlockData(x, y, z, blockType.getDefaultState());
+        } else {
+            setBlock(x, y, z, pattern);
+        }
     }
 
     public void setBlockData(BlockVector3 position, BlockState blockState) {
@@ -256,6 +261,10 @@ public abstract class AbstractBrush implements Brush {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public BaseBlock simulateSetBlock(int x, int y, int z, Pattern pattern) {
+        return pattern.applyBlock(BlockVector3.at(x, y, z));
     }
 
     public BaseBlock getFullBlock(BlockVector3 position) {

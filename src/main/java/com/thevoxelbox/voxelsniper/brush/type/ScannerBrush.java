@@ -95,7 +95,7 @@ public class ScannerBrush extends AbstractBrush {
 
     private void scan(Snipe snipe, Direction blockFace) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        this.checkFor = toolkitProperties.getBlockType();
+        this.checkFor = toolkitProperties.getPattern().asBlockType();
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
         if (blockFace == Direction.NORTH) { // Scan south
@@ -148,7 +148,7 @@ public class ScannerBrush extends AbstractBrush {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() + i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " " + "blocks.");
                     return;
                 }
             }

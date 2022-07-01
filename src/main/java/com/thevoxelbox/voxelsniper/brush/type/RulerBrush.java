@@ -88,7 +88,7 @@ public class RulerBrush extends AbstractBrush {
             int x = targetBlock.getX();
             int y = targetBlock.getY();
             int z = targetBlock.getZ();
-            setBlockType(x + this.xOffset, y + this.yOffset, z + this.zOffset, toolkitProperties.getBlockType());
+            setBlock(x + this.xOffset, y + this.yOffset, z + this.zOffset, toolkitProperties.getPattern().getPattern());
         }
     }
 
@@ -119,7 +119,7 @@ public class RulerBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .blockTypeMessage()
+                .patternMessage()
                 .send();
     }
 

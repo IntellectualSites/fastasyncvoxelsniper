@@ -5,9 +5,10 @@ import java.util.List;
 
 public class BrushPropertiesBuilder {
 
-    private final List<String> aliases = new ArrayList<>(1);
     private String name;
     private String permission;
+    private final List<String> aliases = new ArrayList<>(1);
+    private BrushPatternType brushPatternType;
     private BrushCreator creator;
 
     public BrushPropertiesBuilder name(String name) {
@@ -25,6 +26,11 @@ public class BrushPropertiesBuilder {
         return this;
     }
 
+    public BrushPropertiesBuilder brushPatternType(BrushPatternType brushPatternType) {
+        this.brushPatternType = brushPatternType;
+        return this;
+    }
+
     public BrushPropertiesBuilder creator(BrushCreator creator) {
         this.creator = creator;
         return this;
@@ -34,10 +40,13 @@ public class BrushPropertiesBuilder {
         if (this.name == null) {
             throw new RuntimeException("Brush name must be specified.");
         }
+        if (this.brushPatternType == null) {
+            throw new RuntimeException("Brush pattern type must be specified.");
+        }
         if (this.creator == null) {
             throw new RuntimeException("Brush creator must be specified.");
         }
-        return new BrushProperties(this.name, this.permission, this.aliases, this.creator);
+        return new BrushProperties(this.name, this.permission, this.aliases, this.brushPatternType, this.creator);
     }
 
 }
