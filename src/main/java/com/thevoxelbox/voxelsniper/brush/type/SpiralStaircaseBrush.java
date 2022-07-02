@@ -140,18 +140,17 @@ public class SpiralStaircaseBrush extends AbstractBrush {
             } else if (stairType == StairType.STEP) {
                 // alternating step-doublestep, uses data value to determine type
                 switch (toggle) {
-                    case 0:
-                    case 1:
+                    case 0, 1 -> {
                         toggle = 2;
                         spiral[startX + xOffset][y][startZ + zOffset] = up ? 1 : 2;
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         toggle = 1;
                         spiral[startX + xOffset][y][startZ + zOffset] = up ? 2 : 1;
                         y++;
-                        break;
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             }
             // Adjust horizontal position and do stair-option array stuff
@@ -324,17 +323,12 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     }
 
     private static Direction dataToDirection(int data) {
-        switch (data) {
-            case 3:
-                return Direction.NORTH;
-            case 2:
-                return Direction.SOUTH;
-            case 1:
-                return Direction.WEST;
-            case 0:
-            default:
-                return Direction.EAST;
-        }
+        return switch (data) {
+            case 3 -> Direction.NORTH;
+            case 2 -> Direction.SOUTH;
+            case 1 -> Direction.WEST;
+            default -> Direction.EAST;
+        };
     }
 
     private static StairType getStairType(Snipe snipe) {

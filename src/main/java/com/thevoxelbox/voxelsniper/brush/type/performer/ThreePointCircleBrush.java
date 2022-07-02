@@ -21,8 +21,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
 
     private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
-            .map(Tolerance::getName)
-            .collect(Collectors.toList());
+            .map(Tolerance::getName).toList();
 
     @Nullable
     private Vector coordinatesOne;
@@ -206,14 +205,8 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         SnipeMessageSender messageSender = snipe.createMessageSender()
                 .brushNameMessage();
         switch (this.tolerance) {
-            case DEFAULT:
-            case ACCURATE:
-            case SMOOTH:
-                messageSender.message(ChatColor.GOLD + "Mode: " + this.tolerance.getName());
-                break;
-            default:
-                messageSender.message(ChatColor.GOLD + "Mode: Unknown");
-                break;
+            case DEFAULT, ACCURATE, SMOOTH -> messageSender.message(ChatColor.GOLD + "Mode: " + this.tolerance.getName());
+            default -> messageSender.message(ChatColor.GOLD + "Mode: Unknown");
         }
         messageSender.send();
     }

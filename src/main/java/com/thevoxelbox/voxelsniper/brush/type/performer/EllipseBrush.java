@@ -151,38 +151,29 @@ public class EllipseBrush extends AbstractPerformerBrush {
                 Direction face = getDirection(getTargetBlock(), lastBlock);
                 if (face != null) {
                     switch (face) {
-                        case NORTH:
-                        case SOUTH:
-                            this.performer.perform(
-                                    getEditSession(),
-                                    blockX,
-                                    blockY + x,
-                                    blockZ + y,
-                                    getBlock(blockX, blockY + x, blockZ + y)
-                            );
-                            break;
-                        case EAST:
-                        case WEST:
-                            this.performer.perform(
-                                    getEditSession(),
-                                    blockX + x,
-                                    blockY + y,
-                                    blockZ,
-                                    getBlock(blockX + x, blockY + y, blockZ)
-                            );
-                            break;
-                        case UP:
-                        case DOWN:
-                            this.performer.perform(
-                                    getEditSession(),
-                                    blockX + x,
-                                    blockY,
-                                    blockZ + y,
-                                    getBlock(blockX + x, blockY, blockZ + y)
-                            );
-                            break;
-                        default:
-                            break;
+                        case NORTH, SOUTH -> this.performer.perform(
+                                getEditSession(),
+                                blockX,
+                                blockY + x,
+                                blockZ + y,
+                                getBlock(blockX, blockY + x, blockZ + y)
+                        );
+                        case EAST, WEST -> this.performer.perform(
+                                getEditSession(),
+                                blockX + x,
+                                blockY + y,
+                                blockZ,
+                                getBlock(blockX + x, blockY + y, blockZ)
+                        );
+                        case UP, DOWN -> this.performer.perform(
+                                getEditSession(),
+                                blockX + x,
+                                blockY,
+                                blockZ + y,
+                                getBlock(blockX + x, blockY, blockZ + y)
+                        );
+                        default -> {
+                        }
                     }
                 }
                 if (steps >= TWO_PI) {
@@ -213,38 +204,29 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         Direction face = getDirection(getTargetBlock(), lastBlock);
                         if (face != null) {
                             switch (face) {
-                                case NORTH:
-                                case SOUTH:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX,
-                                            blockY + x,
-                                            blockZ + y,
-                                            getBlock(blockX, blockY + x, blockZ + y)
-                                    );
-                                    break;
-                                case EAST:
-                                case WEST:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX + x,
-                                            blockY + y,
-                                            blockZ,
-                                            getBlock(blockX + x, blockY + y, blockZ)
-                                    );
-                                    break;
-                                case UP:
-                                case DOWN:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX + x,
-                                            blockY,
-                                            blockZ + y,
-                                            getBlock(blockX + x, blockY, blockZ + y)
-                                    );
-                                    break;
-                                default:
-                                    break;
+                                case NORTH, SOUTH -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX,
+                                        blockY + x,
+                                        blockZ + y,
+                                        getBlock(blockX, blockY + x, blockZ + y)
+                                );
+                                case EAST, WEST -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX + x,
+                                        blockY + y,
+                                        blockZ,
+                                        getBlock(blockX + x, blockY + y, blockZ)
+                                );
+                                case UP, DOWN -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX + x,
+                                        blockY,
+                                        blockZ + y,
+                                        getBlock(blockX + x, blockY, blockZ + y)
+                                );
+                                default -> {
+                                }
                             }
                         }
                         if (steps >= TWO_PI) {
@@ -262,38 +244,29 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         Direction face = getDirection(getTargetBlock(), lastBlock);
                         if (face != null) {
                             switch (face) {
-                                case NORTH:
-                                case SOUTH:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX,
-                                            blockY + x,
-                                            blockZ + y,
-                                            getBlock(blockX, blockY + x, blockZ + y)
-                                    );
-                                    break;
-                                case EAST:
-                                case WEST:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX + x,
-                                            blockY + y,
-                                            blockZ,
-                                            getBlock(blockX + x, blockY + y, blockZ)
-                                    );
-                                    break;
-                                case UP:
-                                case DOWN:
-                                    this.performer.perform(
-                                            getEditSession(),
-                                            blockX + x,
-                                            blockY,
-                                            blockZ + y,
-                                            getBlock(blockX + x, blockY, blockZ + y)
-                                    );
-                                    break;
-                                default:
-                                    break;
+                                case NORTH, SOUTH -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX,
+                                        blockY + x,
+                                        blockZ + y,
+                                        getBlock(blockX, blockY + x, blockZ + y)
+                                );
+                                case EAST, WEST -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX + x,
+                                        blockY + y,
+                                        blockZ,
+                                        getBlock(blockX + x, blockY + y, blockZ)
+                                );
+                                case UP, DOWN -> this.performer.perform(
+                                        getEditSession(),
+                                        blockX + x,
+                                        blockY,
+                                        blockZ + y,
+                                        getBlock(blockX + x, blockY, blockZ + y)
+                                );
+                                default -> {
+                                }
                             }
                         }
                         if (steps >= TWO_PI) {

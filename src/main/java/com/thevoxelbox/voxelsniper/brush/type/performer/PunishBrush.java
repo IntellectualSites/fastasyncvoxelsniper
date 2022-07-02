@@ -39,8 +39,7 @@ public class PunishBrush extends AbstractPerformerBrush {
     private static final int DEFAULT_PUNISH_DURATION = 60;
 
     private static final List<String> PUNISHMENTS = Arrays.stream(Punishment.values())
-            .map(punishment -> punishment.name().toLowerCase(Locale.ROOT))
-            .collect(Collectors.toList());
+            .map(punishment -> punishment.name().toLowerCase(Locale.ROOT)).toList();
 
 
     private boolean specificPlayer;

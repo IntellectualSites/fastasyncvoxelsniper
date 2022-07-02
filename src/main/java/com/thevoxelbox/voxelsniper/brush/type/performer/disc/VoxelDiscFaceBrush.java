@@ -36,20 +36,11 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
     private void pre(Snipe snipe, Direction blockFace, BlockVector3 targetBlock) {
         switch (blockFace) {
-            case NORTH:
-            case SOUTH:
-                discNorthSouth(snipe, targetBlock);
-                break;
-            case EAST:
-            case WEST:
-                discEastWest(snipe, targetBlock);
-                break;
-            case UP:
-            case DOWN:
-                disc(snipe, targetBlock);
-                break;
-            default:
-                break;
+            case NORTH, SOUTH -> discNorthSouth(snipe, targetBlock);
+            case EAST, WEST -> discEastWest(snipe, targetBlock);
+            case UP, DOWN -> disc(snipe, targetBlock);
+            default -> {
+            }
         }
     }
 

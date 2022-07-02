@@ -174,17 +174,11 @@ public class ExtrudeBrush extends AbstractBrush {
             return;
         }
         switch (blockFace) {
-            case UP:
-                extrudeUpOrDown(snipe, towardsUser);
-                break;
-            case SOUTH:
-                extrudeNorthOrSouth(snipe, towardsUser);
-                break;
-            case EAST:
-                extrudeEastOrWest(snipe, towardsUser);
-                break;
-            default:
-                break;
+            case UP -> extrudeUpOrDown(snipe, towardsUser);
+            case SOUTH -> extrudeNorthOrSouth(snipe, towardsUser);
+            case EAST -> extrudeEastOrWest(snipe, towardsUser);
+            default -> {
+            }
         }
     }
 

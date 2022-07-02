@@ -23,8 +23,7 @@ public class EntityBrush extends AbstractBrush {
     private static final EntityType DEFAULT_ENTITY_TYPE = EntityTypes.ZOMBIE;
 
     private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
-            .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .collect(Collectors.toList());
+            .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)).toList();
 
     private EntityType entityType;
 

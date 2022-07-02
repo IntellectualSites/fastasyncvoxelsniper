@@ -154,26 +154,26 @@ public class CopyPastaBrush extends AbstractBrush {
                     int y;
                     int z;
                     switch (this.pivot) {
-                        case 180:
+                        case 180 -> {
                             x = this.pastePoint[0] - this.offsetPoint[0] - i;
                             y = this.pastePoint[1] + this.offsetPoint[1] + j;
                             z = this.pastePoint[2] - this.offsetPoint[2] - k;
-                            break;
-                        case 270:
+                        }
+                        case 270 -> {
                             x = this.pastePoint[0] + this.offsetPoint[2] + k;
                             y = this.pastePoint[1] + this.offsetPoint[1] + j;
                             z = this.pastePoint[2] - this.offsetPoint[0] - i;
-                            break;
-                        case 90:
+                        }
+                        case 90 -> {
                             x = this.pastePoint[0] - this.offsetPoint[2] - k;
                             y = this.pastePoint[1] + this.offsetPoint[1] + j;
                             z = this.pastePoint[2] + this.offsetPoint[0] + i;
-                            break;
-                        default: // assume no rotation
+                        }
+                        default -> { // assume no rotation
                             x = this.pastePoint[0] + this.offsetPoint[0] + i;
                             y = this.pastePoint[1] + this.offsetPoint[1] + j;
                             z = this.pastePoint[2] + this.offsetPoint[2] + k;
-                            break;
+                        }
                     }
                     if (!(Materials.isEmpty(this.blockArray[currentPosition]) && !this.pasteAir)) {
                         setBlockData(x, y, z, this.dataArray[currentPosition]);

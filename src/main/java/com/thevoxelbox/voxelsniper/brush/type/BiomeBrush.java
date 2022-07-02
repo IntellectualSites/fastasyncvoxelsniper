@@ -19,8 +19,7 @@ public class BiomeBrush extends AbstractBrush {
     private static final BiomeType DEFAULT_BIOME_TYPE = BiomeTypes.PLAINS;
 
     private static final List<String> BIOMES = BiomeTypes.values().stream()
-            .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .collect(Collectors.toList());
+            .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)).toList();
 
     private BiomeType biomeType;
 

@@ -18,8 +18,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
 
     private static final List<String> ART_NAMES = Arrays.stream(Art.values())
             .map(Art::name)
-            .map(String::toLowerCase)
-            .collect(Collectors.toList());
+            .map(String::toLowerCase).toList();
 
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {

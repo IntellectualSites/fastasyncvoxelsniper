@@ -282,8 +282,7 @@ public class Sniper {
                             return false;
                         }
                         Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
-                        if (currentBrush instanceof PerformerBrush) {
-                            PerformerBrush performerBrush = (PerformerBrush) currentBrush;
+                        if (currentBrush instanceof PerformerBrush performerBrush) {
                             performerBrush.initialize(snipe);
                         }
                         BlockVector3 lastBlock = clickedBlock == null
@@ -325,8 +324,7 @@ public class Sniper {
         ToolkitProperties toolkitProperties = toolkit.getProperties();
         Snipe snipe = new Snipe(this, toolkit, toolkitProperties, brushProperties, brush);
         brush.sendInfo(snipe);
-        if (brush instanceof PerformerBrush) {
-            PerformerBrush performer = (PerformerBrush) brush;
+        if (brush instanceof PerformerBrush performer) {
             performer.sendPerformerInfo(snipe);
         }
     }
