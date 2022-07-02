@@ -302,7 +302,7 @@ public class VoxelSniperConfigLoader {
     protected void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
         this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
                 .map(BlockType::getId)
-                .toList()
+                .toList());
     }
 
     /**
