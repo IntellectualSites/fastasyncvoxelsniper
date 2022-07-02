@@ -27,7 +27,8 @@ import java.util.stream.Collectors;
 public class VoxelExecutor implements CommandExecutor, TabCompleter {
 
     private static final List<String> BLOCKS = BlockType.REGISTRY.values().stream()
-            .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)).toList();
+            .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .toList();
 
     private final VoxelSniperPlugin plugin;
 
@@ -100,7 +101,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                     .toLowerCase(Locale.ROOT);
             return BLOCKS.stream()
                     .filter(id -> id.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

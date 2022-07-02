@@ -112,7 +112,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
                     })
                     .map(Map.Entry::getKey)
                     .filter(brushAlias -> brushAlias.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         if (arguments.length > 1) {
             SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();

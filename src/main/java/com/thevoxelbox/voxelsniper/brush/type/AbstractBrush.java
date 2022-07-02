@@ -87,7 +87,7 @@ public abstract class AbstractBrush implements Brush {
         return (index == 0 ? Stream.concat(completions, Stream.of("info")) : completions)
                 .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(parameterLowered))
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

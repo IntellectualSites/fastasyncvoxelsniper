@@ -291,7 +291,7 @@ public class VoxelSniperConfigLoader {
                 .map(key -> key.toLowerCase(Locale.ROOT))
                 .map(BlockTypes::get)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -301,7 +301,8 @@ public class VoxelSniperConfigLoader {
      */
     protected void setLitesniperRestrictedMaterials(List<BlockType> restrictedMaterials) {
         this.config.set(LITESNIPER_RESTRICTED_MATERIALS, restrictedMaterials.stream()
-                .map(BlockType::getId).collect(Collectors.toList()));
+                .map(BlockType::getId)
+                .toList()
     }
 
     /**

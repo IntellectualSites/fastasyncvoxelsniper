@@ -21,7 +21,8 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
 
     private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
-            .map(Tolerance::getName).toList();
+            .map(Tolerance::getName)
+            .toList();
 
     @Nullable
     private Vector coordinatesOne;
