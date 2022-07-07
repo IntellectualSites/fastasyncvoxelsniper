@@ -73,8 +73,6 @@ public class ScannerBrush extends AbstractBrush {
 
     @Override
     public void handleArrowAction(Snipe snipe) {
-        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        this.checkFor = toolkitProperties.getBlockType();
         BlockVector3 targetBlock = getTargetBlock();
         BlockVector3 lastBlock = getLastBlock();
         Direction face = getDirection(targetBlock, lastBlock);
@@ -86,8 +84,6 @@ public class ScannerBrush extends AbstractBrush {
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
-        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        this.checkFor = toolkitProperties.getBlockType();
         BlockVector3 targetBlock = getTargetBlock();
         BlockVector3 lastBlock = getLastBlock();
         Direction face = getDirection(targetBlock, lastBlock);
@@ -98,12 +94,14 @@ public class ScannerBrush extends AbstractBrush {
     }
 
     private void scan(Snipe snipe, Direction blockFace) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        this.checkFor = toolkitProperties.getBlockType();
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
         if (blockFace == Direction.NORTH) { // Scan south
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() + i) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -111,7 +109,7 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.SOUTH) { // Scan north
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() - i) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -119,7 +117,7 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.EAST) { // Scan west
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -127,7 +125,7 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.WEST) { // Scan east
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -138,7 +136,7 @@ public class ScannerBrush extends AbstractBrush {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() - i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -150,7 +148,7 @@ public class ScannerBrush extends AbstractBrush {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() + i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.checkFor) + " found after " + i + " blocks.");
+                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
                     return;
                 }
             }
@@ -163,7 +161,7 @@ public class ScannerBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
         messenger.sendMessage(ChatColor.GREEN + "Scanner depth set to: " + this.depth);
-        messenger.sendMessage(ChatColor.GREEN + "Scanner scans for " + this.checkFor + " (change with /v #)");
+        messenger.sendMessage(ChatColor.GREEN + "Scanner scans for " + this.checkFor.getId() + " (change with /v #)");
     }
 
 }

@@ -151,11 +151,7 @@ public class OceanBrush extends AbstractBrush {
                 }
                 // cover the sea floor of required
                 if (this.coverFloor && (newSeaFloorLevel <= this.waterLevel)) {
-                    BlockState block = getBlock(x, newSeaFloorLevel, z);
-                    BlockType blockType = block.getBlockType();
-                    if (blockType != toolkitProperties.getBlockType()) {
-                        setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
-                    }
+                    setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
                 }
             }
         }

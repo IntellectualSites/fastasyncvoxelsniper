@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -111,18 +112,19 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         y--;
                     }
                     for (; y >= -(targetBlock.getY() - getEditSession().getMinY()); --y) {
-                        BlockType currentBlockType = getBlockType(
+                        BlockState currentBlockState = getBlock(
                                 targetBlock.getX() + x,
                                 targetBlock.getY() + y,
                                 targetBlock.getZ() + z
                         );
-                        if (Materials.isEmpty(currentBlockType) || (this.fillLiquid && Materials.isLiquid(currentBlockType))) {
+                        if (Materials.isEmpty(currentBlockState.getBlockType())
+                                || (this.fillLiquid && Materials.isLiquid(currentBlockState.getBlockType()))) {
                             this.performer.perform(
                                     getEditSession(),
                                     targetBlock.getX() + x,
                                     targetBlock.getY() + y,
                                     targetBlock.getZ() + z,
-                                    getBlock(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z)
+                                    currentBlockState
                             );
                         } else {
                             break;

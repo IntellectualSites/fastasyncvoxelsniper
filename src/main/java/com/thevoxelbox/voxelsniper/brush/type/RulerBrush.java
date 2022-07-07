@@ -79,7 +79,6 @@ public class RulerBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        BlockType blockDataType = toolkitProperties.getBlockType();
         BlockVector3 targetBlock = getTargetBlock();
         this.coordinates = targetBlock;
         if (this.xOffset == 0 && this.yOffset == 0 && this.zOffset == 0) {
@@ -90,7 +89,7 @@ public class RulerBrush extends AbstractBrush {
             int x = targetBlock.getX();
             int y = targetBlock.getY();
             int z = targetBlock.getZ();
-            setBlockType(x + this.xOffset, y + this.yOffset, z + this.zOffset, blockDataType);
+            setBlockType(x + this.xOffset, y + this.yOffset, z + this.zOffset, toolkitProperties.getBlockType());
         }
     }
 

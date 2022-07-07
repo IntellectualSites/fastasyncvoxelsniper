@@ -172,8 +172,9 @@ public class SplineBrush extends AbstractPerformerBrush {
                         .getY());
                 int pz = (int) Math.round(a.getZ() * (t * t * t) + b.getZ() * (t * t) + c.getZ() * t + this.endPts.get(0)
                         .getZ());
-                if (!this.spline.contains(new Point(px, py, pz))) {
-                    this.spline.add(new Point(px, py, pz));
+                Point point = new Point(px, py, pz);
+                if (!this.spline.contains(point)) {
+                    this.spline.add(point);
                 }
             }
             return true;

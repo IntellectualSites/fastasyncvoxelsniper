@@ -41,10 +41,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
     public static boolean hasUpdate;
     public static boolean updateCheckFailed;
     private static String currentVersionTitle = "";
+    private VoxelSniperConfig voxelSniperConfig;
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
-    private VoxelSniperConfig voxelSniperConfig;
     private double newVersion = 0;
     private double currentVersion = 0;
 
