@@ -16,9 +16,11 @@ public class FillDownBrush extends AbstractPerformerBrush {
     private double trueCircle;
     private boolean fillLiquid = true;
     private boolean fromExisting;
+    private int minY;
 
     @Override
     public void loadProperties() {
+        this.minY = getEditSession().getMinY();
     }
 
     @Override
@@ -32,6 +34,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
             messenger.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
             messenger.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
             messenger.sendMessage(ChatColor.AQUA + "/b fd e -- Fills into only existing blocks. (Toggle)");
+            messenger.sendMessage(ChatColor.AQUA + "/b fd y [n] -- Sets the min y to n. (Must be >= than " + getEditSession().getMinY() + ")");
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
@@ -110,7 +113,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         }
                         y--;
                     }
-                    for (; y >= -(targetBlock.getY() - getEditSession().getMinY()); --y) {
+                    for (; y >= -(targetBlock.getY() - minY); --y) {
                         BlockType currentBlockType = getBlockType(
                                 targetBlock.getX() + x,
                                 targetBlock.getY() + y,
@@ -138,6 +141,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
+                .message(ChatColor.GREEN + "Min y set to: " + this.minY)
                 .send();
     }
 
