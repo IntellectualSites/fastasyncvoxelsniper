@@ -293,8 +293,8 @@ public class EllipseBrush extends AbstractPerformerBrush {
         if (this.steps < this.stepsMin || this.steps > this.stepsMax) {
             this.steps = getIntegerProperty("default-steps", DEFAULT_STEPS);
         }
-        SnipeMessageSender messageSender = snipe.createMessageSender();
-        messageSender.brushNameMessage()
+        snipe.createMessageSender()
+                .brushNameMessage()
                 .message(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl)
                 .message(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl)
                 .message(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps)

@@ -264,12 +264,13 @@ public class HeatRayBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
-        messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
-        messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
-        messenger.sendBrushSizeMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .message(ChatColor.GREEN + "Octaves: " + this.octaves)
+                .message(ChatColor.GREEN + "Amplitude: " + this.amplitude)
+                .message(ChatColor.GREEN + "Frequency: " + this.frequency)
+                .send();
     }
 
 }

@@ -109,12 +109,13 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Tread lightly.");
-        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "This brush will melt your spleen and sell your kidneys.");
-        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
-                (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()));
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.LIGHT_PURPLE + "Tread lightly.")
+                .message(ChatColor.LIGHT_PURPLE + "This brush will melt your spleen and sell your kidneys.")
+                .message(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN +
+                        (this.biomeType == null ? DEFAULT_BIOME : this.biomeType.getId()))
+                .send();
     }
 
 }

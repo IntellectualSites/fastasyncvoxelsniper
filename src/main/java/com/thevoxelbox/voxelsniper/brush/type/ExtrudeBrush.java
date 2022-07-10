@@ -198,14 +198,15 @@ public class ExtrudeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendVoxelListMessage();
-        messenger.sendMessage(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
-                ? "True circle mode ON"
-                : "True circle mode OFF"));
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .voxelHeightMessage()
+                .voxelListMessage()
+                .message(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
+                        ? "True circle mode ON"
+                        : "True circle mode OFF"))
+                .send();
     }
 
 }

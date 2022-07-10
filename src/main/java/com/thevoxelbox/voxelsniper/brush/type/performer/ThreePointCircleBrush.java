@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import org.bukkit.ChatColor;
@@ -203,13 +202,10 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessageSender messageSender = snipe.createMessageSender()
-                .brushNameMessage();
-        switch (this.tolerance) {
-            case DEFAULT, ACCURATE, SMOOTH -> messageSender.message(ChatColor.GOLD + "Mode: " + this.tolerance.getName());
-            default -> messageSender.message(ChatColor.GOLD + "Mode: Unknown");
-        }
-        messageSender.send();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.GOLD + "Mode: " + this.tolerance.getName())
+                .send();
     }
 
     private enum Tolerance {

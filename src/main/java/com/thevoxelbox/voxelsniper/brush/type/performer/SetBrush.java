@@ -84,8 +84,9 @@ public class SetBrush extends AbstractPerformerBrush {
     @Override
     public void sendInfo(Snipe snipe) {
         this.block = null;
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

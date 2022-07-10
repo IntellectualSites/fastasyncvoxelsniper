@@ -429,9 +429,10 @@ public class StencilBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage("File loaded: " + this.filename);
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message("File loaded: " + this.filename)
+                .send();
     }
 
 }

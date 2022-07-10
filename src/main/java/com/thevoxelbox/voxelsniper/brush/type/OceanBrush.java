@@ -175,13 +175,14 @@ public class OceanBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
-        messenger.sendMessage(ChatColor.BLUE + String.format(
-                "Floor cover %s.",
-                ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")
-        ));
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel)
+                .message(ChatColor.BLUE + String.format(
+                        "Floor cover %s.",
+                        ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")
+                ))
+                .send();
     }
 
 }

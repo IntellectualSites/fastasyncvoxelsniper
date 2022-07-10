@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -117,10 +116,11 @@ public class RulerBrush extends AbstractBrush {
     }
 
     @Override
-    public final void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBlockTypeMessage();
+    public void sendInfo(Snipe snipe) {
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .blockTypeMessage()
+                .send();
     }
 
 }

@@ -69,11 +69,12 @@ public class DomeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendBlockTypeMessage();
-        messenger.sendVoxelHeightMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .blockTypeMessage()
+                .voxelHeightMessage()
+                .send();
     }
 
 }

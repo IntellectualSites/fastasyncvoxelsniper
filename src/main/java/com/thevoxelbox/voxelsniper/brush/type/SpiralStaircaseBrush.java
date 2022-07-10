@@ -344,15 +344,16 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendBlockTypeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendBlockDataMessage();
-        messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName());
-        messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-        messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .blockTypeMessage()
+                .blockDataMessage()
+                .voxelHeightMessage()
+                .message(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName())
+                .message(ChatColor.BLUE + "Staircase turns: " + this.sdirect)
+                .message(ChatColor.BLUE + "Staircase opens: " + this.sopen)
+                .send();
     }
 
     private enum StairType {

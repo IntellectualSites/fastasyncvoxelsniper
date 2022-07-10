@@ -98,8 +98,9 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

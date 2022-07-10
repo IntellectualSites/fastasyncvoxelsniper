@@ -133,8 +133,9 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
     @Override
     public void sendInfo(Snipe snipe) {
         this.block = null;
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

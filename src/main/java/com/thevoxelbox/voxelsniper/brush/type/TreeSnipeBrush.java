@@ -113,9 +113,10 @@ public class TreeSnipeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName());
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName())
+                .send();
     }
 
 }

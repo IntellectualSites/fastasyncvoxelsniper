@@ -41,7 +41,7 @@ public class ScannerBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("info")) {
             messenger.sendMessage(ChatColor.GOLD + "Scanner Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b sc d [d] -- Sets the search depth to #. Clamps to 1 - 64.");
+            messenger.sendMessage(ChatColor.AQUA + "/b sc d [d] -- Sets the search depth to d. Clamps to 1 - 64.");
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("d")) {
@@ -158,10 +158,11 @@ public class ScannerBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GREEN + "Scanner depth set to: " + this.depth);
-        messenger.sendMessage(ChatColor.GREEN + "Scanner scans for " + this.checkFor.getId() + " (change with /v #)");
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.GREEN + "Scanner depth set to: " + this.depth)
+                .message(ChatColor.GREEN + "Scanner scans for " + this.checkFor.getId() + " (change with /v #)")
+                .send();
     }
 
 }

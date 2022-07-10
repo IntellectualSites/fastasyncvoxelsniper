@@ -59,9 +59,10 @@ public class EraserBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .send();
     }
 
 }

@@ -228,9 +228,10 @@ public class TriangleBrush extends AbstractPerformerBrush {
     }
 
     @Override
-    public void sendInfo(Snipe snipe) { // Make the triangle
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+    public void sendInfo(Snipe snipe) {
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

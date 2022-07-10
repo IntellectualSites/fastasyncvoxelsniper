@@ -288,13 +288,14 @@ public class ErodeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Fill minimum touching faces set to: " + this.currentPreset.getFillFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion());
-        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion());
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .message(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces())
+                .message(ChatColor.BLUE + "Fill minimum touching faces set to: " + this.currentPreset.getFillFaces())
+                .message(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion())
+                .message(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion())
+                .send();
     }
 
     private enum Preset {

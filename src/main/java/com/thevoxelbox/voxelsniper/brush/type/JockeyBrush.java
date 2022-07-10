@@ -195,9 +195,10 @@ public class JockeyBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message("Current jockey mode: " + ChatColor.GREEN + this.jockeyType)
+                .send();
     }
 
     /**
