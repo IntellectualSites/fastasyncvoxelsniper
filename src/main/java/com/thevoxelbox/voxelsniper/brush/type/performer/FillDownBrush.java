@@ -6,6 +6,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -58,6 +59,18 @@ public class FillDownBrush extends AbstractPerformerBrush {
                             : "all") + " blocks.");
                 } else {
                     messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                }
+            } else if (parameters.length == 2) {
+                if (firstParameter.equalsIgnoreCase("y")) {
+                    Integer minY = NumericParser.parseInteger(parameters[1]);
+                    if (minY != null) {
+                        int minYMin = getEditSession().getMinY();
+                        int minYMax = getEditSession().getMaxY();
+                        this.minY = minY < minYMin ? minYMin : Math.min(minY, minYMax);
+                        messenger.sendMessage(ChatColor.AQUA + "Fill Down min y set to: " + this.minY);
+                    } else {
+                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    }
                 }
             } else {
                 messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
@@ -141,7 +154,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.GREEN + "Min y set to: " + this.minY)
+                .message(ChatColor.GREEN + "Fill Down min y set to: " + this.minY)
                 .send();
     }
 
