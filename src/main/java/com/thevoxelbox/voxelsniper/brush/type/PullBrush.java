@@ -232,12 +232,13 @@ public class PullBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Pinch " + (-this.pinch + 1));
-        messenger.sendMessage(ChatColor.AQUA + "Bubble " + this.bubble);
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .voxelHeightMessage()
+                .message(ChatColor.AQUA + "Pinch " + (-this.pinch + 1))
+                .message(ChatColor.AQUA + "Bubble " + this.bubble)
+                .send();
     }
 
     private static final class PullBrushBlockWrapper {

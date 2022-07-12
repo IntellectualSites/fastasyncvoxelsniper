@@ -16,6 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -287,13 +288,14 @@ public class ErodeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendMessage(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Fill minimum touching faces set to: " + this.currentPreset.getFillFaces());
-        messenger.sendMessage(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion());
-        messenger.sendMessage(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion());
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .message(ChatColor.AQUA + "Erosion minimum exposed faces set to: " + this.currentPreset.getErosionFaces())
+                .message(ChatColor.BLUE + "Fill minimum touching faces set to: " + this.currentPreset.getFillFaces())
+                .message(ChatColor.BLUE + "Erosion recursion amount set to: " + this.currentPreset.getErosionRecursion())
+                .message(ChatColor.DARK_GREEN + "Fill recursion amount set to: " + this.currentPreset.getFillRecursion())
+                .send();
     }
 
     private enum Preset {
@@ -431,21 +433,11 @@ public class ErodeBrush extends AbstractBrush {
 
     }
 
-    private static final class ErosionPreset implements Serializable {
+    private record ErosionPreset(int erosionFaces, int erosionRecursion, int fillFaces, int fillRecursion) implements
+            Serializable {
 
+        @Serial
         private static final long serialVersionUID = 8997952776355430411L;
-
-        private final int erosionFaces;
-        private final int erosionRecursion;
-        private final int fillFaces;
-        private final int fillRecursion;
-
-        private ErosionPreset(int erosionFaces, int erosionRecursion, int fillFaces, int fillRecursion) {
-            this.erosionFaces = erosionFaces;
-            this.erosionRecursion = erosionRecursion;
-            this.fillFaces = fillFaces;
-            this.fillRecursion = fillRecursion;
-        }
 
         @Override
         public int hashCode() {
@@ -454,8 +446,7 @@ public class ErodeBrush extends AbstractBrush {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof ErosionPreset) {
-                ErosionPreset other = (ErosionPreset) obj;
+            if (obj instanceof ErosionPreset other) {
                 return this.erosionFaces == other.erosionFaces && this.erosionRecursion == other.erosionRecursion && this.fillFaces == other.fillFaces && this.fillRecursion == other.fillRecursion;
             }
             return false;
@@ -489,7 +480,6 @@ public class ErodeBrush extends AbstractBrush {
             return this.fillRecursion;
         }
 
-        @SuppressWarnings("ArgumentSelectionDefectChecker") // This is explicit inverted
         public ErosionPreset getInverted() {
             return new ErosionPreset(this.fillFaces, this.fillRecursion, this.erosionFaces, this.erosionRecursion);
         }

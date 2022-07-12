@@ -5,7 +5,6 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
@@ -59,9 +58,10 @@ public class EraserBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .send();
     }
 
 }

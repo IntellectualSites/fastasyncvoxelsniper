@@ -43,7 +43,7 @@ dependencies {
 }
 
 tasks.compileJava.configure {
-    options.release.set(11)
+    options.release.set(17)
 }
 
 configurations.all {

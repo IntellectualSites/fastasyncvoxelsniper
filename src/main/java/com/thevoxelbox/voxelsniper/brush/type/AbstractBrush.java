@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class AbstractBrush implements Brush {
@@ -87,7 +86,7 @@ public abstract class AbstractBrush implements Brush {
         return (index == 0 ? Stream.concat(completions, Stream.of("info")) : completions)
                 .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(parameterLowered))
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

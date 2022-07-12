@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.ArtHelper;
 import org.bukkit.entity.Player;
 
@@ -37,8 +36,9 @@ public class PaintingBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

@@ -21,13 +21,12 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
 
     private static final List<String> BLOCKS = BlockType.REGISTRY.values().stream()
             .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .collect(Collectors.toList());
+            .toList();
 
     private final VoxelSniperPlugin plugin;
 
@@ -90,7 +89,7 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
                     .toLowerCase(Locale.ROOT);
             return BLOCKS.stream()
                     .filter(id -> id.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

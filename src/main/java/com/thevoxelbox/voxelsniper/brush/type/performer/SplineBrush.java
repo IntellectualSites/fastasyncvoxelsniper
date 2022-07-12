@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessageSender;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.bukkit.ChatColor;
 
@@ -172,8 +171,9 @@ public class SplineBrush extends AbstractPerformerBrush {
                         .getY());
                 int pz = (int) Math.round(a.getZ() * (t * t * t) + b.getZ() * (t * t) + c.getZ() * t + this.endPts.get(0)
                         .getZ());
-                if (!this.spline.contains(new Point(px, py, pz))) {
-                    this.spline.add(new Point(px, py, pz));
+                Point point = new Point(px, py, pz);
+                if (!this.spline.contains(point)) {
+                    this.spline.add(point);
                 }
             }
             return true;
@@ -209,16 +209,12 @@ public class SplineBrush extends AbstractPerformerBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessageSender messageSender = snipe.createMessageSender()
-                .brushNameMessage();
-        if (this.set) {
-            messageSender.message(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
-        } else if (this.ctrl) {
-            messageSender.message(ChatColor.GRAY + "Control point selection mode ENABLED.");
-        } else {
-            messageSender.message(ChatColor.AQUA + "No selection mode enabled.");
-        }
-        messageSender.send();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(this.set ? ChatColor.GRAY + "Endpoint selection mode ENABLED." :
+                        this.ctrl ? ChatColor.GRAY + "Endpoint selection mode ENABLED." :
+                                ChatColor.AQUA + "No selection mode enabled.")
+                .send();
     }
 
     // Vector class for splines

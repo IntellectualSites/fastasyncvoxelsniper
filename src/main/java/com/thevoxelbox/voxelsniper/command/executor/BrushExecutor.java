@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BrushExecutor implements CommandExecutor, TabCompleter {
 
@@ -112,7 +111,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
                     })
                     .map(Map.Entry::getKey)
                     .filter(brushAlias -> brushAlias.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         if (arguments.length > 1) {
             SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();

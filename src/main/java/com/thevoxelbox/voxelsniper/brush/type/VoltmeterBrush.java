@@ -65,9 +65,10 @@ public class VoltmeterBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Right click with arrow to see if blocks/faces are powered. Gunpowder measures wire current.");
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.LIGHT_PURPLE + "Right click with arrow to see if blocks/faces are powered. Gunpowder measures wire current.")
+                .send();
     }
 
 }

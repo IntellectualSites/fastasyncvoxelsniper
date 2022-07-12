@@ -2,7 +2,6 @@ package com.thevoxelbox.voxelsniper.brush.type.performer;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 
 public class SnipeBrush extends AbstractPerformerBrush {
 
@@ -36,8 +35,9 @@ public class SnipeBrush extends AbstractPerformerBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

@@ -176,7 +176,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                             sender.hasPermission("voxelsniper.admin") ? Stream.of("reload", "debugpaste") : Stream.empty()
                     )
                     .filter(subCommand -> subCommand.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

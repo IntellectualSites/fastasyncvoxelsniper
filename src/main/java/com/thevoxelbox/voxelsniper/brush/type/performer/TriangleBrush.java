@@ -56,32 +56,35 @@ public class TriangleBrush extends AbstractPerformerBrush {
         double y = targetBlockY + 0.5;
         double z = targetBlockZ + 0.5 * targetBlockZ / Math.abs(targetBlockZ);
         switch (this.cornerNumber) {
-            case 1:
+            case 1 -> {
                 this.coordinatesOne[0] = x; // I hate you sometimes, Notch. Really? Every quadrant is
+
                 // different?
                 this.coordinatesOne[1] = y;
                 this.coordinatesOne[2] = z;
                 this.cornerNumber = 2;
                 messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
-                break;
-            case 2:
+            }
+            case 2 -> {
                 this.coordinatesTwo[0] = x; // I hate you sometimes, Notch. Really? Every quadrant is
+
                 // different?
                 this.coordinatesTwo[1] = y;
                 this.coordinatesTwo[2] = z;
                 this.cornerNumber = 3;
                 messenger.sendMessage(ChatColor.GRAY + "Second Corner set.");
-                break;
-            case 3:
+            }
+            case 3 -> {
                 this.coordinatesThree[0] = x; // I hate you sometimes, Notch. Really? Every quadrant is
+
                 // different?
                 this.coordinatesThree[1] = y;
                 this.coordinatesThree[2] = z;
                 this.cornerNumber = 1;
                 messenger.sendMessage(ChatColor.GRAY + "Third Corner set.");
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
 
@@ -225,9 +228,10 @@ public class TriangleBrush extends AbstractPerformerBrush {
     }
 
     @Override
-    public void sendInfo(Snipe snipe) { // Make the triangle
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
+    public void sendInfo(Snipe snipe) {
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .send();
     }
 
 }

@@ -174,25 +174,17 @@ public class CloneStampBrush extends AbstractStampBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendCylinderCenterMessage();
-        switch (this.stamp) {
-            case DEFAULT:
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Default Stamp");
-                break;
-            case NO_AIR:
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "No-Air Stamp");
-                break;
-            case FILL:
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Fill Stamp");
-                break;
-            default:
-                messenger.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
-                break;
-        }
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .voxelHeightMessage()
+                .cylinderCenterMessage()
+                .message(switch (this.stamp) {
+                    case DEFAULT -> ChatColor.LIGHT_PURPLE + "Default Stamp";
+                    case NO_AIR -> ChatColor.LIGHT_PURPLE + "No-Air Stamp";
+                    case FILL -> ChatColor.LIGHT_PURPLE + "Fill Stamp";
+                })
+                .send();
     }
 
 }

@@ -29,7 +29,7 @@ public class EntityRemovalBrush extends AbstractBrush {
             .flatMap(entityClass -> getEntityClassHierarchy(entityClass).stream())
             .distinct()
             .map(Class::getCanonicalName)
-            .collect(Collectors.toList());
+            .toList();
 
     private List<String> exemptions;
 

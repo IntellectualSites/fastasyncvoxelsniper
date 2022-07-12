@@ -24,7 +24,7 @@ public class EntityBrush extends AbstractBrush {
 
     private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
             .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .collect(Collectors.toList());
+            .toList();
 
     private EntityType entityType;
 

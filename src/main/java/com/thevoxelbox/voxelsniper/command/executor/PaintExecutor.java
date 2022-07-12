@@ -12,14 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class PaintExecutor implements CommandExecutor, TabCompleter {
 
     private static final List<String> ART_NAMES = Arrays.stream(Art.values())
             .map(Art::name)
             .map(String::toLowerCase)
-            .collect(Collectors.toList());
+            .toList();
 
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {
@@ -47,7 +46,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return ART_NAMES.stream()
                     .filter(artName -> artName.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

@@ -19,7 +19,6 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
@@ -113,14 +112,14 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             String argumentLowered = firstArgument.toLowerCase(Locale.ROOT);
             return Stream.of("assign", "remove")
                     .filter(subCommand -> subCommand.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         if (arguments.length == 2 && firstArgument.equalsIgnoreCase("assign")) {
             String argument = arguments[1];
             String argumentLowered = argument.toLowerCase(Locale.ROOT);
             return Stream.of("arrow", "gunpowder")
                     .filter(tool -> tool.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         if (arguments.length == 2 && firstArgument.equalsIgnoreCase("remove") ||
                 arguments.length == 3 && firstArgument.equalsIgnoreCase("assign")) {
@@ -129,7 +128,7 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             return sniper.getToolkits().stream()
                     .map(Toolkit::getToolkitName)
                     .filter(toolkitName -> toolkitName.startsWith(argumentLowered))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

@@ -40,11 +40,10 @@ public class PerformerExecutor implements CommandExecutor {
         }
         BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
         Brush brush = toolkit.getCurrentBrush();
-        if (!(brush instanceof PerformerBrush)) {
+        if (!(brush instanceof PerformerBrush performer)) {
             sender.sendMessage("This brush is not a performer brush.");
             return;
         }
-        PerformerBrush performer = (PerformerBrush) brush;
         String[] parameters = arguments.length == 0 ? new String[]{"m"} : arguments;
         Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
         PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();

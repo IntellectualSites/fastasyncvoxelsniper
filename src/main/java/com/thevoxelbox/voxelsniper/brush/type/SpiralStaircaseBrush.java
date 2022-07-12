@@ -140,18 +140,17 @@ public class SpiralStaircaseBrush extends AbstractBrush {
             } else if (stairType == StairType.STEP) {
                 // alternating step-doublestep, uses data value to determine type
                 switch (toggle) {
-                    case 0:
-                    case 1:
+                    case 0, 1 -> {
                         toggle = 2;
                         spiral[startX + xOffset][y][startZ + zOffset] = up ? 1 : 2;
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         toggle = 1;
                         spiral[startX + xOffset][y][startZ + zOffset] = up ? 2 : 1;
                         y++;
-                        break;
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             }
             // Adjust horizontal position and do stair-option array stuff
@@ -324,17 +323,12 @@ public class SpiralStaircaseBrush extends AbstractBrush {
     }
 
     private static Direction dataToDirection(int data) {
-        switch (data) {
-            case 3:
-                return Direction.NORTH;
-            case 2:
-                return Direction.SOUTH;
-            case 1:
-                return Direction.WEST;
-            case 0:
-            default:
-                return Direction.EAST;
-        }
+        return switch (data) {
+            case 3 -> Direction.NORTH;
+            case 2 -> Direction.SOUTH;
+            case 1 -> Direction.WEST;
+            default -> Direction.EAST;
+        };
     }
 
     private static StairType getStairType(Snipe snipe) {
@@ -350,15 +344,16 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendBlockTypeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendBlockDataMessage();
-        messenger.sendMessage(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName());
-        messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
-        messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .blockTypeMessage()
+                .blockDataMessage()
+                .voxelHeightMessage()
+                .message(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName())
+                .message(ChatColor.BLUE + "Staircase turns: " + this.sdirect)
+                .message(ChatColor.BLUE + "Staircase opens: " + this.sopen)
+                .send();
     }
 
     private enum StairType {

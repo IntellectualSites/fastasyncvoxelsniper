@@ -174,17 +174,11 @@ public class ExtrudeBrush extends AbstractBrush {
             return;
         }
         switch (blockFace) {
-            case UP:
-                extrudeUpOrDown(snipe, towardsUser);
-                break;
-            case SOUTH:
-                extrudeNorthOrSouth(snipe, towardsUser);
-                break;
-            case EAST:
-                extrudeEastOrWest(snipe, towardsUser);
-                break;
-            default:
-                break;
+            case UP -> extrudeUpOrDown(snipe, towardsUser);
+            case SOUTH -> extrudeNorthOrSouth(snipe, towardsUser);
+            case EAST -> extrudeEastOrWest(snipe, towardsUser);
+            default -> {
+            }
         }
     }
 
@@ -204,14 +198,15 @@ public class ExtrudeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendVoxelHeightMessage();
-        messenger.sendVoxelListMessage();
-        messenger.sendMessage(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
-                ? "True circle mode ON"
-                : "True circle mode OFF"));
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .voxelHeightMessage()
+                .voxelListMessage()
+                .message(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
+                        ? "True circle mode ON"
+                        : "True circle mode OFF"))
+                .send();
     }
 
 }

@@ -40,7 +40,7 @@ public class PunishBrush extends AbstractPerformerBrush {
 
     private static final List<String> PUNISHMENTS = Arrays.stream(Punishment.values())
             .map(punishment -> punishment.name().toLowerCase(Locale.ROOT))
-            .collect(Collectors.toList());
+            .toList();
 
 
     private boolean specificPlayer;

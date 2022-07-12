@@ -135,13 +135,14 @@ public class DrainBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendBrushSizeMessage();
-        messenger.sendMessage(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
-                ? "True circle mode ON"
-                : "True circle mode OFF"));
-        messenger.sendMessage(ChatColor.AQUA + (this.disc ? "Disc drain mode ON" : "Disc drain mode OFF"));
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .brushSizeMessage()
+                .message(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
+                        ? "True circle mode ON"
+                        : "True circle mode OFF"))
+                .message(ChatColor.AQUA + (this.disc ? "Disc drain mode ON" : "Disc drain mode OFF"))
+                .send();
     }
 
 }

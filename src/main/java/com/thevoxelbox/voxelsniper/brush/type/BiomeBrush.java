@@ -20,7 +20,7 @@ public class BiomeBrush extends AbstractBrush {
 
     private static final List<String> BIOMES = BiomeTypes.values().stream()
             .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .collect(Collectors.toList());
+            .toList();
 
     private BiomeType biomeType;
 
@@ -127,9 +127,10 @@ public class BiomeBrush extends AbstractBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.biomeType.getId());
+        snipe.createMessageSender()
+                .brushNameMessage()
+                .message(ChatColor.GOLD + "Currently selected biome type: " + ChatColor.DARK_GREEN + this.biomeType.getId())
+                .send();
     }
 
 }

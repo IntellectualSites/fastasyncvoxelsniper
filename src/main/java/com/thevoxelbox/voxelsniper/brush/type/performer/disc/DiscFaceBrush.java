@@ -206,20 +206,11 @@ public class DiscFaceBrush extends AbstractPerformerBrush {
             return;
         }
         switch (blockFace) {
-            case NORTH:
-            case SOUTH:
-                discNorthSouth(snipe, targetBlock);
-                break;
-            case EAST:
-            case WEST:
-                discEastWest(snipe, targetBlock);
-                break;
-            case UP:
-            case DOWN:
-                discUpDown(snipe, targetBlock);
-                break;
-            default:
-                break;
+            case NORTH, SOUTH -> discNorthSouth(snipe, targetBlock);
+            case EAST, WEST -> discEastWest(snipe, targetBlock);
+            case UP, DOWN -> discUpDown(snipe, targetBlock);
+            default -> {
+            }
         }
     }
 

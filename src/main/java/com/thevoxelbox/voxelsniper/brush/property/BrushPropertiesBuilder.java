@@ -32,10 +32,10 @@ public class BrushPropertiesBuilder {
 
     public BrushProperties build() {
         if (this.name == null) {
-            throw new RuntimeException("Brush name must be specified");
+            throw new RuntimeException("Brush name must be specified.");
         }
         if (this.creator == null) {
-            throw new RuntimeException("Brush creator must be specified");
+            throw new RuntimeException("Brush creator must be specified.");
         }
         return new BrushProperties(this.name, this.permission, this.aliases, this.creator);
     }

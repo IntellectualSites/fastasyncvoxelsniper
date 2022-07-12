@@ -28,19 +28,13 @@ public abstract class AbstractStampBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         switch (this.stamp) {
-            case DEFAULT:
-                stamp();
-                break;
-            case NO_AIR:
-                stampNoAir();
-                break;
-            case FILL:
-                stampFill();
-                break;
-            default:
+            case DEFAULT -> stamp();
+            case NO_AIR -> stampNoAir();
+            case FILL -> stampFill();
+            default -> {
                 SnipeMessenger messenger = snipe.createMessenger();
                 messenger.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
-                break;
+            }
         }
     }
 
