@@ -49,10 +49,20 @@ public class ToolkitProperties {
         this.voxelList.clear();
     }
 
+    /**
+     * Resets the pattern.
+     *
+     * @since TODO
+     */
     public void resetPattern() {
         this.pattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultBlockMaterial().getDefaultState());
     }
 
+    /**
+     * Resets the replace pattern.
+     *
+     * @since TODO
+     */
     public void resetReplacePattern() {
         this.replacePattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultReplaceBlockMaterial().getDefaultState());
     }
@@ -80,20 +90,44 @@ public class ToolkitProperties {
         return this.voxelList.contains(blockData);
     }
 
+    /**
+     * Returns the pattern.
+     *
+     * @return the pattern
+     * @since TODO
+     */
     public BrushPattern getPattern() {
         return this.pattern;
     }
 
+    /**
+     * Sets the pattern.
+     *
+     * @param brushPattern the new pattern
+     * @since TODO
+     */
     public void setPattern(BrushPattern brushPattern) {
         this.pattern = brushPattern;
     }
 
+    /**
+     * Returns the replace pattern.
+     *
+     * @return the replace pattern
+     * @since TODO
+     */
     public BrushPattern getReplacePattern() {
         return this.replacePattern;
     }
 
-    public void setReplacePattern(BrushPattern replacePattern) {
-        this.replacePattern = replacePattern;
+    /**
+     * Sets the replace pattern.
+     *
+     * @param replaceBrushPattern the new replace pattern
+     * @since TODO
+     */
+    public void setReplacePattern(BrushPattern replaceBrushPattern) {
+        this.replacePattern = replaceBrushPattern;
     }
 
     public int getBrushSize() {

@@ -7,7 +7,9 @@ import com.sk89q.worldedit.world.block.BlockType;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The type Brush pattern.
+ * A BrushPattern based on a WE pattern and a name.
+ *
+ * @since TODO
  */
 public class BrushPattern {
 

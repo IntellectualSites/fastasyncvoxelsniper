@@ -10,6 +10,11 @@ import com.sk89q.worldedit.extension.factory.parser.pattern.TypeOrStateApplyingP
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.internal.registry.AbstractFactory;
 
+/**
+ * VoxelSniper pattern parser used for argument completion and parsing.
+ *
+ * @since TODO
+ */
 public class PatternParser extends AbstractFactory<Pattern> {
 
     /**
