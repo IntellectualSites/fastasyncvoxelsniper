@@ -39,8 +39,8 @@ public class ToolkitProperties {
     public void reset() {
         VoxelSniperConfig config = plugin.getVoxelSniperConfig();
 
-        resetBlockData();
-        resetReplaceBlockData();
+        resetPattern();
+        resetReplacePattern();
         this.brushSize = config.getDefaultBrushSize();
         this.voxelHeight = config.getDefaultVoxelHeight();
         this.cylinderCenter = config.getDefaultCylinderCenter();
@@ -49,11 +49,11 @@ public class ToolkitProperties {
         this.voxelList.clear();
     }
 
-    public void resetBlockData() {
+    public void resetPattern() {
         this.pattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultBlockMaterial().getDefaultState());
     }
 
-    public void resetReplaceBlockData() {
+    public void resetReplacePattern() {
         this.replacePattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultReplaceBlockMaterial().getDefaultState());
     }
 

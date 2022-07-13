@@ -223,7 +223,7 @@ public class Sniper {
                                             targetBlock.getZ()
                                     ))
                             )) {
-                                toolkitProperties.resetBlockData();
+                                toolkitProperties.resetPattern();
                             } else {
                                 toolkitProperties.setPattern(new BrushPattern(blockType));
                             }
@@ -234,7 +234,7 @@ public class Sniper {
                             if (targetBlock == null || Materials.isEmpty(
                                     (blockState = editSession.getBlock(targetBlock)).getBlockType()
                             )) {
-                                toolkitProperties.resetBlockData();
+                                toolkitProperties.resetPattern();
                             } else {
                                 toolkitProperties.setPattern(new BrushPattern(blockState));
                             }
@@ -245,7 +245,7 @@ public class Sniper {
                     } else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
                         if (toolAction == ToolAction.ARROW) {
                             if (targetBlock == null) {
-                                toolkitProperties.resetReplaceBlockData();
+                                toolkitProperties.resetReplacePattern();
                             } else {
                                 BlockType blockType = editSession.getBlockType(
                                         targetBlock.getX(),
@@ -258,7 +258,7 @@ public class Sniper {
                             return true;
                         } else if (toolAction == ToolAction.GUNPOWDER) {
                             if (targetBlock == null) {
-                                toolkitProperties.resetReplaceBlockData();
+                                toolkitProperties.resetReplacePattern();
                             } else {
                                 toolkitProperties.setReplacePattern(new BrushPattern(editSession.getBlock(targetBlock)));
                             }
