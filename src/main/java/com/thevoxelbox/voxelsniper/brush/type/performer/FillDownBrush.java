@@ -22,7 +22,9 @@ public class FillDownBrush extends AbstractPerformerBrush {
 
     @Override
     public void loadProperties() {
-        this.minY = getEditSession().getMinY();
+        if (getEditSession() != null) {
+            this.minY = getEditSession().getMinY();
+        }
     }
 
     @Override
