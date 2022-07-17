@@ -9,8 +9,8 @@ package com.thevoxelbox.voxelsniper.brush.property;
  */
 public enum BrushPatternType {
 
-    ANY,
-    PATTERN,
-    SINGLE_BLOCK
+    ANY, // Ignores pattern input.
+    PATTERN, // Any pattern (single blocks included).
+    SINGLE_BLOCK // Only single blocks.
 
 }

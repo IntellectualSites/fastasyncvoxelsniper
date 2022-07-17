@@ -8,8 +8,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A BrushPattern based on a WE pattern and a name.
- *
- * @since TODO
  */
 public class BrushPattern {
 
@@ -21,6 +19,7 @@ public class BrushPattern {
      *
      * @param pattern the pattern
      * @param name    the name
+     * @since TODO
      */
     public BrushPattern(Pattern pattern, String name) {
         this.pattern = pattern;
@@ -31,6 +30,7 @@ public class BrushPattern {
      * Create a new brush pattern from a block type.
      *
      * @param blockType the block type
+     * @since TODO
      */
     public BrushPattern(BlockType blockType) {
         this(blockType, blockType.getId());
@@ -40,6 +40,7 @@ public class BrushPattern {
      * Create a new brush pattern from a block state.
      *
      * @param blockState the block state
+     * @since TODO
      */
     public BrushPattern(BlockState blockState) {
         this(blockState, blockState.getAsString());
@@ -49,6 +50,7 @@ public class BrushPattern {
      * Gets pattern.
      *
      * @return the pattern
+     * @since TODO
      */
     public Pattern getPattern() {
         return pattern;
@@ -61,6 +63,7 @@ public class BrushPattern {
      * - block data for block states
      *
      * @return the pattern name
+     * @since TODO
      */
     public String getName() {
         return name;
@@ -70,6 +73,7 @@ public class BrushPattern {
      * Try to parse the pattern as a block type.
      *
      * @return the potential corresponding block type
+     * @since TODO
      */
     public @Nullable BlockType asBlockType() {
         if (this.pattern instanceof BaseBlock baseBlock) {
@@ -88,6 +92,7 @@ public class BrushPattern {
      * Try to parse the pattern as a block state.
      *
      * @return the potential corresponding block state
+     * @since TODO
      */
     public @Nullable BlockState asBlockState() {
         if (this.pattern instanceof BaseBlock baseBlock) {

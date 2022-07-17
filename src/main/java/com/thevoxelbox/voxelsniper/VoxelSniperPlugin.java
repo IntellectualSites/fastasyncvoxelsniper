@@ -55,7 +55,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return plugin;
     }
 
-    @SuppressWarnings({"unused", "StringSplitter"})
+    @SuppressWarnings({"unused"})
     @Override
     public void onEnable() {
         plugin = this;
@@ -169,22 +169,48 @@ public class VoxelSniperPlugin extends JavaPlugin {
         });
     }
 
+    /**
+     * Return the voxel sniper config.
+     *
+     * @return the voxel sniper config
+     */
     public VoxelSniperConfig getVoxelSniperConfig() {
         return this.voxelSniperConfig;
     }
 
+    /**
+     * Return the brush registry.
+     *
+     * @return the brush registry
+     */
     public BrushRegistry getBrushRegistry() {
         return this.brushRegistry;
     }
 
+    /**
+     * Return performer registry.
+     *
+     * @return the performer registry
+     */
     public PerformerRegistry getPerformerRegistry() {
         return this.performerRegistry;
     }
 
+    /**
+     * Return the sniper registry.
+     *
+     * @return the sniper registry
+     */
     public SniperRegistry getSniperRegistry() {
         return this.sniperRegistry;
     }
 
+    /**
+     * Return the pattern parser.
+     *
+     * @return the pattern parser
+     * @since TODO
+     */
     public PatternParser getPatternParser() {
         return patternParser;
     }
