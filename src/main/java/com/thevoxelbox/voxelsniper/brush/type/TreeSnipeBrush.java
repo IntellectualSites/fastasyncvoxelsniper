@@ -94,7 +94,7 @@ public class TreeSnipeBrush extends AbstractBrush {
 
     private void single(Snipe snipe, BlockVector3 targetBlock) {
         BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
-        setBlockType(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
+        setBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
         if (!generateTree(targetBlock, this.treeType)) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(ChatColor.RED + "Failed to generate a tree!");

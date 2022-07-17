@@ -63,8 +63,8 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
                 BlockType currentBlockType = getBlockType(position);
                 if (currentBlockType != type) {
                     clampY(position);
+                    setBlock(position, type);
                 }
-                setBlockType(position, type);
             }
         }
     }
@@ -91,7 +91,7 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
+                .patternMessage()
                 .message(ChatColor.BLUE + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"))
                 .send();
     }

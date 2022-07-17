@@ -2,6 +2,9 @@ package com.thevoxelbox.voxelsniper.performer.type;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.performer.Performer;
@@ -11,8 +14,12 @@ public abstract class AbstractPerformer implements Performer {
 
     private PerformerProperties properties;
 
-    public void setBlockType(EditSession editSession, int x, int y, int z, BlockType type) {
-        setBlockData(editSession, x, y, z, type.getDefaultState());
+    public void setBlock(EditSession editSession, int x, int y, int z, Pattern pattern) {
+        if (pattern instanceof BlockType blockType) {
+            setBlockData(editSession, x, y, z, blockType.getDefaultState());
+        } else {
+            editSession.setBlock(x, y, z, pattern);
+        }
     }
 
     public void setBlockData(EditSession editSession, int x, int y, int z, BlockState blockState) {
@@ -24,6 +31,10 @@ public abstract class AbstractPerformer implements Performer {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public BaseBlock simulateSetBlock(int x, int y, int z, Pattern pattern) {
+        return pattern.applyBlock(BlockVector3.at(x, y, z));
     }
 
     @Override

@@ -15,6 +15,8 @@ import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPatternType;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -221,45 +223,46 @@ public class Sniper {
                                             targetBlock.getZ()
                                     ))
                             )) {
-                                toolkitProperties.resetBlockData();
+                                toolkitProperties.resetPattern();
                             } else {
-                                toolkitProperties.setBlockType(blockType);
+                                toolkitProperties.setPattern(new BrushPattern(blockType));
                             }
-                            messenger.sendBlockTypeMessage();
+                            messenger.sendPatternMessage();
                             return true;
                         } else if (toolAction == ToolAction.GUNPOWDER) {
                             BlockState blockState;
                             if (targetBlock == null || Materials.isEmpty(
                                     (blockState = editSession.getBlock(targetBlock)).getBlockType()
                             )) {
-                                toolkitProperties.resetBlockData();
+                                toolkitProperties.resetPattern();
                             } else {
-                                toolkitProperties.setBlockData(blockState);
+                                toolkitProperties.setPattern(new BrushPattern(blockState));
                             }
-                            messenger.sendBlockTypeMessage();
+                            messenger.sendPatternMessage();
                             return true;
                         }
                         return false;
                     } else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
                         if (toolAction == ToolAction.ARROW) {
                             if (targetBlock == null) {
-                                toolkitProperties.resetReplaceBlockData();
+                                toolkitProperties.resetReplacePattern();
                             } else {
-                                toolkitProperties.setReplaceBlockType(editSession.getBlockType(
+                                BlockType blockType = editSession.getBlockType(
                                         targetBlock.getX(),
                                         targetBlock.getY(),
                                         targetBlock.getZ()
-                                ));
+                                );
+                                toolkitProperties.setReplacePattern(new BrushPattern(blockType));
                             }
-                            messenger.sendReplaceBlockTypeMessage();
+                            messenger.sendReplacePatternMessage();
                             return true;
                         } else if (toolAction == ToolAction.GUNPOWDER) {
                             if (targetBlock == null) {
-                                toolkitProperties.resetReplaceBlockData();
+                                toolkitProperties.resetReplacePattern();
                             } else {
-                                toolkitProperties.setReplaceBlockData(editSession.getBlock(targetBlock));
+                                toolkitProperties.setReplacePattern(new BrushPattern(editSession.getBlock(targetBlock)));
                             }
-                            messenger.sendReplaceBlockDataMessage();
+                            messenger.sendReplacePatternMessage();
                             return true;
                         }
                         return false;
@@ -281,6 +284,12 @@ public class Sniper {
                             return false;
                         }
                         Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
+                        if (currentBrushProperties.getBrushPatternType() == BrushPatternType.SINGLE_BLOCK
+                                && toolkitProperties.getPattern().asBlockType() == null) {
+                            player.sendMessage(ChatColor.RED + "This brush requires a single-block pattern.");
+                            return false;
+                        }
+
                         if (currentBrush instanceof PerformerBrush performerBrush) {
                             performerBrush.initialize(snipe);
                         }

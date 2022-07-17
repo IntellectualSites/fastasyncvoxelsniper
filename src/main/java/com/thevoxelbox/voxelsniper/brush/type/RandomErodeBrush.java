@@ -159,7 +159,7 @@ public class RandomErodeBrush extends AbstractBrush {
                             if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= brushSizeSquared)) {
                                 if (this.erode(x, y, z)) {
                                     BlockWrapper block = this.snap[x][y][z];
-                                    setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
+                                    setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
                                 }
                             }
                         }
@@ -179,7 +179,7 @@ public class RandomErodeBrush extends AbstractBrush {
                             if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= brushSizeSquared)) {
                                 if (this.fill(x, y, z)) {
                                     BlockWrapper block = this.snap[x][y][z];
-                                    setBlockType(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
+                                    setBlock(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
                                 }
                             }
                         }
@@ -203,7 +203,7 @@ public class RandomErodeBrush extends AbstractBrush {
                             if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= bSquared)) {
                                 if (this.fill(x, y, z)) {
                                     BlockWrapper block = this.snap[x][y][z];
-                                    setBlockType(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
+                                    setBlock(block.getX(), block.getY(), block.getZ(), this.snap[x][y][z].getType());
                                 }
                             }
                         }
@@ -223,7 +223,7 @@ public class RandomErodeBrush extends AbstractBrush {
                             if (((xSquared + Math.pow(y - (this.brushSize + 1), 2) + zSquared) <= bSquared)) {
                                 if (this.erode(x, y, z)) {
                                     BlockWrapper block = this.snap[x][y][z];
-                                    setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
+                                    setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR);
                                 }
                             }
                         }

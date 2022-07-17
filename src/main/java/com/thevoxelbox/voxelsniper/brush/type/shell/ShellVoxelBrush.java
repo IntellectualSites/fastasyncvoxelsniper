@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
@@ -43,7 +44,7 @@ public class ShellVoxelBrush extends AbstractBrush {
         }
         // Log current materials into newmats
         // Array that holds the hollowed materials
-        BlockType[][][] newMaterials = new BlockType[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
+        Pattern[][][] newMaterials = new Pattern[2 * brushSize + 1][2 * brushSize + 1][2 * brushSize + 1];
         int brushSizeSquared = 2 * brushSize;
         for (int x = 0; x <= brushSizeSquared; x++) {
             for (int y = 0; y <= brushSizeSquared; y++) {
@@ -55,26 +56,26 @@ public class ShellVoxelBrush extends AbstractBrush {
             for (int z = 0; z <= brushSizeSquared; z++) {
                 for (int y = 0; y <= brushSizeSquared; y++) {
                     int temp = 0;
-                    if (oldMaterials[x + 1 + 1][z + 1][y + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1 + 1][z + 1][y + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1 - 1][z + 1][y + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1 - 1][z + 1][y + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][z + 1 + 1][y + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][z + 1 + 1][y + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][z + 1 - 1][y + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][z + 1 - 1][y + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][z + 1][y + 1 + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][z + 1][y + 1 + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][z + 1][y + 1 - 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][z + 1][y + 1 - 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
                     if (temp == 0) {
-                        newMaterials[x][z][y] = toolkitProperties.getBlockType();
+                        newMaterials[x][z][y] = toolkitProperties.getPattern().getPattern();
                     }
                 }
             }
@@ -83,7 +84,7 @@ public class ShellVoxelBrush extends AbstractBrush {
         for (int x = brushSizeSquared; x >= 0; x--) {
             for (int y = 0; y <= brushSizeSquared; y++) {
                 for (int z = brushSizeSquared; z >= 0; z--) {
-                    this.setBlockType(
+                    this.setBlock(
                             blockPositionX - brushSize + x,
                             blockPositionY - brushSize + y,
                             blockPositionZ - brushSize + z,
@@ -101,8 +102,8 @@ public class ShellVoxelBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
-                .replaceBlockTypeMessage()
+                .patternMessage()
+                .replacePatternMessage()
                 .send();
     }
 

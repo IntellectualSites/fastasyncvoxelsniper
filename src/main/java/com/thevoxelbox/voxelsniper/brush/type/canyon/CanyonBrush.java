@@ -108,13 +108,13 @@ public class CanyonBrush extends AbstractBrush {
                 int currentYLevel = this.yLevel;
                 for (int y = 63; y <= editSession.getMaxY(); y++) {
                     BlockType blockType = getBlockType(blockX + x, y, blockZ + z);
-                    setBlockType(blockX + x, currentYLevel, blockZ + z, blockType);
-                    setBlockType(blockX + x, y, blockZ + z, BlockTypes.AIR);
+                    setBlock(blockX + x, currentYLevel, blockZ + z, blockType);
+                    setBlock(blockX + x, y, blockZ + z, BlockTypes.AIR);
                     currentYLevel++;
                 }
-                setBlockType(blockX + x, editSession.getMinY(), blockZ + z, BlockTypes.BEDROCK);
+                setBlock(blockX + x, editSession.getMinY(), blockZ + z, BlockTypes.BEDROCK);
                 for (int y = editSession.getMinY() + 1; y < this.shiftLevelMin; y++) {
-                    setBlockType(blockX + x, y, blockZ + z, BlockTypes.STONE);
+                    setBlock(blockX + x, y, blockZ + z, BlockTypes.STONE);
                 }
             }
         }

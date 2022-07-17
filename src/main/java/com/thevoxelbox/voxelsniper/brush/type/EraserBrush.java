@@ -49,7 +49,7 @@ public class EraserBrush extends AbstractBrush {
                     int currentZ = targetBlock.getZ() - brushSize + z;
                     BlockState currentBlock = getBlock(currentX, currentY, currentZ);
                     if (!EXCLUSIVE_MATERIALS.contains(currentBlock) && (!keepWater || !EXCLUSIVE_LIQUIDS.contains(currentBlock))) {
-                        setBlockType(currentX, currentY, currentZ, BlockTypes.AIR);
+                        setBlock(currentX, currentY, currentZ, BlockTypes.AIR);
                     }
                 }
             }

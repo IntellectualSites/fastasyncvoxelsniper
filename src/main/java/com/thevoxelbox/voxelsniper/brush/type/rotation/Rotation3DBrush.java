@@ -115,7 +115,7 @@ public class Rotation3DBrush extends AbstractBrush {
                 for (int y = 0; y < this.snap.length; y++) {
                     if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
                         this.snap[x][y][z] = getBlock(sx, clampY(sz), sz);
-                        setBlockType(sx, clampY(sz), sz, BlockTypes.AIR);
+                        setBlock(sx, clampY(sz), sz, BlockTypes.AIR);
                         sz++;
                     }
                 }

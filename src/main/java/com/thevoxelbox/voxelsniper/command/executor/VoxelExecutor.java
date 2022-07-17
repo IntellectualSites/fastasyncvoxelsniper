@@ -1,10 +1,13 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.InputParseException;
+import com.sk89q.worldedit.extension.input.ParserContext;
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
@@ -14,7 +17,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,10 +26,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class VoxelExecutor implements CommandExecutor, TabCompleter {
-
-    private static final List<String> BLOCKS = BlockType.REGISTRY.values().stream()
-            .map(blockType -> blockType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .toList();
 
     private final VoxelSniperPlugin plugin;
 
@@ -53,7 +51,7 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
         }
         Messenger messenger = new Messenger(plugin, sender);
         VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-        List<BlockType> liteSniperRestrictedMaterials = config.getLitesniperRestrictedMaterials();
+        List<String> liteSniperRestrictedPatterns = config.getLitesniperRestrictedMaterials();
         if (arguments.length == 0) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
             BlockVector3 targetBlock = blockTracer.getTargetBlock();
@@ -64,43 +62,47 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                                 targetBlock.getY(),
                                 targetBlock.getZ()
                         ).getType());
+
                 if (targetBlockType == null) {
+                    sender.sendMessage(ChatColor.RED + "You have selected an invalid block type.");
                     return;
                 }
-                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(
-                        targetBlockType)) {
+                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
+                        targetBlockType.getResource())) {
                     sender.sendMessage(ChatColor.RED + "You are not allowed to use " + targetBlockType.getId() + ".");
                     return;
                 }
-                toolkitProperties.setBlockType(targetBlockType);
-                messenger.sendBlockTypeMessage(targetBlockType);
+
+                toolkitProperties.setPattern(new BrushPattern(targetBlockType));
+                messenger.sendPatternMessage(toolkitProperties.getPattern());
             }
-            return;
-        }
-        BlockType blockType = BlockTypes.get(arguments[0].toLowerCase(Locale.ROOT));
-        if (blockType != null) {
-            if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedMaterials.contains(blockType)) {
-                sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockType.getId() + ".");
-                return;
-            }
-            toolkitProperties.setBlockType(blockType);
-            messenger.sendBlockTypeMessage(blockType);
         } else {
-            sender.sendMessage(ChatColor.RED + "You have entered an invalid item name: " + arguments[0]);
+            ParserContext parserContext = new ParserContext();
+            parserContext.setActor(BukkitAdapter.adapt(sender));
+            parserContext.setRestricted(false);
+            parserContext.setPreferringWildcard(true);
+            parserContext.setWorld(BukkitAdapter.adapt(((Player) sender).getWorld()));
+            try {
+                String argument = arguments[0].toLowerCase(Locale.ROOT);
+                Pattern pattern = plugin.getPatternParser().parseFromInput(argument, parserContext);
+
+                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(argument)) {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + argument + ".");
+                    return;
+                }
+
+                toolkitProperties.setPattern(new BrushPattern(pattern, argument));
+                messenger.sendPatternMessage(toolkitProperties.getPattern());
+            } catch (InputParseException e) {
+                sender.sendMessage(ChatColor.RED + "You have entered an invalid pattern: " + arguments[0]);
+            }
         }
     }
 
     @Override
     public List<String> complete(CommandSender sender, String[] arguments) {
         if (arguments.length == 1) {
-            String argument = arguments[0];
-            String argumentLowered = (argument.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
-                    ? argument.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
-                    : argument)
-                    .toLowerCase(Locale.ROOT);
-            return BLOCKS.stream()
-                    .filter(id -> id.startsWith(argumentLowered))
-                    .toList();
+            return plugin.getPatternParser().getSuggestions(arguments[0]);
         }
         return Collections.emptyList();
     }

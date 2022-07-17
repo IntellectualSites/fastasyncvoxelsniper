@@ -106,7 +106,7 @@ public class CometBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .blockTypeMessage()
+                .patternMessage()
                 .message("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"))
                 .send();
     }

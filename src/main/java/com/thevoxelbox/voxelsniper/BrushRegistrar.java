@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper;
 
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPatternType;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.brush.type.BiomeBrush;
 import com.thevoxelbox.voxelsniper.brush.type.BlockResetBrush;
@@ -90,6 +91,7 @@ public class BrushRegistrar {
             .permission("voxelsniper.brush.snipe")
             .alias("s")
             .alias("snipe")
+            .brushPatternType(BrushPatternType.ANY)
             .creator(SnipeBrush::new)
             .build();
 
@@ -189,6 +191,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ball")
                 .alias("b")
                 .alias("ball")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(BallBrush::new)
                 .build();
         this.registry.register(properties);
@@ -200,6 +203,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.biome")
                 .alias("bio")
                 .alias("biome")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BiomeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -212,6 +216,7 @@ public class BrushRegistrar {
                 .alias("bb")
                 .alias("blendball")
                 .alias("blend_ball")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlendBallBrush::new)
                 .build();
         this.registry.register(properties);
@@ -224,6 +229,7 @@ public class BrushRegistrar {
                 .alias("bd")
                 .alias("blenddisc")
                 .alias("blend_disc")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlendDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -236,6 +242,7 @@ public class BrushRegistrar {
                 .alias("bv")
                 .alias("blendvoxel")
                 .alias("blend_voxel")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlendVoxelBrush::new)
                 .build();
         this.registry.register(properties);
@@ -248,6 +255,7 @@ public class BrushRegistrar {
                 .alias("bvd")
                 .alias("blendvoxeldisc")
                 .alias("blend_voxel_disc")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlendVoxelDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -259,6 +267,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.blob")
                 .alias("blob")
                 .alias("splatblob")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(BlobBrush::new)
                 .build();
         this.registry.register(properties);
@@ -271,6 +280,7 @@ public class BrushRegistrar {
                 .alias("brb")
                 .alias("blockresetbrush")
                 .alias("block_reset")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlockResetBrush::new)
                 .build();
         this.registry.register(properties);
@@ -283,6 +293,7 @@ public class BrushRegistrar {
                 .alias("brbs")
                 .alias("blockresetbrushsurface")
                 .alias("block_reset_surface")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(BlockResetSurfaceBrush::new)
                 .build();
         this.registry.register(properties);
@@ -294,6 +305,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.canyon")
                 .alias("ca")
                 .alias("canyon")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CanyonBrush::new)
                 .build();
         this.registry.register(properties);
@@ -306,6 +318,7 @@ public class BrushRegistrar {
                 .alias("cas")
                 .alias("canyonselection")
                 .alias("canyon_selection")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CanyonSelectionBrush::new)
                 .build();
         this.registry.register(properties);
@@ -318,6 +331,7 @@ public class BrushRegistrar {
                 .alias("cvd")
                 .alias("checkervoxeldisc")
                 .alias("checker_voxel_disc")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(CheckerVoxelDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -330,6 +344,7 @@ public class BrushRegistrar {
                 .alias("cls")
                 .alias("cleansnow")
                 .alias("clean_snow")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CleanSnowBrush::new)
                 .build();
         this.registry.register(properties);
@@ -342,6 +357,7 @@ public class BrushRegistrar {
                 .alias("cs")
                 .alias("clonestamp")
                 .alias("clone_stamp")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CloneStampBrush::new)
                 .build();
         this.registry.register(properties);
@@ -353,6 +369,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.comet")
                 .alias("com")
                 .alias("comet")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CometBrush::new)
                 .build();
         this.registry.register(properties);
@@ -365,6 +382,7 @@ public class BrushRegistrar {
                 .alias("cp")
                 .alias("copypasta")
                 .alias("copy_pasta")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(CopyPastaBrush::new)
                 .build();
         this.registry.register(properties);
@@ -376,6 +394,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.cylinder")
                 .alias("c")
                 .alias("cylinder")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(CylinderBrush::new)
                 .build();
         this.registry.register(properties);
@@ -387,6 +406,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.disc")
                 .alias("d")
                 .alias("disc")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(DiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -399,6 +419,7 @@ public class BrushRegistrar {
                 .alias("df")
                 .alias("discface")
                 .alias("disc_face")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(DiscFaceBrush::new)
                 .build();
         this.registry.register(properties);
@@ -410,6 +431,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.dome")
                 .alias("dome")
                 .alias("domebrush")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(DomeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -420,6 +442,7 @@ public class BrushRegistrar {
                 .name("Drain")
                 .permission("voxelsniper.brush.drain")
                 .alias("drain")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(DrainBrush::new)
                 .build();
         this.registry.register(properties);
@@ -431,6 +454,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ellipse")
                 .alias("el")
                 .alias("ellipse")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(EllipseBrush::new)
                 .build();
         this.registry.register(properties);
@@ -442,6 +466,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ellipsoid")
                 .alias("elo")
                 .alias("ellipsoid")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(EllipsoidBrush::new)
                 .build();
         this.registry.register(properties);
@@ -453,6 +478,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.entity")
                 .alias("en")
                 .alias("entity")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(EntityBrush::new)
                 .build();
         this.registry.register(properties);
@@ -465,6 +491,7 @@ public class BrushRegistrar {
                 .alias("er")
                 .alias("entityremoval")
                 .alias("entity_removal")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(EntityRemovalBrush::new)
                 .build();
         this.registry.register(properties);
@@ -476,6 +503,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.eraser")
                 .alias("erase")
                 .alias("eraser")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(EraserBrush::new)
                 .build();
         this.registry.register(properties);
@@ -488,6 +516,7 @@ public class BrushRegistrar {
                 .alias("eb")
                 .alias("erodeblend")
                 .alias("erodeblendball")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(ErodeBlendBrush::new)
                 .build();
         this.registry.register(properties);
@@ -499,6 +528,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.erode")
                 .alias("e")
                 .alias("erode")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(ErodeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -510,6 +540,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.extrude")
                 .alias("ex")
                 .alias("extrude")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(ExtrudeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -522,6 +553,7 @@ public class BrushRegistrar {
                 .alias("fd")
                 .alias("filldown")
                 .alias("fill_down")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(FillDownBrush::new)
                 .build();
         this.registry.register(properties);
@@ -534,6 +566,7 @@ public class BrushRegistrar {
                 .alias("fo")
                 .alias("flatocean")
                 .alias("flat_ocean")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(FlatOceanBrush::new)
                 .build();
         this.registry.register(properties);
@@ -546,6 +579,7 @@ public class BrushRegistrar {
                 .alias("gt")
                 .alias("generatetree")
                 .alias("generate_tree")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(GenerateTreeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -558,6 +592,7 @@ public class BrushRegistrar {
                 .alias("hr")
                 .alias("heatray")
                 .alias("heat_ray")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(HeatRayBrush::new)
                 .build();
         this.registry.register(properties);
@@ -570,6 +605,7 @@ public class BrushRegistrar {
                 .alias("j")
                 .alias("jagged")
                 .alias("jagged_line")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(JaggedLineBrush::new)
                 .build();
         this.registry.register(properties);
@@ -580,6 +616,7 @@ public class BrushRegistrar {
                 .name("Jockey")
                 .permission("voxelsniper.brush.jockey")
                 .alias("jockey")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(JockeyBrush::new)
                 .build();
         this.registry.register(properties);
@@ -591,6 +628,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.lightning")
                 .alias("light")
                 .alias("lightning")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(LightningBrush::new)
                 .build();
         this.registry.register(properties);
@@ -602,6 +640,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.line")
                 .alias("l")
                 .alias("line")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(LineBrush::new)
                 .build();
         this.registry.register(properties);
@@ -613,6 +652,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.move")
                 .alias("mv")
                 .alias("move")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(MoveBrush::new)
                 .build();
         this.registry.register(properties);
@@ -624,6 +664,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ocean")
                 .alias("o")
                 .alias("ocean")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(OceanBrush::new)
                 .build();
         this.registry.register(properties);
@@ -635,6 +676,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.overlay")
                 .alias("over")
                 .alias("overlay")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(OverlayBrush::new)
                 .build();
         this.registry.register(properties);
@@ -646,6 +688,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.painting")
                 .alias("paint")
                 .alias("painting")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(PaintingBrush::new)
                 .build();
         this.registry.register(properties);
@@ -656,6 +699,7 @@ public class BrushRegistrar {
                 .name("Pull")
                 .permission("voxelsniper.brush.pull")
                 .alias("pull")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(PullBrush::new)
                 .build();
         this.registry.register(properties);
@@ -667,6 +711,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.punish")
                 .alias("p")
                 .alias("punish")
+                .brushPatternType(BrushPatternType.SINGLE_BLOCK)
                 .creator(PunishBrush::new)
                 .build();
         this.registry.register(properties);
@@ -679,6 +724,7 @@ public class BrushRegistrar {
                 .alias("re")
                 .alias("randomerode")
                 .alias("randome_rode")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(RandomErodeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -691,6 +737,7 @@ public class BrushRegistrar {
                 .alias("gc")
                 .alias("generatechunk")
                 .alias("regenerate_chunk")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(RegenerateChunkBrush::new)
                 .build();
         this.registry.register(properties);
@@ -702,6 +749,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ring")
                 .alias("ri")
                 .alias("ring")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(RingBrush::new)
                 .build();
         this.registry.register(properties);
@@ -714,6 +762,7 @@ public class BrushRegistrar {
                 .alias("rot2")
                 .alias("rotation2d")
                 .alias("rotation_2d")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(Rotation2DBrush::new)
                 .build();
         this.registry.register(properties);
@@ -726,6 +775,7 @@ public class BrushRegistrar {
                 .alias("rot2v")
                 .alias("rotation2dvertical")
                 .alias("rotation_2d_vertical")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(Rotation2DVerticalBrush::new)
                 .build();
         this.registry.register(properties);
@@ -738,6 +788,7 @@ public class BrushRegistrar {
                 .alias("rot3")
                 .alias("rotation3d")
                 .alias("rotation_3d")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(Rotation3DBrush::new)
                 .build();
         this.registry.register(properties);
@@ -749,6 +800,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.ruler")
                 .alias("r")
                 .alias("ruler")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(RulerBrush::new)
                 .build();
         this.registry.register(properties);
@@ -760,6 +812,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.scanner")
                 .alias("sc")
                 .alias("scanner")
+                .brushPatternType(BrushPatternType.SINGLE_BLOCK)
                 .creator(ScannerBrush::new)
                 .build();
         this.registry.register(properties);
@@ -770,6 +823,7 @@ public class BrushRegistrar {
                 .name("Set")
                 .permission("voxelsniper.brush.set")
                 .alias("set")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SetBrush::new)
                 .build();
         this.registry.register(properties);
@@ -782,6 +836,7 @@ public class BrushRegistrar {
                 .alias("setrf")
                 .alias("setredstoneflip")
                 .alias("set_redstone_flip")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(SetRedstoneFlipBrush::new)
                 .build();
         this.registry.register(properties);
@@ -794,6 +849,7 @@ public class BrushRegistrar {
                 .alias("setrr")
                 .alias("setredstonerotate")
                 .alias("set_redstone_rotate")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(SetRedstoneRotateBrush::new)
                 .build();
         this.registry.register(properties);
@@ -806,6 +862,7 @@ public class BrushRegistrar {
                 .alias("shb")
                 .alias("shellball")
                 .alias("shell_ball")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(ShellBallBrush::new)
                 .build();
         this.registry.register(properties);
@@ -818,6 +875,7 @@ public class BrushRegistrar {
                 .alias("shs")
                 .alias("shellset")
                 .alias("shell_set")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(ShellSetBrush::new)
                 .build();
         this.registry.register(properties);
@@ -830,6 +888,7 @@ public class BrushRegistrar {
                 .alias("shv")
                 .alias("shellvoxel")
                 .alias("shell_voxel")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(ShellVoxelBrush::new)
                 .build();
         this.registry.register(properties);
@@ -842,6 +901,7 @@ public class BrushRegistrar {
                 .alias("sio")
                 .alias("signoverwriter")
                 .alias("sign_overwrite")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(SignOverwriteBrush::new)
                 .build();
         this.registry.register(properties);
@@ -858,6 +918,7 @@ public class BrushRegistrar {
                 .alias("snow")
                 .alias("snowcone")
                 .alias("snow_cone")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(SnowConeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -870,6 +931,7 @@ public class BrushRegistrar {
                 .alias("sstair")
                 .alias("spiralstaircase")
                 .alias("spiral_staircase")
+                .brushPatternType(BrushPatternType.SINGLE_BLOCK)
                 .creator(SpiralStaircaseBrush::new)
                 .build();
         this.registry.register(properties);
@@ -882,6 +944,7 @@ public class BrushRegistrar {
                 .alias("sb")
                 .alias("splatball")
                 .alias("splatter_ball")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplatterBallBrush::new)
                 .build();
         this.registry.register(properties);
@@ -894,6 +957,7 @@ public class BrushRegistrar {
                 .alias("sd")
                 .alias("splatdisc")
                 .alias("splatter_disc")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplatterDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -906,6 +970,7 @@ public class BrushRegistrar {
                 .alias("sover")
                 .alias("splatteroverlay")
                 .alias("splatter_overlay")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplatterOverlayBrush::new)
                 .build();
         this.registry.register(properties);
@@ -918,6 +983,7 @@ public class BrushRegistrar {
                 .alias("sv")
                 .alias("splattervoxel")
                 .alias("splatter_voxel")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplatterVoxelBrush::new)
                 .build();
         this.registry.register(properties);
@@ -930,6 +996,7 @@ public class BrushRegistrar {
                 .alias("svd")
                 .alias("splatvoxeldisc")
                 .alias("splatter_voxel_disc")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplatterVoxelDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -941,6 +1008,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.spline")
                 .alias("sp")
                 .alias("spline")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(SplineBrush::new)
                 .build();
         this.registry.register(properties);
@@ -952,6 +1020,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.stencil")
                 .alias("st")
                 .alias("stencil")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(StencilBrush::new)
                 .build();
         this.registry.register(properties);
@@ -964,6 +1033,7 @@ public class BrushRegistrar {
                 .alias("sl")
                 .alias("stencillist")
                 .alias("stencil_list")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(StencilListBrush::new)
                 .build();
         this.registry.register(properties);
@@ -976,6 +1046,7 @@ public class BrushRegistrar {
                 .alias("tpc")
                 .alias("threepointcircle")
                 .alias("three_point_circle")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(ThreePointCircleBrush::new)
                 .build();
         this.registry.register(properties);
@@ -989,6 +1060,7 @@ public class BrushRegistrar {
                 .alias("tree")
                 .alias("treesnipe")
                 .alias("tree_snipe")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(TreeSnipeBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1000,6 +1072,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.triangle")
                 .alias("tri")
                 .alias("triangle")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(TriangleBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1011,6 +1084,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.underlay")
                 .alias("under")
                 .alias("underlay")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(UnderlayBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1022,6 +1096,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.voltmeter")
                 .alias("volt")
                 .alias("voltmeter")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(VoltmeterBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1033,6 +1108,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.voxel")
                 .alias("v")
                 .alias("voxel")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(VoxelBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1045,6 +1121,7 @@ public class BrushRegistrar {
                 .alias("vd")
                 .alias("voxeldisc")
                 .alias("voxel_disc")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(VoxelDiscBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1057,6 +1134,7 @@ public class BrushRegistrar {
                 .alias("vdf")
                 .alias("voxeldiscface")
                 .alias("voxel_disc_face")
+                .brushPatternType(BrushPatternType.PATTERN)
                 .creator(VoxelDiscFaceBrush::new)
                 .build();
         this.registry.register(properties);
@@ -1068,6 +1146,7 @@ public class BrushRegistrar {
                 .permission("voxelsniper.brush.warp")
                 .alias("world")
                 .alias("warp")
+                .brushPatternType(BrushPatternType.ANY)
                 .creator(WarpBrush::new)
                 .build();
         this.registry.register(properties);

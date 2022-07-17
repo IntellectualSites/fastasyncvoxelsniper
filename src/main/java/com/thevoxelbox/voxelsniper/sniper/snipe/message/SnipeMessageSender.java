@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.MessageSender;
@@ -27,27 +27,15 @@ public class SnipeMessageSender {
         return this;
     }
 
-    public SnipeMessageSender blockTypeMessage() {
-        BlockType blockType = this.toolkitProperties.getBlockType();
-        this.messageSender.blockTypeMessage(blockType);
+    public SnipeMessageSender patternMessage() {
+        BrushPattern pattern = this.toolkitProperties.getPattern();
+        this.messageSender.patternMessage(pattern);
         return this;
     }
 
-    public SnipeMessageSender blockDataMessage() {
-        BlockState blockData = this.toolkitProperties.getBlockData();
-        this.messageSender.blockDataMessage(blockData);
-        return this;
-    }
-
-    public SnipeMessageSender replaceBlockTypeMessage() {
-        BlockType replaceBlockType = this.toolkitProperties.getReplaceBlockType();
-        this.messageSender.replaceBlockTypeMessage(replaceBlockType);
-        return this;
-    }
-
-    public SnipeMessageSender replaceBlockDataMessage() {
-        BlockState replaceBlockData = this.toolkitProperties.getReplaceBlockData();
-        this.messageSender.replaceBlockDataMessage(replaceBlockData);
+    public SnipeMessageSender replacePatternMessage() {
+        BrushPattern replacePattern = this.toolkitProperties.getReplacePattern();
+        this.messageSender.replacePatternMessage(replacePattern);
         return this;
     }
 

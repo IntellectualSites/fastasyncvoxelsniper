@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
@@ -45,7 +46,7 @@ public class ShellBallBrush extends AbstractBrush {
         // Log current materials into newmats
         // Array that holds the hollowed materials
         int brushSizeDoubled = 2 * brushSize;
-        BlockType[][][] newMaterials = new BlockType[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
+        Pattern[][][] newMaterials = new Pattern[brushSizeDoubled + 1][brushSizeDoubled + 1][brushSizeDoubled + 1];
         for (int x = 0; x <= brushSizeDoubled; x++) {
             for (int y = 0; y <= brushSizeDoubled; y++) {
                 System.arraycopy(oldMaterials[x + 1][y + 1], 1, newMaterials[x][y], 0, brushSizeDoubled + 1);
@@ -56,26 +57,26 @@ public class ShellBallBrush extends AbstractBrush {
             for (int y = 0; y <= brushSizeDoubled; y++) {
                 for (int z = 0; z <= brushSizeDoubled; z++) {
                     int temp = 0;
-                    if (oldMaterials[x + 1 + 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1 + 1][y + 1][z + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1 - 1][y + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1 - 1][y + 1][z + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1 + 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][y + 1 + 1][z + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1 - 1][z + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][y + 1 - 1][z + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1][z + 1 + 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][y + 1][z + 1 + 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
-                    if (oldMaterials[x + 1][y + 1][z + 1 - 1] == toolkitProperties.getReplaceBlockType()) {
+                    if (oldMaterials[x + 1][y + 1][z + 1 - 1] == toolkitProperties.getReplacePattern().asBlockType()) {
                         temp++;
                     }
                     if (temp == 0) {
-                        newMaterials[x][y][z] = toolkitProperties.getBlockType();
+                        newMaterials[x][y][z] = toolkitProperties.getPattern().getPattern();
                     }
                 }
             }
@@ -88,7 +89,7 @@ public class ShellBallBrush extends AbstractBrush {
                 double ySquared = Math.pow(y - brushSize, 2);
                 for (int z = 2 * brushSize; z >= 0; z--) {
                     if (xSquared + ySquared + Math.pow(z - brushSize, 2) <= rSquared) {
-                        setBlockType(
+                        setBlock(
                                 blockPositionX - brushSize + x,
                                 blockPositionY - brushSize + y,
                                 blockPositionZ - brushSize + z,
@@ -108,8 +109,8 @@ public class ShellBallBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .blockTypeMessage()
-                .replaceBlockTypeMessage()
+                .patternMessage()
+                .replacePatternMessage()
                 .send();
     }
 

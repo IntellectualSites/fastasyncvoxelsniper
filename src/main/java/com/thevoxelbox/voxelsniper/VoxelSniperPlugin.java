@@ -1,10 +1,12 @@
 package com.thevoxelbox.voxelsniper;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.CommandRegistry;
+import com.thevoxelbox.voxelsniper.command.PatternParser;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfigLoader;
 import com.thevoxelbox.voxelsniper.listener.PlayerInteractListener;
@@ -45,6 +47,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
+    private PatternParser patternParser;
     private double newVersion = 0;
     private double currentVersion = 0;
 
@@ -52,7 +55,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return plugin;
     }
 
-    @SuppressWarnings({"unused", "StringSplitter"})
+    @SuppressWarnings({"unused"})
     @Override
     public void onEnable() {
         plugin = this;
@@ -60,6 +63,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.brushRegistry = loadBrushRegistry();
         this.performerRegistry = loadPerformerRegistry();
         this.sniperRegistry = new SniperRegistry();
+        this.patternParser = new PatternParser(WorldEdit.getInstance());
         testRegistries();
         loadCommands();
         loadListeners();
@@ -165,20 +169,50 @@ public class VoxelSniperPlugin extends JavaPlugin {
         });
     }
 
+    /**
+     * Return the voxel sniper config.
+     *
+     * @return the voxel sniper config
+     */
     public VoxelSniperConfig getVoxelSniperConfig() {
         return this.voxelSniperConfig;
     }
 
+    /**
+     * Return the brush registry.
+     *
+     * @return the brush registry
+     */
     public BrushRegistry getBrushRegistry() {
         return this.brushRegistry;
     }
 
+    /**
+     * Return performer registry.
+     *
+     * @return the performer registry
+     */
     public PerformerRegistry getPerformerRegistry() {
         return this.performerRegistry;
     }
 
+    /**
+     * Return the sniper registry.
+     *
+     * @return the sniper registry
+     */
     public SniperRegistry getSniperRegistry() {
         return this.sniperRegistry;
+    }
+
+    /**
+     * Return the pattern parser.
+     *
+     * @return the pattern parser
+     * @since TODO
+     */
+    public PatternParser getPatternParser() {
+        return patternParser;
     }
 
     // Borrowed from Vault

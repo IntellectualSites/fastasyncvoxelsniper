@@ -358,7 +358,10 @@ public class PunishBrush extends AbstractPerformerBrush {
                                 }
                                 target = location.clone();
                                 target.add(x, y, z);
-                                ((Player) entity).sendBlockChange(target, BukkitAdapter.adapt(toolkitProperties.getBlockData()));
+                                ((Player) entity).sendBlockChange(
+                                        target,
+                                        BukkitAdapter.adapt(toolkitProperties.getPattern().asBlockState())
+                                );
                             }
                         }
                     }

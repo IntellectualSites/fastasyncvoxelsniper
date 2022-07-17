@@ -138,7 +138,7 @@ public class OceanBrush extends AbstractBrush {
                 for (int y = highestY; y > newSeaFloorLevel; y--) {
                     BlockState block = getBlock(x, y, z);
                     if (!block.isAir()) {
-                        setBlockType(x, y, z, BlockTypes.AIR);
+                        setBlock(x, y, z, BlockTypes.AIR);
                     }
                 }
                 // go down from water level to new sea level
@@ -146,12 +146,12 @@ public class OceanBrush extends AbstractBrush {
                     BlockState block = getBlock(x, y, z);
                     BlockType blockType = block.getBlockType();
                     if (blockType != BlockTypes.WATER) {
-                        setBlockType(x, y, z, BlockTypes.WATER);
+                        setBlock(x, y, z, BlockTypes.WATER);
                     }
                 }
                 // cover the sea floor of required
                 if (this.coverFloor && (newSeaFloorLevel <= this.waterLevel)) {
-                    setBlockType(x, newSeaFloorLevel, z, toolkitProperties.getBlockType());
+                    setBlock(x, newSeaFloorLevel, z, toolkitProperties.getPattern().getPattern());
                 }
             }
         }

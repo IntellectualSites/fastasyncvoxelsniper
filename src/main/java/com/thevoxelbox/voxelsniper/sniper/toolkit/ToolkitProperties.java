@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.sniper.toolkit;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,8 +17,8 @@ public class ToolkitProperties {
     private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
     private final List<BlockState> voxelList = new ArrayList<>();
-    private BlockState blockData;
-    private BlockState replaceBlockData;
+    private BrushPattern pattern;
+    private BrushPattern replacePattern;
     private int brushSize;
     private int voxelHeight;
     private int cylinderCenter;
@@ -29,8 +29,8 @@ public class ToolkitProperties {
     public ToolkitProperties() {
         VoxelSniperConfig config = plugin.getVoxelSniperConfig();
 
-        this.blockData = config.getDefaultBlockMaterial().getDefaultState();
-        this.replaceBlockData = config.getDefaultReplaceBlockMaterial().getDefaultState();
+        this.pattern = new BrushPattern(config.getDefaultBlockMaterial().getDefaultState());
+        this.replacePattern = new BrushPattern(config.getDefaultReplaceBlockMaterial().getDefaultState());
         this.brushSize = config.getDefaultBrushSize();
         this.voxelHeight = config.getDefaultVoxelHeight();
         this.cylinderCenter = config.getDefaultCylinderCenter();
@@ -39,8 +39,8 @@ public class ToolkitProperties {
     public void reset() {
         VoxelSniperConfig config = plugin.getVoxelSniperConfig();
 
-        resetBlockData();
-        resetReplaceBlockData();
+        resetPattern();
+        resetReplacePattern();
         this.brushSize = config.getDefaultBrushSize();
         this.voxelHeight = config.getDefaultVoxelHeight();
         this.cylinderCenter = config.getDefaultCylinderCenter();
@@ -49,30 +49,22 @@ public class ToolkitProperties {
         this.voxelList.clear();
     }
 
-    public void resetBlockData() {
-        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
-        this.blockData = config.getDefaultBlockMaterial().getDefaultState();
+    /**
+     * Resets the pattern.
+     *
+     * @since TODO
+     */
+    public void resetPattern() {
+        this.pattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultBlockMaterial().getDefaultState());
     }
 
-    public void resetReplaceBlockData() {
-        VoxelSniperConfig config = plugin.getVoxelSniperConfig();
-        this.replaceBlockData = config.getDefaultReplaceBlockMaterial().getDefaultState();
-    }
-
-    public BlockType getBlockType() {
-        return this.blockData.getBlockType();
-    }
-
-    public void setBlockType(BlockType type) {
-        this.blockData = type.getDefaultState();
-    }
-
-    public BlockType getReplaceBlockType() {
-        return this.replaceBlockData.getBlockType();
-    }
-
-    public void setReplaceBlockType(BlockType type) {
-        this.replaceBlockData = type.getDefaultState();
+    /**
+     * Resets the replace pattern.
+     *
+     * @since TODO
+     */
+    public void resetReplacePattern() {
+        this.replacePattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultReplaceBlockMaterial().getDefaultState());
     }
 
     public BlockTracer createBlockTracer(Player player) {
@@ -98,20 +90,44 @@ public class ToolkitProperties {
         return this.voxelList.contains(blockData);
     }
 
-    public BlockState getBlockData() {
-        return this.blockData;
+    /**
+     * Returns the pattern.
+     *
+     * @return the pattern
+     * @since TODO
+     */
+    public BrushPattern getPattern() {
+        return this.pattern;
     }
 
-    public void setBlockData(BlockState blockData) {
-        this.blockData = blockData;
+    /**
+     * Sets the pattern.
+     *
+     * @param brushPattern the new pattern
+     * @since TODO
+     */
+    public void setPattern(BrushPattern brushPattern) {
+        this.pattern = brushPattern;
     }
 
-    public BlockState getReplaceBlockData() {
-        return this.replaceBlockData;
+    /**
+     * Returns the replace pattern.
+     *
+     * @return the replace pattern
+     * @since TODO
+     */
+    public BrushPattern getReplacePattern() {
+        return this.replacePattern;
     }
 
-    public void setReplaceBlockData(BlockState replaceBlockData) {
-        this.replaceBlockData = replaceBlockData;
+    /**
+     * Sets the replace pattern.
+     *
+     * @param replaceBrushPattern the new replace pattern
+     * @since TODO
+     */
+    public void setReplacePattern(BrushPattern replaceBrushPattern) {
+        this.replacePattern = replaceBrushPattern;
     }
 
     public int getBrushSize() {

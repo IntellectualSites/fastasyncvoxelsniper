@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.util.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -31,23 +31,13 @@ public class MessageSender {
         return this;
     }
 
-    public MessageSender blockTypeMessage(BlockType blockType) {
-        this.messages.add(ChatColor.GOLD + "Voxel: " + ChatColor.RED + blockType.getId());
+    public MessageSender patternMessage(BrushPattern brushPattern) {
+        this.messages.add(ChatColor.GOLD + "Voxel: " + ChatColor.RED + brushPattern.getName());
         return this;
     }
 
-    public MessageSender blockDataMessage(BlockState blockData) {
-        this.messages.add(ChatColor.BLUE + "Data Variable: " + ChatColor.DARK_RED + blockData.getAsString());
-        return this;
-    }
-
-    public MessageSender replaceBlockTypeMessage(BlockType replaceBlockType) {
-        this.messages.add(ChatColor.AQUA + "Replace Material: " + ChatColor.RED + replaceBlockType.getId());
-        return this;
-    }
-
-    public MessageSender replaceBlockDataMessage(BlockState replaceBlockData) {
-        this.messages.add(ChatColor.DARK_GRAY + "Replace Data Variable: " + ChatColor.DARK_RED + replaceBlockData.getAsString());
+    public MessageSender replacePatternMessage(BrushPattern replaceBrushPattern) {
+        this.messages.add(ChatColor.AQUA + "Replace: " + ChatColor.RED + replaceBrushPattern.getName());
         return this;
     }
 

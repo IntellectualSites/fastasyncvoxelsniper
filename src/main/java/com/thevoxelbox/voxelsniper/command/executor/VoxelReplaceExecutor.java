@@ -5,8 +5,10 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.command.TabCompleter;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
@@ -51,31 +53,46 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
             return;
         }
         Messenger messenger = new Messenger(plugin, sender);
+        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+        List<String> liteSniperRestrictedPatterns = config.getLitesniperRestrictedMaterials();
         if (arguments.length == 0) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
             BlockVector3 targetBlock = blockTracer.getTargetBlock();
             if (targetBlock != null) {
-                BlockType blockType = BukkitAdapter.asBlockType(
+                BlockType targetBlockType = BukkitAdapter.asBlockType(
                         player.getWorld().getBlockAt(
                                 targetBlock.getX(),
                                 targetBlock.getY(),
                                 targetBlock.getZ()
                         ).getType()
                 );
-                if (blockType == null) {
+                if (targetBlockType == null) {
+                    sender.sendMessage(ChatColor.RED + "You have selected an invalid block type.");
                     return;
                 }
-                toolkitProperties.setReplaceBlockType(blockType);
-                messenger.sendReplaceBlockTypeMessage(blockType);
+                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
+                        targetBlockType.getResource())) {
+                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + targetBlockType.getId() + ".");
+                    return;
+                }
+                toolkitProperties.setReplacePattern(new BrushPattern(targetBlockType));
+                messenger.sendReplacePatternMessage(toolkitProperties.getReplacePattern());
             }
-            return;
-        }
-        BlockType blockType = BlockTypes.get(arguments[0].toLowerCase(Locale.ROOT));
-        if (blockType != null) {
-            toolkitProperties.setReplaceBlockType(blockType);
-            messenger.sendReplaceBlockTypeMessage(blockType);
         } else {
-            sender.sendMessage(ChatColor.RED + "You have entered an invalid item name: " + arguments[0]);
+            BlockType blockType = BlockTypes.get(arguments[0]);
+
+            if (blockType == null) {
+                sender.sendMessage(ChatColor.RED + "You have entered an invalid block type: " + arguments[0]);
+                return;
+            }
+            if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
+                    blockType.getResource())) {
+                sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockType.getId() + ".");
+                return;
+            }
+
+            toolkitProperties.setReplacePattern(new BrushPattern(blockType));
+            messenger.sendReplacePatternMessage(toolkitProperties.getReplacePattern());
         }
     }
 

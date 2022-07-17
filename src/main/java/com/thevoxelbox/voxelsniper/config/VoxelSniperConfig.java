@@ -17,7 +17,7 @@ public class VoxelSniperConfig {
     private final BlockType defaultReplaceBlockMaterial;
     private final int defaultBrushSize;
     private final int litesniperMaxBrushSize;
-    private final List<BlockType> litesniperRestrictedMaterials;
+    private final List<String> litesniperRestrictedMaterials;
     private final int brushSizeWarningThreshold;
     private final int defaultVoxelHeight;
     private final int defaultCylinderCenter;
@@ -48,7 +48,7 @@ public class VoxelSniperConfig {
             BlockType defaultReplaceBlockMaterial,
             int defaultBrushSize,
             int litesniperMaxBrushSize,
-            List<BlockType> litesniperRestrictedMaterials,
+            List<String> litesniperRestrictedMaterials,
             int brushSizeWarningThreshold,
             int defaultVoxelHeight,
             int defaultCylinderCenter,
@@ -145,7 +145,7 @@ public class VoxelSniperConfig {
      * @return List of restricted Litesniper materials
      * @see VoxelSniperConfigLoader#getLitesniperRestrictedMaterials()
      */
-    public List<BlockType> getLitesniperRestrictedMaterials() {
+    public List<String> getLitesniperRestrictedMaterials() {
         return this.litesniperRestrictedMaterials;
     }
 

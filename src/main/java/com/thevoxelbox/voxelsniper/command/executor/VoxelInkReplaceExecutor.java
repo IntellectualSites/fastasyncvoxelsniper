@@ -1,20 +1,24 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
+import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.Bukkit;
-import org.bukkit.block.data.BlockData;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class VoxelInkReplaceExecutor implements CommandExecutor {
 
@@ -40,25 +44,37 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
         if (toolkitProperties == null) {
             return;
         }
-        BlockData blockData;
+        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
+        List<String> liteSniperRestrictedPatterns = config.getLitesniperRestrictedMaterials();
+        BlockState blockState;
         if (arguments.length == 0) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
             BlockVector3 targetBlock = blockTracer.getTargetBlock();
-            blockData = player.getWorld().getBlockAt(
+            blockState = BukkitAdapter.adapt(player.getWorld().getBlockAt(
                     targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()
-            ).getBlockData();
+            ).getBlockData());
         } else {
             try {
-                blockData = Bukkit.createBlockData(arguments[0]);
-            } catch (IllegalArgumentException exception) {
-                sender.sendMessage("Couldn't parse input.");
+                blockState = BlockState.get(arguments[0]);
+            } catch (InputParseException ignored) {
+                sender.sendMessage("Could not parse block data input.");
                 return;
             }
         }
-        BlockState blockState = BukkitAdapter.adapt(blockData);
-        toolkitProperties.setReplaceBlockData(blockState);
+
+        if (blockState == null) {
+            sender.sendMessage(ChatColor.RED + "You have selected an invalid block state.");
+            return;
+        }
+        if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
+                blockState.getBlockType().getResource())) {
+            sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockState.getAsString() + ".");
+            return;
+        }
+
+        toolkitProperties.setReplacePattern(new BrushPattern(blockState));
         Messenger messenger = new Messenger(plugin, sender);
-        messenger.sendReplaceBlockDataMessage(blockState);
+        messenger.sendReplacePatternMessage(toolkitProperties.getReplacePattern());
     }
 
 }

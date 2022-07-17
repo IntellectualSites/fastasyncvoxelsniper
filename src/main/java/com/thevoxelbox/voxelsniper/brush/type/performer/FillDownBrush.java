@@ -53,7 +53,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
                 } else if (firstParameter.equalsIgnoreCase("some")) {
                     this.fillLiquid = false;
                     ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-                    toolkitProperties.resetReplaceBlockData();
+                    toolkitProperties.resetReplacePattern();
                     messenger.sendMessage(ChatColor.AQUA + "Now only filling air.");
                 } else if (firstParameter.equalsIgnoreCase("e")) {
                     this.fromExisting = !this.fromExisting;

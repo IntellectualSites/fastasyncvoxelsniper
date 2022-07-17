@@ -161,7 +161,7 @@ public class MoveBrush extends AbstractBrush {
             } catch (RuntimeException exception) {
                 messenger.sendMessage(ChatColor.LIGHT_PURPLE + "The new Selection has more blocks than the original selection. This should never happen!");
             }
-            locations.forEach(block -> setBlockType(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
+            locations.forEach(block -> setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
             for (BlockVector3 block : locations) {
                 setBlockData(
                         block.getX() + direction[0],

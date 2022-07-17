@@ -329,7 +329,7 @@ public class GenerateTreeBrush extends AbstractBrush {
                 this.blockPositionY += this.randGenerator.nextInt(2);
             }
             // Creates a branch block.
-            setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, woodType);
+            setBlock(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, woodType);
             this.branchBlocksLocation.add(BlockVector3.at(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ));
         }
         // Resets the origin
@@ -371,7 +371,7 @@ public class GenerateTreeBrush extends AbstractBrush {
             BlockState block = getBlock(x, y, z);
             if (block.isAir()) {
                 // Creates block.
-                setBlockType(x, clampY(y), z, this.leafType);
+                setBlock(x, clampY(y), z, this.leafType);
             }
         }
     }
@@ -407,7 +407,7 @@ public class GenerateTreeBrush extends AbstractBrush {
                     break;
                 } else {
                     // Place log block.
-                    setBlockType(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, this.woodType);
+                    setBlock(this.blockPositionX, clampY(this.blockPositionY), this.blockPositionZ, this.woodType);
                 }
                 // Checks is block below is solid
                 if (SOLIDS.contains(clampY(this.blockPositionX, this.blockPositionY - 1, this.blockPositionZ))) {
@@ -474,7 +474,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         BlockState block = getBlock(x, this.blockPositionY, y);
         if (block.isAir()) {
             // Creates block.
-            setBlockType(x, clampY(this.blockPositionY), y, this.woodType);
+            setBlock(x, clampY(this.blockPositionY), y, this.woodType);
         }
     }
 

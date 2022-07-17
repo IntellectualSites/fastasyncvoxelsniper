@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -27,24 +26,12 @@ public class SnipeMessenger {
         this.messenger.sendBrushNameMessage(brushName);
     }
 
-    public void sendBlockTypeMessage() {
-        BlockType blockType = this.toolkitProperties.getBlockType();
-        this.messenger.sendBlockTypeMessage(blockType);
+    public void sendPatternMessage() {
+        this.messenger.sendPatternMessage(this.toolkitProperties.getPattern());
     }
 
-    public void sendBlockDataMessage() {
-        BlockState blockData = this.toolkitProperties.getBlockData();
-        this.messenger.sendBlockDataMessage(blockData);
-    }
-
-    public void sendReplaceBlockTypeMessage() {
-        BlockType replaceBlockType = this.toolkitProperties.getReplaceBlockType();
-        this.messenger.sendReplaceBlockTypeMessage(replaceBlockType);
-    }
-
-    public void sendReplaceBlockDataMessage() {
-        BlockState replaceBlockData = this.toolkitProperties.getReplaceBlockData();
-        this.messenger.sendReplaceBlockDataMessage(replaceBlockData);
+    public void sendReplacePatternMessage() {
+        this.messenger.sendPatternMessage(this.toolkitProperties.getReplacePattern());
     }
 
     public void sendBrushSizeMessage() {
