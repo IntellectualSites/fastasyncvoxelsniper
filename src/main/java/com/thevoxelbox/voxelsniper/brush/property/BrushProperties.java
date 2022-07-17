@@ -14,7 +14,7 @@ public class BrushProperties {
     private final BrushCreator creator;
 
     /**
-     * Creates a new Brush properties.
+     * Create a new Brush properties.
      *
      * @param name             the name
      * @param permission       the permission
@@ -34,7 +34,7 @@ public class BrushProperties {
     }
 
     /**
-     * Creates a builder for brush properties.
+     * Create a builder for brush properties.
      *
      * @return the brush properties builder
      */
