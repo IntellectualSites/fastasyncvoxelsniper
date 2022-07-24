@@ -52,7 +52,7 @@ public class BrushPropertiesBuilder {
      *
      * @param brushPatternType the brush pattern type
      * @return the brush properties builder
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPropertiesBuilder brushPatternType(BrushPatternType brushPatternType) {
         this.brushPatternType = brushPatternType;

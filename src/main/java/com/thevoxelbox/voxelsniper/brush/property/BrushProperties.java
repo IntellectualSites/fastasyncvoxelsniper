@@ -74,7 +74,7 @@ public class BrushProperties {
      * Gets the accepted brush pattern type for this brush.
      *
      * @return the brush pattern type
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPatternType getBrushPatternType() {
         return brushPatternType;

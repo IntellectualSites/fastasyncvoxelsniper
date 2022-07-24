@@ -19,7 +19,7 @@ public class BrushPattern {
      *
      * @param pattern the pattern
      * @param name    the name
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPattern(Pattern pattern, String name) {
         this.pattern = pattern;
@@ -30,7 +30,7 @@ public class BrushPattern {
      * Create a new brush pattern from a block type.
      *
      * @param blockType the block type
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPattern(BlockType blockType) {
         this(blockType, blockType.getId());
@@ -40,7 +40,7 @@ public class BrushPattern {
      * Create a new brush pattern from a block state.
      *
      * @param blockState the block state
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPattern(BlockState blockState) {
         this(blockState, blockState.getAsString());
@@ -50,7 +50,7 @@ public class BrushPattern {
      * Gets pattern.
      *
      * @return the pattern
-     * @since TODO
+     * @since 2.6.0
      */
     public Pattern getPattern() {
         return pattern;
@@ -63,7 +63,7 @@ public class BrushPattern {
      * - block data for block states
      *
      * @return the pattern name
-     * @since TODO
+     * @since 2.6.0
      */
     public String getName() {
         return name;
@@ -73,7 +73,7 @@ public class BrushPattern {
      * Try to parse the pattern as a block type.
      *
      * @return the potential corresponding block type
-     * @since TODO
+     * @since 2.6.0
      */
     public @Nullable BlockType asBlockType() {
         if (this.pattern instanceof BaseBlock baseBlock) {
@@ -92,7 +92,7 @@ public class BrushPattern {
      * Try to parse the pattern as a block state.
      *
      * @return the potential corresponding block state
-     * @since TODO
+     * @since 2.6.0
      */
     public @Nullable BlockState asBlockState() {
         if (this.pattern instanceof BaseBlock baseBlock) {

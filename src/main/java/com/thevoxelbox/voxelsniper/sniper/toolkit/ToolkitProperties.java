@@ -52,7 +52,7 @@ public class ToolkitProperties {
     /**
      * Resets the pattern.
      *
-     * @since TODO
+     * @since 2.6.0
      */
     public void resetPattern() {
         this.pattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultBlockMaterial().getDefaultState());
@@ -61,7 +61,7 @@ public class ToolkitProperties {
     /**
      * Resets the replace pattern.
      *
-     * @since TODO
+     * @since 2.6.0
      */
     public void resetReplacePattern() {
         this.replacePattern = new BrushPattern(plugin.getVoxelSniperConfig().getDefaultReplaceBlockMaterial().getDefaultState());
@@ -94,7 +94,7 @@ public class ToolkitProperties {
      * Returns the pattern.
      *
      * @return the pattern
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPattern getPattern() {
         return this.pattern;
@@ -104,7 +104,7 @@ public class ToolkitProperties {
      * Sets the pattern.
      *
      * @param brushPattern the new pattern
-     * @since TODO
+     * @since 2.6.0
      */
     public void setPattern(BrushPattern brushPattern) {
         this.pattern = brushPattern;
@@ -114,7 +114,7 @@ public class ToolkitProperties {
      * Returns the replace pattern.
      *
      * @return the replace pattern
-     * @since TODO
+     * @since 2.6.0
      */
     public BrushPattern getReplacePattern() {
         return this.replacePattern;
@@ -124,7 +124,7 @@ public class ToolkitProperties {
      * Sets the replace pattern.
      *
      * @param replaceBrushPattern the new replace pattern
-     * @since TODO
+     * @since 2.6.0
      */
     public void setReplacePattern(BrushPattern replaceBrushPattern) {
         this.replacePattern = replaceBrushPattern;

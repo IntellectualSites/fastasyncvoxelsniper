@@ -209,7 +209,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
      * Return the pattern parser.
      *
      * @return the pattern parser
-     * @since TODO
+     * @since 2.6.0
      */
     public PatternParser getPatternParser() {
         return patternParser;

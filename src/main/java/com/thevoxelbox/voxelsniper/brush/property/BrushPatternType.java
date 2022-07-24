@@ -5,7 +5,7 @@ package com.thevoxelbox.voxelsniper.brush.property;
  * {@code BrushPatternType.PATTERN} might not support all brushes such as
  * {@link com.thevoxelbox.voxelsniper.brush.type.SpiralStaircaseBrush}.
  *
- * @since TODO
+ * @since 2.6.0
  */
 public enum BrushPatternType {
 

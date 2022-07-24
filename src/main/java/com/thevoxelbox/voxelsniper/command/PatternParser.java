@@ -13,7 +13,7 @@ import com.sk89q.worldedit.internal.registry.AbstractFactory;
 /**
  * VoxelSniper pattern parser used for argument completion and parsing.
  *
- * @since TODO
+ * @since 2.6.0
  */
 public class PatternParser extends AbstractFactory<Pattern> {
 
