@@ -10,6 +10,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 
 import java.util.ArrayList;
@@ -41,6 +42,14 @@ public class GenerateTreeBrush extends AbstractBrush {
             .add(BlockTypes.WATER)
             .add(BlockTypes.SNOW)
             .build();
+
+    private static final List<String> LEAVES = BlockCategories.LEAVES.getAll().stream()
+            .map(leafType -> leafType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .toList();
+
+    private static final List<String> LOGS = BlockCategories.LOGS.getAll().stream()
+            .map(logType -> logType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .toList();
 
     // Tree variables.
     private final Random randGenerator = new Random();
@@ -283,8 +292,12 @@ public class GenerateTreeBrush extends AbstractBrush {
         }
         if (parameters.length == 2) {
             String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("rf")) {
-                String parameter = parameters[1];
+            String parameter = parameters[1];
+            if (firstParameter.equalsIgnoreCase("lt")) {
+                return super.sortCompletions(LEAVES.stream(), parameter, 1);
+            } else if (firstParameter.equalsIgnoreCase("wt")) {
+                return super.sortCompletions(LOGS.stream(), parameter, 1);
+            } else if (firstParameter.equalsIgnoreCase("rf")) {
                 return super.sortCompletions(Stream.of("true", "false"), parameter, 1);
             }
         }

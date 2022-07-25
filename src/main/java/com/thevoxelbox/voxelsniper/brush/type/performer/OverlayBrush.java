@@ -40,10 +40,16 @@ public class OverlayBrush extends AbstractPerformerBrush {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("all")) {
                     this.allBlocks = true;
-                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.overlay.set-overlay-all", VoxelSniperText.getStatus(true)));
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.overlay.set-overlay-all",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("some")) {
                     this.allBlocks = false;
-                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.overlay.set-overlay-natural", VoxelSniperText.getStatus(true)));
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.overlay.set-overlay-natural",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else {
                     messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
@@ -207,8 +213,14 @@ public class OverlayBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.performer-brush.overlay.set-overlay-all", this.allBlocks))
-                .message(Caption.of("voxelsniper.performer-brush.overlay.set-overlay-natural", !this.allBlocks))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.overlay.set-overlay-all",
+                        VoxelSniperText.getStatus(this.allBlocks)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.overlay.set-overlay-natural",
+                        VoxelSniperText.getStatus(!this.allBlocks)
+                ))
                 .message(Caption.of("voxelsniper.performer-brush.overlay.set-depth", this.depth))
                 .send();
     }
