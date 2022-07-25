@@ -21,8 +21,6 @@ import java.util.function.Function;
 
 /**
  * Component text utilities for VoxelSniper.
- *
- * @since TODO
  */
 public class VoxelSniperText {
 
