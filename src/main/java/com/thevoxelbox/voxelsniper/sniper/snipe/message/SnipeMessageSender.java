@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper.snipe.message;
 
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -63,8 +64,8 @@ public class SnipeMessageSender {
         return this;
     }
 
-    public SnipeMessageSender message(String message) {
-        this.messageSender.message(message);
+    public SnipeMessageSender message(Component component) {
+        this.messageSender.message(component);
         return this;
     }
 

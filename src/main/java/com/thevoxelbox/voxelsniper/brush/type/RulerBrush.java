@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,25 +29,16 @@ public class RulerBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Ruler Brush instructions: Right click first point with the arrow. " +
-                    "Right click with gunpowder for distances from that block (can repeat without getting a new first " +
-                    "block.) For placing blocks, use arrow and input the desired coordinates with parameters.");
-            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b r [x] [y] [z] -- Places blocks one at a time of the type you " +
-                    "have set with /v at the location you click + this many units away. If you don't include a value, " +
-                    "it will be zero. Don't include ANY values, and the brush will just measure distance.");
-            messenger.sendMessage(ChatColor.BLUE + "/b r ruler -- Resets the tool to just measure distances, not " +
-                    "layout blocks.");
-
+            messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("ruler")) {
                     this.zOffset = 0;
                     this.yOffset = 0;
                     this.xOffset = 0;
-                    messenger.sendMessage(ChatColor.BLUE + "Ruler mode.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.ruler-mode"));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 3) {
                 Integer xOffset = NumericParser.parseInteger(parameters[0]);
@@ -56,12 +47,11 @@ public class RulerBrush extends AbstractBrush {
                 this.xOffset = xOffset == null ? 0 : xOffset;
                 this.yOffset = yOffset == null ? 0 : yOffset;
                 this.zOffset = zOffset == null ? 0 : zOffset;
-                messenger.sendMessage(ChatColor.AQUA + "X-Offset set to: " + this.xOffset);
-                messenger.sendMessage(ChatColor.AQUA + "Y-Offset set to: " + this.yOffset);
-                messenger.sendMessage(ChatColor.AQUA + "Z-Offset set to: " + this.zOffset);
+                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-x-offset", this.xOffset));
+                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-y-offset", this.yOffset));
+                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-z-offset", this.zOffset));
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -82,7 +72,7 @@ public class RulerBrush extends AbstractBrush {
         this.coordinates = targetBlock;
         if (this.xOffset == 0 && this.yOffset == 0 && this.zOffset == 0) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
             this.first = !this.first;
         } else {
             int x = targetBlock.getX();
@@ -96,14 +86,15 @@ public class RulerBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.coordinates == null || this.coordinates.lengthSq() == 0) {
-            messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow. Comparing to point 0,0,0 instead.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.warning"));
             return;
         }
-        messenger.sendMessage(ChatColor.BLUE + "Format = (second coord - first coord)");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.format"));
         BlockVector3 targetBlock = getTargetBlock();
-        messenger.sendMessage(ChatColor.AQUA + "X change: " + (targetBlock.getX() - this.coordinates.getX()));
-        messenger.sendMessage(ChatColor.AQUA + "Y change: " + (targetBlock.getY() - this.coordinates.getY()));
-        messenger.sendMessage(ChatColor.AQUA + "Z change: " + (targetBlock.getZ() - this.coordinates.getZ()));
+
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.x-change", (targetBlock.getX() - this.coordinates.getX())));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.y-change", (targetBlock.getY() - this.coordinates.getY())));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.z-change", (targetBlock.getZ() - this.coordinates.getZ())));
         double distance = Math.round(targetBlock
                 .subtract(this.coordinates)
                 .length() * 100) / 100.0;
@@ -111,8 +102,8 @@ public class RulerBrush extends AbstractBrush {
                 Math.abs(targetBlock.getX() - this.coordinates.getX()),
                 Math.abs(targetBlock.getY() - this.coordinates.getY())
         ), Math.abs(targetBlock.getZ() - this.coordinates.getZ()))) + 1) * 100) / 100.0;
-        messenger.sendMessage(ChatColor.AQUA + "Euclidean distance = " + distance);
-        messenger.sendMessage(ChatColor.AQUA + "Block distance = " + blockDistance);
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.euclidean-distance", distance));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.block-distance", blockDistance));
     }
 
     @Override
@@ -120,6 +111,9 @@ public class RulerBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .patternMessage()
+                .message(Caption.of("voxelsniper.brush.ruler.set-x-offset", this.xOffset))
+                .message(Caption.of("voxelsniper.brush.ruler.set-y-offset", this.yOffset))
+                .message(Caption.of("voxelsniper.brush.ruler.set-z-offset", this.zOffset))
                 .send();
     }
 

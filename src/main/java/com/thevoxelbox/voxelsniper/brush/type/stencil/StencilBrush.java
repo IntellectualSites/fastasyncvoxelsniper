@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -9,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,12 +34,15 @@ import java.util.stream.Stream;
  */
 public class StencilBrush extends AbstractBrush {
 
+    private static final String NO_FILE_LOADED = "NoFileLoaded";
     private static final int DEFAULT_PASTE_OPTION = 1;
+    private static final int DEFAULT_MAX_AREA_VOLUME = 5_000_000;
+    private static final int DEFAULT_MAX_SAVE_VOLUME = 50_000;
 
     private final int[] firstPoint = new int[3];
     private final int[] secondPoint = new int[3];
     private final int[] pastePoint = new int[3];
-    private String filename = "NoFileLoaded";
+    private String filename = NO_FILE_LOADED;
     private short x;
     private short z;
     private short y;
@@ -64,10 +67,7 @@ public class StencilBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Stencil Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b st (full|fill|replace) [s] -- Loads the specified stencil s. " +
-                    "Full/fill/replace must come first. Full = paste all blocks, fill = paste only into air blocks, replace = " +
-                    "paste full blocks in only, but replace anything in their way.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.info"));
         } else {
             byte pasteOption;
             byte pasteParam;
@@ -86,7 +86,7 @@ public class StencilBrush extends AbstractBrush {
                 pasteParam = 0;
             }
             if (parameters.length != 1 + pasteParam) {
-                messenger.sendMessage(ChatColor.RED + "Missing arguments, this command expects more.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
                 return;
             }
 
@@ -95,13 +95,13 @@ public class StencilBrush extends AbstractBrush {
                 this.filename = parameters[pasteParam];
                 File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + this.filename + ".vstencil");
                 if (file.exists()) {
-                    messenger.sendMessage(ChatColor.RED + "Stencil '" + this.filename + "' exists and was loaded. Make sure you are using gunpowder if you do not want any chance of overwriting the file.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.loaded", this.filename));
                 } else {
-                    messenger.sendMessage(ChatColor.AQUA + "Stencil '" + this.filename + "' does not exist. Ready to be saved to, but cannot be pasted.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.missing", this.filename));
                 }
             } catch (RuntimeException exception) {
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.wrong-stencil-name"));
                 exception.printStackTrace();
-                messenger.sendMessage(ChatColor.RED + "You need to type a stencil name.");
             }
         }
     }
@@ -123,28 +123,37 @@ public class StencilBrush extends AbstractBrush {
             this.firstPoint[0] = targetBlock.getX();
             this.firstPoint[1] = targetBlock.getZ();
             this.firstPoint[2] = targetBlock.getY();
-            messenger.sendMessage(ChatColor.GRAY + "First point");
-            messenger.sendMessage("X:" + this.firstPoint[0] + " Z:" + this.firstPoint[1] + " Y:" + this.firstPoint[2]);
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.coordinates", this.firstPoint[0], this.firstPoint[1],
+                    this.firstPoint[2]
+            ));
             this.point = 2;
         } else if (this.point == 2) {
             this.secondPoint[0] = targetBlock.getX();
             this.secondPoint[1] = targetBlock.getZ();
             this.secondPoint[2] = targetBlock.getY();
             if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(
-                    this.firstPoint[2] - this.secondPoint[2])) > 5000000) {
-                messenger.sendMessage(ChatColor.DARK_RED + "Area selected is too large. (Limit is 5,000,000 blocks)");
+                    this.firstPoint[2] - this.secondPoint[2])) > DEFAULT_MAX_AREA_VOLUME) {
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", DEFAULT_MAX_AREA_VOLUME));
                 this.point = 1;
             } else {
-                messenger.sendMessage(ChatColor.GRAY + "Second point");
-                messenger.sendMessage("X:" + this.secondPoint[0] + " Z:" + this.secondPoint[1] + " Y:" + this.secondPoint[2]);
+                messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
+                messenger.sendMessage(Caption.of(
+                        "voxelsniper.brush.stencil.coordinates",
+                        this.secondPoint[0],
+                        this.secondPoint[1],
+                        this.secondPoint[2]
+                ));
                 this.point = 3;
             }
         } else if (this.point == 3) {
             this.pastePoint[0] = targetBlock.getX();
             this.pastePoint[1] = targetBlock.getZ();
             this.pastePoint[2] = targetBlock.getY();
-            messenger.sendMessage(ChatColor.GRAY + "Paste Reference point");
-            messenger.sendMessage("X:" + this.pastePoint[0] + " Z:" + this.pastePoint[1] + " Y:" + this.pastePoint[2]);
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.paste-point"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.coordinates", this.pastePoint[0], this.pastePoint[1],
+                    this.pastePoint[2]
+            ));
             this.point = 1;
             this.stencilSave(snipe);
         }
@@ -157,8 +166,8 @@ public class StencilBrush extends AbstractBrush {
 
     private void stencilPaste(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.filename.matches("NoFileLoaded")) {
-            messenger.sendMessage(ChatColor.RED + "You did not specify a filename. This is required.");
+        if (this.filename.matches(NO_FILE_LOADED)) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
             return;
         }
         File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + this.filename + ".vstencil");
@@ -172,6 +181,7 @@ public class StencilBrush extends AbstractBrush {
                 this.zRef = in.readShort();
                 this.yRef = in.readShort();
                 int numRuns = in.readInt();
+                int volume = this.x * this.y * this.z;
                 int currX = -this.xRef; // so if your ref point is +5 x, you want to start pasting -5 blocks from the clicked point (the reference) to get the
                 // corner, for example.
                 int currZ = -this.zRef;
@@ -325,13 +335,14 @@ public class StencilBrush extends AbstractBrush {
                         }
                     }
                 }
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
                 exception.printStackTrace();
             }
         } else {
-            messenger.sendMessage(ChatColor.RED + "You need to type a stencil name / your specified stencil does not exist.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.wrong-stencil-name"));
         }
     }
 
@@ -347,6 +358,7 @@ public class StencilBrush extends AbstractBrush {
             this.x = (short) (Math.abs((this.firstPoint[0] - this.secondPoint[0])) + 1);
             this.z = (short) (Math.abs((this.firstPoint[1] - this.secondPoint[1])) + 1);
             this.y = (short) (Math.abs((this.firstPoint[2] - this.secondPoint[2])) + 1);
+            int volume = this.x * this.y * this.z;
             this.xRef = (short) ((this.firstPoint[0] > this.secondPoint[0])
                     ? (this.pastePoint[0] - this.secondPoint[0])
                     : (this.pastePoint[0] - this.firstPoint[0]));
@@ -357,7 +369,7 @@ public class StencilBrush extends AbstractBrush {
                     ? (this.pastePoint[2] - this.secondPoint[2])
                     : (this.pastePoint[2] - this.firstPoint[2]));
             if ((this.x * this.y * this.z) > 50000) {
-                messenger.sendMessage(ChatColor.AQUA + "Volume exceeds maximum limit.");
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", DEFAULT_MAX_SAVE_VOLUME));
                 return;
             }
             createParentDirs(file);
@@ -372,7 +384,9 @@ public class StencilBrush extends AbstractBrush {
             out.writeShort(this.xRef);
             out.writeShort(this.zRef);
             out.writeShort(this.yRef);
-            messenger.sendMessage(ChatColor.AQUA + "Volume: " + this.x * this.z * this.y + " blockPositionX:" + blockPositionX + " blockPositionZ:" + blockPositionZ + " blockPositionY:" + blockPositionY);
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.volume-coordinates", this.x * this.z * this.y,
+                    blockPositionX, blockPositionZ, blockPositionY
+            ));
             BlockState[] blockDataArray = new BlockState[this.x * this.z * this.y];
             byte[] runSizeArray = new byte[this.x * this.z * this.y];
             BlockState lastBlockData = getBlock(blockPositionX, blockPositionY, blockPositionZ);
@@ -407,10 +421,10 @@ public class StencilBrush extends AbstractBrush {
                 }
                 out.writeUTF(blockDataArray[i].getAsString());
             }
-            messenger.sendMessage(ChatColor.BLUE + "Saved as '" + this.filename + "'.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.saved", this.filename, volume));
             out.close();
         } catch (IOException exception) {
-            messenger.sendMessage(ChatColor.RED + "Something went wrong.");
+            messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
             exception.printStackTrace();
         }
     }
@@ -431,7 +445,7 @@ public class StencilBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message("File loaded: " + this.filename)
+                .message(Caption.of("voxelsniper.brush.stencil.loaded", this.filename))
                 .send();
     }
 

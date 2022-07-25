@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,16 +24,16 @@ public class DefaultExecutor implements CommandExecutor {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            sender.sendMessage(ChatColor.RED + "Sniper not found.");
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
             return;
         }
         Toolkit toolkit = sniper.getCurrentToolkit();
         if (toolkit == null) {
-            sender.sendMessage(ChatColor.RED + "Current toolkit not found.");
+            sniper.print(Caption.of("voxelsniper.brush.command.missing-toolkit"));
             return;
         }
         toolkit.reset();
-        sender.sendMessage(ChatColor.AQUA + "Brush settings reset to their default values.");
+        sniper.print(Caption.of("voxelsniper.brush.command.default.reset"));
     }
 
 }

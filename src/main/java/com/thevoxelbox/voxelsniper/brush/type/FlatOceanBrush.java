@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,8 +31,7 @@ public class FlatOceanBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GREEN + "/b fo yo [n] -- Sets the level to which the water will rise to n.");
-            messenger.sendMessage(ChatColor.GREEN + "/b fo yl [n] -- Sets the level to which the ocean floor will rise to n.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.info"));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("yo")) {
@@ -42,9 +41,9 @@ public class FlatOceanBrush extends AbstractBrush {
                             newWaterLevel = this.floorLevel + 1;
                         }
                         this.waterLevel = newWaterLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Water level set to: " + this.waterLevel);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.set-water-level", this.waterLevel));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("yl")) {
                     EditSession editSession = getEditSession();
@@ -58,16 +57,15 @@ public class FlatOceanBrush extends AbstractBrush {
                             }
                         }
                         this.floorLevel = newFloorLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.set-ocean-level", this.floorLevel));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -134,8 +132,8 @@ public class FlatOceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Water level set to: " + this.waterLevel)
-                .message(ChatColor.GREEN + "Ocean floor level set to: " + this.floorLevel)
+                .message(Caption.of("voxelsniper.brush.flat-ocean.set-water-level", this.waterLevel))
+                .message(Caption.of("voxelsniper.brush.flat-ocean.set-ocean-level", this.floorLevel))
                 .send();
     }
 

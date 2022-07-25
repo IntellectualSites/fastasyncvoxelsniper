@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -7,7 +8,6 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.ChatColor;
 
 public class ShellVoxelBrush extends AbstractBrush {
 
@@ -94,7 +94,7 @@ public class ShellVoxelBrush extends AbstractBrush {
             }
         }
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.shell.completed"));
     }
 
     @Override

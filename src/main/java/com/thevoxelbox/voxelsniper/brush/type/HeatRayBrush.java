@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -13,7 +14,6 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 
@@ -83,42 +83,38 @@ public class HeatRayBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Heat Ray Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr oct [n] -- Sets octave parameter to n for the noise generator.");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr amp [n] -- Sets amplitude parameter to n for the noise generator.");
-            messenger.sendMessage(ChatColor.AQUA + "/b hr freq [n] -- Sets frequency parameter to n for the noise generator.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.info"));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("oct")) {
                     Integer octaves = NumericParser.parseInteger(parameters[1]);
                     if (octaves != null) {
                         this.octaves = octaves;
-                        messenger.sendMessage(ChatColor.GREEN + "Octaves: " + this.octaves);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-octaves", this.octaves));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("amp")) {
                     Double amplitude = NumericParser.parseDouble(parameters[1]);
                     if (amplitude != null) {
                         this.amplitude = amplitude;
-                        messenger.sendMessage(ChatColor.GREEN + "Amplitude: " + this.amplitude);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-amplitude", this.amplitude));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("freq")) {
                     Double frequency = NumericParser.parseDouble(parameters[1]);
                     if (frequency != null) {
                         this.frequency = frequency;
-                        messenger.sendMessage(ChatColor.GREEN + "Frequency: " + this.frequency);
+                        messenger.sendMessage(Caption.of("vvoxelsniper.brush.heat-ray.set-frequency", this.frequency));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -267,9 +263,9 @@ public class HeatRayBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.GREEN + "Octaves: " + this.octaves)
-                .message(ChatColor.GREEN + "Amplitude: " + this.amplitude)
-                .message(ChatColor.GREEN + "Frequency: " + this.frequency)
+                .message(Caption.of("voxelsniper.brush.heat-ray.set-octaves", this.octaves))
+                .message(Caption.of("voxelsniper.brush.heat-ray.set-amplitude", this.amplitude))
+                .message(Caption.of("vvoxelsniper.brush.heat-ray.set-frequency", this.frequency))
                 .send();
     }
 

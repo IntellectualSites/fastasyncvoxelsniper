@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
@@ -17,7 +18,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -64,12 +64,12 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                         ).getType());
 
                 if (targetBlockType == null) {
-                    sender.sendMessage(ChatColor.RED + "You have selected an invalid block type.");
+                    sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
                     return;
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                         targetBlockType.getResource())) {
-                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + targetBlockType.getId() + ".");
+                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", targetBlockType.getId()));
                     return;
                 }
 
@@ -87,14 +87,14 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                 Pattern pattern = plugin.getPatternParser().parseFromInput(argument, parserContext);
 
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(argument)) {
-                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + argument + ".");
+                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", argument));
                     return;
                 }
 
                 toolkitProperties.setPattern(new BrushPattern(pattern, argument));
                 messenger.sendPatternMessage(toolkitProperties.getPattern());
             } catch (InputParseException e) {
-                sender.sendMessage(ChatColor.RED + "You have entered an invalid pattern: " + arguments[0]);
+                sniper.print(Caption.of("voxelsniper.brush.command.voxel-executor.invalid-pattern", arguments[0]));
             }
         }
     }

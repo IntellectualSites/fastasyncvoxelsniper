@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,24 +40,24 @@ public class CopyPastaBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "CopyPasta Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b cp air -- Toggles include (default) or exclude air during paste.");
-            messenger.sendMessage(ChatColor.AQUA + "/b cp [0|90|180|270] -- Toggles rotation (0 default)");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("air")) {
                     this.pasteAir = !this.pasteAir;
-                    messenger.sendMessage(ChatColor.GOLD + "Paste air set to: " + this.pasteAir);
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.copy-pasta.set-paste-air",
+                            VoxelSniperText.getStatus(this.pasteAir)
+                    ));
                 } else if (Stream.of("0", "90", "180", "270")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     this.pivot = Integer.parseInt(firstParameter);
-                    messenger.sendMessage(ChatColor.GOLD + "Pivot angle set to: " + this.pivot);
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.set-pivot", this.pivot));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -78,13 +79,13 @@ public class CopyPastaBrush extends AbstractBrush {
             this.firstPoint[0] = targetBlock.getX();
             this.firstPoint[1] = targetBlock.getY();
             this.firstPoint[2] = targetBlock.getZ();
-            messenger.sendMessage(ChatColor.GRAY + "First point");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
             this.points = 1;
         } else if (this.points == 1) {
             this.secondPoint[0] = targetBlock.getX();
             this.secondPoint[1] = targetBlock.getY();
             this.secondPoint[2] = targetBlock.getZ();
-            messenger.sendMessage(ChatColor.GRAY + "Second point");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
             this.points = 2;
         } else {
             this.firstPoint = new int[3];
@@ -93,7 +94,7 @@ public class CopyPastaBrush extends AbstractBrush {
             this.blockArray = new BlockType[1];
             this.dataArray = new BlockState[1];
             this.points = 0;
-            messenger.sendMessage(ChatColor.GRAY + "Points cleared.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.points-cleared"));
         }
     }
 
@@ -110,10 +111,10 @@ public class CopyPastaBrush extends AbstractBrush {
                 this.pastePoint[2] = targetBlock.getZ();
                 doPasta(snipe);
             } else {
-                messenger.sendMessage(ChatColor.RED + "Error");
+                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
             }
         } else {
-            messenger.sendMessage(ChatColor.RED + "You must select exactly two points.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.invalid-points"));
         }
     }
 
@@ -139,9 +140,9 @@ public class CopyPastaBrush extends AbstractBrush {
                     }
                 }
             }
-            messenger.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks copied.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.copied", this.numBlocks));
         } else {
-            messenger.sendMessage(ChatColor.RED + "Copy area too big: " + this.numBlocks + "(Limit: " + this.blockLimit + ")");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.invalid-copy", this.numBlocks, this.blockLimit));
         }
     }
 
@@ -182,15 +183,15 @@ public class CopyPastaBrush extends AbstractBrush {
             }
         }
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.AQUA + String.valueOf(this.numBlocks) + " blocks pasted.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.pasted", this.numBlocks));
     }
 
     @Override
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GOLD + "Paste air: " + this.pasteAir)
-                .message(ChatColor.GOLD + "Pivot angle: " + this.pivot)
+                .message(Caption.of("voxelsniper.brush.copy-pasta.set-paste-air", VoxelSniperText.getStatus(this.pasteAir)))
+                .message(Caption.of("voxelsniper.brush.copy-pasta.set-pivot", this.pivot))
                 .send();
     }
 

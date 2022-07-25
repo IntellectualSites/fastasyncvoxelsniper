@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -26,47 +27,49 @@ public class CylinderBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Cylinder Brush Parameters:");
-            messenger.sendMessage(ChatColor.DARK_AQUA + "/b c [true|false] -- Uses a true circle algorithm instead of the " +
-                    "skinnier version with classic sniper nubs. (false is default)");
-            messenger.sendMessage(ChatColor.AQUA + "/b c h [n] -- Sets the cylinder v.voxelHeight to n. Default is 1.");
-            messenger.sendMessage(ChatColor.BLUE + "/b c c [n] -- Sets the origin of the cylinder compared to the target block " +
-                    "to n. Positive numbers will move the cylinder upward, negative will move it downward.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.cylindern.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.trueCircle = 0.5;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.trueCircle = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.parameter.true-circle",
+                            VoxelSniperText.getStatus(false)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("h")) {
                     Integer height = NumericParser.parseInteger(parameters[1]);
                     if (height != null) {
                         toolkitProperties.setVoxelHeight(height);
-                        messenger.sendMessage(ChatColor.AQUA + "Cylinder v.voxelHeight set to: " + toolkitProperties.getVoxelHeight());
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.cylinder.set-voxel-height",
+                                toolkitProperties.getVoxelHeight()
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("c")) {
                     Integer center = NumericParser.parseInteger(parameters[1]);
                     if (center != null) {
                         toolkitProperties.setCylinderCenter(center);
-                        messenger.sendMessage(ChatColor.AQUA + "Cylinder origin set to: " + toolkitProperties.getCylinderCenter());
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.cylinder.set-origin",
+                                toolkitProperties.getCylinderCenter()
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -105,22 +108,22 @@ public class CylinderBrush extends AbstractPerformerBrush {
         int minHeight = editSession.getMinY();
         if (yStartingPoint < minHeight) {
             yStartingPoint = minHeight;
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-start"));
         } else {
             int maxHeight = editSession.getMaxY();
             if (yStartingPoint > maxHeight) {
                 yStartingPoint = maxHeight;
-                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+                messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-start"));
             }
         }
         if (yEndPoint < minHeight) {
             yEndPoint = minHeight;
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-end"));
         } else {
             int maxHeight = editSession.getMaxY();
             if (yEndPoint > maxHeight) {
                 yEndPoint = maxHeight;
-                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+                messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-end"));
             }
         }
         int blockX = targetBlock.getX();
@@ -172,6 +175,7 @@ public class CylinderBrush extends AbstractPerformerBrush {
                 .brushSizeMessage()
                 .voxelHeightMessage()
                 .cylinderCenterMessage()
+                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
                 .send();
     }
 

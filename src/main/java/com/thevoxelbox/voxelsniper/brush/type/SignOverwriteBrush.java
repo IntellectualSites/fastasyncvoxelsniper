@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.internal.util.DeprecationUtil;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -9,6 +10,7 @@ import com.sk89q.worldedit.world.block.BaseBlock;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
 
@@ -50,50 +52,33 @@ public class SignOverwriteBrush extends AbstractBrush {
         boolean textChanged = false;
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "The arrow writes the internal line buffer to the tearget " +
-                    "sign.");
-            messenger.sendMessage(ChatColor.DARK_AQUA + "The gunpowder reads the text of the target sign into the " +
-                    "internal buffer.");
-            messenger.sendMessage(ChatColor.DARK_AQUA + "Colors can be used using the \"&\" symbol.");
-            messenger.sendMessage(ChatColor.GOLD + "Sign Overwrite Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio 1 [set|toggle] (...) -- Sets the text of the first sign line. " +
-                    "(e.g. /b sio 1 set Blah Blah | /b sio 1 toggle)");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio 2 [set|toggle] (...) -- Sets the text of the second sign line. " +
-                    "(e.g. /b sio 2 set Blah Blah | /b sio 2 toggle");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio 3 [set|toggle] (...) -- Sets the text of the third sign line. " +
-                    "(e.g. /b sio 3 set Blah Blah | /b sio 3 toggle");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio 4 [set|toggle] (...) -- Sets the text of the fourth sign line. " +
-                    "(e.g. /b sio 4 set Blah Blah | /b sio 4 toggle");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio clear -- Clears the line buffer. (Alias: /b sio c)");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio clearall -- Clears the line buffer and sets all lines back to " +
-                    "enabled (Alias: /b sio ca)");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio multiple [true|false] -- Enables or disables ranged mode. (see Wiki " +
-                    "for more information) (Alias: /b sio m [true|false])");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio save [n] -- Save you buffer to a file named n. (Alias: /b sio s [n])");
-            messenger.sendMessage(ChatColor.AQUA + "/b sio open [n] -- Loads a buffer from a file named n. (Alias: /b sio o [n])");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("clear") || firstParameter.equalsIgnoreCase("c")) {
                     clearBuffer();
-                    messenger.sendMessage(ChatColor.BLUE + "Internal text buffer cleard.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared"));
                 } else if (firstParameter.equalsIgnoreCase("clearall") || firstParameter.equalsIgnoreCase("ca")) {
                     clearBuffer();
                     resetStates();
-                    messenger.sendMessage(ChatColor.BLUE + "Internal text buffer cleard and states back to enabled.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared-reset"));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
                 if (Stream.of("1", "2", "3", "4")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     String secondParameter = parameters[1];
                     Integer lineNumber = NumericParser.parseInteger(firstParameter);
+                    if (lineNumber == null) {
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", firstParameter));
+                        return;
+                    }
                     int lineIndex = lineNumber - 1;
 
                     if (secondParameter.equalsIgnoreCase("set")) {
                         if (parameters.length < 3) {
-                            messenger.sendMessage(ChatColor.RED + "Missing arguments, this command expects more.");
+                            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
                             return;
                         }
 
@@ -110,27 +95,41 @@ public class SignOverwriteBrush extends AbstractBrush {
 
                         // Check the line length and cut the text if needed.
                         if (newTextBuilder.length() > MAX_SIGN_LINE_LENGTH) {
-                            messenger.sendMessage(ChatColor.RED + "Warning: Text on line " + lineNumber + " exceeds the maximum " +
-                                    "line length of " + MAX_SIGN_LINE_LENGTH + " characters. Your text will be cut.");
+                            messenger.sendMessage(Caption.of(
+                                    "voxelsniper.brush.sign-overwrite.invalid-length",
+                                    lineNumber,
+                                    MAX_SIGN_LINE_LENGTH
+                            ));
                             newTextBuilder = new StringBuilder(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH));
                         }
                         String formattedText = ChatColor.translateAlternateColorCodes('&', newTextBuilder.toString());
                         this.signTextLines[lineIndex] = formattedText;
-                        messenger.sendMessage(ChatColor.AQUA + "Line " + lineNumber + " set to: " + ChatColor.RESET + formattedText);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.line-set", lineNumber, formattedText));
                     } else if (secondParameter.equalsIgnoreCase("toggle")) {
                         this.signLinesEnabled[lineIndex] = !this.signLinesEnabled[lineIndex];
-                        messenger.sendMessage(ChatColor.BLUE + "Line " + firstParameter + " is " + ChatColor.GREEN +
-                                (this.signLinesEnabled[lineIndex] ? "enabled" : "disabled") + ChatColor.BLUE + ".");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.sign-overwrite.line-status",
+                                VoxelSniperText.getStatus(this.signLinesEnabled[lineIndex])
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                     }
                 } else if (firstParameter.equalsIgnoreCase("multiple") || firstParameter.equalsIgnoreCase("m")) {
                     this.rangedMode = Boolean.parseBoolean(parameters[1]);
-                    messenger.sendMessage(ChatColor.BLUE + "Ranged mode is " + ChatColor.GREEN + (this.rangedMode ? "enabled" :
-                            "disabled") + ChatColor.BLUE + ".");
+
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.sign-overwrite.set-ranged-mode",
+                            VoxelSniperText.getStatus(this.rangedMode)
+                    ));
                     if (this.rangedMode) {
-                        messenger.sendMessage(ChatColor.GREEN + "Brush size set to: " + ChatColor.RED + toolkitProperties.getBrushSize());
-                        messenger.sendMessage(ChatColor.AQUA + "Brush height set to: " + ChatColor.RED + toolkitProperties.getVoxelHeight());
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.sign-overwrite.brush-size",
+                                toolkitProperties.getBrushSize()
+                        ));
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.sign-overwrite.brush-height",
+                                toolkitProperties.getVoxelHeight()
+                        ));
                     }
                 } else if (firstParameter.equalsIgnoreCase("save") || firstParameter.equalsIgnoreCase("s")) {
                     String fileName = parameters[1];
@@ -139,7 +138,7 @@ public class SignOverwriteBrush extends AbstractBrush {
                     String fileName = parameters[1];
                     textChanged = loadBufferFromFile(snipe, fileName);
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             }
         }
@@ -199,7 +198,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             displayBuffer(snipe);
         } else {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Target block is not a sign.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.invalid-block"));
         }
     }
 
@@ -231,7 +230,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             setSignText(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), block);
         } else {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Target block is not a sign.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.invalid-block"));
         }
     }
 
@@ -263,16 +262,20 @@ public class SignOverwriteBrush extends AbstractBrush {
         }
         if (!signFound) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Did not found any sign in selection box.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.no-sign"));
         }
     }
 
     private void displayBuffer(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.BLUE + "Buffer text set to: ");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.set-buffer"));
         for (int index = 0; index < this.signTextLines.length; index++) {
-            messenger.sendMessage((this.signLinesEnabled[index] ? ChatColor.GREEN + "(E): " : ChatColor.RED + "(D): ")
-                    + ChatColor.GRAY + this.signTextLines[index]);
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.sign-overwrite.buffer-line",
+                    index + 1,
+                    VoxelSniperText.getStatus(this.signLinesEnabled[index]),
+                    this.signTextLines[index]
+            ));
         }
     }
 
@@ -283,7 +286,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
         if (store.exists()) {
-            messenger.sendMessage(ChatColor.RED + "This file already exists.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-exists"));
             return;
         }
         try {
@@ -296,9 +299,9 @@ public class SignOverwriteBrush extends AbstractBrush {
             }
             outStream.close();
             outFile.close();
-            messenger.sendMessage(ChatColor.BLUE + "File saved successfully.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-saved"));
         } catch (IOException exception) {
-            messenger.sendMessage(ChatColor.RED + "Failed to save file. " + exception.getMessage());
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-save-failed", exception.getMessage()));
             exception.printStackTrace();
         }
     }
@@ -312,7 +315,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
         if (!store.exists()) {
-            messenger.sendMessage(ChatColor.RED + "This file does not exist.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-missing"));
             return false;
         }
         try {
@@ -324,10 +327,10 @@ public class SignOverwriteBrush extends AbstractBrush {
             }
             inStream.close();
             inFile.close();
-            messenger.sendMessage(ChatColor.BLUE + "File loaded successfully.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-loaded"));
             return true;
         } catch (IOException exception) {
-            messenger.sendMessage(ChatColor.RED + "Failed to load file. " + exception.getMessage());
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-load-failed", exception.getMessage()));
             exception.printStackTrace();
             return false;
         }
@@ -358,15 +361,18 @@ public class SignOverwriteBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendBrushNameMessage();
-        messenger.sendMessage(ChatColor.BLUE + "Buffer text: ");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.set-buffer"));
         for (int index = 0; index < this.signTextLines.length; index++) {
-            messenger.sendMessage((this.signLinesEnabled[index]
-                    ? ChatColor.GREEN + "(E): "
-                    : ChatColor.RED + "(D): ") + ChatColor.GRAY + this.signTextLines[index]);
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.sign-overwrite.buffer-line",
+                    index + 1,
+                    VoxelSniperText.getStatus(this.signLinesEnabled[index]),
+                    this.signTextLines[index]
+            ));
         }
-        messenger.sendMessage(ChatColor.BLUE + String.format(
-                "Ranged mode is %s",
-                ChatColor.GREEN + (this.rangedMode ? "enabled" : "disabled")
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.set-ranged-mode",
+                VoxelSniperText.getStatus(this.rangedMode)
         ));
         if (this.rangedMode) {
             messenger.sendBrushSizeMessage();

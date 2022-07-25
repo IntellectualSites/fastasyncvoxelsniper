@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -30,7 +31,7 @@ public class DomeBrush extends AbstractBrush {
         int voxelHeight = toolkitProperties.getVoxelHeight();
         if (voxelHeight == 0) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage("VoxelHeight must not be 0.");
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-voxel-height", 0));
             return;
         }
         int absoluteHeight = Math.abs(voxelHeight);

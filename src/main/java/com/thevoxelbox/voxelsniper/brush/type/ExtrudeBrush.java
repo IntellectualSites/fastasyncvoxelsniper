@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,23 +23,23 @@ public class ExtrudeBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Extrude Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b ex [true|false] -- Uses a true circle algorithm instead of the skinnier " +
-                    "version with classic sniper nubs. (false is default)");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.extrude.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.trueCircle = 0.5;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.trueCircle = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.parameter.true-circle",
+                            VoxelSniperText.getStatus(false)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -203,9 +204,7 @@ public class ExtrudeBrush extends AbstractBrush {
                 .brushSizeMessage()
                 .voxelHeightMessage()
                 .voxelListMessage()
-                .message(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
-                        ? "True circle mode ON"
-                        : "True circle mode OFF"))
+                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
                 .send();
     }
 

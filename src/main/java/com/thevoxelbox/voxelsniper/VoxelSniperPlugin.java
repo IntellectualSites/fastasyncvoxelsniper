@@ -2,6 +2,8 @@ package com.thevoxelbox.voxelsniper;
 
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
+import com.sk89q.worldedit.util.concurrency.LazyReference;
+import com.sk89q.worldedit.util.translation.TranslationManager;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -16,6 +18,7 @@ import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.util.io.VoxelSniperResourceLoader;
 import io.papermc.lib.PaperLib;
 import org.apache.logging.log4j.Logger;
 import org.bstats.bukkit.Metrics;
@@ -44,6 +47,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
     public static boolean updateCheckFailed;
     private static String currentVersionTitle = "";
     private VoxelSniperConfig voxelSniperConfig;
+    private final LazyReference<TranslationManager> translationManager =
+            LazyReference.from(() -> new TranslationManager(
+                    new VoxelSniperResourceLoader(this))
+            );
     private BrushRegistry brushRegistry;
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
@@ -176,6 +183,16 @@ public class VoxelSniperPlugin extends JavaPlugin {
      */
     public VoxelSniperConfig getVoxelSniperConfig() {
         return this.voxelSniperConfig;
+    }
+
+    /**
+     * Return the translation manager.
+     *
+     * @return the translation manager
+     * @since TODO
+     */
+    public TranslationManager getTranslationManager() {
+        return translationManager.getValue();
     }
 
     /**

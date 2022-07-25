@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -8,7 +9,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,32 +25,31 @@ public class DrainBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Drain Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b drain [true|false] -- Uses a true sphere algorithm instead of the " +
-                    "skinnier version with classic sniper nubs. Default is false.");
-            messenger.sendMessage(ChatColor.AQUA + "/b drain d -- Toggles disc drain mode, as opposed to a ball drain mode.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.drain.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.trueCircle = 0.5;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.trueCircle = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.parameter.true-circle",
+                            VoxelSniperText.getStatus(false)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("d")) {
                     if (this.disc) {
                         this.disc = false;
-                        messenger.sendMessage(ChatColor.AQUA + "Disc drain mode OFF");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(false)));
                     } else {
                         this.disc = true;
-                        messenger.sendMessage(ChatColor.AQUA + "Disc drain mode ON");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(true)));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -138,10 +138,8 @@ public class DrainBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.AQUA + (Double.compare(this.trueCircle, 0.5) == 0
-                        ? "True circle mode ON"
-                        : "True circle mode OFF"))
-                .message(ChatColor.AQUA + (this.disc ? "Disc drain mode ON" : "Disc drain mode OFF"))
+                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
+                .message(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(this.disc)))
                 .send();
     }
 

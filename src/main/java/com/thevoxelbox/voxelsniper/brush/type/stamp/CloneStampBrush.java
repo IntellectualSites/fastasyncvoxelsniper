@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,44 +30,50 @@ public class CloneStampBrush extends AbstractStampBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Clone / Stamp Cylinder Brush Parameters:");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs f -- Activates Fill mode.");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs a -- Activates No-Air mode.");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs d -- Activates Default mode.");
-            messenger.sendMessage(ChatColor.GREEN + "/b cs c [n] -- Sets center to n.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.clone-stamp.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("a")) {
                     setStamp(StampType.NO_AIR);
                     reSort();
-                    messenger.sendMessage(ChatColor.AQUA + "No-Air stamp brush activated.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.clone-stamp.set-stamp-type",
+                            StampType.NO_AIR.getFullName()
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("f")) {
                     setStamp(StampType.FILL);
                     reSort();
-                    messenger.sendMessage(ChatColor.AQUA + "Fill stamp brush activated.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.clone-stamp.set-stamp-type",
+                            StampType.FILL.getFullName()
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("d")) {
                     setStamp(StampType.DEFAULT);
                     reSort();
-                    messenger.sendMessage(ChatColor.AQUA + "Default stamp brush activated.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.clone-stamp.set-stamp-type",
+                            StampType.DEFAULT.getFullName()
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("c")) {
                     Integer cylinderCenter = NumericParser.parseInteger(parameters[1]);
                     if (cylinderCenter != null) {
                         toolkitProperties.setCylinderCenter(cylinderCenter);
-                        messenger.sendMessage(ChatColor.BLUE + "Center set to: " + toolkitProperties.getCylinderCenter());
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.clone-stamp.set-center",
+                                toolkitProperties.getCylinderCenter()
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -108,22 +114,22 @@ public class CloneStampBrush extends AbstractStampBrush {
         int minHeight = editSession.getMinY();
         if (yStartingPoint < minHeight) {
             yStartingPoint = minHeight;
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-start"));
         } else {
             int maxHeight = editSession.getMaxY();
             if (yStartingPoint > maxHeight) {
                 yStartingPoint = maxHeight;
-                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world start position.");
+                messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-start"));
             }
         }
         if (yEndPoint < minHeight) {
             yEndPoint = minHeight;
-            messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-end"));
         } else {
             int maxHeight = editSession.getMaxY();
             if (yEndPoint > maxHeight) {
                 yEndPoint = maxHeight;
-                messenger.sendMessage(ChatColor.DARK_PURPLE + "Warning: off-world end position.");
+                messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-end"));
             }
         }
         double bSquared = Math.pow(brushSize, 2);
@@ -169,7 +175,7 @@ public class CloneStampBrush extends AbstractStampBrush {
                 }
             }
         }
-        messenger.sendMessage(ChatColor.GREEN + String.valueOf(this.clone.size()) + ChatColor.AQUA + " blocks copied successfully.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.clone-stamp.copied", this.clone.size()));
     }
 
     @Override
@@ -179,11 +185,10 @@ public class CloneStampBrush extends AbstractStampBrush {
                 .brushSizeMessage()
                 .voxelHeightMessage()
                 .cylinderCenterMessage()
-                .message(switch (this.stamp) {
-                    case DEFAULT -> ChatColor.LIGHT_PURPLE + "Default Stamp";
-                    case NO_AIR -> ChatColor.LIGHT_PURPLE + "No-Air Stamp";
-                    case FILL -> ChatColor.LIGHT_PURPLE + "Fill Stamp";
-                })
+                .message(Caption.of(
+                        "voxelsniper.brush.clone-stamp.set-stamp-type",
+                        this.stamp.getFullName()
+                ))
                 .send();
     }
 

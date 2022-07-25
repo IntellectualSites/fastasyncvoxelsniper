@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -7,8 +8,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,35 +34,47 @@ public class FillDownBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Fill Down Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b fd [true|false] -- Uses a true circle algorithm. Default is false.");
-            messenger.sendMessage(ChatColor.AQUA + "/b fd all -- Fills into liquids as well. (Default)");
-            messenger.sendMessage(ChatColor.AQUA + "/b fd some -- Fills only into air.");
-            messenger.sendMessage(ChatColor.AQUA + "/b fd e -- Fills into only existing blocks. (Toggle)");
-            messenger.sendMessage(ChatColor.AQUA + "/b fd y [n] -- Sets the min y to n. (Must be >= than " + getEditSession().getMinY() + ")");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.fill-down.info", getEditSession().getMinY()));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.trueCircle = 0.5;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.trueCircle = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.parameter.true-circle",
+                            VoxelSniperText.getStatus(false)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("all")) {
                     this.fillLiquid = true;
-                    messenger.sendMessage(ChatColor.AQUA + "Now filling liquids as well as air.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.fill-down.set-fill-all",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("some")) {
                     this.fillLiquid = false;
                     ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
                     toolkitProperties.resetReplacePattern();
-                    messenger.sendMessage(ChatColor.AQUA + "Now only filling air.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.fill-down.set-fill-some",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("e")) {
                     this.fromExisting = !this.fromExisting;
-                    messenger.sendMessage(ChatColor.AQUA + "Now filling down from " + (this.fromExisting
-                            ? "existing"
-                            : "all") + " blocks.");
+                    if (this.fromExisting) {
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.fill-down.set-fill-down-existing",
+                                VoxelSniperText.getStatus(true)
+                        ));
+                    } else {
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.fill-down.set-fill-down-all",
+                                VoxelSniperText.getStatus(true)
+                        ));
+                    }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("y")) {
@@ -70,14 +83,13 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         int minYMin = getEditSession().getMinY();
                         int minYMax = getEditSession().getMaxY();
                         this.minY = minY < minYMin ? minYMin : Math.min(minY, minYMax);
-                        messenger.sendMessage(ChatColor.AQUA + "Fill Down min y set to: " + this.minY);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.fill-down.set-min-y", this.minY));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -158,7 +170,21 @@ public class FillDownBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.GREEN + "Fill Down min y set to: " + this.minY)
+                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
+                .message(Caption.of("voxelsniper.performer-brush.fill-down.set-fill-all", VoxelSniperText.getStatus(fillLiquid)))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.fill-down.set-fill-some",
+                        VoxelSniperText.getStatus(!fillLiquid)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.fill-down.set-fill-down-existing",
+                        VoxelSniperText.getStatus(fromExisting)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.fill-down.set-fill-down-all",
+                        VoxelSniperText.getStatus(!fromExisting)
+                ))
+                .message(Caption.of("voxelsniper.performer-brush.fill-down.set-min-y", this.minY))
                 .send();
     }
 

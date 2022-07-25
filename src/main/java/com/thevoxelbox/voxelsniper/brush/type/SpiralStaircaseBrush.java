@@ -1,15 +1,16 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,27 +35,22 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Spiral Staircase Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/vh [n] -- Sets height to n.");
-            messenger.sendMessage(ChatColor.AQUA + "/v [b] -- Sets block/step/stair to b.");
-            messenger.sendMessage(ChatColor.AQUA + "/b sstair [c|cc] -- Sets the turning direction of staircase.");
-            messenger.sendMessage(ChatColor.AQUA + "/b sstair [n|e|s|w] -- Sets the opening direction of staircase.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.info"));
         } else {
             if (parameters.length == 1) {
                 if (Stream.of("c", "cc")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     this.sdirect = firstParameter;
-                    messenger.sendMessage(ChatColor.BLUE + "Staircase turns: " + this.sdirect);
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.set-turns", this.sdirect));
                 } else if (Stream.of("n", "e", "s", "w")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     this.sopen = firstParameter;
-                    messenger.sendMessage(ChatColor.BLUE + "Staircase opens: " + this.sopen);
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.set-opens", this.sopen));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -90,7 +86,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         int voxelHeight = toolkitProperties.getVoxelHeight();
         if (voxelHeight < 1) {
             toolkitProperties.setVoxelHeight(1);
-            messenger.sendMessage(ChatColor.RED + "VoxelHeight must be a natural number! Now set to 1.");
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-voxel-height", voxelHeight));
         }
         // Initialize array.
         int brushSize = toolkitProperties.getBrushSize();
@@ -354,16 +350,16 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                 .brushSizeMessage()
                 .patternMessage()
                 .voxelHeightMessage()
-                .message(ChatColor.BLUE + "Staircase type: " + getStairType(snipe).getName())
-                .message(ChatColor.BLUE + "Staircase turns: " + this.sdirect)
-                .message(ChatColor.BLUE + "Staircase opens: " + this.sopen)
+                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-type", getStairType(snipe).getFullName()))
+                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-turns", this.sdirect))
+                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-opens", this.sopen))
                 .send();
     }
 
     private enum StairType {
-        BLOCK("Block"),
-        STEP("Step"),
-        STAIR("Stair");
+        BLOCK("block"),
+        STEP("ttep"),
+        STAIR("stair");
 
         private final String name;
 
@@ -373,6 +369,10 @@ public class SpiralStaircaseBrush extends AbstractBrush {
 
         public String getName() {
             return name;
+        }
+
+        public TranslatableComponent getFullName() {
+            return Caption.of("voxelsniper.brush.spiral-staircase.type." + this.name);
         }
     }
 

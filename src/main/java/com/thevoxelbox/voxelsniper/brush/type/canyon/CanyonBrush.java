@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -8,7 +9,6 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,9 +39,7 @@ public class CanyonBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Canyon Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b ca y [n] -- Sets the y-level to which the land will be shifted down to n" +
-                    ".");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.canyon.info"));
         } else {
             if (parameters.length == 2) {
 
@@ -50,24 +48,27 @@ public class CanyonBrush extends AbstractBrush {
                     if (yLevel != null) {
                         if (yLevel < this.shiftLevelMin) {
                             yLevel = this.shiftLevelMin;
-                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer greater than or equal to" +
-                                    this.shiftLevelMax + ".");
+                            messenger.sendMessage(Caption.of(
+                                    "voxelsniper.error.invalid-number-greater-equal",
+                                    this.shiftLevelMin
+                            ));
                         } else if (yLevel > this.shiftLevelMax) {
                             yLevel = this.shiftLevelMax;
-                            messenger.sendMessage(ChatColor.RED + "Shift Level must be an integer less than or equal to " +
-                                    this.shiftLevelMin + ".");
+                            messenger.sendMessage(Caption.of(
+                                    "voxelsniper.error.invalid-number-lower-equal",
+                                    this.shiftLevelMax
+                            ));
                         }
                         this.yLevel = yLevel;
-                        messenger.sendMessage(ChatColor.GREEN + "Shift Level set to: " + this.yLevel);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.canyon.set-shift-level", this.yLevel));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -124,7 +125,7 @@ public class CanyonBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Shift Level set to: " + this.yLevel)
+                .message(Caption.of("voxelsniper.brush.canyon.set-shift-level", this.yLevel))
                 .send();
     }
 

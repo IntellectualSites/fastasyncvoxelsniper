@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
@@ -8,7 +9,6 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,18 +31,22 @@ public class ShellSetBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(targetBlock, getEditSession().getWorld(), snipe)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 lastBlock = getLastBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(lastBlock, getEditSession().getWorld(), snipe)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
@@ -55,7 +59,7 @@ public class ShellSetBrush extends AbstractBrush {
             return true;
         } else {
             if (!this.world.getName().equals(world.getName())) {
-                messenger.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.different-world"));
                 this.block = null;
                 return true;
             }
@@ -73,8 +77,7 @@ public class ShellSetBrush extends AbstractBrush {
             int highZ = Math.max(z1, z2);
             int size = Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY);
             if (size > this.maxSize) {
-                messenger.sendMessage(ChatColor.RED + "Selection size above " + this.maxSize + " limit, please use a smaller " +
-                        "selection.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.maxSize));
             } else {
                 List<BlockVector3> blocks = new ArrayList<>(size / 2);
                 for (int y = lowY; y <= highY; y++) {
@@ -106,7 +109,7 @@ public class ShellSetBrush extends AbstractBrush {
                     Pattern pattern = toolkitProperties.getPattern().getPattern();
                     setBlock(currentBlock, pattern);
                 }
-                messenger.sendMessage(ChatColor.AQUA + "Shell complete.");
+                messenger.sendMessage(Caption.of("voxelsniper.brush.shell.completed"));
             }
             this.block = null;
             return false;

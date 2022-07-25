@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
@@ -11,8 +12,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -62,31 +63,28 @@ public class OceanBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.BLUE + "Parameters:");
-            messenger.sendMessage(ChatColor.GREEN + "/b o wlevel [n] " + ChatColor.BLUE + "-- Sets the water level to n.");
-            messenger.sendMessage(ChatColor.GREEN + "/b o cfloor [true|false] " + ChatColor.BLUE + "-- Enables or disables " +
-                    "sea floor cover. (e.g. /b o cfloor true -> Cover material will be your voxel material.)");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.ocean.info"));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("wlevel")) {
                     Integer waterLevel = NumericParser.parseInteger(parameters[1]);
                     if (waterLevel != null && waterLevel > this.waterLevelMin) {
                         this.waterLevel = waterLevel;
-                        messenger.sendMessage(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.ocean.set-water-level", this.waterLevel));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number, must be an integer greater than" +
-                                this.waterLevelMin + ".");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", this.waterLevelMin));
                     }
                 } else if (firstParameter.equalsIgnoreCase("cfloor")) {
                     this.coverFloor = Boolean.parseBoolean(parameters[1]);
-                    messenger.sendMessage(ChatColor.BLUE + "Floor cover " + ChatColor.GREEN + (this.coverFloor ? "enabled" :
-                            "disabled") + ChatColor.BLUE + ".");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.ocean.set-floor-cover",
+                            VoxelSniperText.getStatus(this.coverFloor)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -177,10 +175,10 @@ public class OceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.BLUE + "Water level set to: " + ChatColor.GREEN + this.waterLevel)
-                .message(ChatColor.BLUE + String.format(
-                        "Floor cover %s.",
-                        ChatColor.GREEN + (this.coverFloor ? "enabled" : "disabled")
+                .message(Caption.of("voxelsniper.brush.ocean.set-water-level", this.waterLevel))
+                .message(Caption.of(
+                        "voxelsniper.brush.ocean.set-floor-cover",
+                        VoxelSniperText.getStatus(this.coverFloor)
                 ))
                 .send();
     }

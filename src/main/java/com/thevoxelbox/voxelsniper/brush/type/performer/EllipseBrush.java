@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -53,57 +54,57 @@ public class EllipseBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Ellipse Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b el fill -- Toggles fill mode. Default is false.");
-            messenger.sendMessage(ChatColor.AQUA + "/b el x [n] -- Sets X size modifier to n.");
-            messenger.sendMessage(ChatColor.AQUA + "/b el y [n] -- Sets Y size modifier to n.");
-            messenger.sendMessage(ChatColor.AQUA + "/b el t [n] -- Sets the amount of time steps.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("fill")) {
                     if (this.fill) {
                         this.fill = false;
-                        messenger.sendMessage(ChatColor.AQUA + "Fill mode is disabled");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.ellipse.set-fill-mode",
+                                VoxelSniperText.getStatus(false)
+                        ));
                     } else {
                         this.fill = true;
-                        messenger.sendMessage(ChatColor.AQUA + "Fill mode is enabled");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.ellipse.set-fill-mode",
+                                VoxelSniperText.getStatus(true)
+                        ));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("x")) {
                     Integer xscl = NumericParser.parseInteger(parameters[1]);
                     if (xscl != null && xscl >= this.sclMin && xscl <= this.sclMax) {
                         this.xscl = xscl;
-                        messenger.sendMessage(ChatColor.AQUA + "X-scale modifier set to: " + this.xscl);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-x-scale", this.xscl));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("y")) {
                     Integer yscl = NumericParser.parseInteger(parameters[1]);
                     if (yscl != null && yscl >= this.sclMin && yscl <= this.sclMax) {
                         this.yscl = yscl;
-                        messenger.sendMessage(ChatColor.AQUA + "Y-scale modifier set to: " + this.yscl);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-y-scale", this.yscl));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number: " + parameters[1]);
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("t")) {
                     Integer steps = NumericParser.parseInteger(parameters[1]);
                     if (steps != null && steps >= this.stepsMin && steps <= this.stepsMax) {
                         this.steps = steps;
-                        messenger.sendMessage(ChatColor.AQUA + "Render step number set to: " + this.steps);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-steps", this.steps));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number : " + parameters[1]);
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
 
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -181,7 +182,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
             }
         } catch (RuntimeException exception) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Invalid target.");
+            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-block"));
         }
     }
 
@@ -277,7 +278,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
             }
         } catch (RuntimeException exception) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Invalid target.");
+            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-block"));
         }
     }
 
@@ -294,10 +295,13 @@ public class EllipseBrush extends AbstractPerformerBrush {
         }
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.AQUA + "X-size set to: " + ChatColor.DARK_AQUA + this.xscl)
-                .message(ChatColor.AQUA + "Y-size set to: " + ChatColor.DARK_AQUA + this.yscl)
-                .message(ChatColor.AQUA + "Render step number set to: " + ChatColor.DARK_AQUA + this.steps)
-                .message(ChatColor.AQUA + "Fill mode is " + (this.fill ? "enabled" : "disabled"))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipse.set-fill-mode",
+                        VoxelSniperText.getStatus(fill)
+                ))
+                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-x-scale", this.xscl))
+                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-y-scale", this.yscl))
+                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-steps", this.steps))
                 .send();
     }
 

@@ -113,7 +113,7 @@ public class CommandRegistrar {
                 .usage("Example: /goto 100 -100 -- Takes the user to the coordinates X: 100, Z: -100. The Y-coordinate will always be 1 more than the Y-coordinate of the highest block at the X and Z-coordinates provided.")
                 .sender(Player.class)
                 .build();
-        GotoExecutor executor = new GotoExecutor();
+        GotoExecutor executor = new GotoExecutor(this.plugin);
         this.registry.register(properties, executor);
     }
 
@@ -182,7 +182,7 @@ public class CommandRegistrar {
                 .usage("Example: /paint -- Cycles through paintings. You must be adjacent to the painting and aiming at it.")
                 .sender(Player.class)
                 .build();
-        PaintExecutor executor = new PaintExecutor();
+        PaintExecutor executor = new PaintExecutor(this.plugin);
         this.registry.register(properties, executor);
     }
 
@@ -258,7 +258,7 @@ public class CommandRegistrar {
                 .usage("Example: /vchunk -- Loads the chunk you're standing in.")
                 .sender(Player.class)
                 .build();
-        VoxelChunkExecutor executor = new VoxelChunkExecutor();
+        VoxelChunkExecutor executor = new VoxelChunkExecutor(this.plugin);
         this.registry.register(properties, executor);
     }
 

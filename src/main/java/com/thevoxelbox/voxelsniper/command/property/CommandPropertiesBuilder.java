@@ -46,7 +46,7 @@ public class CommandPropertiesBuilder {
 
     public CommandProperties build() {
         if (this.name == null) {
-            throw new RuntimeException("Command name must be specified");
+            throw new RuntimeException("Command name must be specified.");
         }
         return new CommandProperties(
                 this.name,

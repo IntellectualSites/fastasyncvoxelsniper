@@ -1,13 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -15,7 +17,6 @@ import org.bukkit.entity.EntityType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EntityRemovalBrush extends AbstractBrush {
@@ -61,43 +62,40 @@ public class EntityRemovalBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.BLUE + "EntityRemoval Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b er + [t] -- Adds an exemption.");
-            messenger.sendMessage(ChatColor.AQUA + "/b er - [t] -- Removes an exemption.");
-            messenger.sendMessage(ChatColor.AQUA + "/b er list -- Lists all exemptions.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.entity.removal"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(
-                            exemptions.stream()
-                                    .map(exemption -> ChatColor.LIGHT_PURPLE + exemption)
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
-                                            ChatColor.AQUA + "Available default exemptions: ", ""
-                                    ))
-                    );
+                    messenger.sendMessage(VoxelSniperText.formatList(
+                            ENTITY_CLASSES,
+                            String::compareTo,
+                            TextComponent::of,
+                            "voxelsniper.brush.entity-removal"
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("+")) {
                     String exemptionToAdd = parameters[1];
                     if (isEntityClass(exemptionToAdd)) {
                         this.exemptions.add(exemptionToAdd);
-                        messenger.sendMessage(ChatColor.GREEN + "Added \"" + exemptionToAdd + "\" to entity exemptions list.");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.entity-removal.add-entity-class", exemptionToAdd));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid entity class: " + exemptionToAdd);
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.entity-removal.invalid-entity-class",
+                                exemptionToAdd
+                        ));
                     }
                 } else if (firstParameter.equalsIgnoreCase("-")) {
                     String exemptionToRemove = parameters[1];
                     this.exemptions.remove(exemptionToRemove);
-                    messenger.sendMessage(ChatColor.YELLOW + "Removed \"" + exemptionToRemove + "\" from entity exemptions list.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.entity-removal.remove-entity-class", exemptionToRemove));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -146,10 +144,7 @@ public class EntityRemovalBrush extends AbstractBrush {
                 chunkCount++;
             }
         }
-        messenger.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.RED + entityCount + ChatColor.GREEN + " entities out of " + ChatColor.BLUE + chunkCount + ChatColor.GREEN + (
-                chunkCount == 1
-                        ? " chunk."
-                        : " chunks."));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.entity-removal.removed", entityCount, chunkCount));
     }
 
     private int removeEntities(int chunkX, int chunkZ) {
@@ -192,11 +187,12 @@ public class EntityRemovalBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(this.exemptions.stream()
-                        .map(exemption -> ChatColor.LIGHT_PURPLE + exemption)
-                        .collect(Collectors.joining(ChatColor.WHITE + ", ",
-                                ChatColor.GREEN + "Exemptions: ", ""
-                        )))
+                .message(VoxelSniperText.formatList(
+                        exemptions,
+                        String::compareTo,
+                        TextComponent::of,
+                        "voxelsniper.brush.entity-removal"
+                ))
                 .brushSizeMessage()
                 .send();
     }

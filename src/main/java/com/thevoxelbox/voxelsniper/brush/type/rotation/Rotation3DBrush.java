@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -10,7 +11,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,15 +38,7 @@ public class Rotation3DBrush extends AbstractBrush {
 
         // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "The gradian is a unit of angle measurement different from the degree. " +
-                    "On average, 180 degrees = " + DECIMAL_FORMAT.format(Math.PI) + " radians.");
-            messenger.sendMessage(ChatColor.GOLD + "Rotate Brush Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b rot3 p [n] -- Sets degrees of pitch rotation to n (rotation about the Z" +
-                    " axis).");
-            messenger.sendMessage(ChatColor.BLUE + "/b rot3 r [n] -- Sets degrees of roll rotation to n (rotation about the X" +
-                    " axis).");
-            messenger.sendMessage(ChatColor.LIGHT_PURPLE + "/b rot3 y [n] -- Sets degrees of yaw rotation to n (Rotation " +
-                    " about the Y axis).");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.rotation-3d.info", 180, DECIMAL_FORMAT.format(Math.PI)));
         } else {
             if (parameters.length == 2) {
                 Double degreesAngle = NumericParser.parseDouble(parameters[1]);
@@ -54,23 +46,31 @@ public class Rotation3DBrush extends AbstractBrush {
                 if (degreesAngle != null && degreesAngle >= 0 && degreesAngle <= 359) {
                     if (firstParameter.equalsIgnoreCase("p")) {
                         this.sePitch = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Z-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.sePitch) + " gradians (" + degreesAngle + " degrees)");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.rotation-3d.set-z-angle",
+                                DECIMAL_FORMAT.format(this.sePitch),
+                                DECIMAL_FORMAT.format(degreesAngle)
+                        ));
                     } else if (firstParameter.equalsIgnoreCase("r")) {
                         this.seRoll = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(ChatColor.AQUA + "Around X-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.seRoll) + " gradians (" + degreesAngle + " degrees)");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.rotation-3d.set-x-angle",
+                                DECIMAL_FORMAT.format(this.seRoll),
+                                DECIMAL_FORMAT.format(degreesAngle)
+                        ));
                     } else if (firstParameter.equalsIgnoreCase("y")) {
                         this.seYaw = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(ChatColor.AQUA + "Around Y-axis degrees set to: " +
-                                DECIMAL_FORMAT.format(this.seYaw) + " gradians (" + degreesAngle + " degrees)");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.rotation-3d.set-y-angle",
+                                DECIMAL_FORMAT.format(this.seYaw),
+                                DECIMAL_FORMAT.format(degreesAngle)
+                        ));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid number! Angles must be from 1-359. Input provided: " + degreesAngle);
+                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", firstParameter, 1, 359));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -216,7 +216,21 @@ public class Rotation3DBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.LIGHT_PURPLE + "Rotates Yaw (XZ), then Pitch(XY), then Roll(ZY), in order.")
+                .message(Caption.of(
+                        "voxelsniper.brush.rotation-3d.set-z-angle",
+                        DECIMAL_FORMAT.format(this.sePitch),
+                        DECIMAL_FORMAT.format(Math.toDegrees(this.sePitch))
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.rotation-3d.set-x-angle",
+                        DECIMAL_FORMAT.format(this.seRoll),
+                        DECIMAL_FORMAT.format(Math.toDegrees(this.seRoll))
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.rotation-3d.set-y-angle",
+                        DECIMAL_FORMAT.format(this.seYaw),
+                        DECIMAL_FORMAT.format(Math.toDegrees(this.seYaw))
+                ))
                 .send();
     }
 

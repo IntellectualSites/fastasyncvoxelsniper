@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
@@ -8,7 +9,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -40,24 +40,22 @@ public class ScannerBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Scanner Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b sc d [d] -- Sets the search depth to d. Clamps to 1 - 64.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.info"));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("d")) {
                     Integer depth = NumericParser.parseInteger(parameters[1]);
                     if (depth != null) {
                         this.depth = depth < this.depthMin ? this.depthMin : Math.min(depth, this.depthMax);
-                        messenger.sendMessage(ChatColor.AQUA + "Scanner depth set to: " + this.depth);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.set-depth", this.depth));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -101,46 +99,46 @@ public class ScannerBrush extends AbstractBrush {
         if (blockFace == Direction.NORTH) { // Scan south
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() + i) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.SOUTH) { // Scan north
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() - i) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.EAST) { // Scan west
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.WEST) { // Scan east
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.UP) { // Scan down
             for (int i = 1; i < this.depth + 1; i++) {
                 if ((targetBlock.getY() - i) <= getEditSession().getMinY()) {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() - i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.DOWN) { // Scan up
             for (int i = 1; i < this.depth + 1; i++) {
                 EditSession editSession = getEditSession();
@@ -148,11 +146,11 @@ public class ScannerBrush extends AbstractBrush {
                     break;
                 }
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() + i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(ChatColor.GREEN + this.checkFor.getId() + " found after " + i + " " + "blocks.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
                     return;
                 }
             }
-            messenger.sendMessage(ChatColor.GRAY + "No matching block found.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         }
     }
 
@@ -160,8 +158,8 @@ public class ScannerBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Scanner depth set to: " + this.depth)
-                .message(ChatColor.GREEN + "Scanner scans for " + this.checkFor.getId() + " (change with /v #)")
+                .patternMessage()
+                .message(Caption.of("voxelsniper.brush.scanner.set-depth", this.depth))
                 .send();
     }
 

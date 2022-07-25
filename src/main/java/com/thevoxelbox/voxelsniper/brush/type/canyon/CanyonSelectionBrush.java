@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
 
 public class CanyonSelectionBrush extends CanyonBrush {
 
@@ -29,9 +29,9 @@ public class CanyonSelectionBrush extends CanyonBrush {
         if (this.first) {
             this.fx = chunkX;
             this.fz = chunkZ;
-            messenger.sendMessage(ChatColor.YELLOW + "First point selected!");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
         } else {
-            messenger.sendMessage(ChatColor.YELLOW + "Second point selected!");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
             selection(
                     Math.min(this.fx, chunkX),
                     Math.min(this.fz, chunkZ),
@@ -52,10 +52,7 @@ public class CanyonSelectionBrush extends CanyonBrush {
 
     @Override
     public void sendInfo(Snipe snipe) {
-        snipe.createMessageSender()
-                .brushNameMessage()
-                .message(ChatColor.GREEN + "Shift Level set to: " + this.getYLevel())
-                .send();
+        super.sendInfo(snipe);
     }
 
 }

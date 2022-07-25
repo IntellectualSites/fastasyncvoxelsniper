@@ -32,10 +32,10 @@ public class PerformerPropertiesBuilder {
 
     public PerformerProperties build() {
         if (this.name == null) {
-            throw new RuntimeException("Performer name must be specified");
+            throw new RuntimeException("Performer name must be specified.");
         }
         if (this.creator == null) {
-            throw new RuntimeException("Performer creator must be specified");
+            throw new RuntimeException("Performer creator must be specified.");
         }
         return new PerformerProperties(this.name, this.usingReplaceMaterial, this.aliases, this.creator);
     }

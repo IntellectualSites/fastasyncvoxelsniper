@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,56 +43,49 @@ public class MoveBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "Use arrow and gunpowder to define two points.");
-            messenger.sendMessage(ChatColor.GOLD + "Move Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b mv x [n] -- Sets the x direction to n. (positive => east)");
-            messenger.sendMessage(ChatColor.AQUA + "/b mv y [n] -- Sets the y direction to n. (positive => up)");
-            messenger.sendMessage(ChatColor.AQUA + "/b mv z [n] -- Sets the z direction to n. (positive => south)");
-            messenger.sendMessage(ChatColor.AQUA + "/b mv reset -- Resets the brush. (x:0 y:0 z:0)");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.move.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("reset")) {
                     this.moveDirections[0] = 0;
                     this.moveDirections[1] = 0;
                     this.moveDirections[2] = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
-                    messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[1]);
-                    messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[2]);
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("x")) {
                     Integer moveDirection = NumericParser.parseInteger(parameters[1]);
                     if (moveDirection != null) {
                         this.moveDirections[0] = moveDirection;
-                        messenger.sendMessage(ChatColor.AQUA + "X direction set to: " + this.moveDirections[0]);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("y")) {
                     Integer moveDirection = NumericParser.parseInteger(parameters[1]);
                     if (moveDirection != null) {
                         this.moveDirections[1] = moveDirection;
-                        messenger.sendMessage(ChatColor.AQUA + "Y direction set to: " + this.moveDirections[0]);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else if (firstParameter.equalsIgnoreCase("z")) {
                     Integer moveDirection = NumericParser.parseInteger(parameters[1]);
                     if (moveDirection != null) {
                         this.moveDirections[2] = moveDirection;
-                        messenger.sendMessage(ChatColor.AQUA + "Z direction set to: " + this.moveDirections[0]);
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -113,14 +106,14 @@ public class MoveBrush extends AbstractBrush {
             this.selection = new Selection(this.maxBlockCount);
         }
         this.selection.setLocation1(this.getTargetBlock(), getEditSession().getWorld());
-        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 1 set.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
         try {
             if (this.selection.calculateRegion()) {
-                moveSelection(snipe, this.selection, this.moveDirections);
+                this.moveSelection(snipe, this.selection, this.moveDirections);
                 this.selection = null;
             }
         } catch (RuntimeException exception) {
-            messenger.sendMessage(exception.getMessage());
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.selection.maxBlockCount));
         }
     }
 
@@ -131,14 +124,14 @@ public class MoveBrush extends AbstractBrush {
             this.selection = new Selection(this.maxBlockCount);
         }
         this.selection.setLocation2(this.getTargetBlock(), getEditSession().getWorld());
-        messenger.sendMessage(ChatColor.LIGHT_PURPLE + "Point 2 set.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         try {
             if (this.selection.calculateRegion()) {
                 this.moveSelection(snipe, this.selection, this.moveDirections);
                 this.selection = null;
             }
         } catch (RuntimeException exception) {
-            messenger.sendMessage(exception.getMessage());
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.selection.maxBlockCount));
         }
     }
 
@@ -159,7 +152,7 @@ public class MoveBrush extends AbstractBrush {
             try {
                 newSelection.calculateRegion();
             } catch (RuntimeException exception) {
-                messenger.sendMessage(ChatColor.LIGHT_PURPLE + "The new Selection has more blocks than the original selection. This should never happen!");
+                messenger.sendMessage(Caption.of("voxelsniper.brush.move.invalid-new-selection"));
             }
             locations.forEach(block -> setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
             for (BlockVector3 block : locations) {
@@ -177,7 +170,9 @@ public class MoveBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.BLUE + "Move selection blockPositionY " + ChatColor.GOLD + "x:" + this.moveDirections[0] + " y:" + this.moveDirections[1] + " z:" + this.moveDirections[2])
+                .message(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]))
+                .message(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]))
+                .message(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]))
                 .send();
     }
 
@@ -225,8 +220,7 @@ public class MoveBrush extends AbstractBrush {
                     int highY = Math.max(y1, y2);
                     int highZ = Math.max(z1, z2);
                     if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > this.maxBlockCount) {
-                        throw new RuntimeException(ChatColor.RED + "Selection size above " + this.maxBlockCount + " limit, " +
-                                "please use a smaller selection.");
+                        throw new RuntimeException();
                     }
                     for (int y = lowY; y <= highY; y++) {
                         for (int x = lowX; x <= highX; x++) {

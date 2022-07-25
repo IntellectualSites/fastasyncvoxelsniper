@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
+import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -8,7 +10,6 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
 
 public class SnowConeBrush extends AbstractBrush {
 
@@ -28,7 +29,7 @@ public class SnowConeBrush extends AbstractBrush {
                 addSnow(blockAbove);
             } else {
                 SnipeMessenger messenger = snipe.createMessenger();
-                messenger.sendMessage(ChatColor.RED + "Error: Center block neither snow nor air.");
+                messenger.sendMessage(Caption.of("voxelsniper.brush.snow-cone.invalid-block"));
             }
         }
     }
@@ -142,7 +143,7 @@ public class SnowConeBrush extends AbstractBrush {
 
     private int blockDataToSnowLayers(BlockState blockData) {
         BlockType type = blockData.getBlockType();
-        Property<Integer> layersProperty = type.getProperty("layers");
+        Property<Integer> layersProperty = type.getProperty(PropertyKey.LAYERS);
         if (layersProperty == null) {
             return 0;
         }
@@ -151,7 +152,7 @@ public class SnowConeBrush extends AbstractBrush {
 
     private BlockState setSnowLayers(BlockState blockData, int layers) {
         BlockType type = blockData.getBlockType();
-        Property<Integer> layersProperty = type.getProperty("layers");
+        Property<Integer> layersProperty = type.getProperty(PropertyKey.LAYERS);
         if (layersProperty == null) {
             return blockData;
         }

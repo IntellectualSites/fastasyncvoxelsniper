@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
@@ -10,7 +11,7 @@ import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -35,28 +36,28 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            sender.sendMessage(ChatColor.RED + "Sniper not found.");
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
             return;
         }
         int length = arguments.length;
         if (length == 0) {
-            sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
-            sender.sendMessage("/btool remove <toolkit name>");
-            sender.sendMessage("/btool remove");
+            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
+            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.remove-help-1"));
+            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.remove-help-2"));
             return;
         }
         String firstArgument = arguments[0];
         if (length == 3 && firstArgument.equalsIgnoreCase("assign")) {
             ToolAction action = ToolAction.getToolAction(arguments[1]);
             if (action == null) {
-                sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
+                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
                 return;
             }
             PlayerInventory inventory = player.getInventory();
             ItemStack itemInHand = inventory.getItemInMainHand();
             ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
             if (itemType == ItemTypes.AIR) {
-                sender.sendMessage("/btool assign <arrow|gunpowder> <toolkit name>");
+                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
                 return;
             }
             String toolkitName = arguments[2];
@@ -66,15 +67,15 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             }
             toolkit.addToolAction(itemType, action);
             sniper.addToolkit(toolkit);
-            sender.sendMessage(itemInHand
-                    .getType()
-                    .name() + " has been assigned to '" + toolkitName + "' as action " + action.name() + ".");
+            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assigned", itemInHand.getType().name(),
+                    toolkitName, action.name()
+            ));
             return;
         }
         if (length == 2 && firstArgument.equalsIgnoreCase("remove")) {
             Toolkit toolkit = sniper.getToolkit(arguments[1]);
             if (toolkit == null) {
-                sender.sendMessage(ChatColor.RED + "Toolkit " + arguments[1] + " not found.");
+                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.not-found", arguments[1]));
                 return;
             }
             sniper.removeToolkit(toolkit);
@@ -85,12 +86,12 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             ItemStack itemInHand = inventory.getItemInMainHand();
             ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
             if (itemType == ItemTypes.AIR) {
-                sender.sendMessage("Can't unassign empty hands.");
+                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.empty-hands"));
                 return;
             }
             Toolkit toolkit = sniper.getCurrentToolkit();
             if (toolkit == null) {
-                sender.sendMessage("Can't unassign default tool.");
+                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.default-tool"));
                 return;
             }
             toolkit.removeToolAction(itemType);

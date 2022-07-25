@@ -1,10 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
@@ -43,34 +44,34 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "3-Point Circle Brush instructions: Select three corners with the arrow " +
-                    "brush, then generate the Circle with the gunpowder brush.");
-            messenger.sendMessage(ChatColor.GOLD + "3-Point Circle Parameters");
-            messenger.sendMessage(ChatColor.AQUA + "/b tpc [t] -- Sets the calculations to emphasize accuracy or smoothness " +
-                    "to t.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.three-point-circle.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(
-                            Arrays.stream(Tolerance.values())
-                                    .map(tolerance -> ((tolerance == this.tolerance) ? ChatColor.GOLD : ChatColor.GRAY) +
-                                            tolerance.name().toLowerCase(Locale.ROOT))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
-                                            ChatColor.AQUA + "Available tolerances: ", ""
-                                    ))
-                    );
+                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                            Arrays.stream(Tolerance.values()).toList(),
+                            (tolerance, tolerance2) -> tolerance.getName().compareTo(tolerance2.getName()),
+                            Tolerance::getFullName,
+                            tolerance -> tolerance,
+                            this.tolerance,
+                            "voxelsniper.brush.three-point-circle"
+                    ));
                 } else {
                     try {
                         this.tolerance = Tolerance.valueOf(firstParameter.toUpperCase(Locale.ROOT));
-                        messenger.sendMessage(ChatColor.AQUA + "Brush set to: " + this.tolerance.getName()
-                                .toLowerCase(Locale.ROOT) + " tolerance.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.three-point-circle.set-tolerance",
+                                this.tolerance.getFullName()
+                        ));
                     } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(ChatColor.RED + "Invalid tolerance:" + firstParameter);
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.three-point-circle.invalid-tolerance",
+                                firstParameter
+                        ));
                     }
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -94,18 +95,18 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         BlockVector3 targetBlock = getTargetBlock();
         if (this.coordinatesOne == null) {
             this.coordinatesOne = Vectors.toBukkit(targetBlock);
-            messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-corner"));
         } else if (this.coordinatesTwo == null) {
             this.coordinatesTwo = Vectors.toBukkit(targetBlock);
-            messenger.sendMessage(ChatColor.GRAY + "Second Corner set.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-corner"));
         } else if (this.coordinatesThree == null) {
             this.coordinatesThree = Vectors.toBukkit(targetBlock);
-            messenger.sendMessage(ChatColor.GRAY + "Third Corner set.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.third-corner"));
         } else {
             this.coordinatesOne = Vectors.toBukkit(targetBlock);
             this.coordinatesTwo = null;
             this.coordinatesThree = null;
-            messenger.sendMessage(ChatColor.GRAY + "First Corner set.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-corner"));
         }
     }
 
@@ -125,7 +126,9 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         // Redundant data check
         if (vectorOne.length() == 0 || vectorTwo.length() == 0 || vectorThree.length() == 0 || vectorOne.angle(vectorTwo) == 0 || vectorOne
                 .angle(vectorThree) == 0 || vectorThree.angle(vectorTwo) == 0) {
-            messenger.sendMessage(ChatColor.RED + "Invalid points: " + this.coordinatesOne + ", " + this.coordinatesTwo + ", " + this.coordinatesThree);
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.three-point-circle.invalid-points",
+                    this.coordinatesOne, this.coordinatesTwo, this.coordinatesThree
+            ));
             this.coordinatesOne = null;
             this.coordinatesTwo = null;
             this.coordinatesThree = null;
@@ -193,7 +196,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                 }
             }
         }
-        messenger.sendMessage(ChatColor.GREEN + "Done.");
+        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.three-point-circle.done"));
         // Reset Brush
         this.coordinatesOne = null;
         this.coordinatesTwo = null;
@@ -204,15 +207,18 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GOLD + "Mode: " + this.tolerance.getName())
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.three-point-circle.set-tolerance",
+                        this.tolerance.getFullName()
+                ))
                 .send();
     }
 
     private enum Tolerance {
 
-        DEFAULT("Default", 1000),
-        ACCURATE("Accurate", 10),
-        SMOOTH("Smooth", 2000);
+        DEFAULT("default", 1000),
+        ACCURATE("accurate", 10),
+        SMOOTH("smooth", 2000);
 
         private final String name;
         private final int value;
@@ -228,6 +234,10 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
         public int getValue() {
             return this.value;
+        }
+
+        public TranslatableComponent getFullName() {
+            return Caption.of("voxelsniper.performer-brush.three-point-circle.tolerance." + this.name);
         }
     }
 

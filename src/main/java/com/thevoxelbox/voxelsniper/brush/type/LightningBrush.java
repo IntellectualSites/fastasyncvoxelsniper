@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 
 public class LightningBrush extends AbstractBrush {
@@ -33,7 +33,7 @@ public class LightningBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.LIGHT_PURPLE + "Lightning Brush! Please use in moderation.")
+                .message(Caption.of("voxelsniper.brush.lightning.warning"))
                 .send();
     }
 

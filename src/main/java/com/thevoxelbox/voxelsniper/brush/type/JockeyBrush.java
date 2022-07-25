@@ -1,8 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.fastasyncworldedit.core.Fawe;
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -48,17 +50,14 @@ public class JockeyBrush extends AbstractBrush {
         boolean inverse = false;
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Jockey Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b jockey [true|false] [true|false] [true|false] -- Sets whether players only or entities should be " +
-                    "affected to n. Sets if entities should be inverted to i. Sets if entities should be stacked to s.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.jockey.info"));
         } else {
             if (parameters.length == 4) {
                 playerOnly = Boolean.parseBoolean(parameters[1]);
                 inverse = Boolean.parseBoolean(parameters[2]);
                 stack = Boolean.parseBoolean(parameters[3]);
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
         if (inverse) {
@@ -68,7 +67,7 @@ public class JockeyBrush extends AbstractBrush {
         } else {
             this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
         }
-        messenger.sendMessage("Current jockey mode: " + ChatColor.GREEN + this.jockeyType);
+        messenger.sendMessage(Caption.of("voxelsniper.brush.jockey.set-mode", this.jockeyType.getFullName()));
     }
 
     @Override
@@ -188,7 +187,7 @@ public class JockeyBrush extends AbstractBrush {
                     stackHeight++;
                 }
             } else {
-                player.sendMessage("You broke stack! :O");
+                sniper.print(Caption.of("voxelsniper.brush.jockey.broke-stack"));
             }
         }
     }
@@ -197,7 +196,7 @@ public class JockeyBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message("Current jockey mode: " + ChatColor.GREEN + this.jockeyType)
+                .message(Caption.of("voxelsniper.brush.jockey.set-mode", this.jockeyType.getFullName()))
                 .send();
     }
 
@@ -206,12 +205,12 @@ public class JockeyBrush extends AbstractBrush {
      */
     private enum JockeyType {
 
-        NORMAL_ALL_ENTITIES("Normal (All)"),
-        NORMAL_PLAYER_ONLY("Normal (Player only)"),
-        INVERT_ALL_ENTITIES("Invert (All)"),
-        INVERT_PLAYER_ONLY("Invert (Player only)"),
-        STACK_ALL_ENTITIES("Stack (All)"),
-        STACK_PLAYER_ONLY("Stack (Player only)");
+        NORMAL_ALL_ENTITIES("normal-all-entities"),
+        NORMAL_PLAYER_ONLY("normal-player-only"),
+        INVERT_ALL_ENTITIES("invert-all-entities"),
+        INVERT_PLAYER_ONLY("invert-player-only"),
+        STACK_ALL_ENTITIES("stack-all-entities"),
+        STACK_PLAYER_ONLY("stack-player-only");
 
         private final String name;
 
@@ -219,9 +218,12 @@ public class JockeyBrush extends AbstractBrush {
             this.name = name;
         }
 
-        @Override
-        public String toString() {
-            return this.name;
+        public String getName() {
+            return name;
+        }
+
+        public TranslatableComponent getFullName() {
+            return Caption.of("voxelsniper.brush.jockey.mode." + this.name);
         }
     }
 
