@@ -11,6 +11,8 @@ public class VoxelSniperResourceLoader implements ResourceLoader {
 
     public VoxelSniperResourceLoader(VoxelSniperPlugin voxelSniperPlugin) {
         this.voxelSniperPlugin = voxelSniperPlugin;
+
+        FileUtils.copyFile("lang/strings.json", this.voxelSniperPlugin.getDataFolder());
     }
 
     @Override
