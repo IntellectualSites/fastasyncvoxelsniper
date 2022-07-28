@@ -1,0 +1,4 @@
+files:
+    - source: src/main/resources/lang/strings.json
+      translation: >-
+          src/main/resources/lang/%two_letters_code%/%original_file_name%
