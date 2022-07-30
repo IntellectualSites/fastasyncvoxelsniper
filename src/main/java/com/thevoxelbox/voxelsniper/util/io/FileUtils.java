@@ -5,9 +5,10 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 public class FileUtils {
 
@@ -31,17 +32,16 @@ public class FileUtils {
             }
             try (InputStream stream = VoxelSniperPlugin.class.getResourceAsStream(resource.startsWith("/") ? resource :
                     "/" + resource)) {
-                byte[] buffer = new byte[2048];
+                if (stream == null) {
+                    throw new NullPointerException("Unable to get the resource " + resource);
+                }
                 File parent = newFile.getParentFile();
                 if (!parent.exists()) {
                     parent.mkdirs();
                 }
                 newFile.createNewFile();
-                try (FileOutputStream fos = new FileOutputStream(newFile)) {
-                    int len;
-                    while ((len = stream.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
+                try (OutputStream outputStream = Files.newOutputStream(newFile.toPath())) {
+                    stream.transferTo(outputStream);
                 }
                 return newFile;
             }
