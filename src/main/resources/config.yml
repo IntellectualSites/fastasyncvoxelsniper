@@ -1,5 +1,5 @@
 # The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
-config-version: 3
+config-version: 4
 update-notifications: true
 message-on-login-enabled: true
 persist-sessions-on-logout: true
@@ -86,8 +86,8 @@ brush-properties:
     Jagged Line:
         recursion-min: 1
         recursion-max: 10
-        defaut-recursion: 3
-        defaut-spread: 3
+        default-recursion: 3
+        default-spread: 3
     Jockey:
         entity-stack-limit: 50
         default-jockey-type: NORMAL_ALL_ENTITIES

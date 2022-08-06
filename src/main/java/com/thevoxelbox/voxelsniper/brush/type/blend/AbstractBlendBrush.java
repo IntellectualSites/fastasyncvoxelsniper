@@ -1,13 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.Map;
@@ -26,9 +27,9 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
 
         if (firstParameter.equalsIgnoreCase("water")) {
             this.waterExcluded = !this.waterExcluded;
-            messenger.sendMessage(ChatColor.AQUA + "Water Mode set to : " + (this.waterExcluded ? "exclude" : "include"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.blend.set-water-mode", getStatus(this.waterExcluded)));
         } else {
-            messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
         }
     }
 
@@ -92,12 +93,16 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
                 .brushNameMessage()
                 .brushSizeMessage()
                 .patternMessage()
-                .message(ChatColor.BLUE + "Water Mode: " + (this.waterExcluded ? "exclude" : "include"))
+                .message(Caption.of("voxelsniper.brush.blend.set-water-mode", getStatus(this.waterExcluded)))
                 .send();
     }
 
     public void setAirExcluded(boolean airExcluded) {
         this.airExcluded = airExcluded;
+    }
+
+    private Component getStatus(boolean status) {
+        return Caption.of(status ? "voxelsniper.sniper.include" : "voxelsniper.sniper.exclude");
     }
 
 }

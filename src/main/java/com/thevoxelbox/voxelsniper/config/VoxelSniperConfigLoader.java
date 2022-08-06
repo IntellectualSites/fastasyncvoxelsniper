@@ -36,7 +36,7 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    private static final int CONFIG_VERSION_VALUE = 3;
+    private static final int CONFIG_VERSION_VALUE = 4;
     private static final boolean DEFAULT_UPDATE_NOTIFICATIONS_ENABLED = true;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
@@ -118,11 +118,28 @@ public class VoxelSniperConfigLoader {
             if (currentConfigVersion < 3) {
                 enableUpdateNotifications(areUpdateNotificationsEnabled());
             }
+            if (currentConfigVersion < 4) {
+                Map<String, Map<String, Object>> brushProperties = getBrushProperties();
+                Map<String, Object> jaggedLineBrush = brushProperties.get("Jagged Line");
+                if (jaggedLineBrush == null) {
+                    return;
+                }
+                Object oldDefaultRecursion = jaggedLineBrush.remove("defaut-recursion");
+                Object oldDefaultSpread = jaggedLineBrush.remove("defaut-spread");
+                if (oldDefaultRecursion != null) {
+                    this.removeBrushProperty("Jagged Line", "defaut-recursion");
+                    jaggedLineBrush.put("default-recursion", oldDefaultRecursion);
+                }
+                if (oldDefaultSpread != null) {
+                    this.removeBrushProperty("Jagged Line", "defaut-spread");
+                    jaggedLineBrush.put("default-spread", oldDefaultSpread);
+                }
+                setBrushProperties(brushProperties);
+            }
 
             plugin.saveConfig();
             LOGGER.info("Your config file is now up-to-date! (v{})", CONFIG_VERSION_VALUE);
         }
-
     }
 
     /**
@@ -408,6 +425,16 @@ public class VoxelSniperConfigLoader {
                 this.config.set(BRUSH_PROPERTIES + "." + brush + "." + propertyKey, propertyValue);
             }
         }
+    }
+
+    /**
+     * Remove a brush property from config.
+     *
+     * @param brush brush
+     * @param propertyKey propertyKey
+     */
+    protected void removeBrushProperty(String brush, String propertyKey) {
+        this.config.set(BRUSH_PROPERTIES + "." + brush + "." + propertyKey, null);
     }
 
 }

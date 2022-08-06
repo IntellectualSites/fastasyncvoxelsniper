@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import com.fastasyncworldedit.core.configuration.Caption;
+import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -8,7 +10,6 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 public class SetRedstoneRotateBrush extends AbstractBrush {
@@ -19,18 +20,22 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(targetBlock)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 lastBlock = getLastBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(lastBlock)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
@@ -54,7 +59,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
             for (int y = lowY; y <= highY; y++) {
                 for (int x = lowX; x <= highX; x++) {
                     for (int z = lowZ; z <= highZ; z++) {
-                        perform(x, clampY(y), z, clampY(x, y, z));
+                        this.perform(x, clampY(y), z, clampY(x, y, z));
                     }
                 }
             }
@@ -66,7 +71,7 @@ public class SetRedstoneRotateBrush extends AbstractBrush {
     private void perform(int x, int y, int z, BlockState block) {
         BlockType type = block.getBlockType();
         if (type == BlockTypes.REPEATER) {
-            Property<Integer> delayProperty = type.getProperty("delay");
+            Property<Integer> delayProperty = type.getProperty(PropertyKey.DELAY);
             if (delayProperty == null) {
                 return;
             }

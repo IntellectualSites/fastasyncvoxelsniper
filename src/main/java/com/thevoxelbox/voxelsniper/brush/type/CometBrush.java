@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.Player;
@@ -25,30 +26,25 @@ public class CometBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.RED + "Warning: This brush is not undo-able! You can use //ex to extinguish the " +
-                    "fire it creates.");
-            messenger.sendMessage(ChatColor.GOLD + "Comet Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b com balls [big|small] -- Sets your ball size.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.comet.info"));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("balls")) {
                     String newBallSize = parameters[1];
                     if (newBallSize.equalsIgnoreCase("big")) {
                         this.useBigBalls = true;
-                        messenger.sendMessage(ChatColor.AQUA + "Your balls are " + ChatColor.DARK_RED + "big");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.comet.set-size", getStatus(true)));
                     } else if (newBallSize.equalsIgnoreCase("small")) {
                         this.useBigBalls = false;
-                        messenger.sendMessage(ChatColor.AQUA + "Your balls are " + ChatColor.DARK_RED + "small");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.comet.set-size", getStatus(false)));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Unknown ball size.");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.biome.invalid-size", newBallSize));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter " +
-                            "info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display parameter " +
-                        "info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -107,8 +103,12 @@ public class CometBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .patternMessage()
-                .message("Your balls are " + ChatColor.DARK_RED + (this.useBigBalls ? "BIG" : "small"))
+                .message(Caption.of("voxelsniper.brush.comet.set-size", getStatus(this.useBigBalls)))
                 .send();
+    }
+
+    private Component getStatus(boolean status) {
+        return Caption.of(status ? "voxelsniper.sniper.big" : "voxelsniper.sniper.small");
     }
 
 }

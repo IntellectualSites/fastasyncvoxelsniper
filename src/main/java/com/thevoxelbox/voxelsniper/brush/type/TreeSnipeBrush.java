@@ -1,19 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.TreeGenerator;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -38,33 +38,30 @@ public class TreeSnipeBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Tree snipe brush:");
-            messenger.sendMessage(ChatColor.AQUA + "/b t [t] -- Sets the selected tree type to t.");
-            messenger.sendMessage(ChatColor.AQUA + "/b t list -- Lists all available trees.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.inf"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(
-                            Arrays.stream(TreeGenerator.TreeType.values())
-                                    .map(treeType -> ((treeType == this.treeType) ? ChatColor.GOLD : ChatColor.GRAY) +
-                                            treeType.lookupKeys.get(0))
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
-                                            ChatColor.AQUA + "Available tree types: ", ""
-                                    ))
-                    );
+                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                            List.of(TreeGenerator.TreeType.values()),
+                            (type, type2) -> type.lookupKeys.get(0).compareTo(type2.lookupKeys.get(0)),
+                            type -> TextComponent.of(type.lookupKeys.get(0)),
+                            type -> type,
+                            this.treeType,
+                            "voxelsniper.brush.tree-sniper"
+                    ));
                 } else {
                     TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);
 
                     if (treeType != null) {
                         this.treeType = treeType;
-                        messenger.sendMessage(ChatColor.GOLD + "Tree type set to: " + ChatColor.DARK_GREEN + this.treeType.getName());
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.set-tree", this.treeType.getName()));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid tree type.");
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.invalid-tree", firstParameter));
                     }
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -97,7 +94,7 @@ public class TreeSnipeBrush extends AbstractBrush {
         setBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
         if (!generateTree(targetBlock, this.treeType)) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Failed to generate a tree!");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.generate-failed"));
         }
         setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
     }
@@ -115,7 +112,7 @@ public class TreeSnipeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GOLD + "Currently selected tree type: " + ChatColor.DARK_GREEN + this.treeType.getName())
+                .message(Caption.of("voxelsniper.brush.tree-sniper.set-tree", this.treeType.getName()))
                 .send();
     }
 

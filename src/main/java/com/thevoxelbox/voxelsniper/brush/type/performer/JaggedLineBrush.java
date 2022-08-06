@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
@@ -42,8 +42,8 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         this.recursionMin = getIntegerProperty("recursion-min", RECURSION_MIN);
         this.recursionMax = getIntegerProperty("recursion-max", RECURSION_MAX);
 
-        this.recursions = getIntegerProperty("defaut-recursion", DEFAULT_RECURSION);
-        this.spread = getIntegerProperty("defaut-spread", DEFAULT_SPREAD);
+        this.recursions = getIntegerProperty("default-recursion", DEFAULT_RECURSION);
+        this.spread = getIntegerProperty("default-spread", DEFAULT_SPREAD);
     }
 
     @Override
@@ -52,39 +52,44 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "Right click first point with the arrow. Right click with gunpowder to " +
-                    "draw a jagged line to set the second point.");
-            messenger.sendMessage(ChatColor.GOLD + "Jagged Line Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b j r [n] - Sets the number of recursions to n. Default is " +
-                    getIntegerProperty("defaut-recursion", DEFAULT_RECURSION) + ", must be an integer " + this.recursionMin +
-                    "-" + this.recursionMax + ".");
-            messenger.sendMessage(ChatColor.AQUA + "/b j s [n] - Sets the spread to n. Default is " +
-                    getIntegerProperty("defaut-spread", DEFAULT_SPREAD) + ".");
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.performer-brush.jagged-line.info",
+                    getIntegerProperty("default-recursion", DEFAULT_RECURSION),
+                    this.recursionMin,
+                    this.recursionMax,
+                    getIntegerProperty("default-spread", DEFAULT_SPREAD)
+            ));
         } else {
             if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("r")) {
                     Integer recursions = NumericParser.parseInteger(parameters[1]);
                     if (recursions != null && recursions >= this.recursionMin && recursions <= this.recursionMax) {
                         this.recursions = recursions;
-                        messenger.sendMessage(ChatColor.GREEN + "Recursions set to: " + this.recursions);
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.jagged-line.set-recursions",
+                                this.recursions
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Recusions must be an integer " + this.recursionMin +
-                                "-" + this.recursionMax + ".");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
+                                recursionMin, recursionMax
+                        ));
                     }
                 } else if (firstParameter.equalsIgnoreCase("s")) {
                     Integer spread = NumericParser.parseInteger(parameters[1]);
                     if (spread != null) {
                         this.spread = spread;
-                        messenger.sendMessage(ChatColor.GREEN + "Spread set to: " + this.spread);
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.jagged-line.set-spread",
+                                this.spread
+                        ));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -106,14 +111,14 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         BlockVector3 targetBlock = getTargetBlock();
         this.originCoordinates = Vectors.toBukkit(targetBlock);
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         if (this.originCoordinates == null) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.first-coordinate"));
         } else {
             BlockVector3 targetBlock = getTargetBlock();
             this.targetCoordinates = Vectors.toBukkit(targetBlock);
@@ -159,8 +164,14 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GRAY + "Recursion set to: " + this.recursions)
-                .message(ChatColor.GRAY + "Spread set to: " + this.spread)
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.jagged-line.set-recursions",
+                        this.recursions
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.jagged-line.set-spread",
+                        this.spread
+                ))
                 .send();
     }
 

@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -27,9 +28,7 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.apache.logging.log4j.Logger;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -56,8 +55,7 @@ public abstract class AbstractBrush implements Brush {
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         Sniper sniper = snipe.getSniper();
-        Player player = sniper.getPlayer();
-        player.sendMessage(ChatColor.RED + "This brush does not accept additional parameters.");
+        sniper.print(Caption.of("voxelsniper.command.no-parameters"));
     }
 
     @Override

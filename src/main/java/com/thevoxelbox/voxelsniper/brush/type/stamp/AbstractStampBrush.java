@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -11,7 +12,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.ChatColor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +33,7 @@ public abstract class AbstractStampBrush extends AbstractBrush {
             case FILL -> stampFill();
             default -> {
                 SnipeMessenger messenger = snipe.createMessenger();
-                messenger.sendMessage(ChatColor.DARK_RED + "Error while stamping! Report");
+                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
             }
         }
     }

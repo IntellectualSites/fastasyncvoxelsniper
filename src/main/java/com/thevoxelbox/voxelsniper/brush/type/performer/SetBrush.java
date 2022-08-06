@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 public class SetBrush extends AbstractPerformerBrush {
@@ -25,18 +25,22 @@ public class SetBrush extends AbstractPerformerBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(targetBlock, getEditSession().getWorld(), snipe)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 lastBlock = getLastBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(lastBlock, getEditSession().getWorld(), snipe)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
@@ -50,7 +54,7 @@ public class SetBrush extends AbstractPerformerBrush {
         String name = this.world.getName();
         String parameterBlockWorldName = world.getName();
         if (!name.equals(parameterBlockWorldName)) {
-            messenger.sendMessage(ChatColor.RED + "You selected points in different worlds!");
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.different-world"));
             this.block = null;
             return true;
         }
@@ -67,7 +71,7 @@ public class SetBrush extends AbstractPerformerBrush {
         int highY = Math.max(y1, y2);
         int highZ = Math.max(z1, z2);
         if (Math.abs(highX - lowX) * Math.abs(highZ - lowZ) * Math.abs(highY - lowY) > this.selectionSizeMax) {
-            messenger.sendMessage(ChatColor.RED + "Selection size above " + this.selectionSizeMax + " limit, please use a smaller selection.");
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.selectionSizeMax));
         } else {
             for (int y = lowY; y <= highY; y++) {
                 for (int x = lowX; x <= highX; x++) {
@@ -76,6 +80,7 @@ public class SetBrush extends AbstractPerformerBrush {
                     }
                 }
             }
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.set.completed"));
         }
         this.block = null;
         return false;

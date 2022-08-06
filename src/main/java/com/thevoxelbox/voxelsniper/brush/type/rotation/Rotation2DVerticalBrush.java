@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -10,7 +11,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 // The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
@@ -29,23 +29,22 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.DARK_AQUA + "The gradian is a unit of angle measurement different from the degree. " +
-                    "On average, 180 degrees = " + DECIMAL_FORMAT.format(Math.PI) + " radians.");
-            messenger.sendMessage(ChatColor.GOLD + "Rotation2DVertical Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b rot2v [n] -- Sets rotation angle to n.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.rotation-2d-vertical.info", 180, DECIMAL_FORMAT.format(Math.PI)));
         } else {
             if (parameters.length == 1) {
                 Double degreesAngle = NumericParser.parseDouble(firstParameter);
                 if (degreesAngle != null) {
                     this.angle = Math.toRadians(degreesAngle);
-                    messenger.sendMessage(ChatColor.GREEN + "Angle set to: " + DECIMAL_FORMAT.format(this.angle) + " gradians " +
-                            "(" + degreesAngle + " degrees)");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.rotation-2d-vertical.set-angle",
+                            DECIMAL_FORMAT.format(this.angle),
+                            DECIMAL_FORMAT.format(degreesAngle)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid number: " + firstParameter);
+                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", firstParameter));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -162,6 +161,11 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
+                .message(Caption.of(
+                        "voxelsniper.brush.rotation-2d-vertical.set-angle",
+                        DECIMAL_FORMAT.format(this.angle),
+                        DECIMAL_FORMAT.format(Math.toDegrees(this.angle))
+                ))
                 .send();
     }
 

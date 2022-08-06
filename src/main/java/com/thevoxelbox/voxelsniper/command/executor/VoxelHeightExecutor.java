@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.CommandExecutor;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -7,7 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,10 +39,10 @@ public class VoxelHeightExecutor implements CommandExecutor {
         try {
             height = Integer.parseInt(arguments[0]);
         } catch (NumberFormatException ignored) {
-            sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number, not: " + arguments[0]);
+            sniper.print(Caption.of("voxelsniper.brush.command.voxel-height.invalid-input", arguments[0]));
             return;
         } catch (ArrayIndexOutOfBoundsException ignored) {
-            sender.sendMessage(ChatColor.RED + "Invalid input. Must be a number.");
+            sniper.print(Caption.of("voxelsniper.brush.command.voxel-height.invalid-input-none"));
             return;
         }
         toolkitProperties.setVoxelHeight(height);

@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -16,7 +17,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -67,12 +67,12 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
                         ).getType()
                 );
                 if (targetBlockType == null) {
-                    sender.sendMessage(ChatColor.RED + "You have selected an invalid block type.");
+                    sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
                     return;
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                         targetBlockType.getResource())) {
-                    sender.sendMessage(ChatColor.RED + "You are not allowed to use " + targetBlockType.getId() + ".");
+                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", targetBlockType.getId()));
                     return;
                 }
                 toolkitProperties.setReplacePattern(new BrushPattern(targetBlockType));
@@ -82,12 +82,12 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
             BlockType blockType = BlockTypes.get(arguments[0]);
 
             if (blockType == null) {
-                sender.sendMessage(ChatColor.RED + "You have entered an invalid block type: " + arguments[0]);
+                sniper.print(Caption.of("voxelsniper.brush.command.voxel-replace-executor.invalid-block", arguments[0]));
                 return;
             }
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                     blockType.getResource())) {
-                sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockType.getId() + ".");
+                sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", blockType.getId()));
                 return;
             }
 

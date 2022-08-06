@@ -1,11 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,37 +25,35 @@ public class RingBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Ring Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b ri [true|false] -- Uses a true circle algorithm instead of the skinnier " +
-                    "version with classic sniper nubs. (false is default)");
-            messenger.sendMessage(ChatColor.AQUA + "/b ri ir [n] -- Sets the inner radius to n units.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ring.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.trueCircle = 0.5;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode ON.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.trueCircle = 0;
-                    messenger.sendMessage(ChatColor.AQUA + "True circle mode OFF.");
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.brush.parameter.true-circle",
+                            VoxelSniperText.getStatus(false)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("ir")) {
                     Double innerSize = NumericParser.parseDouble(parameters[1]);
                     if (innerSize != null) {
                         this.innerSize = innerSize;
-                        messenger.sendMessage(ChatColor.AQUA + "The inner radius has been set to: " + ChatColor.RED + this.innerSize);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ring.set-inner-radius", this.innerSize));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -131,7 +130,8 @@ public class RingBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(ChatColor.AQUA + "The inner radius is " + ChatColor.RED + this.innerSize)
+                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
+                .message(Caption.of("voxelsniper.performer-brush.ring.set-inner-radius", this.innerSize))
                 .send();
     }
 

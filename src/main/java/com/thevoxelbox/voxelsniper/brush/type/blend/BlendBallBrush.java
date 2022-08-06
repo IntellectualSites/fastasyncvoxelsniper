@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -7,7 +8,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
-import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,8 +22,7 @@ public class BlendBallBrush extends AbstractBlendBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Blend Ball Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b bb water -- Toggles include or exclude (default) water.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.blend-ball.info"));
             return;
         }
         super.handleCommand(parameters, snipe);

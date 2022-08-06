@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
@@ -41,7 +42,7 @@ public class PerformerExecutor implements CommandExecutor {
         BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
         Brush brush = toolkit.getCurrentBrush();
         if (!(brush instanceof PerformerBrush performer)) {
-            sender.sendMessage("This brush is not a performer brush.");
+            sniper.print(Caption.of("voxelsniper.brush.command.performer.invalid-brush"));
             return;
         }
         String[] parameters = arguments.length == 0 ? new String[]{"m"} : arguments;

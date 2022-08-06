@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -8,7 +9,7 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,7 +36,7 @@ public class VoltmeterBrush extends AbstractBrush {
             return;
         }
         int power = blockData.getState(powerProperty);
-        messenger.sendMessage(ChatColor.AQUA + "Blocks until repeater needed: " + power);
+        messenger.sendMessage(Caption.of("voxelsniper.brush.voltmeter.data", power));
     }
 
     private void volt(Snipe snipe) {
@@ -46,19 +47,41 @@ public class VoltmeterBrush extends AbstractBrush {
             Block block = world.getBlockAt(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ());
             boolean indirect = block.isBlockIndirectlyPowered();
             boolean direct = block.isBlockPowered();
-            messenger.sendMessage(ChatColor.AQUA + "Direct Power? " + direct + " Indirect Power? " + indirect);
-            messenger.sendMessage(ChatColor.BLUE + "Top Direct? " + block.isBlockFacePowered(BlockFace.UP) + " Top Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.UP));
-            messenger.sendMessage(ChatColor.BLUE + "Bottom Direct? " + block.isBlockFacePowered(BlockFace.DOWN) + " Bottom Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.DOWN));
-            messenger.sendMessage(ChatColor.BLUE + "East Direct? " + block.isBlockFacePowered(BlockFace.EAST) + " East Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.EAST));
-            messenger.sendMessage(ChatColor.BLUE + "West Direct? " + block.isBlockFacePowered(BlockFace.WEST) + " West Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.WEST));
-            messenger.sendMessage(ChatColor.BLUE + "North Direct? " + block.isBlockFacePowered(BlockFace.NORTH) + " North Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.NORTH));
-            messenger.sendMessage(ChatColor.BLUE + "South Direct? " + block.isBlockFacePowered(BlockFace.SOUTH) + " South Indirect? " + block
-                    .isBlockFaceIndirectlyPowered(BlockFace.SOUTH));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.direct",
+                    VoxelSniperText.getStatus(direct),
+                    VoxelSniperText.getStatus(indirect)
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.top",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.UP)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.UP))
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.bottom",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.DOWN)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.DOWN))
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.east",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.EAST)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.EAST))
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.west",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.WEST)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.WEST))
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.north",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.NORTH)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.NORTH))
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.voltmeter.south",
+                    VoxelSniperText.getStatus(block.isBlockFacePowered(BlockFace.SOUTH)),
+                    VoxelSniperText.getStatus(block.isBlockFaceIndirectlyPowered(BlockFace.SOUTH))
+            ));
             return null;
         });
     }
@@ -67,7 +90,7 @@ public class VoltmeterBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.LIGHT_PURPLE + "Right click with arrow to see if blocks/faces are powered. Gunpowder measures wire current.")
+                .message(Caption.of("voxelsniper.brush.voltmeter.usage"))
                 .send();
     }
 

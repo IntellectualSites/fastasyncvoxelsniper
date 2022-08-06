@@ -1,9 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +32,38 @@ public class SplineBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Spline Brush Barameters");
-            messenger.sendMessage(ChatColor.AQUA + "/b sp ss -- Enables endpoint selection mode for desired curve");
-            messenger.sendMessage(ChatColor.AQUA + "/b sp sc -- Enables control point selection mode for desired curve");
-            messenger.sendMessage(ChatColor.AQUA + "/b sp clear -- Clears out the curve selection");
-            messenger.sendMessage(ChatColor.AQUA + "/b sp ren -- Renders curve from control points");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("ss")) {
                     if (this.set) {
                         this.set = false;
-                        messenger.sendMessage(ChatColor.AQUA + "Endpoint selection mode disabled.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.spline.set-endpoint",
+                                VoxelSniperText.getStatus(false)
+                        ));
                     } else {
                         this.set = true;
                         this.ctrl = false;
-                        messenger.sendMessage(ChatColor.GRAY + "Endpoint selection mode ENABLED.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.spline.set-endpoint",
+                                VoxelSniperText.getStatus(true)
+                        ));
                     }
                 } else if (firstParameter.equalsIgnoreCase("sc")) {
                     if (this.ctrl) {
                         this.ctrl = false;
-                        messenger.sendMessage(ChatColor.AQUA + "Control point selection mode disabled.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.spline.set-control-point",
+                                VoxelSniperText.getStatus(false)
+                        ));
                     } else {
                         this.set = false;
                         this.ctrl = true;
-                        messenger.sendMessage(ChatColor.GRAY + "Control point selection mode ENABLED.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.spline.set-control-point",
+                                VoxelSniperText.getStatus(true)
+                        ));
                     }
                 } else if (firstParameter.equalsIgnoreCase("clear")) {
                     clear(snipe);
@@ -70,14 +79,13 @@ public class SplineBrush extends AbstractPerformerBrush {
                             render();
                         }
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Some endpoints or controlspoints are missing.");
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.missing-points"));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -119,37 +127,53 @@ public class SplineBrush extends AbstractPerformerBrush {
                 return;
             }
             this.endPts.add(targetBlock);
-            messenger.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock
-                    .getZ() + ") " + ChatColor.GRAY + "to endpoint selection");
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.performer-brush.spline.add-endpoint",
+                    targetBlock.getX(),
+                    targetBlock.getY(),
+                    targetBlock.getZ()
+            ));
             return;
         }
         if (this.ctrlPts.contains(targetBlock) || this.ctrlPts.size() == 2) {
             return;
         }
         this.ctrlPts.add(targetBlock);
-        messenger.sendMessage(ChatColor.GRAY + "Added block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock
-                .getZ() + ") " + ChatColor.GRAY + "to control point selection");
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.spline.add-control-point",
+                targetBlock.getX(),
+                targetBlock.getY(),
+                targetBlock.getZ()
+        ));
     }
 
     private void removeFromSet(Snipe snipe, boolean ep, BlockVector3 targetBlock) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (ep) {
             if (!this.endPts.contains(targetBlock)) {
-                messenger.sendMessage(ChatColor.RED + "That block is not in the endpoint selection set.");
+                messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.not-in-endpoint"));
                 return;
             }
             this.endPts.add(targetBlock);
-            messenger.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock
-                    .getY() + ", " + targetBlock.getZ() + ") " + ChatColor.GRAY + "from endpoint selection");
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.performer-brush.spline.remove-endpoint",
+                    targetBlock.getX(),
+                    targetBlock.getY(),
+                    targetBlock.getZ()
+            ));
             return;
         }
         if (!this.ctrlPts.contains(targetBlock)) {
-            messenger.sendMessage(ChatColor.RED + "That block is not in the control point selection set.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.not-in-control-point"));
             return;
         }
         this.ctrlPts.remove(targetBlock);
-        messenger.sendMessage(ChatColor.GRAY + "Removed block " + ChatColor.RED + "(" + targetBlock.getX() + ", " + targetBlock.getY() + ", " + targetBlock
-                .getZ() + ") " + ChatColor.GRAY + "from control point selection");
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.spline.remove-control-point",
+                targetBlock.getX(),
+                targetBlock.getY(),
+                targetBlock.getZ()
+        ));
     }
 
     private boolean spline(Point start, Point end, Point c1, Point c2, Snipe snipe) {
@@ -178,8 +202,9 @@ public class SplineBrush extends AbstractPerformerBrush {
             }
             return true;
         } catch (RuntimeException exception) {
-            messenger.sendMessage(ChatColor.RED + "Not enough points selected; " + this.endPts.size() + " endpoints, " + this.ctrlPts
-                    .size() + " control points");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.not-enough-points", this.endPts.size(),
+                    this.ctrlPts.size()
+            ));
             return false;
         }
     }
@@ -204,16 +229,21 @@ public class SplineBrush extends AbstractPerformerBrush {
         this.ctrlPts.clear();
         this.endPts.clear();
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.GRAY + "Bezier curve cleared.");
+        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.cleared"));
     }
 
     @Override
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(this.set ? ChatColor.GRAY + "Endpoint selection mode ENABLED." :
-                        this.ctrl ? ChatColor.GRAY + "Endpoint selection mode ENABLED." :
-                                ChatColor.AQUA + "No selection mode enabled.")
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.spline.set-endpoint",
+                        VoxelSniperText.getStatus(this.set)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.spline.set-control-point",
+                        VoxelSniperText.getStatus(this.ctrl)
+                ))
                 .send();
     }
 

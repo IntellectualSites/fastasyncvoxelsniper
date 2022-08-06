@@ -39,10 +39,10 @@ public class CubePainter implements Painter {
     @Override
     public void paint() {
         if (this.center == null) {
-            throw new RuntimeException("Center must be specified");
+            throw new RuntimeException("Center must be specified.");
         }
         if (this.blockSetter == null) {
-            throw new RuntimeException("Block setter must be specified");
+            throw new RuntimeException("Block setter must be specified.");
         }
         paintCube();
     }

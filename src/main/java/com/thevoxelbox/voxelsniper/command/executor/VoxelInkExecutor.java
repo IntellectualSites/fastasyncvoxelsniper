@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -14,7 +15,6 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -57,18 +57,18 @@ public class VoxelInkExecutor implements CommandExecutor {
             try {
                 blockState = BlockState.get(arguments[0]);
             } catch (InputParseException ignored) {
-                sender.sendMessage("Could not parse block data input.");
+                sniper.print(Caption.of("voxelsniper.brush.command.cannot-parse-input"));
                 return;
             }
         }
 
         if (blockState == null) {
-            sender.sendMessage(ChatColor.RED + "You have selected an invalid block state.");
+            sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
             return;
         }
         if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                 blockState.getBlockType().getResource())) {
-            sender.sendMessage(ChatColor.RED + "You are not allowed to use " + blockState.getAsString() + ".");
+            sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", blockState.getAsString()));
             return;
         }
 

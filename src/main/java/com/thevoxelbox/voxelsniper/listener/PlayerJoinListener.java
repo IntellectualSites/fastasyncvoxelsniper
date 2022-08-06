@@ -1,16 +1,15 @@
 package com.thevoxelbox.voxelsniper.listener;
 
+import com.fastasyncworldedit.core.configuration.Caption;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 import static com.thevoxelbox.voxelsniper.VoxelSniperPlugin.hasUpdate;
 import static com.thevoxelbox.voxelsniper.VoxelSniperPlugin.newVersionTitle;
@@ -29,31 +28,29 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
     public void listen(PlayerJoinEvent event) {
         VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        Sniper sniper = getSniperFromRegistry(uuid);
+        Sniper sniper = getSniperFromRegistry(player);
         if (player.hasPermission("voxelsniper.admin") && (hasUpdate || updateCheckFailed) && config.areUpdateNotificationsEnabled()) {
             if (updateCheckFailed) {
-                player.sendMessage(ChatColor.RED + "Could not check for FastAsyncVoxelSniper updates.");
+                sniper.print(Caption.of("favs.info.update.check-failed"));
             } else {
-                player.sendMessage(ChatColor.GOLD + "An update for FastAsyncVoxelSniper is available.");
-                player.sendMessage(ChatColor.GOLD + "You are running version " +
-                        ChatColor.AQUA + this.plugin.getDescription().getVersion() + ChatColor.GOLD + ", the latest version is " +
-                        ChatColor.AQUA + newVersionTitle);
-                player.sendMessage(ChatColor.GOLD + "Update at https://dev.bukkit.org/projects/favs");
+                sniper.print(Caption.of(
+                        "favs.info.update.update-available",
+                        this.plugin.getDescription().getVersion(),
+                        newVersionTitle,
+                        TextComponent
+                                .of("https://dev.bukkit.org/projects/favs")
+                                .clickEvent(ClickEvent.openUrl("https://dev.bukkit.org/projects/favs"))
+                ));
             }
         }
-        if (sniper == null) {
-            return;
-        }
         if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
-            sniper.sendInfo(player);
+            sniper.sendInfo(player, true);
         }
     }
 
-    @Nullable
-    private Sniper getSniperFromRegistry(UUID uuid) {
+    private Sniper getSniperFromRegistry(Player player) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        return sniperRegistry.getSniper(uuid);
+        return sniperRegistry.registerAndGetSniper(player);
     }
 
 }

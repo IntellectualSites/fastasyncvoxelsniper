@@ -1,12 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
@@ -31,8 +31,7 @@ public class LineBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Line Brush instructions: Right click first point with the arrow. " +
-                    "Right click with gunpowder to draw a line to set the second point.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.line.info"));
         }
     }
 
@@ -42,7 +41,7 @@ public class LineBrush extends AbstractPerformerBrush {
         this.originCoordinates = Vectors.toBukkit(targetBlock);
         this.targetWorld = TaskManager.taskManager().sync(() -> BukkitAdapter.adapt(getEditSession().getWorld()));
         SnipeMessenger messenger = snipe.createMessenger();
-        messenger.sendMessage(ChatColor.DARK_PURPLE + "First point selected.");
+        messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
     }
 
     @Override
@@ -51,7 +50,7 @@ public class LineBrush extends AbstractPerformerBrush {
         World world = BukkitAdapter.adapt(getEditSession().getWorld());
         if (this.originCoordinates == null || !world.equals(this.targetWorld)) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.RED + "Warning: You did not select a first coordinate with the arrow");
+            messenger.sendMessage(Caption.of("voxelsniper.warning.brush.first-coordinate"));
         } else {
             this.targetCoordinates = Vectors.toBukkit(targetBlock);
             lineGunpowder();

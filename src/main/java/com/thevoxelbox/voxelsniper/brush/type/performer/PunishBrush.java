@@ -1,16 +1,18 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.HumanEntity;
@@ -24,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PunishBrush extends AbstractPerformerBrush {
@@ -71,42 +72,39 @@ public class PunishBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Punish Brush Options:");
-            messenger.sendMessage(ChatColor.AQUA + "/b p [p] -- Sets Punishment to p.");
-            messenger.sendMessage(ChatColor.AQUA + "/vc [n] -- Sets Punishment level to n.");
-            messenger.sendMessage(ChatColor.AQUA + "/vh [n] -- Sets Punishment duration to n.");
-            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSM [s] -- Makes Punish Brush only affect s player name.");
-            messenger.sendMessage(ChatColor.AQUA + "/b p toggleSelf -- Toggles whether you get hit as well.");
-            messenger.sendMessage(ChatColor.AQUA + "/b p toggleHypnoLandscape -- Makes Hypno punishment only affect " +
-                    "landscape.");
-            messenger.sendMessage(ChatColor.AQUA + "/b p list -- Lists all available punishments.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(
-                            Arrays.stream(Punishment.values())
-                                    .map(punishment -> ((punishment == this.punishment) ? ChatColor.GOLD : ChatColor.GRAY) +
-                                            punishment.name())
-                                    .collect(Collectors.joining(ChatColor.WHITE + ", ",
-                                            ChatColor.AQUA + "Available punishments: ", ""
-                                    ))
-                    );
+                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                            Arrays.stream(Punishment.values()).toList(),
+                            (punishment, punishment2) -> punishment.getName().compareTo(punishment2.getName()),
+                            Punishment::getFullName,
+                            punishment -> punishment,
+                            this.punishment,
+                            "voxelsniper.performer-brush.punish"
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("toggleSelf")) {
                     this.hitsSelf = !this.hitsSelf;
                     if (this.hitsSelf) {
-                        messenger.sendMessage(ChatColor.AQUA + "Your punishments will now affect you too!");
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.hit-self"));
                     } else {
-                        messenger.sendMessage(ChatColor.AQUA + "Your punishments will no longer affect you!");
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.hit-other"));
                     }
                 } else if (firstParameter.equalsIgnoreCase("toggleHypnoLandscape")) {
                     this.hypnoAffectLandscape = !this.hypnoAffectLandscape;
                 } else {
                     try {
                         this.punishment = Punishment.valueOf(firstParameter.toUpperCase(Locale.ROOT));
-                        messenger.sendMessage(ChatColor.AQUA + this.punishment.name()
-                                .toLowerCase(Locale.ROOT) + " punishment selected.");
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.punish.set-punishment",
+                                this.punishment.getFullName()
+                        ));
                     } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(ChatColor.RED + "Invalid Punishment: " + firstParameter);
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.performer-brush.punish.invalid-punishment",
+                                firstParameter
+                        ));
                     }
                 }
             } else if (parameters.length == 2) {
@@ -116,18 +114,19 @@ public class PunishBrush extends AbstractPerformerBrush {
                         this.specificPlayer = !this.specificPlayer;
                         if (this.specificPlayer) {
                             this.punishPlayerName = punishPlayerName;
-                            messenger.sendMessage(ChatColor.AQUA + "Your punishments will now only affect: " + this.punishPlayerName);
+                            messenger.sendMessage(Caption.of(
+                                    "voxelsniper.performer-brush.punish.hit-player",
+                                    this.punishPlayerName
+                            ));
                         }
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid player name: " + punishPlayerName);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.invalid-player", punishPlayerName));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -161,7 +160,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
         if (!player.hasPermission("voxelsniper.punish")) {
-            messenger.sendMessage("The server says no!");
+            messenger.sendMessage(Caption.of("voxelsniper.command.missing-permission", "voxelsniper.punish"));
             return;
         }
         this.punishDuration = toolkitProperties.getVoxelHeight();
@@ -170,7 +169,7 @@ public class PunishBrush extends AbstractPerformerBrush {
             TaskManager.taskManager().sync(() -> {
                 Player punishedPlayer = Bukkit.getPlayer(this.punishPlayerName);
                 if (punishedPlayer == null) {
-                    messenger.sendMessage("No player " + this.punishPlayerName + " found.");
+                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.invalid-player", this.punishPlayerName));
                     return null;
                 }
                 applyPunishment(punishedPlayer, snipe);
@@ -197,7 +196,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                             }
                         } catch (RuntimeException exception) {
                             exception.printStackTrace();
-                            messenger.sendMessage("An error occured.");
+                            messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
                             return null;
                         }
                     } else if (brushSize == this.infiniPunishSize) {
@@ -206,7 +205,7 @@ public class PunishBrush extends AbstractPerformerBrush {
                     }
                 }
             }
-            messenger.sendMessage(ChatColor.DARK_RED + "Punishment applied to " + numPunishApps + " living entities.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.punish.applied", numPunishApps));
             return null;
         });
     }
@@ -218,7 +217,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
         if (!player.hasPermission("voxelsniper.punish")) {
-            messenger.sendMessage("The server says no!");
+            messenger.sendMessage(Caption.of("voxelsniper.command.missing-permission", "voxelsniper.punish"));
             return;
         }
         int brushSize = toolkitProperties.getBrushSize();
@@ -381,42 +380,59 @@ public class PunishBrush extends AbstractPerformerBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(ChatColor.GREEN + "Punishment: " + this.punishment)
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.punish.set-punishment",
+                        this.punishment.getFullName()
+                ))
                 .brushSizeMessage()
                 .cylinderCenterMessage()
                 .send();
     }
 
     private enum Punishment {
-        FIRE,
-        LIGHTNING,
-        BLINDNESS,
-        DRUNK,
-        KILL,
-        RANDOMTP,
-        ALL_POTION,
-        SLOW,
-        JUMP,
-        ABSORPTION,
-        DAMAGE_RESISTANCE,
-        FAST_DIGGING,
-        FIRE_RESISTANCE,
-        HEAL,
-        HEALTH_BOOST,
-        HUNGER,
-        INCREASE_DAMAGE,
-        INVISIBILITY,
-        NIGHT_VISION,
-        POISON,
-        REGENERATION,
-        SATURATION,
-        SLOW_DIGGING,
-        SPEED,
-        WATER_BREATHING,
-        WEAKNESS,
-        WITHER,
-        FORCE,
-        HYPNO
+        FIRE("fire"),
+        LIGHTNING("lightning"),
+        BLINDNESS("blindness"),
+        DRUNK("drunk"),
+        KILL("kill"),
+        RANDOMTP("random-tp"),
+        ALL_POTION("all-potion"),
+        SLOW("slow"),
+        JUMP("jump"),
+        ABSORPTION("absorption"),
+        DAMAGE_RESISTANCE("damage-resistance"),
+        FAST_DIGGING("fast-digging"),
+        FIRE_RESISTANCE("fire-resistance"),
+        HEAL("heal"),
+        HEALTH_BOOST("health-boost"),
+        HUNGER("hunger"),
+        INCREASE_DAMAGE("increase-damage"),
+        INVISIBILITY("invisibility"),
+        NIGHT_VISION("night-vision"),
+        POISON("poison"),
+        REGENERATION("regeneration"),
+        SATURATION("saturation"),
+        SLOW_DIGGING("slow-digging"),
+        SPEED("speed"),
+        WATER_BREATHING("water-breathing"),
+        WEAKNESS("weakness"),
+        WITHER("wither"),
+        FORCE("force"),
+        HYPNO("hypno");
+
+        private final String name;
+
+        Punishment(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public TranslatableComponent getFullName() {
+            return Caption.of("voxelsniper.performer-brush.punish.type." + this.name);
+        }
     }
 
 }

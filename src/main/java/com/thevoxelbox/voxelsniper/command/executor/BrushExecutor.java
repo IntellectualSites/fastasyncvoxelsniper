@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
@@ -13,8 +14,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -38,12 +39,12 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            sender.sendMessage(ChatColor.RED + "Sniper not found.");
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
             return;
         }
         Toolkit toolkit = sniper.getCurrentToolkit();
         if (toolkit == null) {
-            sender.sendMessage(ChatColor.RED + "Current toolkit not found.");
+            sniper.print(Caption.of("voxelsniper.brush.command.missing-toolkit"));
             return;
         }
         ToolkitProperties toolkitProperties = toolkit.getProperties();
@@ -51,25 +52,25 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
             BrushProperties previousBrushProperties = toolkit.getPreviousBrushProperties();
             String permission = previousBrushProperties.getPermission();
             if (permission != null && !player.hasPermission(permission)) {
-                sender.sendMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
+                sniper.print(Caption.of("voxelsniper.brush.command.missing-permission", permission));
                 return;
             }
             toolkit.useBrush(previousBrushProperties);
-            sniper.sendInfo(sender);
+            sniper.sendInfo(sender, true);
             return;
         }
         String firstArgument = arguments[0];
         Integer brushSize = NumericParser.parseInteger(firstArgument);
         if (brushSize != null) {
             if (brushSize < 0) {
-                sender.sendMessage(ChatColor.RED + "Size must be a positive integer.");
+                sniper.print(Caption.of("voxelsniper.brush.command.brush.invalid-size"));
                 return;
             }
             VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
             int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
             Messenger messenger = new Messenger(plugin, sender);
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
-                sender.sendMessage(ChatColor.RED + "Size is restricted to " + litesniperMaxBrushSize + " for you.");
+                sniper.print(Caption.of("voxelsniper.brush.command.brush.restricted-size", litesniperMaxBrushSize));
                 toolkitProperties.setBrushSize(litesniperMaxBrushSize);
                 messenger.sendBrushSizeMessage(litesniperMaxBrushSize);
             } else {
@@ -81,12 +82,12 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
         BrushProperties newBrush = brushRegistry.getBrushProperties(firstArgument);
         if (newBrush == null) {
-            sender.sendMessage(ChatColor.RED + "Could not find brush for alias " + firstArgument + ".");
+            sniper.print(Caption.of("voxelsniper.brush.command.brush.no-alias", firstArgument));
             return;
         }
         String permission = newBrush.getPermission();
         if (permission != null && !player.hasPermission(permission)) {
-            sender.sendMessage(ChatColor.RED + "You are lacking the permission node: " + permission);
+            sniper.print(Caption.of("voxelsniper.brush.command.missing-permission", permission));
             return;
         }
         Brush brush = toolkit.useBrush(newBrush);
@@ -96,7 +97,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
             brush.handleCommand(parameters, snipe);
             return;
         }
-        sniper.sendInfo(sender);
+        sniper.sendInfo(sender, true);
     }
 
     @Override

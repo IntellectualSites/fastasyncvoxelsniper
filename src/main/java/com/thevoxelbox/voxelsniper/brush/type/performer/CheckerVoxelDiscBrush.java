@@ -1,10 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.ChatColor;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,22 +24,22 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "CheckerVoxelDisc Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b cvd [true|false] -- Enables or disables using World Coordinates.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("true")) {
                     this.useWorldCoordinates = true;
-                    messenger.sendMessage(ChatColor.AQUA + "Enabled using World Coordinates.");
+                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
+                            ".set-using-world-coordinates", VoxelSniperText.getStatus(true)));
                 } else if (firstParameter.equalsIgnoreCase("false")) {
                     this.useWorldCoordinates = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Disabled using World Coordinates.");
+                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
+                            ".set-using-world-coordinates", VoxelSniperText.getStatus(false)));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -88,6 +89,8 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
+                .message(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
+                        ".set-using-world-coordinates", VoxelSniperText.getStatus(this.useWorldCoordinates)))
                 .send();
     }
 

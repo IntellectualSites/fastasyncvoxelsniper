@@ -1,12 +1,13 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,39 +31,38 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Underlay Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b under all -- Sets the brush to overlay over ALL materials, not just " +
-                    "natural surface ones (will no longer ignore trees and buildings).");
-            messenger.sendMessage(ChatColor.AQUA + "/b under some -- Sets the brush to overlay over natural surface " +
-                    "materials.");
-            messenger.sendMessage(ChatColor.AQUA + "/b under d [n] -- Sets the number of blocks thick to change to n.");
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.underlay.info"));
         } else {
             if (parameters.length == 1) {
                 if (firstParameter.equalsIgnoreCase("all")) {
                     this.allBlocks = true;
-                    messenger.sendMessage(ChatColor.BLUE + "Will underlay over any block: " + this.depth);
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.underlay.set-underlay-all",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else if (firstParameter.equalsIgnoreCase("some")) {
                     this.allBlocks = false;
-                    messenger.sendMessage(ChatColor.BLUE + "Will underlay only natural block types: " + this.depth);
+                    messenger.sendMessage(Caption.of(
+                            "voxelsniper.performer-brush.underlay.set-underlay-natural",
+                            VoxelSniperText.getStatus(true)
+                    ));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display " +
-                            "parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else if (parameters.length == 2) {
                 if (firstParameter.equalsIgnoreCase("d")) {
                     Integer depth = NumericParser.parseInteger(parameters[1]);
                     if (depth != null) {
                         this.depth = depth < 1 ? 1 : depth;
-                        messenger.sendMessage(ChatColor.AQUA + "Depth set to: " + this.depth);
+                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.underlay.set-depth", this.depth));
                     } else {
-                        messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -192,6 +192,15 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.underlay.set-underlay-all",
+                        VoxelSniperText.getStatus(this.allBlocks)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.underlay.set-underlay-natural",
+                        VoxelSniperText.getStatus(!this.allBlocks)
+                ))
+                .message(Caption.of("voxelsniper.performer-brush.underlay.set-depth", this.depth))
                 .send();
     }
 

@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
 import com.fastasyncworldedit.core.Fawe;
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.queue.implementation.QueueHandler;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
@@ -9,6 +10,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.item.ItemType;
@@ -25,8 +27,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
@@ -146,32 +148,29 @@ public class Sniper {
         BrushProperties currentBrushProperties = toolkit.getCurrentBrushProperties();
         String permission = currentBrushProperties.getPermission();
         if (permission != null && !player.hasPermission(permission)) {
-            player.sendMessage(ChatColor.RED + "You are not allowed to use this brush. You're missing the permission node " +
-                    "'" + permission + "'");
+            print(Caption.of("voxelsniper.sniper.missing-permission", permission));
             return false;
         }
-        {
-            BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
-            LocalSession session = wePlayer.getSession();
-            QueueHandler queue = Fawe.instance().getQueueHandler();
-            queue.async(() -> {
-                synchronized (session) {
-                    if (!player.isValid()) {
-                        return;
-                    }
-                    snipeOnCurrentThread(
-                            wePlayer,
-                            player,
-                            action,
-                            clickedBlock,
-                            clickedBlockFace,
-                            toolkit,
-                            toolAction,
-                            currentBrushProperties
-                    );
+        BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
+        LocalSession session = wePlayer.getSession();
+        QueueHandler queue = Fawe.instance().getQueueHandler();
+        queue.async(() -> {
+            synchronized (session) {
+                if (!player.isValid()) {
+                    return;
                 }
-            });
-        }
+                snipeOnCurrentThread(
+                        wePlayer,
+                        player,
+                        action,
+                        clickedBlock,
+                        clickedBlockFace,
+                        toolkit,
+                        toolAction,
+                        currentBrushProperties
+                );
+            }
+        });
         return true;
     }
 
@@ -276,7 +275,7 @@ public class Sniper {
                                         targetBlock.getY(),
                                         targetBlock.getZ()
                                 )))) {
-                            player.sendMessage(ChatColor.RED + "Snipe target block must be visible.");
+                            print(Caption.of("voxelsniper.sniper.target-invisible"));
                             return true;
                         }
                         Brush currentBrush = toolkit.getCurrentBrush();
@@ -286,7 +285,7 @@ public class Sniper {
                         Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
                         if (currentBrushProperties.getBrushPatternType() == BrushPatternType.SINGLE_BLOCK
                                 && toolkitProperties.getPattern().asBlockType() == null) {
-                            player.sendMessage(ChatColor.RED + "This brush requires a single-block pattern.");
+                            print(Caption.of("voxelsniper.sniper.single-block-pattern"));
                             return false;
                         }
 
@@ -316,17 +315,17 @@ public class Sniper {
         }
     }
 
-    public void sendInfo(CommandSender sender) {
+    public void sendInfo(CommandSender sender, boolean prefix) {
         Toolkit toolkit = getCurrentToolkit();
         if (toolkit == null) {
-            sender.sendMessage("Current toolkit: none");
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit-none"));
             return;
         }
-        sender.sendMessage("Current toolkit: " + toolkit.getToolkitName());
+        VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit", toolkit.getToolkitName()), prefix);
         BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
         Brush brush = toolkit.getCurrentBrush();
         if (brush == null) {
-            sender.sendMessage("No brush selected.");
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.no-brush-selected", toolkit.getToolkitName()), false);
             return;
         }
         ToolkitProperties toolkitProperties = toolkit.getProperties();
@@ -335,6 +334,28 @@ public class Sniper {
         if (brush instanceof PerformerBrush performer) {
             performer.sendPerformerInfo(snipe);
         }
+    }
+
+    /**
+     * Sends a component to a sniper. This method adds the prefix and handle translations.
+     *
+     * @param component component
+     * @since TODO
+     */
+    public void print(Component component) {
+        print(component, true);
+    }
+
+    /**
+     * Sends a component to a sniper. This method potentially adds the prefix and handle translations.
+     *
+     * @param component component
+     * @param prefix    prefix
+     * @since TODO
+     */
+    public void print(Component component, boolean prefix) {
+        Player player = getPlayer();
+        VoxelSniperText.print(player, component, prefix);
     }
 
     public UUID getUuid() {

@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import com.fastasyncworldedit.core.configuration.Caption;
+import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -8,7 +10,6 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,25 +27,22 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
         String firstParameter = parameters[0];
 
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Set Repeater Flip Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b setrf [d] -- Valid direction inputs are: n, s, ns, e, w, ew. " +
-                    "Sets the direction that you wish to flip your repeaters, defaults to north/south.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.info"));
         } else {
             if (parameters.length == 1) {
                 if (Stream.of("n", "s", "ns")
                         .anyMatch(firstParameter::startsWith)) {
                     this.northSouth = true;
-                    messenger.sendMessage(ChatColor.AQUA + "Flip direction set to north/south");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.north-south"));
                 } else if (Stream.of("e", "w", "ew")
                         .anyMatch(firstParameter::startsWith)) {
                     this.northSouth = false;
-                    messenger.sendMessage(ChatColor.AQUA + "Flip direction set to east/west.");
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.east-west"));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid brush parameters! Use the \"info\" parameter to display parameter info.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -61,22 +59,26 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(targetBlock)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 lastBlock = getLastBlock();
+        SnipeMessenger messenger = snipe.createMessenger();
         if (set(lastBlock)) {
-            SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(ChatColor.GRAY + "Point one");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
+        } else {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
         }
     }
 
-    private boolean set(BlockVector3 block) {
+    protected boolean set(BlockVector3 block) {
         if (this.block == null) {
             this.block = block;
             return true;
@@ -108,7 +110,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
     private void perform(int x, int y, int z, BlockState block) {
         BlockType type = block.getBlockType();
         if (type == BlockTypes.REPEATER) {
-            Property<Integer> delayProperty = type.getProperty("delay");
+            Property<Integer> delayProperty = type.getProperty(PropertyKey.DELAY);
             if (delayProperty == null) {
                 return;
             }
@@ -135,6 +137,9 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
         this.block = null;
         snipe.createMessageSender()
                 .brushNameMessage()
+                .message(Caption.of(northSouth
+                        ? "voxelsniper.brush.set-redstone-flip.north-south"
+                        : "voxelsniper.brush.set-redstone-flip.east-west"))
                 .send();
     }
 

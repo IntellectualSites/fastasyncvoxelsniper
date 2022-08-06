@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -9,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,8 +36,7 @@ public class PullBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         String firstParameter = parameters[0];
         if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(ChatColor.GOLD + "Pull Brush Parameters:");
-            messenger.sendMessage(ChatColor.AQUA + "/b pull [n] -- Sets pinch and bubble to n.");
+            messenger.sendMessage(Caption.of("voxelsniper.brush.pull.info"));
         } else {
             if (parameters.length == 1) {
                 Double pinch = NumericParser.parseDouble(firstParameter);
@@ -45,14 +44,13 @@ public class PullBrush extends AbstractBrush {
                 if (pinch != null && bubble != null) {
                     this.pinch = 1 - pinch;
                     this.bubble = bubble;
-                    messenger.sendMessage(ChatColor.AQUA + "Pinch set to: " + this.pinch);
-                    messenger.sendMessage(ChatColor.AQUA + "Bubble set to: " + this.bubble);
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.pull.set-pinch", this.pinch));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.pull.set-bubble", this.bubble));
                 } else {
-                    messenger.sendMessage(ChatColor.RED + "Invalid number.");
+                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[0]));
                 }
             } else {
-                messenger.sendMessage(ChatColor.RED + "Invalid brush parameters length! Use the \"info\" parameter to display " +
-                        "parameter info.");
+                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
             }
         }
     }
@@ -236,8 +234,8 @@ public class PullBrush extends AbstractBrush {
                 .brushNameMessage()
                 .brushSizeMessage()
                 .voxelHeightMessage()
-                .message(ChatColor.AQUA + "Pinch " + (-this.pinch + 1))
-                .message(ChatColor.AQUA + "Bubble " + this.bubble)
+                .message(Caption.of("voxelsniper.brush.pull.set-pinch", -this.pinch + 1))
+                .message(Caption.of("voxelsniper.brush.pull.set-bubble", this.bubble))
                 .send();
     }
 
