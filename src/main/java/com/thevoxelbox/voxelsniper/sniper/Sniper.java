@@ -340,7 +340,7 @@ public class Sniper {
      * Sends a component to a sniper. This method adds the prefix and handle translations.
      *
      * @param component component
-     * @since TODO
+     * @since 2.7.0
      */
     public void print(Component component) {
         print(component, true);
@@ -351,7 +351,7 @@ public class Sniper {
      *
      * @param component component
      * @param prefix    prefix
-     * @since TODO
+     * @since 2.7.0
      */
     public void print(Component component, boolean prefix) {
         Player player = getPlayer();

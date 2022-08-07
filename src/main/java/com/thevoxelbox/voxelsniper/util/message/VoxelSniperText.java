@@ -33,7 +33,7 @@ public class VoxelSniperText {
      *
      * @param target    the target
      * @param component the component
-     * @since TODO
+     * @since 2.7.0
      */
     public static void print(CommandSender target, Component component) {
         print(target, component, true);
@@ -45,7 +45,7 @@ public class VoxelSniperText {
      * @param target    the target
      * @param component the component
      * @param prefix    the prefix
-     * @since TODO
+     * @since 2.7.0
      */
     public static void print(CommandSender target, Component component, boolean prefix) {
         print(target, component, target instanceof Player player
@@ -60,7 +60,7 @@ public class VoxelSniperText {
      * @param component the component
      * @param locale    the locale
      * @param prefix    the prefix
-     * @since TODO
+     * @since 2.7.0
      */
     public static void print(CommandSender target, Component component, Locale locale, boolean prefix) {
         TextAdapter.sendMessage(target, format(component, locale, prefix));
@@ -73,7 +73,7 @@ public class VoxelSniperText {
      * @param locale    the locale
      * @param prefix    the prefix
      * @return the component
-     * @since TODO
+     * @since 2.7.0
      */
     public static Component format(Component component, Locale locale, boolean prefix) {
         if (prefix) {
@@ -93,7 +93,7 @@ public class VoxelSniperText {
      * @param locale    the locale
      * @param prefix    the prefix
      * @return the string
-     * @since TODO
+     * @since 2.7.0
      */
     public static String reduceToText(Component component, Locale locale, boolean prefix) {
         return TextHelper.reduceToText(format(component, locale, prefix));
@@ -104,7 +104,7 @@ public class VoxelSniperText {
      *
      * @param status the status
      * @return the status component
-     * @since TODO
+     * @since 2.7.0
      */
     public static Component getStatus(boolean status) {
         return Caption.of(status ? "voxelsniper.sniper.enabled" : "voxelsniper.sniper.disabled");
@@ -119,7 +119,7 @@ public class VoxelSniperText {
      * @param transformFunction the transform function, transforms a collection object to a component
      * @param path              the path
      * @return the component
-     * @since TODO
+     * @since 2.7.0
      */
     public static <T> Component formatList(
             Collection<T> collection,
@@ -157,7 +157,7 @@ public class VoxelSniperText {
      * @param current           the current
      * @param path              the path
      * @return the component
-     * @since TODO
+     * @since 2.7.0
      */
     public static <T> Component formatListWithCurrent(
             Collection<T> collection,

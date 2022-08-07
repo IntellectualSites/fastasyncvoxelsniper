@@ -51,7 +51,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "2.6.1-SNAPSHOT"
+version = "2.7.0"
 
 bukkit {
     name = "FastAsyncVoxelSniper"

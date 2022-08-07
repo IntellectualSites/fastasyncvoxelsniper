@@ -189,7 +189,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
      * Return the translation manager.
      *
      * @return the translation manager
-     * @since TODO
+     * @since 2.7.0
      */
     public TranslationManager getTranslationManager() {
         return translationManager.getValue();
