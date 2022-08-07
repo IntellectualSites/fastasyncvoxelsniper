@@ -39,10 +39,10 @@ public class VoxelHeightExecutor implements CommandExecutor {
         try {
             height = Integer.parseInt(arguments[0]);
         } catch (NumberFormatException ignored) {
-            sniper.print(Caption.of("voxelsniper.brush.command.voxel-height.invalid-input", arguments[0]));
+            sniper.print(Caption.of("voxelsniper.command.voxel-height.invalid-input", arguments[0]));
             return;
         } catch (ArrayIndexOutOfBoundsException ignored) {
-            sniper.print(Caption.of("voxelsniper.brush.command.voxel-height.invalid-input-none"));
+            sniper.print(Caption.of("voxelsniper.command.voxel-height.invalid-input-none"));
             return;
         }
         toolkitProperties.setVoxelHeight(height);

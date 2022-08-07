@@ -33,11 +33,11 @@ public class GotoExecutor implements CommandExecutor {
             x = Integer.parseInt(arguments[0]);
             z = Integer.parseInt(arguments[1]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
-            sniper.print(Caption.of("voxelsniper.brush.command.goto.invalid-syntax", arguments[0], arguments[1]));
+            sniper.print(Caption.of("voxelsniper.command.goto.invalid-syntax", arguments[0], arguments[1]));
             return;
         }
         player.teleport(new Location(world, x, world.getHighestBlockYAt(x, z), z));
-        sniper.print(Caption.of("voxelsniper.brush.command.goto.woosh"));
+        sniper.print(Caption.of("voxelsniper.command.goto.woosh"));
     }
 
 }

@@ -36,28 +36,28 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-sniper"));
             return;
         }
         int length = arguments.length;
         if (length == 0) {
-            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
-            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.remove-help-1"));
-            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.remove-help-2"));
+            sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
+            sniper.print(Caption.of("voxelsniper.command.toolkit.remove-help-1"));
+            sniper.print(Caption.of("voxelsniper.command.toolkit.remove-help-2"));
             return;
         }
         String firstArgument = arguments[0];
         if (length == 3 && firstArgument.equalsIgnoreCase("assign")) {
             ToolAction action = ToolAction.getToolAction(arguments[1]);
             if (action == null) {
-                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
+                sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
                 return;
             }
             PlayerInventory inventory = player.getInventory();
             ItemStack itemInHand = inventory.getItemInMainHand();
             ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
             if (itemType == ItemTypes.AIR) {
-                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assign-help"));
+                sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
                 return;
             }
             String toolkitName = arguments[2];
@@ -67,7 +67,7 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             }
             toolkit.addToolAction(itemType, action);
             sniper.addToolkit(toolkit);
-            sniper.print(Caption.of("voxelsniper.brush.command.toolkit.assigned", itemInHand.getType().name(),
+            sniper.print(Caption.of("voxelsniper.command.toolkit.assigned", itemInHand.getType().name(),
                     toolkitName, action.name()
             ));
             return;
@@ -75,7 +75,7 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
         if (length == 2 && firstArgument.equalsIgnoreCase("remove")) {
             Toolkit toolkit = sniper.getToolkit(arguments[1]);
             if (toolkit == null) {
-                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.not-found", arguments[1]));
+                sniper.print(Caption.of("voxelsniper.command.toolkit.not-found", arguments[1]));
                 return;
             }
             sniper.removeToolkit(toolkit);
@@ -86,12 +86,12 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
             ItemStack itemInHand = inventory.getItemInMainHand();
             ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
             if (itemType == ItemTypes.AIR) {
-                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.empty-hands"));
+                sniper.print(Caption.of("voxelsniper.command.toolkit.empty-hands"));
                 return;
             }
             Toolkit toolkit = sniper.getCurrentToolkit();
             if (toolkit == null) {
-                sniper.print(Caption.of("voxelsniper.brush.command.toolkit.default-tool"));
+                sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
                 return;
             }
             toolkit.removeToolAction(itemType);

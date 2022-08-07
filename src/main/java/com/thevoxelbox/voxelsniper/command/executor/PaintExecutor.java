@@ -43,7 +43,7 @@ public class PaintExecutor implements CommandExecutor, TabCompleter {
             } else {
                 Art art = Art.getByName(arguments[0]);
                 if (art == null) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.paint.invalid-art", arguments[0]));
+                    sniper.print(Caption.of("voxelsniper.command.paint.invalid-art", arguments[0]));
                     return;
                 }
                 ArtHelper.paint(player, art);

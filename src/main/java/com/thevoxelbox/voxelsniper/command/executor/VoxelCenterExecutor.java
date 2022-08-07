@@ -39,10 +39,10 @@ public class VoxelCenterExecutor implements CommandExecutor {
         try {
             center = Integer.parseInt(arguments[0]);
         } catch (NumberFormatException ignored) {
-            sniper.print(Caption.of("voxelsniper.brush.command.voxel-center.invalid-input", arguments[0]));
+            sniper.print(Caption.of("voxelsniper.command.voxel-center.invalid-input", arguments[0]));
             return;
         } catch (ArrayIndexOutOfBoundsException ignored) {
-            sniper.print(Caption.of("voxelsniper.brush.command.voxel-center.invalid-input-none"));
+            sniper.print(Caption.of("voxelsniper.command.voxel-center.invalid-input-none"));
             return;
         }
         toolkitProperties.setCylinderCenter(center);

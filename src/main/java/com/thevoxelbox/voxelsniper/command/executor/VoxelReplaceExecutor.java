@@ -67,12 +67,12 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
                         ).getType()
                 );
                 if (targetBlockType == null) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
+                    sniper.print(Caption.of("voxelsniper.command.invalid-block"));
                     return;
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                         targetBlockType.getResource())) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", targetBlockType.getId()));
+                    sniper.print(Caption.of("voxelsniper.command.not-allowed", targetBlockType.getId()));
                     return;
                 }
                 toolkitProperties.setReplacePattern(new BrushPattern(targetBlockType));
@@ -82,12 +82,12 @@ public class VoxelReplaceExecutor implements CommandExecutor, TabCompleter {
             BlockType blockType = BlockTypes.get(arguments[0]);
 
             if (blockType == null) {
-                sniper.print(Caption.of("voxelsniper.brush.command.voxel-replace-executor.invalid-block", arguments[0]));
+                sniper.print(Caption.of("voxelsniper.command.voxel-replace-executor.invalid-block", arguments[0]));
                 return;
             }
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                     blockType.getResource())) {
-                sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", blockType.getId()));
+                sniper.print(Caption.of("voxelsniper.command.not-allowed", blockType.getId()));
                 return;
             }
 
