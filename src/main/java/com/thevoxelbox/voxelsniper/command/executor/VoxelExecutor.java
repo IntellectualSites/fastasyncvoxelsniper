@@ -64,12 +64,12 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                         ).getType());
 
                 if (targetBlockType == null) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
+                    sniper.print(Caption.of("voxelsniper.command.invalid-block"));
                     return;
                 }
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                         targetBlockType.getResource())) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", targetBlockType.getId()));
+                    sniper.print(Caption.of("voxelsniper.command.not-allowed", targetBlockType.getId()));
                     return;
                 }
 
@@ -87,14 +87,14 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                 Pattern pattern = plugin.getPatternParser().parseFromInput(argument, parserContext);
 
                 if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(argument)) {
-                    sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", argument));
+                    sniper.print(Caption.of("voxelsniper.command.not-allowed", argument));
                     return;
                 }
 
                 toolkitProperties.setPattern(new BrushPattern(pattern, argument));
                 messenger.sendPatternMessage(toolkitProperties.getPattern());
             } catch (InputParseException e) {
-                sniper.print(Caption.of("voxelsniper.brush.command.voxel-executor.invalid-pattern", arguments[0]));
+                sniper.print(Caption.of("voxelsniper.command.voxel-executor.invalid-pattern", arguments[0]));
             }
         }
     }

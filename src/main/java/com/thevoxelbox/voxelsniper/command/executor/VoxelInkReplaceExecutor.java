@@ -57,18 +57,18 @@ public class VoxelInkReplaceExecutor implements CommandExecutor {
             try {
                 blockState = BlockState.get(arguments[0]);
             } catch (InputParseException ignored) {
-                sniper.print(Caption.of("voxelsniper.brush.command.cannot-parse-input"));
+                sniper.print(Caption.of("voxelsniper.command.cannot-parse-input"));
                 return;
             }
         }
 
         if (blockState == null) {
-            sniper.print(Caption.of("voxelsniper.brush.command.invalid-block"));
+            sniper.print(Caption.of("voxelsniper.command.invalid-block"));
             return;
         }
         if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
                 blockState.getBlockType().getResource())) {
-            sniper.print(Caption.of("voxelsniper.brush.command.not-allowed", blockState.getAsString()));
+            sniper.print(Caption.of("voxelsniper.command.not-allowed", blockState.getAsString()));
             return;
         }
 

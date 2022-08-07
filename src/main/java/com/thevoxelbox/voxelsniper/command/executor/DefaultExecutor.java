@@ -24,16 +24,16 @@ public class DefaultExecutor implements CommandExecutor {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-sniper"));
             return;
         }
         Toolkit toolkit = sniper.getCurrentToolkit();
         if (toolkit == null) {
-            sniper.print(Caption.of("voxelsniper.brush.command.missing-toolkit"));
+            sniper.print(Caption.of("voxelsniper.command.missing-toolkit"));
             return;
         }
         toolkit.reset();
-        sniper.print(Caption.of("voxelsniper.brush.command.default.reset"));
+        sniper.print(Caption.of("voxelsniper.command.default.reset"));
     }
 
 }

@@ -39,12 +39,12 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         Player player = (Player) sender;
         Sniper sniper = sniperRegistry.registerAndGetSniper(player);
         if (sniper == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-sniper"));
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-sniper"));
             return;
         }
         Toolkit toolkit = sniper.getCurrentToolkit();
         if (toolkit == null) {
-            sniper.print(Caption.of("voxelsniper.brush.command.missing-toolkit"));
+            sniper.print(Caption.of("voxelsniper.command.missing-toolkit"));
             return;
         }
         ToolkitProperties toolkitProperties = toolkit.getProperties();
@@ -52,7 +52,7 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
             BrushProperties previousBrushProperties = toolkit.getPreviousBrushProperties();
             String permission = previousBrushProperties.getPermission();
             if (permission != null && !player.hasPermission(permission)) {
-                sniper.print(Caption.of("voxelsniper.brush.command.missing-permission", permission));
+                sniper.print(Caption.of("voxelsniper.command.missing-permission", permission));
                 return;
             }
             toolkit.useBrush(previousBrushProperties);
@@ -63,14 +63,14 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         Integer brushSize = NumericParser.parseInteger(firstArgument);
         if (brushSize != null) {
             if (brushSize < 0) {
-                sniper.print(Caption.of("voxelsniper.brush.command.brush.invalid-size"));
+                sniper.print(Caption.of("voxelsniper.command.brush.invalid-size"));
                 return;
             }
             VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
             int litesniperMaxBrushSize = config.getLitesniperMaxBrushSize();
             Messenger messenger = new Messenger(plugin, sender);
             if (!sender.hasPermission("voxelsniper.ignorelimitations") && brushSize > litesniperMaxBrushSize) {
-                sniper.print(Caption.of("voxelsniper.brush.command.brush.restricted-size", litesniperMaxBrushSize));
+                sniper.print(Caption.of("voxelsniper.command.brush.restricted-size", litesniperMaxBrushSize));
                 toolkitProperties.setBrushSize(litesniperMaxBrushSize);
                 messenger.sendBrushSizeMessage(litesniperMaxBrushSize);
             } else {
@@ -82,12 +82,12 @@ public class BrushExecutor implements CommandExecutor, TabCompleter {
         BrushRegistry brushRegistry = this.plugin.getBrushRegistry();
         BrushProperties newBrush = brushRegistry.getBrushProperties(firstArgument);
         if (newBrush == null) {
-            sniper.print(Caption.of("voxelsniper.brush.command.brush.no-alias", firstArgument));
+            sniper.print(Caption.of("voxelsniper.command.brush.no-alias", firstArgument));
             return;
         }
         String permission = newBrush.getPermission();
         if (permission != null && !player.hasPermission(permission)) {
-            sniper.print(Caption.of("voxelsniper.brush.command.missing-permission", permission));
+            sniper.print(Caption.of("voxelsniper.command.missing-permission", permission));
             return;
         }
         Brush brush = toolkit.useBrush(newBrush);

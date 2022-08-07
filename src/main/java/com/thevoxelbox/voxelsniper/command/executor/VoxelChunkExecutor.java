@@ -31,7 +31,7 @@ public class VoxelChunkExecutor implements CommandExecutor {
         int x = location.getBlockX();
         int z = location.getBlockZ();
         world.refreshChunk(x, z);
-        sniper.print(Caption.of("voxelsniper.brush.command.voxel-chunk.refreshed"));
+        sniper.print(Caption.of("voxelsniper.command.voxel-chunk.refreshed"));
     }
 
 }

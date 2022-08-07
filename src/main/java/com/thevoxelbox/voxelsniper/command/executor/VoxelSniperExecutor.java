@@ -171,7 +171,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                     VoxelSniperText.print(sender, Caption.of("voxelsniper.command.voxel-sniper.config-reload"));
                 } else {
                     VoxelSniperText.print(sender, Caption.of(
-                            "voxelsniper.brush.command.missing-permission",
+                            "voxelsniper.command.missing-permission",
                             "voxelsniper.admin"
                     ));
                 }
@@ -190,7 +190,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                     sender.sendMessage(destination);
                 } else {
                     VoxelSniperText.print(sender, Caption.of(
-                            "voxelsniper.brush.command.missing-permission",
+                            "voxelsniper.command.missing-permission",
                             "voxelsniper.admin"
                     ));
                 }

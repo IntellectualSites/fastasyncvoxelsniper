@@ -35,7 +35,7 @@ public final class Command extends org.bukkit.command.Command {
         setPermission(permission);
         setPermissionMessage(
                 LegacyComponentSerializer.legacy().serialize(
-                        VoxelSniperText.format(Caption.of("voxelsniper.brush.command.missing-permission", permission),
+                        VoxelSniperText.format(Caption.of("voxelsniper.command.missing-permission", permission),
                                 Locale.ROOT, true
                         )
                 )
@@ -48,13 +48,13 @@ public final class Command extends org.bukkit.command.Command {
         if (!senderType.isInstance(sender)) {
             VoxelSniperText.print(
                     sender,
-                    Caption.of("voxelsniper.brush.command.wrong-sender-type", senderType.getSimpleName())
+                    Caption.of("voxelsniper.command.wrong-sender-type", senderType.getSimpleName())
             );
             return true;
         }
         String permission = this.properties.getPermission();
         if (permission != null && !permission.isEmpty() && !sender.hasPermission(permission)) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.brush.command.missing-permission", permission));
+            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-permission", permission));
             return true;
         }
         this.executor.executeCommand(sender, args);
