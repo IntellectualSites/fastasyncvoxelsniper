@@ -1,5 +1,7 @@
 # FastAsyncVoxelSniper
 
+[![Crowdin](https://badges.crowdin.net/e/387f461acd0dfa902cb510bc3da3e0e3/localized.svg)](https://intellectualsites.crowdin.com/fastasyncvoxelsniper)
+
 This is a fork of [VoxelSniper](https://github.com/TVPT/VoxelSniper). It adds support for newer versions of [Spigot](https://www.spigotmc.org/) and [Paper](https://papermc.io/) keeping available all features from original version of plugin, but with some optimizations and code cleanup.
 
 ## Links
@@ -9,6 +11,7 @@ This is a fork of [VoxelSniper](https://github.com/TVPT/VoxelSniper). It adds su
 * [Issues](https://github.com/IntellectualSites/fastasyncvoxelsniper/issues)
 * [Wiki](https://intellectualsites.github.io/FastasyncVoxelSniper-Documentation/)
 * [JavaDocs](https://intellectualsites.github.io/fastasyncvoxelsniper-javadocs/)
+* [Translations](https://intellectualsites.crowdin.com/fastasyncvoxelsniper)
 
 ## Contributing
 See [here](https://github.com/IntellectualSites/.github/blob/main/CONTRIBUTING.md)
