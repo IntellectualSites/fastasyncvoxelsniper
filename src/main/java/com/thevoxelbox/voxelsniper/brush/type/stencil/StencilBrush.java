@@ -30,7 +30,6 @@ import java.util.stream.Stream;
  * to be size 1, which in Minecraft is almost definitely true. IF boolean was true, next unsigned byte stores the number of consecutive blocks of the same type,
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
  * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
- * TODO: Make limit a config option
  */
 public class StencilBrush extends AbstractBrush {
 
@@ -52,10 +51,14 @@ public class StencilBrush extends AbstractBrush {
     private byte point = 1;
 
     private byte pasteOption; // 0 = full, 1 = fill, 2 = replace
+    private int maxAreaVolume;
+    private int maxSaveVolume;
 
     @Override
     public void loadProperties() {
         this.pasteOption = (byte) getIntegerProperty("default-paste-option", DEFAULT_PASTE_OPTION);
+        this.maxAreaVolume = getIntegerProperty("default-max-area-volume", DEFAULT_MAX_AREA_VOLUME);
+        this.maxSaveVolume = getIntegerProperty("default-max-save-volume", DEFAULT_MAX_SAVE_VOLUME);
 
         File dataFolder = new File(PLUGIN_DATA_FOLDER, "/stencils");
         dataFolder.mkdirs();
@@ -133,8 +136,8 @@ public class StencilBrush extends AbstractBrush {
             this.secondPoint[1] = targetBlock.getZ();
             this.secondPoint[2] = targetBlock.getY();
             if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(
-                    this.firstPoint[2] - this.secondPoint[2])) > DEFAULT_MAX_AREA_VOLUME) {
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", DEFAULT_MAX_AREA_VOLUME));
+                    this.firstPoint[2] - this.secondPoint[2])) > this.maxAreaVolume) {
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", this.maxAreaVolume));
                 this.point = 1;
             } else {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
@@ -368,8 +371,8 @@ public class StencilBrush extends AbstractBrush {
             this.yRef = (short) ((this.firstPoint[2] > this.secondPoint[2])
                     ? (this.pastePoint[2] - this.secondPoint[2])
                     : (this.pastePoint[2] - this.firstPoint[2]));
-            if ((this.x * this.y * this.z) > 50000) {
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", DEFAULT_MAX_SAVE_VOLUME));
+            if ((this.x * this.y * this.z) > maxSaveVolume) {
+                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.area-too-large", this.maxSaveVolume));
                 return;
             }
             createParentDirs(file);

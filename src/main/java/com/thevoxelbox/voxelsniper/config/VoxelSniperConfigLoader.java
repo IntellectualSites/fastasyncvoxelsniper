@@ -136,6 +136,10 @@ public class VoxelSniperConfigLoader {
                 }
                 setBrushProperties(brushProperties);
             }
+            if (currentConfigVersion < 5) {
+                setBrushProperty("Stencil", "default-max-area-volume", 5000000);
+                setBrushProperty("Stencil", "default-max-save-volume", 50000);
+            }
 
             plugin.saveConfig();
             LOGGER.info("Your config file is now up-to-date! (v{})", CONFIG_VERSION_VALUE);
@@ -428,9 +432,20 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
+     * Set a brush property from config.
+     *
+     * @param brush       brush
+     * @param value       value
+     * @param propertyKey propertyKey
+     */
+    protected void setBrushProperty(String brush, String propertyKey, Object value) {
+        this.config.set(BRUSH_PROPERTIES + "." + brush + "." + propertyKey, value);
+    }
+
+    /**
      * Remove a brush property from config.
      *
-     * @param brush brush
+     * @param brush       brush
      * @param propertyKey propertyKey
      */
     protected void removeBrushProperty(String brush, String propertyKey) {

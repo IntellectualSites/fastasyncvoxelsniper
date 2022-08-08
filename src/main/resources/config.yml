@@ -1,5 +1,5 @@
 # The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
-config-version: 4
+config-version: 5
 update-notifications: true
 message-on-login-enabled: true
 persist-sessions-on-logout: true
@@ -186,6 +186,8 @@ brush-properties:
         default-splatter-recursions: 3
     Stencil:
         default-paste-option: 1
+        default-max-area-volume: 5000000
+        default-max-save-volume: 50000
     Tree Snipe:
         default-tree-type: TREE
     Three Point Circle:

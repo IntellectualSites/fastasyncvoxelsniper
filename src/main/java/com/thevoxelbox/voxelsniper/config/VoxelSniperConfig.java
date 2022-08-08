@@ -196,7 +196,7 @@ public class VoxelSniperConfig {
      *
      * @param brush       brush
      * @param propertyKey property key
-     * @param value       alue
+     * @param value       value
      */
     public void saveBrushPropertyToConfig(String brush, String propertyKey, Object value) {
         plugin.getConfig().set(VoxelSniperConfigLoader.BRUSH_PROPERTIES + "." + brush + "." + propertyKey, value);
