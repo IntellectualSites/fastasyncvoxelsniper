@@ -111,7 +111,7 @@ public class VoxelSniperText {
     }
 
     /**
-     * Formats simple list componen (same delimiter).
+     * Formats simple list component (same delimiter).
      *
      * @param <T>               the provided collection type
      * @param collection        the collection
@@ -132,11 +132,11 @@ public class VoxelSniperText {
                 .reduce(
                         TextComponent.empty(), (component, element) -> {
                             if (!component.isEmpty()) {
-                                component = component.append(Caption.of(path + ".list-delimiter"));
+                                component = component.append(Caption.of("voxelsniper.messenger.list-delimiter"));
                             }
                             return component.append(
                                     Caption.of(
-                                            path + ".list-element",
+                                            "voxelsniper.messenger.list-element",
                                             transformFunction.apply(element)
                                     )
                             );
@@ -172,12 +172,12 @@ public class VoxelSniperText {
                 .reduce(
                         TextComponent.empty(), (component, element) -> {
                             if (!component.isEmpty()) {
-                                component = component.append(Caption.of(path + ".list-delimiter"));
+                                component = component.append(Caption.of("voxelsniper.messenger.list-delimiter"));
                             }
                             return component.append(
                                     Caption.of(
                                             extractFunction.apply(element) == current
-                                                    ? path + ".list-current" : path + ".list-other",
+                                                    ? "voxelsniper.messenger.list-current" : "voxelsniper.messenger.list-other",
                                             transformFunction.apply(element)
                                     )
                             );
