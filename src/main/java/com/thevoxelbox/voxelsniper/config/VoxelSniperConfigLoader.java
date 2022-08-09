@@ -36,7 +36,7 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    private static final int CONFIG_VERSION_VALUE = 4;
+    private static final int CONFIG_VERSION_VALUE = 5;
     private static final boolean DEFAULT_UPDATE_NOTIFICATIONS_ENABLED = true;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
