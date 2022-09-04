@@ -1,0 +1,29 @@
+name: Upload release to CurseForge
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  upload-to-curseforge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          curseforge-id: 454430
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files-primary: build/libs/!(*-@(sources|javadoc)).jar
+
+          name: FastAsyncVoxelSniper ${{ github.event.release.tag_name }}
+          version: ${{ github.event.release.tag_name }}
+          version-type: release
+
+          game-versions: |
+            1.19.1
+            1.19
+            1.18.2
+            1.18.1
+            1.18
+            1.17
+            1.16
