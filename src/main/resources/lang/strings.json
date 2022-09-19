@@ -122,7 +122,7 @@
     "voxelsniper.brush.drain.disc": "&bDisc drain mode is {0}",
 
     "voxelsniper.brush.erode.info": "&6Erode Brush Parameters:\n&b/b e f [n] -- Sets erosion faces to n.\n&b/b e e [n] -- Sets fill faces to n.\n&b/b e F [n] -- Sets erosion recursions to n.\n&b/b e E [n] -- Sets fill recursions to n.\n&6Erode Brush Presets:\n&b/b eb default -- Sets erosion faces to 0, erosion recursions to 1, fill faces to 0 and fill recursions to 1.\n&b/b eb melt -- Sets erosion faces to 2, erosion recursions to 1, fill faces to 5 and fill recursions to 1.\n&b/b eb fill -- Sets erosion faces to 5, erosion recursions to 1, fill faces to 2 and fill recursions to 1.\n&b/b eb smooth -- Sets erosion faces to 3, erosion recursions to 1, fill faces to 3 and fill recursions to 1.\n&b/b eb lift -- Sets erosion faces to 6, erosion recursions to 0, fill faces to 1 and fill recursions to 1.\n&b/b eb floatclean -- Sets erosion faces to 0, erosion recursions to 1, fill faces to 6 and fill recursions to 1.",
-    "voxelsniper.brush.erode.set-preset": "&dBrush preset set to: &5",
+    "voxelsniper.brush.erode.set-preset": "&dBrush preset set to: &5{0}",
     "voxelsniper.brush.erode.invalid-preset": "&cInvalid preset: &b{0}",
     "voxelsniper.brush.erode.set-erosion-faces": "&bErosion faces set to: &f{0}",
     "voxelsniper.brush.erode.set-fill-faces": "&9Fill faces set to: &f{0}",
