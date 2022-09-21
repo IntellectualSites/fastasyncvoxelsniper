@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.6.0")
+    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.7.2")
 }
 ```
 
