@@ -197,4 +197,5 @@ modrinth {
     dependencies {
         required.project("fastasyncworldedit")
     }
+    syncBodyFrom.set(rootProject.file("README.md").readText())
 }
