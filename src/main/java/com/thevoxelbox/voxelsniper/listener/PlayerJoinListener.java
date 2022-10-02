@@ -29,7 +29,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
         VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
         Player player = event.getPlayer();
         Sniper sniper = getSniperFromRegistry(player);
-        if (player.hasPermission("voxelsniper.admin") && (hasUpdate || updateCheckFailed) && config.areUpdateNotificationsEnabled()) {
+        if (player.hasPermission("voxelsniper.admin") && (hasUpdate || updateCheckFailed)) {
             if (updateCheckFailed) {
                 sniper.print(Caption.of("favs.info.update.check-failed"));
             } else {

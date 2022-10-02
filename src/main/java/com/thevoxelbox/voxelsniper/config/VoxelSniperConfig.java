@@ -10,7 +10,8 @@ public class VoxelSniperConfig {
 
     private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
-    private final boolean updateNotificationsEnabled;
+    private final boolean updateCheckerEnabled;
+    private final int updateCheckerInterval;
     private final boolean messageOnLoginEnabled;
     private final boolean persistSessionsOnLogout;
     private final BlockType defaultBlockMaterial;
@@ -27,7 +28,8 @@ public class VoxelSniperConfig {
     /**
      * Create a new cached voxel configuration, used runtime.
      *
-     * @param updateNotificationsEnabled    notify whether updates are available or not
+     * @param updateCheckerEnabled          whether to check for updates
+     * @param updateCheckerInterval         period to wait in hours in-between checks
      * @param messageOnLoginEnabled         if message on login is enabled
      * @param persistSessionsOnLogout       if snipers shall be removed on logout
      * @param defaultBlockMaterial          default block material
@@ -41,7 +43,8 @@ public class VoxelSniperConfig {
      * @param brushProperties               brush properties
      */
     public VoxelSniperConfig(
-            boolean updateNotificationsEnabled,
+            boolean updateCheckerEnabled,
+            int updateCheckerInterval,
             boolean messageOnLoginEnabled,
             boolean persistSessionsOnLogout,
             BlockType defaultBlockMaterial,
@@ -54,7 +57,8 @@ public class VoxelSniperConfig {
             int defaultCylinderCenter,
             Map<String, Map<String, Object>> brushProperties
     ) {
-        this.updateNotificationsEnabled = updateNotificationsEnabled;
+        this.updateCheckerEnabled = updateCheckerEnabled;
+        this.updateCheckerInterval = updateCheckerInterval;
         this.messageOnLoginEnabled = messageOnLoginEnabled;
         this.persistSessionsOnLogout = persistSessionsOnLogout;
         this.defaultBlockMaterial = defaultBlockMaterial;
@@ -69,14 +73,25 @@ public class VoxelSniperConfig {
     }
 
     /**
-     * Return if update notifications are enabled.
+     * Return if update checker is enabled.
      *
-     * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
-     * @see VoxelSniperConfigLoader#areUpdateNotificationsEnabled()
-     * @since 2.3.0
+     * @return {@code true} if to check for updates periodically, {@code false} otherwise.
+     * @see VoxelSniperConfigLoader#isUpdateCheckerEnabled()
+     * @since TODO
      */
-    public boolean areUpdateNotificationsEnabled() {
-        return this.updateNotificationsEnabled;
+    public boolean isUpdateCheckerEnabled() {
+        return this.updateCheckerEnabled;
+    }
+
+    /**
+     * Return update interval in hours.
+     *
+     * @return interval in hours
+     * @see VoxelSniperConfigLoader#getUpdateCheckerInterval()
+     * @since TODO
+     */
+    public int getUpdateCheckerInterval() {
+        return this.updateCheckerInterval;
     }
 
     /**
