@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
     alias(libs.plugins.nexus)
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 java {
@@ -181,5 +182,19 @@ nexusPublishing {
             nexusUrl.set(URI.create("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
+    }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("fastasyncvoxelsniper")
+    versionName.set("${project.version}")
+    versionNumber.set("${project.version}")
+    versionType.set("release")
+    uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
+    gameVersions.addAll(listOf("1.19.2", "1.19.1", "1.19", "1.18.2", "1.17.1", "1.16.5"))
+    loaders.addAll(listOf("paper", "purpur", "spigot"))
+    dependencies {
+        required.project("fastasyncworldedit")
     }
 }
