@@ -56,3 +56,8 @@ jobs:
           destination-repository-name: 'fastasyncvoxelsniper-javadocs'
           user-email: ${{ secrets.USER_EMAIL }}
           target-branch: main
+      - name: Publish to Modrinth
+        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+        run: ./gradlew modrinth
+        env:
+          MODRINTH_TOKEN : ${{ secrets.MODRINTH_TOKEN }}
