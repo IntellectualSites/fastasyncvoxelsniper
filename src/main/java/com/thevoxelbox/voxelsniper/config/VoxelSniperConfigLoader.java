@@ -25,7 +25,8 @@ public class VoxelSniperConfigLoader {
     protected static final String BRUSH_PROPERTIES = "brush-properties";
     private static final Logger LOGGER = LogManagerCompat.getLogger();
     private static final String CONFIG_VERSION = "config-version";
-    private static final String UPDATE_NOTIFICATIONS_ENABLED = "update-notifications";
+    private static final String UPDATE_CHECKER_ENABLED = "update-checker.enabled";
+    private static final String UPDATE_CHECKER_INTERVAL = "update-checker.interval";
     private static final String MESSAGE_ON_LOGIN_ENABLED = "message-on-login-enabled";
     private static final String PERSIST_SESSIONS_ON_LOGOUT = "persist-sessions-on-logout";
     private static final String DEFAULT_BLOCK_MATERIAL = "default-block-material";
@@ -36,8 +37,10 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    private static final int CONFIG_VERSION_VALUE = 5;
-    private static final boolean DEFAULT_UPDATE_NOTIFICATIONS_ENABLED = true;
+    private static final int CONFIG_VERSION_VALUE = 6;
+    private static final boolean DEFAULT_UPDATE_CHECKER_ENABLED = true;
+    private static final int MIN_UPDATE_CHECKER_INTERVAL = 6;
+    private static final int DEFAULT_UPDATE_CHECKER_INTERVAL = 6;
     private static final boolean DEFAULT_MESSAGE_ON_LOGIN_ENABLED = true;
     private static final boolean DEFAULT_PERSIST_SESSIONS_ON_LOGOUT = true;
     private static final BlockType DEFAULT_BLOCK_MATERIAL_VALUE = BlockTypes.AIR;
@@ -115,9 +118,6 @@ public class VoxelSniperConfigLoader {
             if (currentConfigVersion < 2) {
                 setPersistentSessions(arePersistentSessionsEnabled());
             }
-            if (currentConfigVersion < 3) {
-                enableUpdateNotifications(areUpdateNotificationsEnabled());
-            }
             if (currentConfigVersion < 4) {
                 Map<String, Map<String, Object>> brushProperties = getBrushProperties();
                 Map<String, Object> jaggedLineBrush = brushProperties.get("Jagged Line");
@@ -139,6 +139,10 @@ public class VoxelSniperConfigLoader {
             if (currentConfigVersion < 5) {
                 setBrushProperty("Stencil", "default-max-area-volume", 5000000);
                 setBrushProperty("Stencil", "default-max-save-volume", 50000);
+            }
+            if (currentConfigVersion < 6) {
+                enableUpdateChecker(isUpdateCheckerEnabled());
+                setUpdateCheckerInterval(getUpdateCheckerInterval());
             }
 
             plugin.saveConfig();
@@ -165,23 +169,43 @@ public class VoxelSniperConfigLoader {
     }
 
     /**
-     * Return if update notifications are enabled.
+     * Return if update checker is enabled.
      *
-     * @return {@code true} if notifications for updates are enabled, {@code false} otherwise.
-     * @since 2.3.0
+     * @return {@code true} if to check for updates periodically, {@code false} otherwise.
+     * @since TODO
      */
-    public boolean areUpdateNotificationsEnabled() {
-        return this.config.getBoolean(UPDATE_NOTIFICATIONS_ENABLED, DEFAULT_UPDATE_NOTIFICATIONS_ENABLED);
+    public boolean isUpdateCheckerEnabled() {
+        return this.config.getBoolean(UPDATE_CHECKER_ENABLED, DEFAULT_UPDATE_CHECKER_ENABLED);
     }
 
     /**
-     * Set the update notifier be enabled or disabled.
+     * Set the update checker be enabled or disabled.
      *
-     * @param enabled Update notifications enabled
-     * @since 2.3.0
+     * @param enabled Update checker enabled
+     * @since TODO
      */
-    protected void enableUpdateNotifications(boolean enabled) {
-        this.config.set(UPDATE_NOTIFICATIONS_ENABLED, enabled);
+    public void enableUpdateChecker(boolean enabled) {
+        this.config.set(UPDATE_CHECKER_ENABLED, enabled);
+    }
+
+    /**
+     * Return update interval in hours.
+     *
+     * @return interval in hours
+     * @since TODO
+     */
+    public int getUpdateCheckerInterval() {
+        return Math.max(MIN_UPDATE_CHECKER_INTERVAL, this.config.getInt(UPDATE_CHECKER_INTERVAL, DEFAULT_UPDATE_CHECKER_INTERVAL));
+    }
+
+    /**
+     * Set the update checker waiting interval.
+     *
+     * @param interval Period to wait in hours in-between checks
+     * @since TODO
+     */
+    public void setUpdateCheckerInterval(int interval) {
+        this.config.set(UPDATE_CHECKER_INTERVAL, interval);
     }
 
     /**

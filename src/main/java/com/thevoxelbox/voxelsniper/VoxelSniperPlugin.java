@@ -40,6 +40,8 @@ import java.net.URLConnection;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
+    private static final long HOURS_TO_TICKS = 72000L;
+
     private static final Logger LOGGER = LogManagerCompat.getLogger();
     public static VoxelSniperPlugin plugin;
     public static String newVersionTitle = "";
@@ -83,6 +85,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
         PaperLib.suggestPaper(this);
         currentVersionTitle = getDescription().getVersion().split("-")[0];
         currentVersion = Double.parseDouble(currentVersionTitle.replaceFirst("\\.", ""));
+        // Don't register task if update check is unwanted
+        if (!voxelSniperConfig.isUpdateCheckerEnabled()) {
+            return;
+        }
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
             try {
                 newVersion = updateCheck(currentVersion);
@@ -102,7 +108,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0L, 432000);
+        }, 0L, voxelSniperConfig.getUpdateCheckerInterval() * HOURS_TO_TICKS);
     }
 
     private VoxelSniperConfig loadConfig() {
@@ -111,7 +117,8 @@ public class VoxelSniperPlugin extends JavaPlugin {
         VoxelSniperConfigLoader voxelSniperConfigLoader = new VoxelSniperConfigLoader(this, config);
 
         return new VoxelSniperConfig(
-                voxelSniperConfigLoader.areUpdateNotificationsEnabled(),
+                voxelSniperConfigLoader.isUpdateCheckerEnabled(),
+                voxelSniperConfigLoader.getUpdateCheckerInterval(),
                 voxelSniperConfigLoader.isMessageOnLoginEnabled(),
                 voxelSniperConfigLoader.arePersistentSessionsEnabled(),
                 voxelSniperConfigLoader.getDefaultBlockMaterial(),
