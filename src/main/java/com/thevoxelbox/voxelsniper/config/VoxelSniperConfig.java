@@ -77,7 +77,7 @@ public class VoxelSniperConfig {
      *
      * @return {@code true} if to check for updates periodically, {@code false} otherwise.
      * @see VoxelSniperConfigLoader#isUpdateCheckerEnabled()
-     * @since TODO
+     * @since 2.8.0
      */
     public boolean isUpdateCheckerEnabled() {
         return this.updateCheckerEnabled;
@@ -88,7 +88,7 @@ public class VoxelSniperConfig {
      *
      * @return interval in hours
      * @see VoxelSniperConfigLoader#getUpdateCheckerInterval()
-     * @since TODO
+     * @since 2.8.0
      */
     public int getUpdateCheckerInterval() {
         return this.updateCheckerInterval;

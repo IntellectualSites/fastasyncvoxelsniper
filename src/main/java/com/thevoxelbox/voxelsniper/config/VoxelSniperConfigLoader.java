@@ -172,7 +172,7 @@ public class VoxelSniperConfigLoader {
      * Return if update checker is enabled.
      *
      * @return {@code true} if to check for updates periodically, {@code false} otherwise.
-     * @since TODO
+     * @since 2.8.0
      */
     public boolean isUpdateCheckerEnabled() {
         return this.config.getBoolean(UPDATE_CHECKER_ENABLED, DEFAULT_UPDATE_CHECKER_ENABLED);
@@ -182,7 +182,7 @@ public class VoxelSniperConfigLoader {
      * Set the update checker be enabled or disabled.
      *
      * @param enabled Update checker enabled
-     * @since TODO
+     * @since 2.8.0
      */
     public void enableUpdateChecker(boolean enabled) {
         this.config.set(UPDATE_CHECKER_ENABLED, enabled);
@@ -192,7 +192,7 @@ public class VoxelSniperConfigLoader {
      * Return update interval in hours.
      *
      * @return interval in hours
-     * @since TODO
+     * @since 2.8.0
      */
     public int getUpdateCheckerInterval() {
         return Math.max(MIN_UPDATE_CHECKER_INTERVAL, this.config.getInt(UPDATE_CHECKER_INTERVAL, DEFAULT_UPDATE_CHECKER_INTERVAL));
@@ -202,7 +202,7 @@ public class VoxelSniperConfigLoader {
      * Set the update checker waiting interval.
      *
      * @param interval Period to wait in hours in-between checks
-     * @since TODO
+     * @since 2.8.0
      */
     public void setUpdateCheckerInterval(int interval) {
         this.config.set(UPDATE_CHECKER_INTERVAL, interval);
