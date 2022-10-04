@@ -198,4 +198,6 @@ modrinth {
         required.project("fastasyncworldedit")
     }
     syncBodyFrom.set(rootProject.file("README.md").readText())
+    changelog.set("The changelog is available on GitHub: https://github" +
+            ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
 }

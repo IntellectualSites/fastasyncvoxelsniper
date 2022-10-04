@@ -66,6 +66,7 @@ jobs:
           name: FastAsyncVoxelSniper ${{ github.event.release.tag_name }}
           version: ${{ github.event.release.tag_name }}
           version-type: release
+          changelog: "The changelog is available on GitHub: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
           game-versions : |
             1.19.1
             1.19
