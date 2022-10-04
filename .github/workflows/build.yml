@@ -56,25 +56,6 @@ jobs:
           destination-repository-name: 'fastasyncvoxelsniper-javadocs'
           user-email: ${{ secrets.USER_EMAIL }}
           target-branch: main
-      - name: Publish to CurseForge
-        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: Kir-Antipov/mc-publish@v3.2
-        with:
-          curseforge-id: 454430
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          files-primary: build/libs/!(*-@(sources|javadoc)).jar
-          name: FastAsyncVoxelSniper ${{ github.event.release.tag_name }}
-          version: ${{ github.event.release.tag_name }}
-          version-type: release
-          changelog: "The changelog is available on GitHub: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
-          game-versions : |
-            1.19.1
-            1.19
-            1.18.2
-            1.18.1
-            1.18
-            1.17
-            1.16
       - name: Publish to Modrinth
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
         run: ./gradlew modrinth
