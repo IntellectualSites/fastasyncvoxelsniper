@@ -22,5 +22,5 @@ jobs:
             "✏️ Click here to view changelog: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
             ""
             "⬇️ The download is available at:"
-            "- Modrinth: <https://modrinth.com/plugin/fastasyncvoxelsniper>"
+            "- Modrinth: <https://modrinth.com/plugin/fastasyncvoxelsniper/version/${{ github.event.release.tag_name }}>"
             "- CurseForge: <https://www.curseforge.com/minecraft/bukkit-plugins/favs>"
