@@ -1,0 +1,26 @@
+name: Announce release on discord
+on:
+  release:
+    types: [published]
+
+jobs:
+  send_announcement:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send custom message with args
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_USERNAME: FastAsyncVoxelSniper Release
+          DISCORD_AVATAR: https://cdn-raw.modrinth.com//data/D7XBSI1y/icon.png
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: |
+            "<@&673137848211472384>"
+            ""
+            "<:favs:673138127434416139> **FastAsyncVoxelSniper ${{ github.event.release.tag_name }} has been released!**"
+            ""
+            "Click here to view changelog: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
+            ""
+            "The download is available at:"
+            "- Modrinth: <https://modrinth.com/plugin/fastasyncvoxelsniper/version/${{ github.event.release.tag_name }}>"
+            "- CurseForge: <https://www.curseforge.com/minecraft/bukkit-plugins/favs>"
