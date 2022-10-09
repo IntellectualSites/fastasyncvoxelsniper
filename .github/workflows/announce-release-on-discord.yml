@@ -4,7 +4,7 @@ on:
     types: [published]
 
 jobs:
-  upload_asset:
+  send_announcement:
     runs-on: ubuntu-latest
     steps:
       - name: send custom message with args
