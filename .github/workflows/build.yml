@@ -19,7 +19,7 @@ jobs:
       - name: Clean Build
         run: ./gradlew clean build --no-daemon
       - name : Archive Artifacts
-        uses : actions/upload-artifact@v2
+        uses : actions/upload-artifact@v3
         with :
           name : FastAsyncVoxelSniper-SNAPSHOT
           path : build/libs/*-SNAPSHOT.jar
