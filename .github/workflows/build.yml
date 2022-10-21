@@ -72,12 +72,14 @@ jobs:
         if : ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
         uses: itsmeow/curseforge-upload@v3
         with:
-          file_path: build/libs/fastasyncvoxelsniper-${{ env.GITHUB_ENV }}.jar
-          game_versions: "Minecraft 1.19:1.19.1,Java 17"
-          game_endpoint: minecraft
+          file_path: build/libs/fastasyncvoxelsniper-${{ env.VERSION }}.jar
+          # https://minecraft.curseforge.com/api/game/versions?token=redacted
+          # gameVersionTypeID: 1
+          game_versions: "8849,8897,9016,9190,9261"
           project_id: 454430
+          game_endpoint: minecraft
           token: ${{ secrets.CURSEFORGE_TOKEN }}
-          display_name: FastAsyncVoxelSniper ${{ env.GITHUB_ENV }}
+          display_name: FastAsyncVoxelSniper ${{ env.VERSION }}
           release_type: release
           changelog: "Click here to view changelog: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
           changelog_type: markdown
