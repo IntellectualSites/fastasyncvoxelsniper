@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.23"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.24"))
     // Platform expectations
     compileOnly("io.papermc.paper:paper-api")
     compileOnly("org.apache.logging.log4j:log4j-api")
