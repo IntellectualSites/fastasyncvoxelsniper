@@ -3,7 +3,7 @@
 annotations = "24.0.0"
 
 # Gradle plugins
-shadow = "7.1.2"
+shadow = "8.0.0"
 pluginyml = "0.5.3"
 nexus = "1.2.0"
 
