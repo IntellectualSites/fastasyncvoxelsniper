@@ -1,7 +1,5 @@
 name: build
-
 on: [pull_request, push]
-
 jobs:
   build:
     if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
@@ -9,8 +7,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-      - name : Validate Gradle Wrapper
-        uses : gradle/wrapper-validation-action@v1
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@55e685c48d84285a5b0418cd094606e199cca3b6 # v1
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -18,11 +16,11 @@ jobs:
           java-version: 17
       - name: Clean Build
         run: ./gradlew clean build --no-daemon
-      - name : Archive Artifacts
-        uses : actions/upload-artifact@v3
-        with :
-          name : FastAsyncVoxelSniper-SNAPSHOT
-          path : build/libs/*-SNAPSHOT.jar
+      - name: Archive Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: FastAsyncVoxelSniper-SNAPSHOT
+          path: build/libs/*-SNAPSHOT.jar
       - name: Determine release status
         if: ${{ runner.os == 'Linux' }}
         run: |
@@ -34,20 +32,20 @@ jobs:
       - name: Publish Release
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
         run: ./gradlew publishToSonatype closeSonatypeStagingRepository --info
-        env :
-          ORG_GRADLE_PROJECT_sonatypeUsername : ${{ secrets.SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey : ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword : ${{ secrets.SIGNING_PASSWORD }}
-      - name : Publish Snapshot
-        if : ${{ runner.os == 'Linux' && env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-        run : ./gradlew publishToSonatype
-        env :
-          ORG_GRADLE_PROJECT_sonatypeUsername : ${{ secrets.SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_sonatypePassword : ${{ secrets.SONATYPE_PASSWORD }}
+        env:
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+      - name: Publish Snapshot
+        if: ${{ runner.os == 'Linux' && env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: ./gradlew publishToSonatype
+        env:
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       - name: Publish javadocs
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: cpina/github-action-push-to-another-repository@main
+        uses: cpina/github-action-push-to-another-repository@0a14457bb28b04dfa1652e0ffdfda866d2845c73 # main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
@@ -60,17 +58,17 @@ jobs:
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
         run: ./gradlew modrinth
         env:
-          MODRINTH_TOKEN : ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       - name: Publish to GitHub actions
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@ec6d3263266dc57eb6645b5f75e827987f7c217d # ratchet:AButler/upload-release-assets@v2.0
         with:
           files: build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ github.event.release.tag_name }}
-      - name : Publish to CurseForge
-        if : ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: itsmeow/curseforge-upload@v3
+      - name: Publish to CurseForge
+        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+        uses: itsmeow/curseforge-upload@13f278adc4cc7b881555f87e6ea528387dd6492b # v3
         with:
           file_path: build/libs/fastasyncvoxelsniper-${{ env.VERSION }}.jar
           # https://minecraft.curseforge.com/api/game/versions?token=redacted

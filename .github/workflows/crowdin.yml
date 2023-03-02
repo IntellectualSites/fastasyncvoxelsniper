@@ -1,26 +1,20 @@
 name: Crowdin Action
-
 on:
   schedule:
     - cron: '0 */12 * * *'
   workflow_dispatch:
-
 permissions:
   actions: write
   contents: write
   pull-requests: write
-
 jobs:
   synchronize-with-crowdin:
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout
         uses: actions/checkout@v3
-
       - name: crowdin action
-        uses: crowdin/github-action@v1.7.0
+        uses: crowdin/github-action@37e7ee2f55c30ccc6d6064db2276c1c4294c9ad5 # v1.7.0
         with:
           upload_translations: false
           download_translations: true
