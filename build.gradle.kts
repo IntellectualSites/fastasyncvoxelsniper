@@ -18,7 +18,7 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") }
 }
 
