@@ -61,7 +61,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       - name: Publish to GitHub actions
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: AButler/upload-release-assets@ec6d3263266dc57eb6645b5f75e827987f7c217d # ratchet:AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@b2b56d8ca22109e8606ac54603ab60dfb32058a7 # ratchet:AButler/upload-release-assets@v2.0
         with:
           files: build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
