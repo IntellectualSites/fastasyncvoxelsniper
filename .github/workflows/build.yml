@@ -8,7 +8,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@55e685c48d84285a5b0418cd094606e199cca3b6 # v1
+        uses: gradle/wrapper-validation-action@v1
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -45,7 +45,7 @@ jobs:
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       - name: Publish javadocs
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: cpina/github-action-push-to-another-repository@0a14457bb28b04dfa1652e0ffdfda866d2845c73 # main
+        uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
         with:
@@ -61,14 +61,14 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       - name: Publish to GitHub actions
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: AButler/upload-release-assets@ec6d3263266dc57eb6645b5f75e827987f7c217d # ratchet:AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@v2.0
         with:
           files: build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           release-tag: ${{ github.event.release.tag_name }}
       - name: Publish to CurseForge
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-        uses: itsmeow/curseforge-upload@13f278adc4cc7b881555f87e6ea528387dd6492b # v3
+        uses: itsmeow/curseforge-upload@v3
         with:
           file_path: build/libs/fastasyncvoxelsniper-${{ env.VERSION }}.jar
           # https://minecraft.curseforge.com/api/game/versions?token=redacted
