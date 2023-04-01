@@ -1,6 +1,6 @@
 [versions]
 # Annotations
-annotations = "24.0.0"
+annotations = "24.0.1"
 
 # Gradle plugins
 shadow = "8.1.0"
