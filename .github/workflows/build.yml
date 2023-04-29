@@ -59,6 +59,11 @@ jobs:
         run: ./gradlew modrinth
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish to Hangar
+        if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+        run: ./gradlew publishAllPublicationsToHangar
+        env:
+         HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
       - name: Publish to GitHub actions
         if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
         uses: AButler/upload-release-assets@v2.0
