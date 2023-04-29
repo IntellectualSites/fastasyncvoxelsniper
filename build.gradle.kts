@@ -1,4 +1,5 @@
 import java.net.URI
+import io.papermc.hangarpublishplugin.model.Platforms
 
 plugins {
     java
@@ -10,6 +11,7 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.nexus)
     id("com.modrinth.minotaur") version "2.+"
+    id("io.papermc.hangar-publish-plugin") version "0.0.5"
 }
 
 java {
@@ -177,13 +179,15 @@ publishing {
 }
 
 nexusPublishing {
-    repositories {
+    this.repositories {
         sonatype {
             nexusUrl.set(URI.create("https://s01.oss.sonatype.org/service/local/"))
             snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
+
+val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
@@ -192,7 +196,7 @@ modrinth {
     versionNumber.set("${project.version}")
     versionType.set("release")
     uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
-    gameVersions.addAll(listOf("1.19.2", "1.19.1", "1.19", "1.18.2", "1.17.1", "1.16.5"))
+    gameVersions.addAll(supportedVersions)
     loaders.addAll(listOf("paper", "purpur", "spigot"))
     dependencies {
         required.project("fastasyncworldedit")
@@ -200,4 +204,26 @@ modrinth {
     syncBodyFrom.set(rootProject.file("README.md").readText())
     changelog.set("The changelog is available on GitHub: https://github" +
             ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version as String)
+        namespace("IntellectualSites", "FastAsyncVoxelSniper")
+        channel.set("Release")
+        changelog.set("The changelog is available on GitHub: https://github" +
+                ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
+        apiKey.set(System.getenv("HANGAR_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
+                platformVersions.set(supportedVersions)
+                this.dependencies {
+                    hangar("IntellectualSites", "FastAsyncWorldEdit") {
+                        required.set(true)
+                    }
+                }
+            }
+        }
+    }
 }

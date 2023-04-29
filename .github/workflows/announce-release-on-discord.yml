@@ -22,4 +22,5 @@ jobs:
             ""
             "The download is available at:"
             "- Modrinth: <https://modrinth.com/plugin/fastasyncvoxelsniper/version/${{ github.event.release.tag_name }}>"
+            "- Hangar: <https://hangar.papermc.io/IntellectualSites/FastAsyncVoxelSniper/versions/${{ github.event.release.tag_name }}>"
             "- CurseForge: <https://www.curseforge.com/minecraft/bukkit-plugins/favs>"
