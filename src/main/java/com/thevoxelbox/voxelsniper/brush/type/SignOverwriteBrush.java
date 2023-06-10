@@ -161,7 +161,7 @@ public class SignOverwriteBrush extends AbstractBrush {
                         }
 
                         this.signTextLines[lineIndex] = formattedText;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.line-set", lineNumber, formattedText));
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.set-line", lineNumber, formattedText));
                     } else if (secondParameter.equalsIgnoreCase("toggle")) {
                         this.signLinesEnabled[lineIndex] = !this.signLinesEnabled[lineIndex];
                         messenger.sendMessage(Caption.of(
