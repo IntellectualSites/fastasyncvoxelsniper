@@ -1,18 +1,28 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.fastasyncworldedit.core.configuration.Caption;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.extension.platform.Capability;
+import com.sk89q.worldedit.internal.Constants;
 import com.sk89q.worldedit.internal.util.DeprecationUtil;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.sk89q.worldedit.util.formatting.text.serializer.gson.GsonComponentSerializer;
 import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
 import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
+import com.sk89q.worldedit.util.nbt.ListBinaryTag;
+import com.sk89q.worldedit.util.nbt.StringBinaryTag;
 import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockCategories;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,15 +32,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public class SignOverwriteBrush extends AbstractBrush {
 
+    private static final Side DEFAULT_SIDE = Side.FRONT;
+
+    private static final List<String> SIDES = Arrays.stream(Side.values())
+            .map(Side::getName)
+            .toList();
+
     private static final int MAX_SIGN_LINE_LENGTH = 15;
     private static final int NUM_SIGN_LINES = 4;
+    private static final char LEGACY_AMPERSAND = '&';
 
-    private final String[] signTextLines = new String[NUM_SIGN_LINES];
+    private final Component[] signTextLines = new TextComponent[NUM_SIGN_LINES];
     private final boolean[] signLinesEnabled = new boolean[]{true, true, true, true};
+    private Side side;
     private boolean rangedMode;
 
     public SignOverwriteBrush() {
@@ -42,6 +61,8 @@ public class SignOverwriteBrush extends AbstractBrush {
     public void loadProperties() {
         File dataFolder = new File(PLUGIN_DATA_FOLDER, "/signs");
         dataFolder.mkdirs();
+
+        this.side = (Side) getEnumProperty("default-side", Side.class, DEFAULT_SIDE);
     }
 
     @Override
@@ -55,7 +76,16 @@ public class SignOverwriteBrush extends AbstractBrush {
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.info"));
         } else {
             if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("clear") || firstParameter.equalsIgnoreCase("c")) {
+                if (firstParameter.equalsIgnoreCase("list")) {
+                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                            Arrays.stream(Side.values()).toList(),
+                            (side, side2) -> side.getName().compareTo(side2.getName()),
+                            Side::getFullName,
+                            side -> side,
+                            this.side,
+                            "voxelsniper.brush.sign-overwrite"
+                    ));
+                } else if (firstParameter.equalsIgnoreCase("clear") || firstParameter.equalsIgnoreCase("c")) {
                     clearBuffer();
                     messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared"));
                 } else if (firstParameter.equalsIgnoreCase("clearall") || firstParameter.equalsIgnoreCase("ca")) {
@@ -66,7 +96,30 @@ public class SignOverwriteBrush extends AbstractBrush {
                     messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
                 }
             } else {
-                if (Stream.of("1", "2", "3", "4")
+                if (firstParameter.equalsIgnoreCase("side")) {
+                    if (!isHangingSignsSupported()) {
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.legacy-side"));
+                        return;
+                    }
+                    if (parameters.length != 2) {
+                        messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
+                        return;
+                    }
+
+                    String secondParameter = parameters[1];
+                    try {
+                        this.side = Side.valueOf(secondParameter.toUpperCase(Locale.ROOT));
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.sign-overwrite.set-side",
+                                this.side.getFullName()
+                        ));
+                    } catch (IllegalArgumentException exception) {
+                        messenger.sendMessage(Caption.of(
+                                "voxelsniper.brush.sign-overwrite.invalid-side",
+                                secondParameter
+                        ));
+                    }
+                } else if (Stream.of("1", "2", "3", "4")
                         .anyMatch(firstParameter::equalsIgnoreCase)) {
                     String secondParameter = parameters[1];
                     Integer lineNumber = NumericParser.parseInteger(firstParameter);
@@ -93,16 +146,20 @@ public class SignOverwriteBrush extends AbstractBrush {
                             }
                         }
 
+                        TextComponent formattedText = LegacyComponentSerializer.legacy()
+                                .deserialize(newTextBuilder.toString(), LEGACY_AMPERSAND);
                         // Check the line length and cut the text if needed.
-                        if (newTextBuilder.length() > MAX_SIGN_LINE_LENGTH) {
+                        // There is no plain text serializer available yet, rely on legacy chat color stripping for now.
+                        if (ChatColor.stripColor(toLegacyText(formattedText)).length() > MAX_SIGN_LINE_LENGTH) {
                             messenger.sendMessage(Caption.of(
                                     "voxelsniper.brush.sign-overwrite.invalid-length",
                                     lineNumber,
                                     MAX_SIGN_LINE_LENGTH
                             ));
-                            newTextBuilder = new StringBuilder(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH));
+                            formattedText = LegacyComponentSerializer.legacy()
+                                    .deserialize(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH), LEGACY_AMPERSAND);
                         }
-                        String formattedText = ChatColor.translateAlternateColorCodes('&', newTextBuilder.toString());
+
                         this.signTextLines[lineIndex] = formattedText;
                         messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.line-set", lineNumber, formattedText));
                     } else if (secondParameter.equalsIgnoreCase("toggle")) {
@@ -153,14 +210,17 @@ public class SignOverwriteBrush extends AbstractBrush {
         if (parameters.length == 1) {
             String parameter = parameters[0];
             return super.sortCompletions(Stream.of(
-                    "1", "2", "3", "4",
+                    "list", "side", "1", "2", "3", "4",
                     "clear", "c", "clearall", "ca",
                     "multiple", "m", "save", "s", "open", "o"
             ), parameter, 0);
         }
         if (parameters.length == 2) {
             String firstParameter = parameters[0];
-            if (Stream.of("1", "2", "3", "4")
+            if (firstParameter.equalsIgnoreCase("side")) {
+                String parameter = parameters[1];
+                return super.sortCompletions(SIDES.stream(), parameter, 1);
+            } else if (Stream.of("1", "2", "3", "4")
                     .anyMatch(firstParameter::equalsIgnoreCase)) {
                 String parameter = parameters[1];
                 return super.sortCompletions(Stream.of("set", "toggle"), parameter, 1);
@@ -185,14 +245,26 @@ public class SignOverwriteBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
-        if (DeprecationUtil.isSign(block.getBlockType())) {
+        if (isSign(block.getBlockType())) {
             CompoundBinaryTag tag = block.getNbt();
             if (tag == null) {
                 return;
             }
-            for (int i = 0; i < this.signTextLines.length; i++) {
-                if (this.signLinesEnabled[i]) {
-                    this.signTextLines[i] = tag.getString("Text" + (i + 1));
+
+            if (isHangingSignsSupported()) {
+                // 1.20+ behavior, with two-side text.
+                CompoundBinaryTag text = tag.getCompound(side.getTagName());
+                ListBinaryTag messages = text.getList("messages");
+                for (int i = 0; i < this.signTextLines.length; i++) {
+                    if (this.signLinesEnabled[i]) {
+                        this.signTextLines[i] = fromJson(messages.getString(i));
+                    }
+                }
+            } else {
+                for (int i = 0; i < this.signTextLines.length; i++) {
+                    if (this.signLinesEnabled[i]) {
+                        this.signTextLines[i] = fromJson(tag.getString("Text" + (i + 1)));
+                    }
                 }
             }
             displayBuffer(snipe);
@@ -200,6 +272,15 @@ public class SignOverwriteBrush extends AbstractBrush {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.invalid-block"));
         }
+    }
+
+    private boolean isHangingSignsSupported() {
+        int dataVersion = WorldEdit.getInstance().getPlatformManager().queryCapability(Capability.WORLD_EDITING).getDataVersion();
+        return dataVersion >= Constants.DATA_VERSION_MC_1_20;
+    }
+
+    private boolean isSign(BlockType blockType) {
+        return DeprecationUtil.isSign(blockType) || BlockCategories.ALL_HANGING_SIGNS.contains(blockType);
     }
 
     /**
@@ -211,11 +292,27 @@ public class SignOverwriteBrush extends AbstractBrush {
             return;
         }
 
-        for (int i = 0; i < this.signTextLines.length; i++) {
-            if (this.signLinesEnabled[i]) {
-                tag = tag.putString("Text" + (i + 1), toJson(this.signTextLines[i]));
+        if (isHangingSignsSupported()) {
+            // 1.20+ behavior, with two-sided text.
+            CompoundBinaryTag text = tag.getCompound(side.getTagName());
+            ListBinaryTag messages = text.getList("messages");
+            for (int i = 0; i < this.signTextLines.length; i++) {
+                if (this.signLinesEnabled[i]) {
+                    messages = messages.set(i, StringBinaryTag.of(toJson(this.signTextLines[i])), ignored -> {
+                    });
+                }
+            }
+            text = text.put("messages", messages);
+            tag = tag.put(side.getTagName(), text);
+        } else {
+            // Legacy behavior with only one-sided text.
+            for (int i = 0; i < this.signTextLines.length; i++) {
+                if (this.signLinesEnabled[i]) {
+                    tag = tag.putString("Text" + (i + 1), toJson(this.signTextLines[i]));
+                }
             }
         }
+
         block = block.toBaseBlock(tag);
         setBlock(x, y, z, block);
     }
@@ -226,7 +323,7 @@ public class SignOverwriteBrush extends AbstractBrush {
     private void setSingle(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
         BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
-        if (DeprecationUtil.isSign(block.getBlockType())) {
+        if (isSign(block.getBlockType())) {
             setSignText(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), block);
         } else {
             SnipeMessenger messenger = snipe.createMessenger();
@@ -253,7 +350,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     BaseBlock block = getFullBlock(x, y, z);
-                    if (DeprecationUtil.isSign(block.getBlockType())) {
+                    if (isSign(block.getBlockType())) {
                         setSignText(x, y, z, block);
                         signFound = true;
                     }
@@ -295,7 +392,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             BufferedWriter outStream = new BufferedWriter(outFile);
             for (int i = 0; i < this.signTextLines.length; i++) {
                 outStream.write(this.signLinesEnabled[i] + "\n");
-                outStream.write(this.signTextLines[i] + "\n");
+                outStream.write(toLegacyText(this.signTextLines[i]) + "\n");
             }
             outStream.close();
             outFile.close();
@@ -323,7 +420,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             BufferedReader inStream = new BufferedReader(inFile);
             for (int i = 0; i < this.signTextLines.length; i++) {
                 this.signLinesEnabled[i] = Boolean.parseBoolean(inStream.readLine());
-                this.signTextLines[i] = inStream.readLine();
+                this.signTextLines[i] = fromLegacyText(inStream.readLine());
             }
             inStream.close();
             inFile.close();
@@ -340,7 +437,7 @@ public class SignOverwriteBrush extends AbstractBrush {
      * Clears the internal text buffer. (Sets it to empty strings)
      */
     private void clearBuffer() {
-        Arrays.fill(this.signTextLines, "");
+        Arrays.fill(this.signTextLines, TextComponent.empty());
     }
 
     /**
@@ -350,11 +447,21 @@ public class SignOverwriteBrush extends AbstractBrush {
         Arrays.fill(this.signLinesEnabled, true);
     }
 
-    private String toJson(String oldInput) {
-        if (oldInput == null || oldInput.isEmpty()) {
-            return "";
-        }
-        return LegacyComponentSerializer.legacy().serialize(TextComponent.of(oldInput));
+    private String toJson(Component input) {
+        return GsonComponentSerializer.INSTANCE.serialize(input == null
+                ? TextComponent.empty() : input);
+    }
+
+    private Component fromJson(String input) {
+        return GsonComponentSerializer.INSTANCE.deserialize(input);
+    }
+
+    private String toLegacyText(Component input) {
+        return LegacyComponentSerializer.legacy().serialize(input);
+    }
+
+    private TextComponent fromLegacyText(String input) {
+        return LegacyComponentSerializer.legacy().deserialize(input);
     }
 
     @Override
@@ -371,12 +478,45 @@ public class SignOverwriteBrush extends AbstractBrush {
             ));
         }
         messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.set-side",
+                side.getFullName()
+        ));
+        messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.sign-overwrite.set-ranged-mode",
                 VoxelSniperText.getStatus(this.rangedMode)
         ));
         if (this.rangedMode) {
             messenger.sendBrushSizeMessage();
             messenger.sendVoxelHeightMessage();
+        }
+    }
+
+    /**
+     * Available types of sides.
+     */
+    private enum Side {
+
+        FRONT("front", "front_text"),
+        BACK("back", "back_text");
+
+        private final String name;
+        private final String tagName;
+
+        Side(String name, String tagName) {
+            this.name = name;
+            this.tagName = tagName;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getTagName() {
+            return tagName;
+        }
+
+        public TranslatableComponent getFullName() {
+            return Caption.of("voxelsniper.brush.sign-overwrite.side." + this.name);
         }
     }
 

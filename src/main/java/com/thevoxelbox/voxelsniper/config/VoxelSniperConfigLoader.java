@@ -37,7 +37,7 @@ public class VoxelSniperConfigLoader {
     private static final String BRUSH_SIZE_WARNING_THRESHOLD = "brush-size-warning-threshold";
     private static final String DEFAULT_VOXEL_HEIGHT = "default-voxel-height";
     private static final String DEFAULT_CYLINDER_CENTER = "default-cylinder-center";
-    private static final int CONFIG_VERSION_VALUE = 6;
+    private static final int CONFIG_VERSION_VALUE = 7;
     private static final boolean DEFAULT_UPDATE_CHECKER_ENABLED = true;
     private static final int MIN_UPDATE_CHECKER_INTERVAL = 6;
     private static final int DEFAULT_UPDATE_CHECKER_INTERVAL = 6;
@@ -144,6 +144,9 @@ public class VoxelSniperConfigLoader {
                 enableUpdateChecker(isUpdateCheckerEnabled());
                 setUpdateCheckerInterval(getUpdateCheckerInterval());
             }
+            if (currentConfigVersion < 7) {
+                setBrushProperty("Sign Overwrite", "default-side", "FRONT");
+            }
 
             plugin.saveConfig();
             LOGGER.info("Your config file is now up-to-date! (v{})", CONFIG_VERSION_VALUE);
@@ -195,7 +198,10 @@ public class VoxelSniperConfigLoader {
      * @since 2.8.0
      */
     public int getUpdateCheckerInterval() {
-        return Math.max(MIN_UPDATE_CHECKER_INTERVAL, this.config.getInt(UPDATE_CHECKER_INTERVAL, DEFAULT_UPDATE_CHECKER_INTERVAL));
+        return Math.max(
+                MIN_UPDATE_CHECKER_INTERVAL,
+                this.config.getInt(UPDATE_CHECKER_INTERVAL, DEFAULT_UPDATE_CHECKER_INTERVAL)
+        );
     }
 
     /**
