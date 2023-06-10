@@ -34,8 +34,8 @@ dependencies {
     compileOnly(libs.annotations)
 
     // Plugins
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.6.3-SNAPSHOT")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.6.3-SNAPSHOT")
 
     // Third party
     implementation("dev.notmyfault.serverlib:ServerLib")
