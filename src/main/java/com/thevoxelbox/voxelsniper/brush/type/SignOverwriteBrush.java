@@ -47,7 +47,7 @@ public class SignOverwriteBrush extends AbstractBrush {
     private static final int NUM_SIGN_LINES = 4;
     private static final char LEGACY_AMPERSAND = '&';
 
-    private final Component[] signTextLines = new TextComponent[NUM_SIGN_LINES];
+    private final Component[] signTextLines = new Component[NUM_SIGN_LINES];
     private final boolean[] signLinesEnabled = new boolean[]{true, true, true, true};
     private Side side;
     private boolean rangedMode;
