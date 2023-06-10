@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
     alias(libs.plugins.nexus)
-    id("com.modrinth.minotaur") version "2.+"
+    id("com.modrinth.minotaur") version "2.8.0"
     id("io.papermc.hangar-publish-plugin") version "0.0.5"
 }
 
@@ -90,7 +90,7 @@ tasks {
                 "implNote:a:Implementation Note:"
         )
         opt.addBooleanOption("html5", true)
-        opt.links("https://jd.papermc.io/paper/1.19/")
+        opt.links("https://jd.papermc.io/paper/1.20/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
     }
 
@@ -187,7 +187,7 @@ nexusPublishing {
     }
 }
 
-val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4")
+val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
