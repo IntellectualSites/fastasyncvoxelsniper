@@ -1,5 +1,5 @@
 # The config-version line is immutable. Don't change the value, it will reset itself after every reboot.
-config-version: 6
+config-version: 7
 update-checker:
   enabled: true
   interval: 6
@@ -120,6 +120,12 @@ brush-properties:
         default-seed-percent: 1000
         default-growth-percent: 1000
         default-splatter-recursions: 3
+    Scanner:
+        depth-min: 1
+        depth-max: 64
+        default-depth: 24
+    Sign Overwrite:
+        side: FRONT
     Splatter Ball:
         seed-percent-min: 1
         seed-percent-max: 9999
@@ -130,10 +136,6 @@ brush-properties:
         default-seed-percent: 1000
         default-growth-percent: 1000
         default-splatter-recursions: 3
-    Scanner:
-        depth-min: 1
-        depth-max: 64
-        default-depth: 24
     Splatter Disc:
         seed-percent-min: 1
         seed-percent-max: 9999

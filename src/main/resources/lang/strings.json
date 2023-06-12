@@ -221,12 +221,16 @@
     "voxelsniper.brush.scanner.found": "&a{0} &bfound after &a{1} &bblocks.",
     "voxelsniper.brush.scanner.not-found": "&cNo matching block found.",
 
-    "voxelsniper.brush.sign-overwrite.info": "&3The arrow writes the internal line buffer to the tearget sign.\n&3The gunpowder reads the text of the target sign into the internal buffer.\n&3Colors can be used using the \"&\" symbol.\n&6Sign Overwrite Brush Parameters:\n&b/b sio 1 [set|toggle] (...) -- Sets the text of the first sign line. (e.g. /b sio 1 set Blah Blah | /b sio 1 toggle)\n&b/b sio 2 [set|toggle] (...) -- Sets the text of the second sign line. (e.g. /b sio 2 set Blah Blah | /b sio 2 toggle\n&b/b sio 3 [set|toggle] (...) -- Sets the text of the third sign line. (e.g. /b sio 3 set Blah Blah | /b sio 3 toggle\n&b/b sio 4 [set|toggle] (...) -- Sets the text of the fourth sign line. (e.g. /b sio 4 set Blah Blah | /b sio 4 toggle\n&b/b sio clear -- Clears the line buffer. (Alias: /b sio c)\n&b/b sio clearall -- Clears the line buffer and sets all lines back to enabled (Alias: /b sio ca)\n&b/b sio multiple [true|false] -- Enables or disables ranged mode. (see Wiki for more information) (Alias: /b sio m [true|false])\n&b/b sio save [n] -- Save you buffer to a file named n. (Alias: /b sio s [n])\n&b/b sio open [n] -- Loads a buffer from a file named n. (Alias: /b sio o [n])",
-    "voxelsniper.brush.sign-overwrite.cleared": "&9Internal text buffer cleard.",
+    "voxelsniper.brush.sign-overwrite.info": "&3The arrow writes the internal line buffer to the target sign.\n&3The gunpowder reads the text of the target sign into the internal buffer.\n&3Colors can be used using the \"&\" symbol.\n&6Sign Overwrite Brush Parameters:\n&b/b sio 1 [set|toggle] (...) -- Sets the text of the first sign line. (e.g. /b sio 1 set Blah Blah | /b sio 1 toggle)\n&b/b sio 2 [set|toggle] (...) -- Sets the text of the second sign line. (e.g. /b sio 2 set Blah Blah | /b sio 2 toggle\n&b/b sio 3 [set|toggle] (...) -- Sets the text of the third sign line. (e.g. /b sio 3 set Blah Blah | /b sio 3 toggle\n&b/b sio 4 [set|toggle] (...) -- Sets the text of the fourth sign line. (e.g. /b sio 4 set Blah Blah | /b sio 4 toggle\n&b/b sio clear -- Clears the line buffer. (Alias: /b sio c)\n&b/b sio clearall -- Clears the line buffer and sets all lines back to enabled (Alias: /b sio ca)\n&b/b sio side [s] -- Sets the sign side to s. (not available in versions prior to 1.20)\n&b/b sio multiple [true|false] -- Enables or disables ranged mode. (see Wiki for more information) (Alias: /b sio m [true|false])\n&b/b sio save [n] -- Save you buffer to a file named n. (Alias: /b sio s [n])\n&b/b sio open [n] -- Loads a buffer from a file named n. (Alias: /b sio o [n])",
+    "voxelsniper.brush.sign-overwrite.list-prefix": "&bAvailable sides: {0}",
+    "voxelsniper.brush.sign-overwrite.cleared": "&9Internal text buffer cleared.",
     "voxelsniper.brush.sign-overwrite.cleared-reset": "&9Internal text buffer cleard and states back to enabled.",
     "voxelsniper.brush.sign-overwrite.invalid-length": "&cWarning: Text on line &b{0} &cexceeds the maximum line length of &b{1} &ccharacters. Your text will be cut.",
-    "voxelsniper.brush.sign-overwrite.line-set": "&bLine {0} set to: &f{1}",
+    "voxelsniper.brush.sign-overwrite.set-line": "&bLine {0} set to: &f{1}",
     "voxelsniper.brush.sign-overwrite.line-status": "&9Line &b{0} &9is {1}",
+    "voxelsniper.brush.sign-overwrite.set-side": "&9Side set to: &f{0}",
+    "voxelsniper.brush.sign-overwrite.invalid-side": "&cInvalid side: &b{0}",
+    "voxelsniper.brush.sign-overwrite.legacy-side": "&cWarning: Two-sided signs are not available in your version.",
     "voxelsniper.brush.sign-overwrite.set-ranged-mode": "&9Ranged mode is {0}",
     "voxelsniper.brush.sign-overwrite.brush-size": "&aBrush size set to: &c{0}",
     "voxelsniper.brush.sign-overwrite.brush-height": "&bBrush height set to: &c{0}",
@@ -240,6 +244,8 @@
     "voxelsniper.brush.sign-overwrite.file-missing": "&cThis file does not exist.",
     "voxelsniper.brush.sign-overwrite.file-loaded": "&9File loaded successfully.",
     "voxelsniper.brush.sign-overwrite.file-load-failed": "&cFailed to load file: &f{0}",
+    "voxelsniper.brush.sign-overwrite.side.front": "Front",
+    "voxelsniper.brush.sign-overwrite.side.back": "Back",
 
     "voxelsniper.brush.snow-cone.invalid-block": "&cCenter block neither snow nor air.",
 
