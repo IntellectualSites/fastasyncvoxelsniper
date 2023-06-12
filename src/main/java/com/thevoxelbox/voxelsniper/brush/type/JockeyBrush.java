@@ -10,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -94,16 +93,18 @@ public class JockeyBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
-        if (this.jockeyType == JockeyType.INVERT_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
-            player.eject();
-            sniper.print(Caption.of("voxelsniper.brush.jockey.top-ejected"));
-        } else {
-            if (this.jockeyedEntity != null) {
-                this.jockeyedEntity.eject();
-                this.jockeyedEntity = null;
-                sniper.print(Caption.of("voxelsniper.brush.jockey.ejected"));
+        Fawe.instance().getQueueHandler().sync(() -> {
+            if (this.jockeyType == JockeyType.INVERT_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
+                player.eject();
+                sniper.print(Caption.of("voxelsniper.brush.jockey.top-ejected"));
+            } else {
+                if (this.jockeyedEntity != null) {
+                    this.jockeyedEntity.eject();
+                    this.jockeyedEntity = null;
+                    sniper.print(Caption.of("voxelsniper.brush.jockey.ejected"));
+                }
             }
-        }
+        });
     }
 
     private void sitOn(Snipe snipe) {
