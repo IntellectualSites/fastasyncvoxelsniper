@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.29"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.30"))
     // Platform expectations
     compileOnly("io.papermc.paper:paper-api")
     compileOnly("org.apache.logging.log4j:log4j-api")
@@ -34,8 +34,8 @@ dependencies {
     compileOnly(libs.annotations)
 
     // Plugins
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit:2.6.3-SNAPSHOT")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core:2.6.3-SNAPSHOT")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
 
     // Third party
     implementation("dev.notmyfault.serverlib:ServerLib")
