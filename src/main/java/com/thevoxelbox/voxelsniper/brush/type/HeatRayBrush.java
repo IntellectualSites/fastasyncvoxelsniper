@@ -106,7 +106,7 @@ public class HeatRayBrush extends AbstractBrush {
                     Double frequency = NumericParser.parseDouble(parameters[1]);
                     if (frequency != null) {
                         this.frequency = frequency;
-                        messenger.sendMessage(Caption.of("vvoxelsniper.brush.heat-ray.set-frequency", this.frequency));
+                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-frequency", this.frequency));
                     } else {
                         messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
                     }
@@ -265,7 +265,7 @@ public class HeatRayBrush extends AbstractBrush {
                 .brushSizeMessage()
                 .message(Caption.of("voxelsniper.brush.heat-ray.set-octaves", this.octaves))
                 .message(Caption.of("voxelsniper.brush.heat-ray.set-amplitude", this.amplitude))
-                .message(Caption.of("vvoxelsniper.brush.heat-ray.set-frequency", this.frequency))
+                .message(Caption.of("voxelsniper.brush.heat-ray.set-frequency", this.frequency))
                 .send();
     }
 
