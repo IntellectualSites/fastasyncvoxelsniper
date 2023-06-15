@@ -16,11 +16,28 @@ jobs:
                   distribution: temurin
                   cache: gradle
                   java-version: 17
-            - name: Clean Build
-              run: ./gradlew clean build
+            - name: Upload to Modrinth and Hangar
+              run: ./gradlew clean build modrinth publishAllPublicationsToHangar
+              env:
+                  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+                  HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
             - name: Upload Release Assets
               uses: AButler/upload-release-assets@v2.0
               with:
                   files: 'build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar'
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
                   release-tag: ${{ github.event.release.tag_name }}
+            - name: Publish to CurseForge
+              uses: itsmeow/curseforge-upload@v3
+              with:
+                file_path: 'build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar'
+                # https://minecraft.curseforge.com/api/game/versions?token=redacted
+                # gameVersionTypeID: 1
+                game_versions: "8849,8897,9016,9190,9261"
+                project_id: 454430
+                game_endpoint: minecraft
+                token: ${{ secrets.CURSEFORGE_TOKEN }}
+                display_name: FastAsyncVoxelSniper ${{ env.VERSION }}
+                release_type: release
+                changelog: "Click here to view changelog: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
+                changelog_type: markdown
