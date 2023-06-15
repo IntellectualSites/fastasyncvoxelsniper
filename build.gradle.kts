@@ -54,7 +54,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "2.9.1"
+version = "2.9.2-SNAPSHOT"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -225,8 +225,5 @@ hangarPublish {
                 }
             }
         }
-    }
-    tasks.named("publishAllPublicationsToHangar").configure {
-        dependsOn("shadowJar")
     }
 }
