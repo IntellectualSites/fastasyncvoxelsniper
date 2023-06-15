@@ -137,7 +137,7 @@
 
     "voxelsniper.brush.extrude.info": "&6Extrude Brush Parameters:\n&b/b ex [true|false] -- Uses a true circle algorithm instead of the skinnier version with classic sniper nubs. Default is false.",
 
-    "voxelsniper.brush.flat-ocean.info": "&6Flat Ocean Brush Parameters:\n&b/b gt default -- Restores default parameters.\n&b/b gt lt [t] -- Sets leaf type to t. (e.g. oak_leaves)\n&b/b gt wt [t] -- Sets wood type to t. (e.g. oak_log)\n&b/b gt tt [n] -- Sets tree thickness to n. (whole number)\n&b/b gt rf [true|false] -- Sets root float.\n&b/b gt sh [n] -- Sets starting height to n. (whole number)\n&b/b gt rl [n] -- Sets root length to n. (whole number)\n&b/b gt ts [n] -- Sets trunk slope chance to n. (0-100)\n&b/b gt bl [n] -- Sets branch length to n. (whole number)\n&b/b gt minr [n] -- Sets minimum roots to n. (whole number)\n&b/b gt maxr [n] -- Sets maximum roots to n. (whole number)\n&b/b gt minh [n] -- Sets minimum height to n. (whole number)\n&b/b gt maxh [n] -- Sets maximum height to n. (whole number)\n&b/b gt minl [n] -- Sets minimum leaf node size to n. (whole number)\n&b/b gt maxl [n] -- Sets maximum leaf node size to n. (whole number)",
+    "voxelsniper.brush.flat-ocean.info": "&6Flat Ocean Brush Parameters:\n&b/b fo yo [n] -- Sets the level to which the water will rise to n.\n&b/b fo yl [n] -- Sets the level to which the ocean floor will rise to n.",
     "voxelsniper.brush.flat-ocean.set-water-level": "&aWater level set to: &f{0}",
     "voxelsniper.brush.flat-ocean.set-ocean-level": "&aOcean floor level set to: &f{0}",
 
@@ -168,8 +168,12 @@
     "voxelsniper.brush.heat-ray.set-amplitude": "&aAmplitude set to: &f{0}",
     "voxelsniper.brush.heat-ray.set-frequency": "&aFrequency set to: &f{0}",
 
-    "voxelsniper.brush.jockey.info": "&6Jockey Brush Parameters:\n&b/b jockey [true|false] [true|false] [true|false] -- Sets whether players only or entities should be \" +\n                    \"affected to n. Sets if entities should be inverted to i. Sets if entities should be stacked to s.",
+    "voxelsniper.brush.jockey.info": "&6Jockey Brush Parameters:\n&b/b jockey [true|false] [true|false] [true|false] -- Sets whether players only or entities should be affected, whether entities should be inverted and whether entities should be stacked.",
     "voxelsniper.brush.jockey.set-mode": "&6Jockey mode set to: &a{0}",
+    "voxelsniper.brush.jockey.top-ejected": "&6The guy on top of you has been ejected!",
+    "voxelsniper.brush.jockey.ejected": "&6You have been ejected!",
+    "voxelsniper.brush.jockey.sitting": "&2You are now sitting on entity: &f{0}",
+    "voxelsniper.brush.jockey.no-entities": "&cCould not find any entities.",
     "voxelsniper.brush.jockey.broke-stack": "&cYou broke stack! :O",
     "voxelsniper.brush.jockey.mode.normal-all-entities": "Normal (All)",
     "voxelsniper.brush.jockey.mode.normal-player-only": "Normal (Player only)",

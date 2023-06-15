@@ -10,7 +10,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -58,6 +57,7 @@ public class JockeyBrush extends AbstractBrush {
                 stack = Boolean.parseBoolean(parameters[3]);
             } else {
                 messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
+                return;
             }
         }
         if (inverse) {
@@ -93,16 +93,18 @@ public class JockeyBrush extends AbstractBrush {
     public void handleGunpowderAction(Snipe snipe) {
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();
-        if (this.jockeyType == JockeyType.INVERT_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
-            player.eject();
-            player.sendMessage(ChatColor.GOLD + "The guy on top of you has been ejected!");
-        } else {
-            if (this.jockeyedEntity != null) {
-                this.jockeyedEntity.eject();
-                this.jockeyedEntity = null;
-                player.sendMessage(ChatColor.GOLD + "You have been ejected!");
+        Fawe.instance().getQueueHandler().sync(() -> {
+            if (this.jockeyType == JockeyType.INVERT_PLAYER_ONLY || this.jockeyType == JockeyType.INVERT_ALL_ENTITIES) {
+                player.eject();
+                sniper.print(Caption.of("voxelsniper.brush.jockey.top-ejected"));
+            } else {
+                if (this.jockeyedEntity != null) {
+                    this.jockeyedEntity.eject();
+                    this.jockeyedEntity = null;
+                    sniper.print(Caption.of("voxelsniper.brush.jockey.ejected"));
+                }
             }
-        }
+        });
     }
 
     private void sitOn(Snipe snipe) {
@@ -156,11 +158,11 @@ public class JockeyBrush extends AbstractBrush {
                         finalClosest.addPassenger(player);
                         jockeyedEntity = finalClosest;
                     }
-                    player.sendMessage(ChatColor.GREEN + "You are now sitting on entity: " + finalClosest.getEntityId());
+                    sniper.print(Caption.of("voxelsniper.brush.jockey.sitting", finalClosest.getType().toString()));
                 }
             });
         } else {
-            player.sendMessage(ChatColor.RED + "Could not find any entities");
+            sniper.print(Caption.of("voxelsniper.brush.jockey.no-entities"));
         }
     }
 
