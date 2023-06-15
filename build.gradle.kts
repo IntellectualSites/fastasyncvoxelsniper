@@ -226,4 +226,7 @@ hangarPublish {
             }
         }
     }
+    tasks.named("publishAllPublicationsToHangar").configure {
+        dependsOn("shadowJar")
+    }
 }

@@ -22,12 +22,14 @@ jobs:
                   MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
                   HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
             - name: Upload Release Assets
+              if: always()
               uses: AButler/upload-release-assets@v2.0
               with:
                   files: 'build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar'
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
                   release-tag: ${{ github.event.release.tag_name }}
             - name: Publish to CurseForge
+              if: always()
               uses: itsmeow/curseforge-upload@v3
               with:
                 file_path: 'build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar'
