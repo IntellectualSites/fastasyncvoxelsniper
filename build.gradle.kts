@@ -1,5 +1,6 @@
 import java.net.URI
 import io.papermc.hangarpublishplugin.model.Platforms
+import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     java
@@ -12,6 +13,7 @@ plugins {
     alias(libs.plugins.nexus)
     id("com.modrinth.minotaur") version "2.8.1"
     id("io.papermc.hangar-publish-plugin") version "0.0.5"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 java {
@@ -112,7 +114,7 @@ tasks {
     supportedVersions.forEach {
         register<RunServer>("runServer-$it") {
             minecraftVersion(it)
-            pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+            pluginJars(*rootProject.getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
                     .toTypedArray())
             jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
             group = "run paper"
@@ -121,7 +123,7 @@ tasks {
     }
     runServer {
         minecraftVersion("1.19.3")
-        pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+        pluginJars(*rootProject.getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
                 .toTypedArray())
 
     }
@@ -131,7 +133,7 @@ tasks {
         group = "run paper"
         runDirectory.set(file("run-folia"))
         jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
-        pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+        pluginJars(*rootProject.getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
                 .toTypedArray())
     }
 }
