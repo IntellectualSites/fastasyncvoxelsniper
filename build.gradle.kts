@@ -23,7 +23,7 @@ repositories {
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
     maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") }
 }
-
+val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20")
 dependencies {
     implementation(platform("com.intellectualsites.bom:bom-newest:1.30"))
     // Platform expectations
@@ -108,6 +108,32 @@ tasks {
     named("build") {
         dependsOn(named("shadowJar"))
     }
+
+    supportedVersions.forEach {
+        register<RunServer>("runServer-$it") {
+            minecraftVersion(it)
+            pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+                    .toTypedArray())
+            jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
+            group = "run paper"
+            runDirectory.set(file("run-$it"))
+        }
+    }
+    runServer {
+        minecraftVersion("1.19.3")
+        pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+                .toTypedArray())
+
+    }
+    register<RunServer>("runFolia") {
+        downloadsApiService.set(xyz.jpenilla.runtask.service.DownloadsAPIService.folia(project))
+        minecraftVersion("1.19.4")
+        group = "run paper"
+        runDirectory.set(file("run-folia"))
+        jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
+        pluginJars(*project(":worldedit-bukkit").getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+                .toTypedArray())
+    }
 }
 
 java {
@@ -187,7 +213,7 @@ nexusPublishing {
     }
 }
 
-val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20")
+
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
