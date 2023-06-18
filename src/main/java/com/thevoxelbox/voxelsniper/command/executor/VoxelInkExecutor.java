@@ -74,7 +74,7 @@ public class VoxelInkExecutor implements CommandExecutor {
 
         toolkitProperties.setPattern(new BrushPattern(blockState));
         Messenger messenger = new Messenger(plugin, sender);
-        messenger.sendPatternMessage(toolkitProperties.getReplacePattern());
+        messenger.sendPatternMessage(toolkitProperties.getPattern());
     }
 
 }
