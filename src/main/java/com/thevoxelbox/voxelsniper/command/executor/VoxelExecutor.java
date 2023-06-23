@@ -2,6 +2,7 @@ package com.thevoxelbox.voxelsniper.command.executor;
 
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.pattern.Pattern;
@@ -77,11 +78,12 @@ public class VoxelExecutor implements CommandExecutor, TabCompleter {
                 messenger.sendPatternMessage(toolkitProperties.getPattern());
             }
         } else {
+            BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
             ParserContext parserContext = new ParserContext();
-            parserContext.setActor(BukkitAdapter.adapt(sender));
+            parserContext.setSession(wePlayer.getSession());
+            parserContext.setWorld(wePlayer.getWorld());
+            parserContext.setActor(wePlayer);
             parserContext.setRestricted(false);
-            parserContext.setPreferringWildcard(true);
-            parserContext.setWorld(BukkitAdapter.adapt(((Player) sender).getWorld()));
             try {
                 String argument = arguments[0].toLowerCase(Locale.ROOT);
                 Pattern pattern = plugin.getPatternParser().parseFromInput(argument, parserContext);

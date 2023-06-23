@@ -32,7 +32,7 @@ public class SnipeMessenger {
     }
 
     public void sendReplacePatternMessage() {
-        this.messenger.sendPatternMessage(this.toolkitProperties.getReplacePattern());
+        this.messenger.sendReplacePatternMessage(this.toolkitProperties.getReplacePattern());
     }
 
     public void sendBrushSizeMessage() {
