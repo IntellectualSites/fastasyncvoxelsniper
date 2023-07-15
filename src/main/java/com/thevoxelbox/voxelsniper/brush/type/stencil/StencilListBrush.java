@@ -1,14 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
 import com.fastasyncworldedit.core.configuration.Caption;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.Bukkit;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -103,7 +101,7 @@ public class StencilListBrush extends AbstractBrush {
 
     @Override
     public void handleArrowAction(Snipe snipe) {
-        stencilPaste(snipe);
+        stencilPaste(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
     }
 
     @Override
@@ -135,7 +133,7 @@ public class StencilListBrush extends AbstractBrush {
         }
     }
 
-    private void stencilPaste(Snipe snipe) {
+    private void stencilPaste(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches(NO_FILE_LOADED)) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
@@ -166,7 +164,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -189,7 +187,7 @@ public class StencilListBrush extends AbstractBrush {
                                     targetBlock.getX() + currX,
                                     clampY(targetBlock.getY() + currY),
                                     targetBlock.getZ() + currZ,
-                                    readBlockData(in)
+                                    blockDataReader.readBlockData(in)
                             );
                             currX++;
                             if (currX == this.x - this.xRef) {
@@ -206,7 +204,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && clampY(
                                         targetBlock.getX() + currX,
@@ -231,7 +229,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                     targetBlock.getX() + currX,
                                     targetBlock.getY() + currY,
@@ -259,7 +257,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
@@ -280,7 +278,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -304,15 +302,20 @@ public class StencilListBrush extends AbstractBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                exception.printStackTrace();
+                if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
+                    // Tries with some legacy handling for legacy stencils.
+                    stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
+                } else {
+                    messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
+                    exception.printStackTrace();
+                }
             }
         } else {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
         }
     }
 
-    private void stencilPaste180(Snipe snipe) {
+    private void stencilPaste180(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches(NO_FILE_LOADED)) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
@@ -343,7 +346,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -366,7 +369,7 @@ public class StencilListBrush extends AbstractBrush {
                                     targetBlock.getX() + currX,
                                     clampY(targetBlock.getY() + currY),
                                     targetBlock.getZ() + currZ,
-                                    readBlockData(in)
+                                    blockDataReader.readBlockData(in)
                             );
                             currX--;
                             if (currX == -this.x + this.xRef) {
@@ -383,7 +386,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                         targetBlock.getX() + currX,
@@ -408,7 +411,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                     targetBlock.getX() + currX,
                                     targetBlock.getY() + currY,
@@ -436,7 +439,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
@@ -457,7 +460,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -481,15 +484,20 @@ public class StencilListBrush extends AbstractBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                exception.printStackTrace();
+                if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
+                    // Tries with some legacy handling for legacy stencils.
+                    stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
+                } else {
+                    messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
+                    exception.printStackTrace();
+                }
             }
         } else {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
         }
     }
 
-    private void stencilPaste270(Snipe snipe) {
+    private void stencilPaste270(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches(NO_FILE_LOADED)) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
@@ -520,7 +528,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -543,7 +551,7 @@ public class StencilListBrush extends AbstractBrush {
                                     targetBlock.getX() + currX,
                                     clampY(targetBlock.getY() + currY),
                                     targetBlock.getZ() + currZ,
-                                    readBlockData(in)
+                                    blockDataReader.readBlockData(in)
                             );
                             currZ++;
                             currZ++;
@@ -561,7 +569,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                         targetBlock.getX() + currX,
@@ -590,7 +598,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                     targetBlock.getX() + currX,
                                     targetBlock.getY() + currY,
@@ -621,7 +629,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
@@ -642,7 +650,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -666,15 +674,20 @@ public class StencilListBrush extends AbstractBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                exception.printStackTrace();
+                if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
+                    // Tries with some legacy handling for legacy stencils.
+                    stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
+                } else {
+                    messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
+                    exception.printStackTrace();
+                }
             }
         } else {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
         }
     }
 
-    private void stencilPaste90(Snipe snipe) {
+    private void stencilPaste90(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches(NO_FILE_LOADED)) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
@@ -705,7 +718,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -728,7 +741,7 @@ public class StencilListBrush extends AbstractBrush {
                                     targetBlock.getX() + currX,
                                     clampY(targetBlock.getY() + currY),
                                     targetBlock.getZ() + currZ,
-                                    readBlockData(in)
+                                    blockDataReader.readBlockData(in)
                             );
                             currZ--;
                             if (currZ == -this.x + this.xRef) {
@@ -745,7 +758,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                         targetBlock.getX() + currX,
@@ -770,7 +783,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
                                     targetBlock.getX() + currX,
                                     targetBlock.getY() + currY,
@@ -798,7 +811,7 @@ public class StencilListBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
@@ -819,7 +832,7 @@ public class StencilListBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
                                         targetBlock.getX() + currX,
@@ -843,17 +856,17 @@ public class StencilListBrush extends AbstractBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                exception.printStackTrace();
+                if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
+                    // Tries with some legacy handling for legacy stencils.
+                    stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
+                } else {
+                    messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
+                    exception.printStackTrace();
+                }
             }
         } else {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
         }
-    }
-
-    private BlockState readBlockData(DataInputStream in) throws IOException {
-        String blockDataString = in.readUTF();
-        return BukkitAdapter.adapt(Bukkit.createBlockData(blockDataString));
     }
 
     private void stencilPasteRotation(Snipe snipe) {
@@ -861,13 +874,13 @@ public class StencilListBrush extends AbstractBrush {
         this.readStencilList();
         double random = Math.random();
         if (random < 0.26) {
-            this.stencilPaste(snipe);
+            this.stencilPaste(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
         } else if (random < 0.51) {
-            this.stencilPaste90(snipe);
+            this.stencilPaste90(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
         } else if (random < 0.76) {
-            this.stencilPaste180(snipe);
+            this.stencilPaste180(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
         } else {
-            this.stencilPaste270(snipe);
+            this.stencilPaste270(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
         }
     }
 
