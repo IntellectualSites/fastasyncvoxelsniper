@@ -259,7 +259,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
                     ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("FastAsyncVoxelSniper", "").trim();
             return Double.parseDouble(newVersionTitle.replaceFirst("\\.", "").trim());
         } catch (IOException ignored) {
-            LOGGER.error("Unable to connect to dev.bukkit.org to check for updates. Improper firewall configuration?");
+            LOGGER.error("Unable to connect to api.curseforge.com to check for updates. Improper firewall configuration?");
         }
         return Double.NaN;
     }
