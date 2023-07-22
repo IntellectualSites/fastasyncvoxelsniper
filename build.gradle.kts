@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
     alias(libs.plugins.nexus)
-    id("com.modrinth.minotaur") version "2.8.1"
+    id("com.modrinth.minotaur") version "2.8.2"
     id("io.papermc.hangar-publish-plugin") version "0.0.5"
 }
 
