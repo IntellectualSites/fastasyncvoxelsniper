@@ -1,7 +1,6 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
 import com.fastasyncworldedit.core.configuration.Caption;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -9,7 +8,6 @@ import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import org.bukkit.Bukkit;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -25,11 +23,11 @@ import java.util.stream.Stream;
 /**
  * This is paste only currently. Assumes files exist, and thus has no usefulness until I add in saving stencils later. Uses sniper-exclusive stencil format: 3
  * shorts for X,Z,Y size of cuboid 3 shorts for X,Z,Y offsets from the -X,-Z,-Y corner. This is the reference point for pasting, corresponding to where you
- * click your brush. 1 long integer saying how many runs of blocks are in the schematic (data is compressed into runs) 1 per run: ( 1 boolean: true = compressed
+ * click your brush. 1 long integer saying how many runs of blocks are in the schematic (data is compressed into runs) 1 per run: (1 boolean: true = compressed
  * line ahead, false = locally unique block ahead. This wastes a bit instead of a byte, and overall saves space, as long as at least 1/8 of all RUNS are going
  * to be size 1, which in Minecraft is almost definitely true. IF boolean was true, next unsigned byte stores the number of consecutive blocks of the same type,
  * up to 256. IF boolean was false, there is no byte here, goes straight to ID and data instead, which applies to just one block. 2 bytes to identify type of
- * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true. )
+ * block. First byte is ID, second is data. This applies to every one of the line of consecutive blocks if boolean was true.)
  */
 public class StencilBrush extends AbstractBrush {
 
@@ -164,10 +162,10 @@ public class StencilBrush extends AbstractBrush {
 
     @Override
     public void handleGunpowderAction(Snipe snipe) { // will be used to paste later on
-        this.stencilPaste(snipe);
+        this.stencilPaste(snipe, StencilReader.BlockDataReader.BLOCK_DATA);
     }
 
-    private void stencilPaste(Snipe snipe) {
+    private void stencilPaste(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
         if (this.filename.matches(NO_FILE_LOADED)) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
@@ -198,7 +196,7 @@ public class StencilBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
                                         blockPositionX + currX,
@@ -221,7 +219,7 @@ public class StencilBrush extends AbstractBrush {
                                     blockPositionX + currX,
                                     clampY(blockPositionY + currY),
                                     blockPositionZ + currZ,
-                                    readBlockData(in)
+                                    blockDataReader.readBlockData(in)
                             );
                             currX++;
                             if (currX == this.x - this.xRef) {
@@ -238,7 +236,7 @@ public class StencilBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 BlockType type = blockData.getBlockType();
                                 if (!Materials.isEmpty(type) && clampY(
@@ -264,7 +262,7 @@ public class StencilBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             BlockType type = blockData.getBlockType();
                             if (!Materials.isEmpty(type) && clampY(
                                     blockPositionX + currX,
@@ -294,7 +292,7 @@ public class StencilBrush extends AbstractBrush {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {
                             int numLoops = in.readByte() + 128;
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 BlockType type = blockData.getBlockType();
                                 if (!Materials.isEmpty(type)) {
@@ -316,7 +314,7 @@ public class StencilBrush extends AbstractBrush {
                                 }
                             }
                         } else {
-                            blockData = readBlockData(in);
+                            blockData = blockDataReader.readBlockData(in);
                             BlockType type = blockData.getBlockType();
                             if (!Materials.isEmpty(type)) {
                                 setBlockData(
@@ -341,17 +339,17 @@ public class StencilBrush extends AbstractBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
                 in.close();
             } catch (IOException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                exception.printStackTrace();
+                if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
+                    // Tries with some legacy handling for legacy stencils.
+                    stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
+                } else {
+                    messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
+                    exception.printStackTrace();
+                }
             }
         } else {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.wrong-stencil-name"));
         }
-    }
-
-    private BlockState readBlockData(DataInputStream in) throws IOException {
-        String blockDataString = in.readUTF();
-        return BukkitAdapter.adapt(Bukkit.createBlockData(blockDataString));
     }
 
     private void stencilSave(Snipe snipe) {
