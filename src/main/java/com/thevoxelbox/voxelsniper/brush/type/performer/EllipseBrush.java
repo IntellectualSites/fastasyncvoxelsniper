@@ -1,17 +1,22 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b ellipse|el")
+@CommandPermission("voxelsniper.brush.ellipse")
 public class EllipseBrush extends AbstractPerformerBrush {
 
     private static final double TWO_PI = (2 * Math.PI);
@@ -48,74 +53,73 @@ public class EllipseBrush extends AbstractPerformerBrush {
         this.steps = getIntegerProperty("default-steps", DEFAULT_STEPS);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("fill")) {
-                    if (this.fill) {
-                        this.fill = false;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.ellipse.set-fill-mode",
-                                VoxelSniperText.getStatus(false)
-                        ));
-                    } else {
-                        this.fill = true;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.ellipse.set-fill-mode",
-                                VoxelSniperText.getStatus(true)
-                        ));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("x")) {
-                    Integer xscl = NumericParser.parseInteger(parameters[1]);
-                    if (xscl != null && xscl >= this.sclMin && xscl <= this.sclMax) {
-                        this.xscl = xscl;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-x-scale", this.xscl));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("y")) {
-                    Integer yscl = NumericParser.parseInteger(parameters[1]);
-                    if (yscl != null && yscl >= this.sclMin && yscl <= this.sclMax) {
-                        this.yscl = yscl;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-y-scale", this.yscl));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("t")) {
-                    Integer steps = NumericParser.parseInteger(parameters[1]);
-                    if (steps != null && steps >= this.stepsMin && steps <= this.stepsMax) {
-                        this.steps = steps;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipse.set-steps", this.steps));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("fill", "x", "y", "t"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ellipse.info"));
+    }
+
+    @CommandMethod("fill")
+    public void onBrushFill(
+            final @NotNull Snipe snipe
+    ) {
+        this.fill = !this.fill;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipse.set-fill-mode",
+                VoxelSniperText.getStatus(this.fill)
+        ));
+    }
+
+    @CommandMethod("x <x-scl>")
+    public void onBrushX(
+            final @NotNull Snipe snipe,
+            final @Argument("x-scl") @DynamicRange(min = "sclMin", max = "sclMax") int xscl
+    ) {
+        this.xscl = xscl;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipse.set-x-scale",
+                this.xscl
+        ));
+    }
+
+    @CommandMethod("y <y-scl>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-scl") @DynamicRange(min = "sclMin", max = "sclMax") int yscl
+    ) {
+        this.yscl = yscl;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipse.set-y-scale",
+                this.yscl
+        ));
+    }
+
+    @CommandMethod("t <steps>")
+    public void onBrushT(
+            final @NotNull Snipe snipe,
+            final @Argument("steps") @DynamicRange(min = "stepsMin", max = "stepsMax") int steps
+    ) {
+        this.steps = steps;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipse.set-steps",
+                this.steps
+        ));
     }
 
     @Override
@@ -180,9 +184,9 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     break;
                 }
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException e) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-block"));
+            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-target-block"));
         }
     }
 
@@ -276,9 +280,9 @@ public class EllipseBrush extends AbstractPerformerBrush {
                     iy--;
                 }
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException e) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-block"));
+            messenger.sendMessage(Caption.of("voxelsniper.command.invalid-target-block"));
         }
     }
 
@@ -299,9 +303,18 @@ public class EllipseBrush extends AbstractPerformerBrush {
                         "voxelsniper.performer-brush.ellipse.set-fill-mode",
                         VoxelSniperText.getStatus(fill)
                 ))
-                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-x-scale", this.xscl))
-                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-y-scale", this.yscl))
-                .message(Caption.of("voxelsniper.performer-brush.ellipse.set-steps", this.steps))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipse.set-x-scale",
+                        this.xscl
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipse.set-y-scale",
+                        this.yscl
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipse.set-steps",
+                        this.steps
+                ))
                 .send();
     }
 

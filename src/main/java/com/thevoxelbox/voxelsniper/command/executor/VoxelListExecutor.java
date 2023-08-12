@@ -1,25 +1,32 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
-import com.sk89q.worldedit.world.block.BlockType;
-import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
+import com.thevoxelbox.voxelsniper.command.argument.VoxelListBlocksArgument;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Locale;
+import java.util.Collection;
 
-public class VoxelListExecutor implements CommandExecutor {
+@RequireToolkit
+@CommandMethod(value = "voxel_list|voxellist|vl")
+@CommandDescription("Voxel block exclusions list.")
+@CommandPermission("voxelsniper.sniper")
+public class VoxelListExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -27,65 +34,63 @@ public class VoxelListExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            return;
-        }
-        Toolkit toolkit = sniper.getCurrentToolkit();
-        if (toolkit == null) {
-            return;
-        }
+    @CommandMethod("")
+    public void onVoxelList(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit
+    ) {
+        Player player = sniper.getPlayer();
         ToolkitProperties toolkitProperties = toolkit.getProperties();
-        if (toolkitProperties == null) {
+        BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+        BlockVector3 targetBlock = blockTracer.getTargetBlock();
+        if (targetBlock == null) {
+            sniper.print(Caption.of("voxelsniper.command.invalid-target-block"));
             return;
         }
-        Messenger messenger = new Messenger(plugin, sender);
-        if (arguments.length == 0) {
-            BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
-            BlockVector3 targetBlock = blockTracer.getTargetBlock();
-            if (targetBlock == null) {
-                return;
-            }
-            BlockState blockState = BukkitAdapter.adapt(player.getWorld().getBlockAt(
-                    targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()
-            ).getBlockData());
-            toolkitProperties.addToVoxelList(blockState);
-            List<BlockState> voxelList = toolkitProperties.getVoxelList();
-            messenger.sendVoxelListMessage(voxelList);
-            return;
-        } else {
-            if (arguments[0].equalsIgnoreCase("clear")) {
-                toolkitProperties.clearVoxelList();
-                List<BlockState> voxelList = toolkitProperties.getVoxelList();
-                messenger.sendVoxelListMessage(voxelList);
-                return;
-            }
-        }
-        boolean remove = false;
-        for (String string : arguments) {
-            String materialString;
-            if (!string.isEmpty() && string.charAt(0) == '-') {
-                remove = true;
-                materialString = string.replaceAll("-", "");
+
+        BlockState blockState = BukkitAdapter.adapt(player.getWorld().getBlockAt(
+                targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()
+        ).getBlockData());
+        toolkitProperties.addToVoxelList(blockState);
+
+        Messenger messenger = new Messenger(plugin, player);
+        Collection<BlockState> voxelList = toolkitProperties.getVoxelList();
+        messenger.sendVoxelListMessage(voxelList);
+    }
+
+    @CommandMethod("clear")
+    public void onVoxelListClear(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit
+    ) {
+        Player player = sniper.getPlayer();
+        ToolkitProperties toolkitProperties = toolkit.getProperties();
+        toolkitProperties.clearVoxelList();
+
+        Messenger messenger = new Messenger(plugin, player);
+        Collection<BlockState> voxelList = toolkitProperties.getVoxelList();
+        messenger.sendVoxelListMessage(voxelList);
+    }
+
+    @CommandMethod("<blocks>")
+    public void onVoxelListBlocks(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit,
+            final @NotNull @Argument("blocks") VoxelListBlocksArgument.BlockWrapper[] blockWrappers
+    ) {
+        Player player = sniper.getPlayer();
+        ToolkitProperties toolkitProperties = toolkit.getProperties();
+        for (VoxelListBlocksArgument.BlockWrapper blockWrapper : blockWrappers) {
+            if (blockWrapper.remove()) {
+                toolkitProperties.removeFromVoxelList(blockWrapper.block());
             } else {
-                materialString = string;
-            }
-            BlockType blockType = BlockTypes.get(materialString.toLowerCase(Locale.ROOT));
-            if (blockType != null) {
-                BlockState blockState = blockType.getDefaultState();
-                if (remove) {
-                    toolkitProperties.removeFromVoxelList(blockState);
-                } else {
-                    toolkitProperties.addToVoxelList(blockState);
-                }
-                List<BlockState> voxelList = toolkitProperties.getVoxelList();
-                messenger.sendVoxelListMessage(voxelList);
+                toolkitProperties.addToVoxelList(blockWrapper.block());
             }
         }
+
+        Messenger messenger = new Messenger(plugin, player);
+        Collection<BlockState> voxelList = toolkitProperties.getVoxelList();
+        messenger.sendVoxelListMessage(voxelList);
     }
 
 }

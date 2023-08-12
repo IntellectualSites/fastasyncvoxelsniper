@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -7,21 +10,22 @@ import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b tree_snipe|treesnipe|tree|t")
+@CommandPermission("voxelsniper.brush.treesnipe")
 public class TreeSnipeBrush extends AbstractBrush {
 
     private static final TreeGenerator.TreeType DEFAULT_TREE_TYPE = TreeGenerator.TreeType.TREE;
-
-    private static final List<String> TREES = new ArrayList<>(TreeGenerator.TreeType.getPrimaryAliases());
 
     private TreeGenerator.TreeType treeType;
 
@@ -32,50 +36,47 @@ public class TreeSnipeBrush extends AbstractBrush {
         );
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.inf"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
-                            List.of(TreeGenerator.TreeType.values()),
-                            (type, type2) -> type.lookupKeys.get(0).compareTo(type2.lookupKeys.get(0)),
-                            type -> TextComponent.of(type.lookupKeys.get(0)),
-                            type -> type,
-                            this.treeType,
-                            "voxelsniper.brush.tree-sniper"
-                    ));
-                } else {
-                    TreeGenerator.TreeType treeType = TreeGenerator.TreeType.lookup(firstParameter);
-
-                    if (treeType != null) {
-                        this.treeType = treeType;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.set-tree", this.treeType.getName()));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.invalid-tree", firstParameter));
-                    }
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.concat(
-                    TREES.stream(),
-                    Stream.of("list")
-            ), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.tree-snipe.info"));
+    }
+
+    @CommandMethod("list")
+    public void onBrushList(
+            final @NotNull Snipe snipe
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                List.of(TreeGenerator.TreeType.values()),
+                (type, type2) -> type.lookupKeys.get(0).compareTo(type2.lookupKeys.get(0)),
+                type -> TextComponent.of(type.lookupKeys.get(0)),
+                type -> type,
+                this.treeType,
+                "voxelsniper.brush.tree-snipe"
+        ));
+    }
+
+    @CommandMethod("<tree-type>")
+    public void onBrushTreetype(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("tree-type") TreeGenerator.TreeType treeType
+    ) {
+        this.treeType = treeType;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.tree-snipe.set-tree",
+                this.treeType.getName()
+        ));
     }
 
     @Override
@@ -94,7 +95,7 @@ public class TreeSnipeBrush extends AbstractBrush {
         setBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
         if (!generateTree(targetBlock, this.treeType)) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(Caption.of("voxelsniper.brush.tree-sniper.generate-failed"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.tree-snipe.generate-failed"));
         }
         setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
     }
@@ -112,7 +113,10 @@ public class TreeSnipeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.tree-sniper.set-tree", this.treeType.getName()))
+                .message(Caption.of(
+                        "voxelsniper.brush.tree-snipe.set-tree",
+                        this.treeType.getName()
+                ))
                 .send();
     }
 

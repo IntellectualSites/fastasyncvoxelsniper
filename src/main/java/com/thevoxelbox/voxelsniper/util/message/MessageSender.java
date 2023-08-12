@@ -9,6 +9,7 @@ import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MessageSender {
@@ -60,7 +61,7 @@ public class MessageSender {
         return this;
     }
 
-    public MessageSender voxelListMessage(List<? extends BlockState> voxelList) {
+    public MessageSender voxelListMessage(Collection<? extends BlockState> voxelList) {
         if (voxelList.isEmpty()) {
             this.messages.add(Caption.of("voxelsniper.messenger.voxel.list-empty"));
             return this;

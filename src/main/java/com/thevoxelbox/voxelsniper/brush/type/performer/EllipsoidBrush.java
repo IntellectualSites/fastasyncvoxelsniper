@@ -1,15 +1,20 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b ellipsoid|elo")
+@CommandPermission("voxelsniper.brush.ellipsoid")
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_X_RAD = 0;
@@ -22,71 +27,74 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
     private double yRad = DEFAULT_Y_RAD;
     private double zRad = DEFAULT_Z_RAD;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipsoid.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.offset = true;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.ellipsoid.set-offset",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.offset = false;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.ellipsoid.set-offset",
-                            VoxelSniperText.getStatus(false)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("x")) {
-                    Integer xRad = NumericParser.parseInteger(parameters[1]);
-                    if (xRad != null) {
-                        this.xRad = xRad;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipsoid.set-x-radius", this.xRad));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("y")) {
-                    Integer yRad = NumericParser.parseInteger(parameters[1]);
-                    if (yRad != null) {
-                        this.yRad = yRad;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipsoid.set-y-radius", this.yRad));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("z")) {
-                    Integer zRad = NumericParser.parseInteger(parameters[1]);
-                    if (zRad != null) {
-                        this.zRad = zRad;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ellipsoid.set-z-radius", this.zRad));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false", "x", "y", "z"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ellipsoid.info"));
+    }
+
+    @CommandMethod("<offset>")
+    public void onBrushOffset(
+            final @NotNull Snipe snipe,
+            final @Argument("offset") @Liberal boolean offset
+    ) {
+        this.offset = offset;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipsoid.set-offset",
+                VoxelSniperText.getStatus(this.offset)
+        ));
+    }
+
+    @CommandMethod("x <x-rad>")
+    public void onBrushX(
+            final @NotNull Snipe snipe,
+            final @Argument("x-rad") int xRad
+    ) {
+        this.xRad = xRad;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipsoid.set-x-radius",
+                this.xRad
+        ));
+    }
+
+    @CommandMethod("y <y-rad>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-rad") int yRad
+    ) {
+        this.yRad = yRad;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipsoid.set-y-radius",
+                this.yRad
+        ));
+    }
+
+    @CommandMethod("z <z-rad>")
+    public void onBrushZ(
+            final @NotNull Snipe snipe,
+            final @Argument("z-rad") int zRad
+    ) {
+        this.zRad = zRad;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.ellipsoid.set-z-radius",
+                this.zRad
+        ));
     }
 
     @Override
@@ -184,9 +192,18 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
                         "voxelsniper.performer-brush.ellipsoid.set-offset",
                         VoxelSniperText.getStatus(offset)
                 ))
-                .message(Caption.of("voxelsniper.performer-brush.ellipsoid.set-x-radius", this.xRad))
-                .message(Caption.of("voxelsniper.performer-brush.ellipsoid.set-y-radius", this.yRad))
-                .message(Caption.of("voxelsniper.performer-brush.ellipsoid.set-z-radius", this.zRad))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipsoid.set-x-radius",
+                        this.xRad
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipsoid.set-y-radius",
+                        this.yRad
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.ellipsoid.set-z-radius",
+                        this.zRad
+                ))
                 .send();
     }
 

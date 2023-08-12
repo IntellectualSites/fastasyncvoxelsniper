@@ -13,8 +13,8 @@ public class BlockTracer {
     private final BlockVector3 lastBlock;
 
     public BlockTracer(Player player, int distance) {
-        com.sk89q.worldedit.entity.Player fp = BukkitAdapter.adapt(player);
-        TargetBlock tracer = new TargetBlock(fp, distance, 0.2);
+        com.sk89q.worldedit.entity.Player wePlayer = BukkitAdapter.adapt(player);
+        TargetBlock tracer = new TargetBlock(wePlayer, distance, 0.2);
         Location targetLocation = tracer.getAnyTargetBlock();
         Location lastLocation = tracer.getPreviousBlock();
 

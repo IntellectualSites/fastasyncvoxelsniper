@@ -1,19 +1,25 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * FOR ANY BRUSH THAT USES A SPLINE, EXTEND THAT BRUSH FROM THIS BRUSH!!! That way, the spline calculations are already there. Also, the UI for
  * the splines will be included.
  */
+@RequireToolkit
+@CommandMethod(value = "brush|b spline|sp")
+@CommandPermission("voxelsniper.brush.ellipsoid")
 public class SplineBrush extends AbstractPerformerBrush {
 
     private final List<BlockVector3> endPts = new ArrayList<>();
@@ -26,77 +32,77 @@ public class SplineBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("ss")) {
-                    if (this.set) {
-                        this.set = false;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.spline.set-endpoint",
-                                VoxelSniperText.getStatus(false)
-                        ));
-                    } else {
-                        this.set = true;
-                        this.ctrl = false;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.spline.set-endpoint",
-                                VoxelSniperText.getStatus(true)
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("sc")) {
-                    if (this.ctrl) {
-                        this.ctrl = false;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.spline.set-control-point",
-                                VoxelSniperText.getStatus(false)
-                        ));
-                    } else {
-                        this.set = false;
-                        this.ctrl = true;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.spline.set-control-point",
-                                VoxelSniperText.getStatus(true)
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("clear")) {
-                    clear(snipe);
-                } else if (firstParameter.equalsIgnoreCase("ren")) {
-                    if (this.endPts.size() == 2 && this.ctrlPts.size() == 2) {
-                        if (spline(
-                                new Point(this.endPts.get(0)),
-                                new Point(this.endPts.get(1)),
-                                new Point(this.ctrlPts.get(0)),
-                                new Point(this.ctrlPts.get(1)),
-                                snipe
-                        )) {
-                            render();
-                        }
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.missing-points"));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("ss", "sc", "clear", "ren"), parameter, 0);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.spline.info"));
+    }
+
+    @CommandMethod("ss")
+    public void onBrushSs(
+            final @NotNull Snipe snipe
+    ) {
+        this.set = !this.set;
+        if (this.set) {
+            this.ctrl = false;
         }
-        return super.handleCompletions(parameters, snipe);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.spline.set-endpoint",
+                VoxelSniperText.getStatus(this.set)
+        ));
+    }
+
+    @CommandMethod("sc")
+    public void onBrushSc(
+            final @NotNull Snipe snipe
+    ) {
+        this.ctrl = !this.ctrl;
+        if (this.ctrl) {
+            this.set = false;
+        }
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.spline.set-control-point",
+                VoxelSniperText.getStatus(this.ctrl)
+        ));
+    }
+
+    @CommandMethod("clear")
+    public void onBrushClear(
+            final @NotNull Snipe snipe
+    ) {
+        this.clear(snipe);
+    }
+
+    @CommandMethod("ren")
+    public void onBrushRen(
+            final @NotNull Snipe snipe
+    ) {
+        if (this.endPts.size() == 2 && this.ctrlPts.size() == 2) {
+            if (spline(
+                    new Point(this.endPts.get(0)),
+                    new Point(this.endPts.get(1)),
+                    new Point(this.ctrlPts.get(0)),
+                    new Point(this.ctrlPts.get(1)),
+                    snipe
+            )) {
+                render();
+            }
+        } else {
+            SnipeMessenger messenger = snipe.createMessenger();
+            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.missing-points"));
+        }
     }
 
     @Override
@@ -201,7 +207,7 @@ public class SplineBrush extends AbstractPerformerBrush {
                 }
             }
             return true;
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException e) {
             messenger.sendMessage(Caption.of("voxelsniper.performer-brush.spline.not-enough-points", this.endPts.size(),
                     this.ctrlPts.size()
             ));

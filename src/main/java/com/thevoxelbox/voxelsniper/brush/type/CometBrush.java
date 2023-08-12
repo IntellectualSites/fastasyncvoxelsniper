@@ -1,9 +1,14 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.Component;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -12,57 +17,55 @@ import org.bukkit.entity.LargeFireball;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b comet|com")
+@CommandPermission("voxelsniper.brush.comet")
 public class CometBrush extends AbstractBrush {
 
     private boolean useBigBalls;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.comet.info"));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("balls")) {
-                    String newBallSize = parameters[1];
-                    if (newBallSize.equalsIgnoreCase("big")) {
-                        this.useBigBalls = true;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.comet.set-size", getStatus(true)));
-                    } else if (newBallSize.equalsIgnoreCase("small")) {
-                        this.useBigBalls = false;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.comet.set-size", getStatus(false)));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.biome.invalid-size", newBallSize));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("balls"), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("balls")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(Stream.of("big", "small"), parameter, 1);
-            }
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.comet.info"));
+    }
+
+    @CommandMethod("<use-big-balls>")
+    public void onBrushBigballs(
+            final @NotNull Snipe snipe,
+            final @Argument("use-big-balls") @Liberal boolean useBigBalls
+    ) {
+        this.useBigBalls = useBigBalls;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.comet.set-size",
+                this.getStatus(this.useBigBalls)
+        ));
+    }
+
+    @CommandMethod("balls big")
+    public void onBrushBallsBig(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushBigballs(snipe, true);
+    }
+
+    @CommandMethod("balls small")
+    public void onBrushBallsSmall(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushBigballs(snipe, false);
     }
 
     @Override
@@ -103,7 +106,10 @@ public class CometBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .patternMessage()
-                .message(Caption.of("voxelsniper.brush.comet.set-size", getStatus(this.useBigBalls)))
+                .message(Caption.of(
+                        "voxelsniper.brush.comet.set-size",
+                        this.getStatus(this.useBigBalls)
+                ))
                 .send();
     }
 

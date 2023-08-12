@@ -1,20 +1,25 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b rotation_3d|rotation3d|rot3d|rot3")
+@CommandPermission("voxelsniper.brush.rot3d")
 public class Rotation3DBrush extends AbstractBrush {
 
     private static final int DEFAULT_SE_YAW = 0;
@@ -28,60 +33,65 @@ public class Rotation3DBrush extends AbstractBrush {
     private double sePitch = DEFAULT_SE_PITCH;
     private double seRoll = DEFAULT_SE_ROLL;
 
-    // after all rotations, compare snapshot to new state of world?
-    // --> agreed. Do what erode does and store one snapshot with Block pointers and int id of what the block started with, afterwards simply go thru that
-    // matrix and compare Block.getId with 'id'
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        // which way is clockwise is less obvious for roll and pitch... should probably fix that / make it clear
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.rotation-3d.info", 180, DECIMAL_FORMAT.format(Math.PI)));
-        } else {
-            if (parameters.length == 2) {
-                Double degreesAngle = NumericParser.parseDouble(parameters[1]);
-
-                if (degreesAngle != null && degreesAngle >= 0 && degreesAngle <= 359) {
-                    if (firstParameter.equalsIgnoreCase("p")) {
-                        this.sePitch = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.rotation-3d.set-z-angle",
-                                DECIMAL_FORMAT.format(this.sePitch),
-                                DECIMAL_FORMAT.format(degreesAngle)
-                        ));
-                    } else if (firstParameter.equalsIgnoreCase("r")) {
-                        this.seRoll = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.rotation-3d.set-x-angle",
-                                DECIMAL_FORMAT.format(this.seRoll),
-                                DECIMAL_FORMAT.format(degreesAngle)
-                        ));
-                    } else if (firstParameter.equalsIgnoreCase("y")) {
-                        this.seYaw = Math.toRadians(degreesAngle);
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.rotation-3d.set-y-angle",
-                                DECIMAL_FORMAT.format(this.seYaw),
-                                DECIMAL_FORMAT.format(degreesAngle)
-                        ));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", firstParameter, 1, 359));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("p", "r", "y"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.rotation.3d.info",
+                180, DECIMAL_FORMAT.format(Math.PI)
+        ));
+    }
+
+    @CommandMethod("p <degrees-angle>")
+    public void onBrushP(
+            final @NotNull Snipe snipe,
+            final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
+    ) {
+        this.sePitch = Math.toRadians(degreesAngle);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.rotation-3d.set-z-angle",
+                DECIMAL_FORMAT.format(this.sePitch),
+                DECIMAL_FORMAT.format(degreesAngle)
+        ));
+    }
+
+    @CommandMethod("r <degrees-angle>")
+    public void onBrushR(
+            final @NotNull Snipe snipe,
+            final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
+    ) {
+        this.seRoll = Math.toRadians(degreesAngle);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.rotation-3d.set-x-angle",
+                DECIMAL_FORMAT.format(this.seRoll),
+                DECIMAL_FORMAT.format(degreesAngle)
+        ));
+    }
+
+    @CommandMethod("y <degrees-angle>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
+    ) {
+        this.seYaw = Math.toRadians(degreesAngle);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.rotation-3d.set-y-angle",
+                DECIMAL_FORMAT.format(this.seYaw),
+                DECIMAL_FORMAT.format(degreesAngle)
+        ));
     }
 
     @Override

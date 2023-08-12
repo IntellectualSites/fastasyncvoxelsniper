@@ -1,5 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -8,13 +12,14 @@ import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
@@ -25,8 +30,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b erode|e")
+@CommandPermission("voxelsniper.brush.erode")
 public class ErodeBrush extends AbstractBrush {
 
     private static final List<Direction> FACES_TO_CHECK = Arrays.asList(
@@ -40,120 +47,108 @@ public class ErodeBrush extends AbstractBrush {
 
     private ErosionPreset currentPreset = Preset.DEFAULT.getPreset();
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.erode.info"));
-        } else {
-            Preset preset = Preset.getPreset(firstParameter);
-            if (preset != null) {
-                try {
-                    this.currentPreset = preset.getPreset();
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.erode.set-preset", preset.getFullName()));
-                    return;
-                } catch (IllegalArgumentException exception) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.erode.invalid-preset", preset.getFullName()));
-                    return;
-                }
-            }
-
-            ErosionPreset currentPresetBackup = this.currentPreset;
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("f")) {
-                    Integer fillFaces = NumericParser.parseInteger(parameters[1]);
-                    if (fillFaces != null) {
-                        this.currentPreset = new ErosionPreset(
-                                this.currentPreset.getErosionFaces(),
-                                this.currentPreset.getErosionRecursions(),
-                                fillFaces,
-                                this.currentPreset.getFillRecursions()
-                        );
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("e")) {
-                    Integer erosionFaces = NumericParser.parseInteger(parameters[1]);
-                    if (erosionFaces != null) {
-                        this.currentPreset = new ErosionPreset(
-                                erosionFaces,
-                                this.currentPreset.getErosionRecursions(),
-                                this.currentPreset.getFillFaces(),
-                                this.currentPreset.getFillRecursions()
-                        );
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("F")) {
-                    Integer fillRecursion = NumericParser.parseInteger(parameters[1]);
-                    if (fillRecursion != null) {
-                        this.currentPreset = new ErosionPreset(
-                                this.currentPreset.getErosionFaces(),
-                                this.currentPreset.getErosionRecursions(),
-                                this.currentPreset.getFillFaces(),
-                                fillRecursion
-                        );
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("E")) {
-                    Integer erosionRecursion = NumericParser.parseInteger(parameters[1]);
-                    if (erosionRecursion != null) {
-                        this.currentPreset = new ErosionPreset(
-                                this.currentPreset.getErosionFaces(),
-                                erosionRecursion,
-                                this.currentPreset.getFillFaces(),
-                                this.currentPreset.getFillRecursions()
-                        );
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-                return;
-            }
-
-            if (!this.currentPreset.equals(currentPresetBackup)) {
-                if (this.currentPreset.getErosionFaces() != currentPresetBackup.getErosionFaces()) {
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.erode.set-erosion-faces",
-                            this.currentPreset.getErosionFaces()
-                    ));
-                }
-                if (this.currentPreset.getFillFaces() != currentPresetBackup.getFillFaces()) {
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.erode.set-fill-faces",
-                            this.currentPreset.getFillFaces()
-                    ));
-                }
-                if (this.currentPreset.getErosionRecursions() != currentPresetBackup.getErosionRecursions()) {
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.erode.set-erosion-recursions",
-                            this.currentPreset.getErosionRecursions()
-                    ));
-                }
-                if (this.currentPreset.getFillRecursions() != currentPresetBackup.getFillRecursions()) {
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.erode.set-fill-recursions",
-                            this.currentPreset.getFillRecursions()
-                    ));
-                }
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("f", "e", "F", "E", "default", "melt", "fill", "smooth", "lift", "floatclean"),
-                    parameter, 0
-            );
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.erode.info"));
+    }
+
+    @CommandMethod("<preset>")
+    public void onBrushPreset(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("preset") Preset preset
+    ) {
+        this.currentPreset = preset.getPreset();
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.erode.set-preset",
+                preset.getFullName()
+        ));
+    }
+
+    @CommandMethod("e <erosion-faces>")
+    public void onBrushErosionfaces(
+            final @NotNull Snipe snipe,
+            final @Argument("erosion-faces") @Range(min = "0") int erosionFaces
+    ) {
+        this.currentPreset = new ErosionPreset(
+                erosionFaces,
+                this.currentPreset.getErosionRecursions(),
+                this.currentPreset.getFillFaces(),
+                this.currentPreset.getFillRecursions()
+        );
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.erode.set-erosion-faces",
+                this.currentPreset.getErosionFaces()
+        ));
+    }
+
+    @CommandMethod("E <erosion-recursions>")
+    public void onBrushErosionrecursion(
+            final @NotNull Snipe snipe,
+            final @Argument("erosion-recursions") @Range(min = "0") int erosionRecursions
+    ) {
+        this.currentPreset = new ErosionPreset(
+                this.currentPreset.getErosionFaces(),
+                erosionRecursions,
+                this.currentPreset.getFillFaces(),
+                this.currentPreset.getFillRecursions()
+        );
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.erode.set-erosion-recursions",
+                this.currentPreset.getErosionRecursions()
+        ));
+    }
+
+    @CommandMethod("f <fill-faces>")
+    public void onBrushFillfaces(
+            final @NotNull Snipe snipe,
+            final @Argument("fill-faces") @Range(min = "0") int fillFaces
+    ) {
+        this.currentPreset = new ErosionPreset(
+                this.currentPreset.getErosionFaces(),
+                this.currentPreset.getErosionRecursions(),
+                fillFaces,
+                this.currentPreset.getFillRecursions()
+        );
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.erode.set-fill-faces",
+                this.currentPreset.getFillFaces()
+        ));
+    }
+
+    @CommandMethod("F <fill-recursions>")
+    public void onBrushFillrecursion(
+            final @NotNull Snipe snipe,
+            final @Argument("fill-recursions") @Range(min = "0") int fillRecursions
+    ) {
+        this.currentPreset = new ErosionPreset(
+                this.currentPreset.getErosionFaces(),
+                this.currentPreset.getErosionRecursions(),
+                this.currentPreset.getFillFaces(),
+                fillRecursions
+        );
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.erode.set-fill-recursions",
+                this.currentPreset.getFillRecursions()
+        ));
     }
 
     @Override
@@ -285,14 +280,26 @@ public class ErodeBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.brush.erode.set-erosion-faces", this.currentPreset.getErosionFaces()))
-                .message(Caption.of("voxelsniper.brush.erode.set-fill-faces", this.currentPreset.getFillFaces()))
-                .message(Caption.of("voxelsniper.brush.erode.set-erosion-recursions", this.currentPreset.getErosionRecursions()))
-                .message(Caption.of("voxelsniper.brush.erode.set-fill-recursions", this.currentPreset.getFillRecursions()))
+                .message(Caption.of(
+                        "voxelsniper.brush.erode.set-erosion-faces",
+                        this.currentPreset.getErosionFaces()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.erode.set-erosion-recursions",
+                        this.currentPreset.getErosionRecursions()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.erode.set-fill-faces",
+                        this.currentPreset.getFillFaces()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.erode.set-fill-recursions",
+                        this.currentPreset.getFillRecursions()
+                ))
                 .send();
     }
 
-    private enum Preset {
+    public enum Preset {
 
         DEFAULT("default", new ErosionPreset(0, 1, 0, 1)),
         MELT("melt", new ErosionPreset(2, 1, 5, 1)),
@@ -431,7 +438,7 @@ public class ErodeBrush extends AbstractBrush {
 
     }
 
-    private record ErosionPreset(int erosionFaces, int erosionRecursions, int fillFaces, int fillRecursion) implements
+    protected record ErosionPreset(int erosionFaces, int erosionRecursions, int fillFaces, int fillRecursions) implements
             Serializable {
 
         @Serial
@@ -439,13 +446,13 @@ public class ErodeBrush extends AbstractBrush {
 
         @Override
         public int hashCode() {
-            return Objects.hash(this.erosionFaces, this.erosionRecursions, this.fillFaces, this.fillRecursion);
+            return Objects.hash(this.erosionFaces, this.erosionRecursions, this.fillFaces, this.fillRecursions);
         }
 
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof ErosionPreset other) {
-                return this.erosionFaces == other.erosionFaces && this.erosionRecursions == other.erosionRecursions && this.fillFaces == other.fillFaces && this.fillRecursion == other.fillRecursion;
+                return this.erosionFaces == other.erosionFaces && this.erosionRecursions == other.erosionRecursions && this.fillFaces == other.fillFaces && this.fillRecursions == other.fillRecursions;
             }
             return false;
         }
@@ -475,11 +482,11 @@ public class ErodeBrush extends AbstractBrush {
          * Returns the fill recursion
          */
         public int getFillRecursions() {
-            return this.fillRecursion;
+            return this.fillRecursions;
         }
 
         public ErosionPreset getInverted() {
-            return new ErosionPreset(this.fillFaces, this.fillRecursion, this.erosionFaces, this.erosionRecursions);
+            return new ErosionPreset(this.fillFaces, this.fillRecursions, this.erosionFaces, this.erosionRecursions);
         }
 
     }

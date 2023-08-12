@@ -2,10 +2,11 @@ package com.thevoxelbox.voxelsniper.performer;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
-public interface Performer {
+public interface Performer extends VoxelCommandElement {
 
     /**
      * Initialize performer data.

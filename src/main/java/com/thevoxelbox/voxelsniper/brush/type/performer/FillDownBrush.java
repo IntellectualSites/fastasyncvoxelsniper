@@ -1,22 +1,27 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b fill_down|filldown|fd")
+@CommandPermission("voxelsniper.brush.filldown")
 public class FillDownBrush extends AbstractPerformerBrush {
 
-    private double trueCircle;
+    private boolean trueCircle;
     private boolean fillLiquid = true;
     private boolean fromExisting;
     private int minY;
@@ -28,79 +33,99 @@ public class FillDownBrush extends AbstractPerformerBrush {
         }
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.fill-down.info", getEditSession().getMinY()));
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of(
+                "voxelsniper.performer-brush.fill-down.info",
+                this.getEditSession().getMinY()
+        ));
+    }
+
+    @CommandMethod("<true-circle>")
+    public void onBrushTruecircle(
+            final @NotNull Snipe snipe,
+            final @Argument("true-circle") @Liberal boolean trueCircle
+    ) {
+        this.trueCircle = trueCircle;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.parameter.true-circle",
+                VoxelSniperText.getStatus(this.trueCircle)
+        ));
+    }
+
+    @CommandMethod("all")
+    public void onBrushAll(
+            final @NotNull Snipe snipe
+    ) {
+        this.fillLiquid = true;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.fill-down.set-fill-all",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("some")
+    public void onBrushSome(
+            final @NotNull Snipe snipe
+    ) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        this.fillLiquid = false;
+        toolkitProperties.resetReplacePattern();
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.fill-down.set-fill-some",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("e")
+    public void onBrushE(
+            final @NotNull Snipe snipe
+    ) {
+        this.fromExisting = !this.fromExisting;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        if (this.fromExisting) {
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.performer-brush.fill-down.set-fill-down-existing",
+                    VoxelSniperText.getStatus(true)
+            ));
         } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.trueCircle = 0.5;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.trueCircle = 0;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.parameter.true-circle",
-                            VoxelSniperText.getStatus(false)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("all")) {
-                    this.fillLiquid = true;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.fill-down.set-fill-all",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("some")) {
-                    this.fillLiquid = false;
-                    ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-                    toolkitProperties.resetReplacePattern();
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.fill-down.set-fill-some",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("e")) {
-                    this.fromExisting = !this.fromExisting;
-                    if (this.fromExisting) {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.fill-down.set-fill-down-existing",
-                                VoxelSniperText.getStatus(true)
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.fill-down.set-fill-down-all",
-                                VoxelSniperText.getStatus(true)
-                        ));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("y")) {
-                    Integer minY = NumericParser.parseInteger(parameters[1]);
-                    if (minY != null) {
-                        int minYMin = getEditSession().getMinY();
-                        int minYMax = getEditSession().getMaxY();
-                        this.minY = minY < minYMin ? minYMin : Math.min(minY, minYMax);
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.fill-down.set-min-y", this.minY));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.performer-brush.fill-down.set-fill-down-all",
+                    VoxelSniperText.getStatus(true)
+            ));
         }
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false", "some", "all", "e"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("y <min-y>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("min-y") int minY
+    ) {
+        int minYMin = this.getEditSession().getMinY();
+        int minYMax = this.getEditSession().getMaxY();
+        this.minY = minY < minYMin ? minYMin : Math.min(minY, minYMax);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.fill-down.set-min-y",
+                this.minY
+        ));
     }
 
     @Override
@@ -116,7 +141,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
     private void fillDown(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         BlockVector3 targetBlock = this.getTargetBlock();
         for (int x = -brushSize; x <= brushSize; x++) {
             double currentXSquared = Math.pow(x, 2);
@@ -170,8 +195,14 @@ public class FillDownBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
-                .message(Caption.of("voxelsniper.performer-brush.fill-down.set-fill-all", VoxelSniperText.getStatus(fillLiquid)))
+                .message(Caption.of(
+                        "voxelsniper.brush.parameter.true-circle",
+                        VoxelSniperText.getStatus(this.trueCircle)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.fill-down.set-fill-all",
+                        VoxelSniperText.getStatus(fillLiquid)
+                ))
                 .message(Caption.of(
                         "voxelsniper.performer-brush.fill-down.set-fill-some",
                         VoxelSniperText.getStatus(!fillLiquid)
@@ -184,7 +215,10 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         "voxelsniper.performer-brush.fill-down.set-fill-down-all",
                         VoxelSniperText.getStatus(!fromExisting)
                 ))
-                .message(Caption.of("voxelsniper.performer-brush.fill-down.set-min-y", this.minY))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.fill-down.set-min-y",
+                        this.minY
+                ))
                 .send();
     }
 

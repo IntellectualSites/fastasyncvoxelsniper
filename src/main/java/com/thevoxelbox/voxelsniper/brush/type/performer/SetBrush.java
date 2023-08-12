@@ -1,12 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b set")
+@CommandPermission("voxelsniper.brush.set")
 public class SetBrush extends AbstractPerformerBrush {
 
     private static final int SELECTION_SIZE_MAX = 5000000;
@@ -20,6 +27,13 @@ public class SetBrush extends AbstractPerformerBrush {
     @Override
     public void loadProperties() {
         this.selectionSizeMax = getIntegerProperty("selection-size-max", SELECTION_SIZE_MAX);
+    }
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
     @Override

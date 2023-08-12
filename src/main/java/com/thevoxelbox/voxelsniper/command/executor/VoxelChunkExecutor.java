@@ -1,16 +1,21 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class VoxelChunkExecutor implements CommandExecutor {
+@CommandMethod(value = "voxel_chunk|voxelchunk|vchunk")
+@CommandDescription("Update the chunk you are standing in.")
+@CommandPermission("voxelsniper.sniper")
+public class VoxelChunkExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -18,14 +23,11 @@ public class VoxelChunkExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            return;
-        }
+    @CommandMethod("")
+    public void onVoxelChunk(
+            final @NotNull Sniper sniper
+    ) {
+        Player player = sniper.getPlayer();
         World world = player.getWorld();
         Location location = player.getLocation();
         int x = location.getBlockX();

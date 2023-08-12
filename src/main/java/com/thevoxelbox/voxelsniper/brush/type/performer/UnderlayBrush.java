@@ -1,7 +1,12 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -9,11 +14,11 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b underlay|under")
+@CommandPermission("voxelsniper.brush.underlay")
 public class UnderlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
@@ -27,55 +32,58 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.underlay.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("all")) {
-                    this.allBlocks = true;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.underlay.set-underlay-all",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("some")) {
-                    this.allBlocks = false;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.performer-brush.underlay.set-underlay-natural",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("d")) {
-                    Integer depth = NumericParser.parseInteger(parameters[1]);
-                    if (depth != null) {
-                        this.depth = depth < 1 ? 1 : depth;
-                        messenger.sendMessage(Caption.of("voxelsniper.performer-brush.underlay.set-depth", this.depth));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("d", "all", "some"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.underlay.info"));
+    }
+
+    @CommandMethod("all")
+    public void onBrushAll(
+            final @NotNull Snipe snipe
+    ) {
+        this.allBlocks = true;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.underlay.set-underlay-all",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("some")
+    public void onBrushSome(
+            final @NotNull Snipe snipe
+    ) {
+        this.allBlocks = false;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.underlay.set-underlay-natural",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("d <depth>")
+    public void onBrushD(
+            final @NotNull Snipe snipe,
+            final @Argument("depth") @Range(min = "1") int depth
+    ) {
+        this.depth = depth;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.underlay.set-depth",
+                this.depth
+        ));
     }
 
     @Override
@@ -215,7 +223,10 @@ public class UnderlayBrush extends AbstractPerformerBrush {
                         "voxelsniper.performer-brush.underlay.set-underlay-natural",
                         VoxelSniperText.getStatus(!this.allBlocks)
                 ))
-                .message(Caption.of("voxelsniper.performer-brush.underlay.set-depth", this.depth))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.underlay.set-depth",
+                        this.depth
+                ))
                 .send();
     }
 

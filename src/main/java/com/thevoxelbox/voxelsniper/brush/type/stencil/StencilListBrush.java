@@ -1,12 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -15,18 +20,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b stencil_list|stencillist|sl")
+@CommandPermission("voxelsniper.brush.stencillist")
 public class StencilListBrush extends AbstractBrush {
 
     private static final String NO_FILE_LOADED = "NoFileLoaded";
     private static final int DEFAULT_PASTE_OPTION = 1;
 
     private final Map<Integer, String> stencilList = new HashMap<>();
-    private String filename = NO_FILE_LOADED;
+    private File file = null;
     private short x;
     private short z;
     private short y;
@@ -39,64 +45,72 @@ public class StencilListBrush extends AbstractBrush {
     @Override
     public void loadProperties() {
         this.pasteOption = (byte) getIntegerProperty("default-paste-option", DEFAULT_PASTE_OPTION);
-
-        File dataFolder = new File(PLUGIN_DATA_FOLDER, "/stencilLists");
-        dataFolder.mkdirs();
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
+
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.stencil-list.info"));
+    }
+
+    private void onBrushPasteCommand(Snipe snipe, byte pasteOption, File stencilList) {
+        this.pasteOption = pasteOption;
+        this.file = stencilList;
+
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.info"));
+        if (stencilList.exists()) {
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.stencil-list.loaded",
+                    this.file.getName()
+            ));
+            readStencilList();
         } else {
-            byte pasteOption;
-            byte pasteParam;
-            if (firstParameter.equalsIgnoreCase("full")) {
-                pasteOption = 0;
-                pasteParam = 1;
-            } else if (firstParameter.equalsIgnoreCase("fill")) {
-                pasteOption = 1;
-                pasteParam = 1;
-            } else if (firstParameter.equalsIgnoreCase("replace")) {
-                pasteOption = 2;
-                pasteParam = 1;
-            } else {
-                // Reset to [s] parameter expected.
-                pasteOption = 1;
-                pasteParam = 0;
-            }
-            if (parameters.length != 1 + pasteParam) {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-                return;
-            }
-
-            this.pasteOption = pasteOption;
-            try {
-                this.filename = parameters[pasteParam];
-                File file = new File(PLUGIN_DATA_FOLDER, "/stencilLists/" + this.filename + ".txt");
-                if (file.exists()) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.loaded", this.filename));
-                    readStencilList();
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing", this.filename));
-                    this.filename = NO_FILE_LOADED;
-                }
-            } catch (RuntimeException exception) {
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
-            }
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.stencil-list.missing",
+                    this.file.getName()
+            ));
+            this.file = null;
         }
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("full", "fill", "replace"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("full <stencil-list>")
+    public void onBrushFull(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
+    ) {
+        this.onBrushPasteCommand(snipe, (byte) 0, stencilList);
+    }
+
+    @CommandMethod("fill <stencil-list>")
+    public void onBrushFill(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
+    ) {
+        this.onBrushPasteCommand(snipe, (byte) 1, stencilList);
+    }
+
+    @CommandMethod("replace <stencil-list>")
+    public void onBrushReplace(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
+    ) {
+        this.onBrushPasteCommand(snipe, (byte) 2, stencilList);
+    }
+
+    @CommandMethod("<stencil-list>")
+    public void onBrushStencillist(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
+    ) {
+        this.onBrushFill(snipe, stencilList);
     }
 
     @Override
@@ -117,7 +131,6 @@ public class StencilListBrush extends AbstractBrush {
 
     private void readStencilList() {
         stencilList.clear();
-        File file = new File(PLUGIN_DATA_FOLDER, "/stencilLists/" + this.filename + ".txt");
         if (file.exists()) {
             try {
                 Scanner scanner = new Scanner(file);
@@ -127,24 +140,24 @@ public class StencilListBrush extends AbstractBrush {
                     counter++;
                 }
                 scanner.close();
-            } catch (FileNotFoundException exception) {
-                exception.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
 
     private void stencilPaste(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.filename.matches(NO_FILE_LOADED)) {
+        if (this.file == null) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
             return;
         }
         String stencilName = this.readRandomStencil();
         messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.stencil-loaded", stencilName));
-        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
-        if (file.exists()) {
+        File stencil = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
+        if (stencil.exists()) {
             try {
-                DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+                DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(stencil)));
                 this.x = in.readShort();
                 this.z = in.readShort();
                 this.y = in.readShort();
@@ -299,34 +312,41 @@ public class StencilListBrush extends AbstractBrush {
                         }
                     }
                 }
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
+                messenger.sendMessage(Caption.of(
+                        "voxelsniper.brush.stencil.pasted",
+                        stencilName,
+                        volume
+                ));
                 in.close();
-            } catch (IOException exception) {
+            } catch (IOException e) {
                 if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
                     // Tries with some legacy handling for legacy stencils.
                     stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
                 } else {
                     messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                    exception.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         } else {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.invalid-stencil-list-name"));
         }
     }
 
     private void stencilPaste180(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.filename.matches(NO_FILE_LOADED)) {
+        if (this.file == null) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
             return;
         }
         String stencilName = this.readRandomStencil();
-        messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.stencil-loaded", stencilName));
-        File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
-        if (file.exists()) {
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.stencil-list.stencil-loaded",
+                stencilName
+        ));
+        File stencil = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
+        if (stencil.exists()) {
             try {
-                DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+                DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(stencil)));
                 this.x = in.readShort();
                 this.z = in.readShort();
                 this.y = in.readShort();
@@ -481,30 +501,37 @@ public class StencilListBrush extends AbstractBrush {
                         }
                     }
                 }
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
+                messenger.sendMessage(Caption.of(
+                        "voxelsniper.brush.stencil.pasted",
+                        stencilName,
+                        volume
+                ));
                 in.close();
-            } catch (IOException exception) {
+            } catch (IOException e) {
                 if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
                     // Tries with some legacy handling for legacy stencils.
                     stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
                 } else {
                     messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                    exception.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         } else {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.invalid-stencil-list-name"));
         }
     }
 
     private void stencilPaste270(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.filename.matches(NO_FILE_LOADED)) {
+        if (this.file == null) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
             return;
         }
         String stencilName = this.readRandomStencil();
-        messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.stencil-loaded", stencilName));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.stencil-list.stencil-loaded",
+                stencilName
+        ));
         File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
@@ -671,30 +698,37 @@ public class StencilListBrush extends AbstractBrush {
                         }
                     }
                 }
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
+                messenger.sendMessage(Caption.of(
+                        "voxelsniper.brush.stencil.pasted",
+                        stencilName,
+                        volume
+                ));
                 in.close();
-            } catch (IOException exception) {
+            } catch (IOException e) {
                 if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
                     // Tries with some legacy handling for legacy stencils.
                     stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
                 } else {
                     messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                    exception.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         } else {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.invalid-stencil-list-name"));
         }
     }
 
     private void stencilPaste90(Snipe snipe, StencilReader.BlockDataReader blockDataReader) {
         SnipeMessenger messenger = snipe.createMessenger();
-        if (this.filename.matches(NO_FILE_LOADED)) {
+        if (this.file == null) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.missing-file"));
             return;
         }
         String stencilName = this.readRandomStencil();
-        messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.stencil-loaded", stencilName));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.stencil-list.stencil-loaded",
+                stencilName
+        ));
         File file = new File(PLUGIN_DATA_FOLDER, "/stencils/" + stencilName + ".vstencil");
         if (file.exists()) {
             try {
@@ -853,19 +887,23 @@ public class StencilListBrush extends AbstractBrush {
                         }
                     }
                 }
-                messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.pasted", this.filename, volume));
+                messenger.sendMessage(Caption.of(
+                        "voxelsniper.brush.stencil.pasted",
+                        stencilName,
+                        volume
+                ));
                 in.close();
-            } catch (IOException exception) {
+            } catch (IOException e) {
                 if (blockDataReader == StencilReader.BlockDataReader.BLOCK_DATA) {
                     // Tries with some legacy handling for legacy stencils.
                     stencilPaste(snipe, StencilReader.BlockDataReader.LEGACY_IDS);
                 } else {
                     messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));
-                    exception.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         } else {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.wrong-stencil-list-name"));
+            messenger.sendMessage(Caption.of("voxelsniper.brush.stencil-list.invalid-stencil-list-name"));
         }
     }
 
@@ -888,7 +926,10 @@ public class StencilListBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.stencil-list.loaded", this.filename))
+                .message(Caption.of(
+                        "voxelsniper.brush.stencil-list.loaded",
+                        this.file.getName()
+                ))
                 .send();
     }
 

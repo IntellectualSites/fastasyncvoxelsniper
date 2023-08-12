@@ -1,21 +1,27 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Moves a selection blockPositionY a certain amount.
  */
+@RequireToolkit
+@CommandMethod(value = "brush|b move|mv")
+@CommandPermission("voxelsniper.brush.move")
 public class MoveBrush extends AbstractBrush {
 
     private static final int MAX_BLOCK_COUNT = 5000000;
@@ -37,66 +43,83 @@ public class MoveBrush extends AbstractBrush {
         this.maxBlockCount = getIntegerProperty("max-block-count", MAX_BLOCK_COUNT);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.move.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("reset")) {
-                    this.moveDirections[0] = 0;
-                    this.moveDirections[1] = 0;
-                    this.moveDirections[2] = 0;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]));
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]));
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("x")) {
-                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
-                    if (moveDirection != null) {
-                        this.moveDirections[0] = moveDirection;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("y")) {
-                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
-                    if (moveDirection != null) {
-                        this.moveDirections[1] = moveDirection;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("z")) {
-                    Integer moveDirection = NumericParser.parseInteger(parameters[1]);
-                    if (moveDirection != null) {
-                        this.moveDirections[2] = moveDirection;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("x", "y", "z", "reset"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.move.info"));
+    }
+
+    @CommandMethod("reset")
+    public void onBrushReset(
+            final @NotNull Snipe snipe
+    ) {
+        this.moveDirections[0] = 0;
+        this.moveDirections[1] = 0;
+        this.moveDirections[2] = 0;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-x",
+                this.moveDirections[0]
+        ));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-y",
+                this.moveDirections[1]
+        ));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-z",
+                this.moveDirections[2]
+        ));
+    }
+
+    @CommandMethod("x <x-direction>")
+    public void onBrushX(
+            final @NotNull Snipe snipe,
+            final @Argument("x-direction") int xDirection
+    ) {
+        this.moveDirections[0] = xDirection;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-x",
+                this.moveDirections[0]
+        ));
+    }
+
+    @CommandMethod("y <y-direction>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-direction") int yDirection
+    ) {
+        this.moveDirections[1] = yDirection;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-y",
+                this.moveDirections[1]
+        ));
+    }
+
+    @CommandMethod("z <z-direction>")
+    public void onBrushZ(
+            final @NotNull Snipe snipe,
+            final @Argument("z-direction") int zDirection
+    ) {
+        this.moveDirections[2] = zDirection;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.move.set-z",
+                this.moveDirections[2]
+        ));
     }
 
     @Override
@@ -112,7 +135,7 @@ public class MoveBrush extends AbstractBrush {
                 this.moveSelection(snipe, this.selection, this.moveDirections);
                 this.selection = null;
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException e) {
             messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.selection.maxBlockCount));
         }
     }
@@ -130,7 +153,7 @@ public class MoveBrush extends AbstractBrush {
                 this.moveSelection(snipe, this.selection, this.moveDirections);
                 this.selection = null;
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException e) {
             messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-selection", this.selection.maxBlockCount));
         }
     }
@@ -151,7 +174,7 @@ public class MoveBrush extends AbstractBrush {
             newSelection.setLocation2(movedLocation2, selection.getWorld2());
             try {
                 newSelection.calculateRegion();
-            } catch (RuntimeException exception) {
+            } catch (RuntimeException e) {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.move.invalid-new-selection"));
             }
             locations.forEach(block -> setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
@@ -170,9 +193,18 @@ public class MoveBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.move.set-x", this.moveDirections[0]))
-                .message(Caption.of("voxelsniper.brush.move.set-y", this.moveDirections[1]))
-                .message(Caption.of("voxelsniper.brush.move.set-z", this.moveDirections[2]))
+                .message(Caption.of(
+                        "voxelsniper.brush.move.set-x",
+                        this.moveDirections[0]
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.move.set-y",
+                        this.moveDirections[1]
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.move.set-z",
+                        this.moveDirections[2]
+                ))
                 .send();
     }
 

@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,20 @@ public class SniperRegistry {
     }
 
     /**
+     * Return the associated sniper commander.
+     * This method returns the usual sniper and registers, if necessary, for a player.
+     *
+     * @param commandSender the command sender
+     * @return the sniper commander
+     * @since TODO
+     */
+    public SniperCommander getSniperCommander(CommandSender commandSender) {
+        return commandSender instanceof Player player
+                ? registerAndGetSniper(player)
+                : new SniperSender(commandSender);
+    }
+
+    /**
      * Register the player as a sniper if not already done.
      * Return the sniper directly or after registration.
      *
@@ -43,7 +58,7 @@ public class SniperRegistry {
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniper(uuid);
         if (sniper == null) {
-            sniper = new Sniper(uuid);
+            sniper = new Sniper(player);
             register(sniper);
         }
         return sniper;

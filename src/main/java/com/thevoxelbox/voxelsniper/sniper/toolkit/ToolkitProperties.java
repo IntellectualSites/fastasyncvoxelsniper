@@ -8,15 +8,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ToolkitProperties {
 
     private static final VoxelSniperPlugin plugin = VoxelSniperPlugin.plugin;
 
-    private final List<BlockState> voxelList = new ArrayList<>();
+    private final Set<BlockState> voxelList = new HashSet<>();
     private BrushPattern pattern;
     private BrushPattern replacePattern;
     private int brushSize;
@@ -171,8 +172,14 @@ public class ToolkitProperties {
         this.lightningEnabled = lightningEnabled;
     }
 
-    public List<BlockState> getVoxelList() {
-        return Collections.unmodifiableList(this.voxelList);
+    /**
+     * Return the voxel list.
+     *
+     * @return the voxel list
+     * @since TODO
+     */
+    public Collection<BlockState> getVoxelList() {
+        return Collections.unmodifiableCollection(this.voxelList);
     }
 
 }

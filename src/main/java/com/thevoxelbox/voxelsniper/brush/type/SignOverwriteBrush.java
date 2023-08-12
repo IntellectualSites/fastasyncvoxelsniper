@@ -1,5 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Greedy;
+import cloud.commandframework.annotations.specifier.Liberal;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Capability;
@@ -17,12 +23,13 @@ import com.sk89q.worldedit.util.nbt.StringBinaryTag;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,9 +39,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b sign_overwrite|signoverwrite|sio")
+@CommandPermission("voxelsniper.brush.signoverwrite")
 public class SignOverwriteBrush extends AbstractBrush {
 
     private static final Side DEFAULT_SIDE = Side.FRONT;
@@ -59,178 +67,165 @@ public class SignOverwriteBrush extends AbstractBrush {
 
     @Override
     public void loadProperties() {
-        File dataFolder = new File(PLUGIN_DATA_FOLDER, "/signs");
-        dataFolder.mkdirs();
-
         this.side = (Side) getEnumProperty("default-side", Side.class, DEFAULT_SIDE);
     }
 
-    @SuppressWarnings("deprecation") // Paper deprecation
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
+
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.sign-overwrite.info"));
+    }
+
+    @CommandMethod("list")
+    public void onBrushList(
+            final @NotNull Snipe snipe
+    ) {
         SnipeMessenger messenger = snipe.createMessenger();
-        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        String firstParameter = parameters[0];
-        boolean textChanged = false;
+        messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                Arrays.stream(Side.values()).toList(),
+                (side, side2) -> side.getName().compareTo(side2.getName()),
+                Side::getFullName,
+                side -> side,
+                this.side,
+                "voxelsniper.brush.sign-overwrite"
+        ));
+    }
 
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
-                            Arrays.stream(Side.values()).toList(),
-                            (side, side2) -> side.getName().compareTo(side2.getName()),
-                            Side::getFullName,
-                            side -> side,
-                            this.side,
-                            "voxelsniper.brush.sign-overwrite"
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("clear") || firstParameter.equalsIgnoreCase("c")) {
-                    clearBuffer();
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared"));
-                } else if (firstParameter.equalsIgnoreCase("clearall") || firstParameter.equalsIgnoreCase("ca")) {
-                    clearBuffer();
-                    resetStates();
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared-reset"));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                if (firstParameter.equalsIgnoreCase("side")) {
-                    if (!isHangingSignsSupported()) {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.legacy-side"));
-                        return;
-                    }
-                    if (parameters.length != 2) {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-                        return;
-                    }
+    @CommandMethod("clear|c")
+    public void onBrushClear(
+            final @NotNull Snipe snipe
+    ) {
+        this.clearBuffer();
 
-                    String secondParameter = parameters[1];
-                    try {
-                        this.side = Side.valueOf(secondParameter.toUpperCase(Locale.ROOT));
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.sign-overwrite.set-side",
-                                this.side.getFullName()
-                        ));
-                    } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.sign-overwrite.invalid-side",
-                                secondParameter
-                        ));
-                    }
-                } else if (Stream.of("1", "2", "3", "4")
-                        .anyMatch(firstParameter::equalsIgnoreCase)) {
-                    String secondParameter = parameters[1];
-                    Integer lineNumber = NumericParser.parseInteger(firstParameter);
-                    if (lineNumber == null) {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", firstParameter));
-                        return;
-                    }
-                    int lineIndex = lineNumber - 1;
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared"));
+    }
 
-                    if (secondParameter.equalsIgnoreCase("set")) {
-                        if (parameters.length < 3) {
-                            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-                            return;
-                        }
+    @CommandMethod("clearall|ca")
+    public void onBrushClearall(
+            final @NotNull Snipe snipe
+    ) {
+        this.clearBuffer();
+        this.resetStates();
 
-                        StringBuilder newTextBuilder = new StringBuilder();
-                        // Go through the end of the array.
-                        for (int index = 2; index < parameters.length; index++) {
-                            String word = parameters[index];
-                            newTextBuilder.append(word);
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared-reset"));
+    }
 
-                            if (index < parameters.length - 1) {
-                                newTextBuilder.append(" ");
-                            }
-                        }
+    @CommandMethod("side <side>")
+    public void onBrushSide(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("side") Side side
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        if (!isHangingSignsSupported()) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.legacy-side"));
+            return;
+        }
+        this.side = side;
 
-                        TextComponent formattedText = LegacyComponentSerializer.legacy()
-                                .deserialize(newTextBuilder.toString(), LEGACY_AMPERSAND);
-                        // Check the line length and cut the text if needed.
-                        // There is no plain text serializer available yet, rely on legacy chat color stripping for now.
-                        if (ChatColor.stripColor(toLegacyText(formattedText)).length() > MAX_SIGN_LINE_LENGTH) {
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.sign-overwrite.invalid-length",
-                                    lineNumber,
-                                    MAX_SIGN_LINE_LENGTH
-                            ));
-                            formattedText = LegacyComponentSerializer.legacy()
-                                    .deserialize(newTextBuilder.substring(0, MAX_SIGN_LINE_LENGTH), LEGACY_AMPERSAND);
-                        }
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.set-side",
+                this.side.getFullName()
+        ));
+    }
 
-                        this.signTextLines[lineIndex] = formattedText;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.set-line", lineNumber, formattedText));
-                    } else if (secondParameter.equalsIgnoreCase("toggle")) {
-                        this.signLinesEnabled[lineIndex] = !this.signLinesEnabled[lineIndex];
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.sign-overwrite.line-status",
-                                VoxelSniperText.getStatus(this.signLinesEnabled[lineIndex])
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("multiple") || firstParameter.equalsIgnoreCase("m")) {
-                    this.rangedMode = Boolean.parseBoolean(parameters[1]);
+    @SuppressWarnings("deprecation") // Paper deprecation
+    @CommandMethod("<line> set <text>")
+    public void onBrushLineSet(
+            final @NotNull Snipe snipe,
+            final @Argument("line") @Range(min = "1", max = "4") int line,
+            final @NotNull @Argument("text") @Greedy String text
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        TextComponent formattedText = LegacyComponentSerializer.legacy().deserialize(text, LEGACY_AMPERSAND);
+        int lineIndex = line - 1;
 
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.sign-overwrite.set-ranged-mode",
-                            VoxelSniperText.getStatus(this.rangedMode)
-                    ));
-                    if (this.rangedMode) {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.sign-overwrite.brush-size",
-                                toolkitProperties.getBrushSize()
-                        ));
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.sign-overwrite.brush-height",
-                                toolkitProperties.getVoxelHeight()
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("save") || firstParameter.equalsIgnoreCase("s")) {
-                    String fileName = parameters[1];
-                    saveBufferToFile(snipe, fileName);
-                } else if (firstParameter.equalsIgnoreCase("open") || firstParameter.equalsIgnoreCase("o")) {
-                    String fileName = parameters[1];
-                    textChanged = loadBufferFromFile(snipe, fileName);
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            }
+        // Checks the line length and cut the text if needed.
+        // There is no plain text serializer available yet, rely on legacy chat color stripping for now.
+        if (ChatColor.stripColor(toLegacyText(formattedText)).length() > MAX_SIGN_LINE_LENGTH) {
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.sign-overwrite.invalid-length",
+                    line,
+                    MAX_SIGN_LINE_LENGTH
+            ));
+            formattedText = LegacyComponentSerializer.legacy()
+                    .deserialize(text.substring(0, MAX_SIGN_LINE_LENGTH), LEGACY_AMPERSAND);
         }
 
-        if (textChanged) {
-            displayBuffer(snipe);
+        this.signTextLines[lineIndex] = formattedText;
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.set-line",
+                line,
+                formattedText
+        ));
+    }
+
+    @CommandMethod("<line> toggle")
+    public void onBrushLineToggle(
+            final @NotNull Snipe snipe,
+            final @Argument("line") @Range(min = "1", max = "4") int line
+    ) {
+        int lineIndex = line - 1;
+        this.signLinesEnabled[lineIndex] = !this.signLinesEnabled[lineIndex];
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.line-status",
+                line,
+                VoxelSniperText.getStatus(this.signLinesEnabled[lineIndex])
+        ));
+    }
+
+    @CommandMethod("multiple|m <ranged-mode>")
+    public void onBrushMultiple(
+            final @NotNull Snipe snipe,
+            final @Argument("ranged-mode") @Liberal boolean rangedMode
+    ) {
+        this.rangedMode = rangedMode;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.sign-overwrite.set-ranged-mode",
+                VoxelSniperText.getStatus(this.rangedMode)
+        ));
+        if (this.rangedMode) {
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.sign-overwrite.brush-size",
+                    toolkitProperties.getBrushSize()
+            ));
+            messenger.sendMessage(Caption.of(
+                    "voxelsniper.brush.sign-overwrite.brush-height",
+                    toolkitProperties.getVoxelHeight()
+            ));
         }
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of(
-                    "list", "side", "1", "2", "3", "4",
-                    "clear", "c", "clearall", "ca",
-                    "multiple", "m", "save", "s", "open", "o"
-            ), parameter, 0);
+    @CommandMethod("save|s <sign>")
+    public void onBrushSave(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "sign", parserName = "sign-file_parser") File sign
+    ) {
+        this.saveBufferToFile(snipe, sign);
+    }
+
+    @CommandMethod("open|o <sign>")
+    public void onBrushOpen(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "sign", parserName = "sign-file_parser") File sign
+    ) {
+        if (this.loadBufferFromFile(snipe, sign)) {
+            this.displayBuffer(snipe);
         }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("side")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(SIDES.stream(), parameter, 1);
-            } else if (Stream.of("1", "2", "3", "4")
-                    .anyMatch(firstParameter::equalsIgnoreCase)) {
-                String parameter = parameters[1];
-                return super.sortCompletions(Stream.of("set", "toggle"), parameter, 1);
-            } else if (firstParameter.equalsIgnoreCase("multiple")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(Stream.of("on", "off"), parameter, 1);
-            }
-        }
-        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -299,7 +294,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             ListBinaryTag messages = text.getList("messages");
             for (int i = 0; i < this.signTextLines.length; i++) {
                 if (this.signLinesEnabled[i]) {
-                    messages = messages.set(i, StringBinaryTag.of(toJson(this.signTextLines[i])), ignored -> {
+                    messages = messages.set(i, StringBinaryTag.stringBinaryTag(toJson(this.signTextLines[i])), ignored -> {
                     });
                 }
             }
@@ -380,13 +375,8 @@ public class SignOverwriteBrush extends AbstractBrush {
     /**
      * Saves the buffer to file.
      */
-    private void saveBufferToFile(Snipe snipe, String fileName) {
+    private void saveBufferToFile(Snipe snipe, File store) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
-        if (store.exists()) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-exists"));
-            return;
-        }
         try {
             store.createNewFile();
             FileWriter outFile = new FileWriter(store);
@@ -398,9 +388,9 @@ public class SignOverwriteBrush extends AbstractBrush {
             outStream.close();
             outFile.close();
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-saved"));
-        } catch (IOException exception) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-save-failed", exception.getMessage()));
-            exception.printStackTrace();
+        } catch (IOException e) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-save-failed", e.getMessage()));
+            e.printStackTrace();
         }
     }
 
@@ -409,9 +399,8 @@ public class SignOverwriteBrush extends AbstractBrush {
      *
      * @return {@code true} if file has been loaded successfully, {@code false} otherwise
      */
-    private boolean loadBufferFromFile(Snipe snipe, String fileName) {
+    private boolean loadBufferFromFile(Snipe snipe, File store) {
         SnipeMessenger messenger = snipe.createMessenger();
-        File store = new File(PLUGIN_DATA_FOLDER, "/signs/" + fileName + ".vsign");
         if (!store.exists()) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-missing"));
             return false;
@@ -427,9 +416,9 @@ public class SignOverwriteBrush extends AbstractBrush {
             inFile.close();
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-loaded"));
             return true;
-        } catch (IOException exception) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-load-failed", exception.getMessage()));
-            exception.printStackTrace();
+        } catch (IOException e) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.file-load-failed", e.getMessage()));
+            e.printStackTrace();
             return false;
         }
     }
@@ -495,7 +484,7 @@ public class SignOverwriteBrush extends AbstractBrush {
     /**
      * Available types of sides.
      */
-    private enum Side {
+    public enum Side {
 
         FRONT("front", "front_text"),
         BACK("back", "back_text");

@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -14,6 +13,7 @@ import com.sk89q.worldedit.registry.NamespacedRegistry;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.util.TreeGenerator;
+import com.sk89q.worldedit.util.formatting.text.Component;
 import com.sk89q.worldedit.world.RegenOptions;
 import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.BaseBlock;
@@ -26,17 +26,15 @@ import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
-import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Stream;
 
 public abstract class AbstractBrush implements Brush {
 
@@ -44,48 +42,24 @@ public abstract class AbstractBrush implements Brush {
     protected static final VoxelSniperConfig CONFIG = PLUGIN.getVoxelSniperConfig();
     protected static final File PLUGIN_DATA_FOLDER = PLUGIN.getDataFolder();
     protected static final int CHUNK_SIZE = 16;
-    protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(".##");
+    protected static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
     private static final Logger LOGGER = LogManagerCompat.getLogger();
+
     private BrushProperties properties;
 
     private EditSession editSession;
     private BlockVector3 targetBlock;
     private BlockVector3 lastBlock;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    protected void onBrushCommand(Snipe snipe) {
         Sniper sniper = snipe.getSniper();
-        sniper.print(Caption.of("voxelsniper.command.no-parameters"));
+        Player player = sniper.getPlayer();
+        sniper.sendInfo(player, true);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return sortCompletions(Stream.empty(), parameter, 0);
-        }
-        return Collections.emptyList();
-    }
-
-    /**
-     * Sort and return all possible completions that match given parameter.
-     *
-     * @param completions Completions
-     * @param parameter   Given parameter
-     * @param index       Parameter index
-     * @return Sorted completions.
-     */
-    public List<String> sortCompletions(Stream<String> completions, String parameter, int index) {
-        // The first brush parameter may be info.
-        // Removing MINECRAFT_IDENTIFIER permits completing whether minecraft:XXXX or XXXX.
-        String parameterLowered = (parameter.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
-                ? parameter.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
-                : parameter)
-                .toLowerCase(Locale.ROOT);
-        return (index == 0 ? Stream.concat(completions, Stream.of("info")) : completions)
-                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(parameterLowered))
-                .sorted()
-                .toList();
+    protected void onBrushInfoCommand(Snipe snipe, Component component) {
+        Sniper sniper = snipe.getSniper();
+        sniper.print(component);
     }
 
     @Override
