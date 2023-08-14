@@ -24,10 +24,10 @@ FAVS is designed for efficient terrain creation.
 
 ## Downloads
 
-Downloads are available on the following platforms:
-- [Hangar](https://hangar.papermc.io/IntellectualSites/FastAsyncVoxelSniper)
-- [Modrinth](https://modrinth.com/plugin/fastasyncvoxelsniper/)
-- [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/favs)
+The primary download is available on [Modrinth](https://modrinth.com/plugin/fastasyncvoxelsniper/).
+
+Alternative downloads are available on [Hangar](https://hangar.papermc.io/IntellectualSites/FastAsyncVoxelSniper) and 
+[CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/favs).
 
 ## Documentation
 

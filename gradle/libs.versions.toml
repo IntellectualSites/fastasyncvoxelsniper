@@ -6,6 +6,8 @@ annotations = "24.0.1"
 shadow = "8.1.1"
 pluginyml = "0.6.0"
 nexus = "1.3.0"
+minotaur = "2.8.3"
+hangar = "0.0.5"
 
 [libraries]
 
@@ -16,3 +18,5 @@ annotations = { group = "org.jetbrains", name = "annotations", version.ref = "an
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
+hangar = { id = "io.papermc.hangar-publish-plugin", version.ref = "hangar" }

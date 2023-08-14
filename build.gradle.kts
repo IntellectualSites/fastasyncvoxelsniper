@@ -10,8 +10,8 @@ plugins {
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
     alias(libs.plugins.nexus)
-    id("com.modrinth.minotaur") version "2.8.3"
-    id("io.papermc.hangar-publish-plugin") version "0.0.5"
+    alias(libs.plugins.minotaur)
+    alias(libs.plugins.hangar)
 }
 
 java {
@@ -21,7 +21,6 @@ java {
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/") }
 }
 
 dependencies {
@@ -187,7 +186,7 @@ nexusPublishing {
     }
 }
 
-val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20")
+val supportedVersions = listOf("1.16.5", "1.17.1", "1.18.2", "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4", "1.20", "1.20.1")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
