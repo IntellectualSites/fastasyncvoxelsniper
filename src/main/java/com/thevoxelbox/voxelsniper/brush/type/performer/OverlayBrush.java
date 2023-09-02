@@ -132,7 +132,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
     }
 
     private boolean isIgnoredBlock(BlockType type) {
-        return type == BlockTypes.WATER || type.getMaterial().isTranslucent() || type == BlockTypes.CACTUS;
+        return type == BlockTypes.WATER || type == BlockTypes.CACTUS || type.getMaterial().isTranslucent();
     }
 
     private boolean isOverrideableMaterial(BlockType type) {
@@ -147,7 +147,7 @@ public class OverlayBrush extends AbstractPerformerBrush {
         EditSession editSession = getEditSession();
         int brushSize = toolkitProperties.getBrushSize();
         double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
-        int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
+        boolean[][] memory = new boolean[brushSize * 2 + 1][brushSize * 2 + 1];
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 boolean surfaceFound = false;
@@ -156,7 +156,8 @@ public class OverlayBrush extends AbstractPerformerBrush {
                 int blockY = targetBlock.getY();
                 int blockZ = targetBlock.getZ();
                 for (int y = blockY; y >= editSession.getMinY() && !surfaceFound; y--) { // start scanning from the height you clicked at
-                    if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
+                    boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
+                    if (noSurfaceFound) { // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared) { // if inside of the column...
                             if (!Materials.isEmpty(getBlockType(
                                     blockX + x,
@@ -169,32 +170,38 @@ public class OverlayBrush extends AbstractPerformerBrush {
                                         blockZ + z
                                 ))) { // must start at surface... this prevents it filling stuff in if
                                     // you click in a wall and it starts out below surface.
+                                    BlockType type = getBlockType(blockX + x, y, blockZ + z);
                                     if (this.allBlocks) {
-                                        for (int index = 1; (index < this.depth + 1); index++) {
-                                            this.performer.perform(
-                                                    getEditSession(),
-                                                    blockX + x,
-                                                    clampY(y + index),
-                                                    blockZ + z,
-                                                    this.clampY(blockX + x, y + index, blockZ + z)
-                                            ); // fills down as many layers as you specify in
-                                            // parameters
-                                            memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                        }
-                                        surfaceFound = true;
-                                    } else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                        BlockType type = getBlockType(blockX + x, y, blockZ + z);
-                                        if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
+                                        boolean nonEmptyMaterial = !Materials.isEmpty(type);
+                                        if (nonEmptyMaterial) {
                                             for (int index = 1; (index < this.depth + 1); index++) {
+                                                // fills down as many layers as you specify in parameters
                                                 this.performer.perform(
                                                         getEditSession(),
                                                         blockX + x,
                                                         clampY(y + index),
                                                         blockZ + z,
                                                         this.clampY(blockX + x, y + index, blockZ + z)
-                                                ); // fills down as many layers as you specify
-                                                // in parameters
-                                                memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                                );
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + brushSize][z + brushSize] = true;
+                                            }
+                                            surfaceFound = true;
+                                        }
+                                    } else {
+                                        // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+                                        if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
+                                            for (int index = 1; (index < this.depth + 1); index++) {
+                                                // fills down as many layers as you specify in parameters
+                                                this.performer.perform(
+                                                        getEditSession(),
+                                                        blockX + x,
+                                                        clampY(y + index),
+                                                        blockZ + z,
+                                                        this.clampY(blockX + x, y + index, blockZ + z)
+                                                );
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + brushSize][z + brushSize] = true;
                                             }
                                             surfaceFound = true;
                                         }
