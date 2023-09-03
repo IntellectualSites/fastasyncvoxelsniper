@@ -104,6 +104,7 @@ tasks {
         this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
         this.destinationDirectory.set(rootProject.tasks.shadowJar.get().destinationDirectory.get())
         relocate("cloud.commandframework", "com.thevoxelbox.voxelsniper.cloud")
+        relocate("io.leangen.geantyref", "com.thevoxelbox.geantyref")
         relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper.serverlib")
         relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
         relocate("io.papermc.lib", "com.thevoxelbox.voxelsniper.paperlib")
