@@ -208,7 +208,7 @@ modrinth {
 hangarPublish {
     publications.register("plugin") {
         version.set(project.version as String)
-        namespace("IntellectualSites", "FastAsyncVoxelSniper")
+        id.set("FastAsyncVoxelSniper")
         channel.set("Release")
         changelog.set("The changelog is available on GitHub: https://github" +
                 ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
@@ -218,7 +218,7 @@ hangarPublish {
                 jar.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
                 platformVersions.set(supportedVersions)
                 this.dependencies {
-                    hangar("IntellectualSites", "FastAsyncWorldEdit") {
+                    hangar("FastAsyncWorldEdit") {
                         required.set(true)
                     }
                 }
