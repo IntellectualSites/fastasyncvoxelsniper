@@ -200,7 +200,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
             }
         }
         this.growthPercent = gref;
-        int[][] memory = new int[2 * brushSize + 1][2 * brushSize + 1];
+        boolean[][] memory = new boolean[brushSize * 2 + 1][brushSize * 2 + 1];
         double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
@@ -209,7 +209,8 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 int blockZ = targetBlock.getZ();
                 for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) {
                     // start scanning from the height you clicked at
-                    if (memory[x + brushSize][z + brushSize] != 1) {
+                    boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
+                    if (noSurfaceFound) {
                         // if haven't already found the surface in this column
                         if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) {
                             // if inside of the column && if to be splattered
@@ -230,7 +231,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                                                     clampY(blockX + x, y - i + this.yOffset, blockZ + z)
                                             );
                                             // stop it from checking any other blocks in this vertical 1x1 column.
-                                            memory[x + brushSize][z + brushSize] = 1;
+                                            memory[x + brushSize][z + brushSize] = true;
                                         }
                                     }
                                 } else {
@@ -248,7 +249,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                                                         clampY(blockX + x, y - d + this.yOffset, blockZ + z)
                                                 );
                                                 // stop it from checking any other blocks in this vertical 1x1 column.
-                                                memory[x + brushSize][z + brushSize] = 1;
+                                                memory[x + brushSize][z + brushSize] = true;
                                             }
                                         }
                                     }
@@ -311,7 +312,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
             }
         }
         this.growthPercent = gref;
-        int[][] memory = new int[brushSize * 2 + 1][brushSize * 2 + 1];
+        boolean[][] memory = new boolean[brushSize * 2 + 1][brushSize * 2 + 1];
         double brushSizeSquared = Math.pow(brushSize + 0.5, 2);
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
@@ -319,52 +320,58 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 int blockX = targetBlock.getX();
                 int blockZ = targetBlock.getZ();
                 for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) { // start scanning from the height you clicked at
-                    if (memory[x + brushSize][z + brushSize] != 1) { // if haven't already found the surface in this column
-                        if ((Math.pow(x, 2) + Math.pow(
-                                z,
-                                2
-                        )) <= brushSizeSquared && splat[x + brushSize][z + brushSize] == 1) { // if inside of the column...&& if to be splattered
-                            if (!Materials.isEmpty(getBlockType(
+                    boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
+                    if (noSurfaceFound) {
+                        // if haven't already found the surface in this column
+                        if ((Math.pow(x, 2) + Math.pow(z, 2)) <= brushSizeSquared
+                                && splat[x + brushSize][z + brushSize] == 1) {
+                            // if inside of the column...&& if to be splattered
+                            boolean nonEmptyMaterialBelow = !Materials.isEmpty(getBlockType(
                                     blockX + x,
                                     y - 1,
                                     blockZ + z
-                            ))) { // if not a floating block (like one of Notch'world pools)
+                            ));
+                            if (nonEmptyMaterialBelow) {
+                                // if not a floating block (like one of Notch'world pools)
                                 if (Materials.isEmpty(getBlockType(
                                         blockX + x,
                                         y + 1,
                                         targetBlock.getZ() + z
-                                ))) { // must start at surface... this prevents it filling stuff in if
+                                ))) {
+                                    // must start at surface... this prevents it filling stuff in if
                                     // you click in a wall and it starts out below surface.
+                                    BlockType type = getBlockType(blockX + x, y, blockZ + z);
                                     if (this.allBlocks) {
-                                        int depth = this.randomizeHeight ? super.generator.nextInt(this.depth) : this.depth;
-                                        for (int i = 1; (i < depth + 1); i++) {
-                                            this.performer.perform(
-                                                    getEditSession(),
-                                                    blockX + x,
-                                                    clampY(y + i + this.yOffset),
-                                                    blockZ + z,
-                                                    clampY(blockX + x, y + i + this.yOffset, blockZ + z)
-                                            ); // fills down as many layers as you specify in
-                                            // parameters
-                                            memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
-                                        }
-                                    } else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
-                                        if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(getBlockType(
-                                                blockX + x,
-                                                y,
-                                                blockZ + z
-                                        ))) {
+                                        boolean nonEmptyMaterial = !Materials.isEmpty(type);
+                                        if (nonEmptyMaterial) {
                                             int depth = this.randomizeHeight ? super.generator.nextInt(this.depth) : this.depth;
                                             for (int i = 1; (i < depth + 1); i++) {
+                                                // fills down as many layers as you specify in parameters
                                                 this.performer.perform(
                                                         getEditSession(),
                                                         blockX + x,
                                                         clampY(y + i + this.yOffset),
                                                         blockZ + z,
                                                         clampY(blockX + x, y + i + this.yOffset, blockZ + z)
-                                                ); // fills down as many layers as you specify
-                                                // in parameters
-                                                memory[x + brushSize][z + brushSize] = 1; // stop it from checking any other blocks in this vertical 1x1 column.
+                                                );
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + brushSize][z + brushSize] = true;
+                                            }
+                                        }
+                                    } else { // if the override parameter has not been activated, go to the switch that filters out manmade stuff.
+                                        if (MaterialSets.OVERRIDEABLE_WITH_ORES.contains(type)) {
+                                            int depth = this.randomizeHeight ? super.generator.nextInt(this.depth) : this.depth;
+                                            for (int i = 1; (i < depth + 1); i++) {
+                                                // fills down as many layers as you specify in parameters
+                                                this.performer.perform(
+                                                        getEditSession(),
+                                                        blockX + x,
+                                                        clampY(y + i + this.yOffset),
+                                                        blockZ + z,
+                                                        clampY(blockX + x, y + i + this.yOffset, blockZ + z)
+                                                );
+                                                // stop it from checking any other blocks in this vertical 1x1 column.
+                                                memory[x + brushSize][z + brushSize] = true;
                                             }
                                         }
                                     }
