@@ -103,6 +103,7 @@
     "voxelsniper.command.voxel-sniper.toggle": "FastAsyncVoxelSniper is {0}",
     "voxelsniper.command.voxel-sniper.admin-info": "{0} version {1}\n{2}\nWebsite: {3}\nWiki: {4}\nDiscord: {5}",
     "voxelsniper.command.voxel-sniper.config-reload": "&aFastAsyncVoxelSniper config reloaded!",
+    "voxelsniper.command.voxel-sniper.debugpaste-written": "&7FAVS report written to {0}",
     "voxelsniper.command.voxel-sniper.debugpaste-fail": "&cFailed to upload debugpaste because of &b{0}",
     "voxelsniper.command.voxel-sniper.info": "&4FastAsyncVoxelSniper - Current Brush Settings:",
 

@@ -20,7 +20,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b comet|com")
+@CommandMethod(value = "brush|b comet|meteor|com|met")
 @CommandPermission("voxelsniper.brush.comet")
 public class CometBrush extends AbstractBrush {
 

@@ -1,6 +1,5 @@
 package com.thevoxelbox.voxelsniper;
 
-import cloud.commandframework.CommandManager;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.util.concurrency.LazyReference;
@@ -18,7 +17,6 @@ import com.thevoxelbox.voxelsniper.listener.PlayerQuitListener;
 import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
-import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.util.io.VoxelSniperResourceLoader;
 import io.papermc.lib.PaperLib;
@@ -183,7 +181,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
 
     private void loadCommands() {
         try {
-            commandRegistry.initialize();
             CommandRegistrar commandRegistrar = new CommandRegistrar(this, commandRegistry);
             commandRegistrar.registerSuggestionsAndParsers();
             commandRegistrar.registerCommands();
@@ -191,14 +188,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
             LOGGER.warn("Unable to register the commands. FastAsyncVoxelSniper will be disabled!");
             getServer().getPluginManager().disablePlugin(plugin);
             throw new RuntimeException(e);
-        }
-    }
-
-    private void deleteCommands() {
-        // Bukkit servers have the capability to delete root commands.
-        CommandManager<SniperCommander> commandManager = commandRegistry.getCommandManager();
-        for (String rootCommand : commandManager.rootCommands()) {
-            commandManager.deleteRootCommand(rootCommand);
         }
     }
 
@@ -213,8 +202,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.reloadConfig();
         this.voxelSniperConfig = loadConfig();
         testRegistries();
-        deleteCommands();
-        loadCommands();
     }
 
     /**

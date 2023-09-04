@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.command;
 
 import cloud.commandframework.Command;
+import cloud.commandframework.CommandManager;
 import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.MethodCommandExecutionHandler;

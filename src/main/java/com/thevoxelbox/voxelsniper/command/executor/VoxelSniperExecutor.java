@@ -9,6 +9,7 @@ import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.intellectualsites.paster.IncendoPaster;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.util.formatting.text.event.ClickEvent;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
@@ -192,16 +193,18 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
     public void onVoxelSniperDebugpaste(
             final @NotNull SniperCommander commander
     ) {
-        String destination;
         try {
             final File logFile = new File("logs/latest.log");
             final File config = new File(plugin.getDataFolder(), "config.yml");
-            destination = IncendoPaster.debugPaste(logFile, Fawe.platform().getDebugInfo(), config);
+            final String destination = IncendoPaster.debugPaste(logFile, Fawe.platform().getDebugInfo(), config);
+            commander.print(Caption.of(
+                    "voxelsniper.command.voxel-sniper.debugpaste-written",
+                    TextComponent.of(destination)
+                            .clickEvent(ClickEvent.of(ClickEvent.Action.OPEN_URL, destination))
+            ));
         } catch (IOException e) {
             commander.print(Caption.of("voxelsniper.command.voxel-sniper.debugpaste-fail", e));
-            return;
         }
-        commander.print(TextComponent.of(destination));
     }
 
 }
