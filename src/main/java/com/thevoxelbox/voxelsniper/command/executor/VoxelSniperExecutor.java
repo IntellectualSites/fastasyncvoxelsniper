@@ -92,7 +92,8 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ToolkitProperties toolkitProperties = toolkit.getProperties();
         toolkitProperties.setBlockTracerRange(range);
 
-        sniper.print(Caption.of("voxelsniper.command.voxel-sniper.distance-restriction",
+        sniper.print(Caption.of(
+                "voxelsniper.command.voxel-sniper.distance-restriction",
                 VoxelSniperText.getStatus(range != null), range == null ? -1 : range
         ));
     }

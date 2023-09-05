@@ -368,7 +368,7 @@
 
     "voxelsniper.brush.stencil.pasted": "&b\"{0}\" &9pasted. Volume is &b{1} &9blocks.",
     "voxelsniper.brush.stencil.saved": "&9Saved as &b\"{0}\"&9. Volume is &b{1} &9blocks.",
-    "voxelsniper.brush.stencil-list.missing-file": "&cYou did not specify a filename for the list. This is required.",
+    "voxelsniper.brush.stencil-list.missing-file": "&cYou did not specify a filename for the stencil(s). This is required.",
 
     "voxelsniper.brush.stencil.info": "&6Stencil Brush Parameters:\n&b/b st (full|fill|replace) [s] -- Loads the specified stencil s. Full/fill/replace must come first. Full = paste all blocks, fill = paste only into air blocks, replace = paste full blocks in only, but replace anything in their way.",
     "voxelsniper.brush.stencil.loaded": "&9Stencil &b\"{0}\" &9exists and is loaded. Make sure you are using gunpowder if you do not want any chance of overwriting the file.",
