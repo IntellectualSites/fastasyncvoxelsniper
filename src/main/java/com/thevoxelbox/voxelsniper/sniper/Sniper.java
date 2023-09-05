@@ -176,7 +176,7 @@ public class Sniper implements SniperCommander {
                 if (!player.isValid()) {
                     return;
                 }
-                snipeOnCurrentThread(
+                boolean success = snipeOnCurrentThread(
                         wePlayer,
                         player,
                         action,
@@ -186,6 +186,9 @@ public class Sniper implements SniperCommander {
                         toolAction,
                         currentBrushProperties
                 );
+                if (!success) {
+                    VoxelSniperText.print(player, Caption.of("voxelsniper.error.unexpected"));
+                }
             }
         });
         return true;

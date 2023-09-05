@@ -53,7 +53,7 @@ public class BrushExecutor implements VoxelCommandElement {
     public void onBrushSize(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,
-            final @Argument("size") @Range(min = "0") int size
+            final @Argument("size") @Range(min = "0", max = "500") int size
     ) {
         ToolkitProperties toolkitProperties = toolkit.getProperties();
         Player player = sniper.getPlayer();
