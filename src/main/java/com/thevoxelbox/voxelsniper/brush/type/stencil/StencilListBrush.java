@@ -926,10 +926,12 @@ public class StencilListBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of(
-                        "voxelsniper.brush.stencil-list.loaded",
-                        this.file.getName()
-                ))
+                .message(this.file == null
+                        ? Caption.of("voxelsniper.brush.stencil-list.missing-file")
+                        : Caption.of(
+                                "voxelsniper.brush.stencil-list.loaded",
+                                this.file.getName()
+                        ))
                 .send();
     }
 
