@@ -202,7 +202,7 @@
     "voxelsniper.brush.ocean.set-water-level": "&9Water level set to: &a{0}",
     "voxelsniper.brush.ocean.set-floor-cover": "&9Floor cover {0}",
 
-    "voxelsniper.brush.pull.info": "&6Pull Brush Parameters:\n&b/b pull [n] -- Sets pinch and bubble to n.",
+    "voxelsniper.brush.pull.info": "&6Pull Brush Parameters:\n&b/b pull [p] [b] -- Sets pinch to p and bubble to b.",
     "voxelsniper.brush.pull.set-pinch": "&bPinch set to: &f{0}",
     "voxelsniper.brush.pull.set-bubble": "&bBubble set to: &f{0}",
 

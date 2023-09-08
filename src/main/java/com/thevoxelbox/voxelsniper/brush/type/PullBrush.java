@@ -55,10 +55,11 @@ public class PullBrush extends AbstractBrush {
     @CommandMethod("<pinch-bubble>")
     public void onBrushPinchbubble(
             final @NotNull Snipe snipe,
-            final @Argument("pinch-bubble") double pinchBubble
+            final @Argument("pinch") double pinch,
+            final @Argument("pinch") double bubble
     ) {
-        this.pinch = pinchBubble - 1;
-        this.bubble = pinchBubble;
+        this.pinch = 1 - pinch;
+        this.bubble = bubble;
 
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
