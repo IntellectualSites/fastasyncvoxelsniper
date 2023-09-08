@@ -26,8 +26,8 @@
     "voxelsniper.messenger.large-brush-size": "&cWARNING: Large brush size selected!",
     "voxelsniper.messenger.cylinder-center": "&9Brush Center: &4{0}",
     "voxelsniper.messenger.voxel-height": "&3Brush Height: &4{0}",
-    "voxelsniper.messenger.voxel.list-prefix": "&2Block Types Selected: {0}",
-    "voxelsniper.messenger.voxel.list-empty": "&2No blocks selected!",
+    "voxelsniper.messenger.voxel.list-prefix": "&2Voxel List: {0}",
+    "voxelsniper.messenger.voxel.list-empty": "&2Empty Voxel List!",
 
     "voxelsniper.messenger.list-element": "&b{0}",
     "voxelsniper.messenger.list-current": "&6{0}",
