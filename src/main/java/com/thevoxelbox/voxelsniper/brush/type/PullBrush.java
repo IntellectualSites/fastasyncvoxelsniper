@@ -52,11 +52,11 @@ public class PullBrush extends AbstractBrush {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.pull.info"));
     }
 
-    @CommandMethod("<pinch-bubble>")
+    @CommandMethod("<pinch> <bubble>")
     public void onBrushPinchbubble(
             final @NotNull Snipe snipe,
             final @Argument("pinch") double pinch,
-            final @Argument("pinch") double bubble
+            final @Argument("bubble") double bubble
     ) {
         this.pinch = 1 - pinch;
         this.bubble = bubble;

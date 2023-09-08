@@ -38,7 +38,7 @@ public class RulerBrush extends AbstractBrush {
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
-        super.onBrushInfoCommand(snipe, Caption.of("oxelsniper.brush.ruler.info"));
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.ruler.info"));
     }
 
     @CommandMethod("ruler")
