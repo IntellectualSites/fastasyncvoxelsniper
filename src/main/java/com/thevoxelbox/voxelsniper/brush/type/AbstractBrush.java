@@ -28,7 +28,6 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import org.apache.logging.log4j.Logger;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -53,8 +52,7 @@ public abstract class AbstractBrush implements Brush {
 
     protected void onBrushCommand(Snipe snipe) {
         Sniper sniper = snipe.getSniper();
-        Player player = sniper.getPlayer();
-        sniper.sendInfo(player, true);
+        sniper.sendInfo(true);
     }
 
     protected void onBrushInfoCommand(Snipe snipe, Component component) {

@@ -45,7 +45,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
             final @NotNull Sniper sniper
     ) {
         sniper.print(Caption.of("voxelsniper.command.voxel-sniper.info"));
-        sniper.sendInfo(sniper.getCommandSender(), false);
+        sniper.sendInfo(false);
     }
 
     @CommandMethod("brushes")

@@ -46,7 +46,7 @@ public class BrushExecutor implements VoxelCommandElement {
         }
 
         toolkit.useBrush(previousBrushProperties);
-        sniper.sendInfo(player, true);
+        sniper.sendInfo(true);
     }
 
     @CommandMethod("<size>")

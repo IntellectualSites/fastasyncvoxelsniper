@@ -11,7 +11,6 @@ import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
@@ -37,8 +36,7 @@ public class PerformerExecutor implements VoxelCommandElement {
             return;
         }
 
-        Player player = sniper.getPlayer();
-        sniper.sendInfo(player, true);
+        sniper.sendInfo(true);
     }
 
 }

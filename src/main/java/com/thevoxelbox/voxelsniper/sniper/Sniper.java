@@ -176,7 +176,7 @@ public class Sniper implements SniperCommander {
                 if (!player.isValid()) {
                     return;
                 }
-                boolean success = snipeOnCurrentThread(
+                snipeOnCurrentThread(
                         wePlayer,
                         player,
                         action,
@@ -186,9 +186,6 @@ public class Sniper implements SniperCommander {
                         toolAction,
                         currentBrushProperties
                 );
-                if (!success) {
-                    VoxelSniperText.print(player, Caption.of("voxelsniper.error.unexpected"));
-                }
             }
         });
         return true;
@@ -326,6 +323,7 @@ public class Sniper implements SniperCommander {
                 return false;
             } catch (Throwable t) {
                 t.printStackTrace();
+                print(Caption.of("voxelsniper.error.unexpected"));
                 return false;
             } finally {
                 session.remember(editSession);
@@ -335,17 +333,17 @@ public class Sniper implements SniperCommander {
         }
     }
 
-    public void sendInfo(CommandSender sender, boolean prefix) {
+    public void sendInfo(boolean prefix) {
         Toolkit toolkit = getCurrentToolkit();
         if (toolkit == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit-none"));
+            print(Caption.of("voxelsniper.sniper.current-toolkit-none"), true);
             return;
         }
-        VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit", toolkit.getToolkitName()), prefix);
+        print(Caption.of("voxelsniper.sniper.current-toolkit", toolkit.getToolkitName()), prefix);
         BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
         Brush brush = toolkit.getCurrentBrush();
         if (brush == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.no-brush-selected", toolkit.getToolkitName()), false);
+            print(Caption.of("voxelsniper.sniper.no-brush-selected", toolkit.getToolkitName()), false);
             return;
         }
         ToolkitProperties toolkitProperties = toolkit.getProperties();
