@@ -239,7 +239,7 @@ public abstract class AbstractBrush implements Brush {
         if (pattern instanceof BlockType blockType) {
             setBlockData(x, y, z, blockType.getDefaultState());
         } else {
-            setBlock(x, y, z, pattern);
+            editSession.setBlock(x, y, z, pattern);
         }
     }
 
