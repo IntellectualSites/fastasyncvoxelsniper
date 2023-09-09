@@ -3,7 +3,7 @@
 annotations = "24.0.1"
 
 # Cloud command system
-cloud = "1.8.3"
+cloud = "1.8.4"
 
 # Gradle plugins
 shadow = "8.1.1"
