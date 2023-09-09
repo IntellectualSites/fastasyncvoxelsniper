@@ -1,6 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
 import com.fastasyncworldedit.core.configuration.Caption;
+import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -397,7 +398,9 @@ public class GenerateTreeBrush extends AbstractBrush {
             BlockState block = getBlock(x, y, z);
             if (block.isAir()) {
                 // Creates block.
-                setBlock(x, clampY(y), z, this.leafType);
+                setBlockData(x, clampY(y), z, this.leafType
+                        .getDefaultState()
+                        .with(PropertyKey.PERSISTENT, true));
             }
         }
     }
