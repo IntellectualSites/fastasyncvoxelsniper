@@ -3,6 +3,7 @@ package com.thevoxelbox.voxelsniper.brush.type;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -18,6 +19,7 @@ import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
 import org.jetbrains.annotations.NotNull;
@@ -54,11 +56,11 @@ public class HeatRayBrush extends AbstractBrush {
             .with(BlockCategories.WOODEN_FENCES)
             .with(BlockCategories.FENCE_GATES)
             .with(BlockCategories.SNOW)
+            .with(BlockCategories.FIRE)
             .with(MaterialSets.TORCHES)
             .with(MaterialSets.FLORA)
             .add(BlockTypes.SPONGE)
             .add(BlockTypes.COBWEB)
-            .add(BlockTypes.FIRE)
             .add(BlockTypes.LADDER)
             .build();
 
@@ -67,6 +69,7 @@ public class HeatRayBrush extends AbstractBrush {
     private double requiredFireDensity;
     private double requiredAirDensity;
 
+    private boolean soulFire;
     private int octaves;
     private double frequency;
     private double amplitude;
@@ -95,6 +98,20 @@ public class HeatRayBrush extends AbstractBrush {
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.heat-ray.info"));
+    }
+
+    @CommandMethod("<soul-fire>")
+    public void onBrushSoulfire(
+            final @NotNull Snipe snipe,
+            final @Argument("soul-fire") @Liberal boolean soulFire
+    ) {
+        this.soulFire = soulFire;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.heat-ray.set-soul-fire",
+                VoxelSniperText.getStatus(this.soulFire)
+        ));
     }
 
     @CommandMethod("oct <octaves>")
@@ -159,6 +176,7 @@ public class HeatRayBrush extends AbstractBrush {
         Vector targetBlockVector = Vectors.toBukkit(targetBlock);
         Vector currentLocation = new Vector();
         int brushSize = toolkitProperties.getBrushSize();
+        BlockType fire = soulFire ? BlockTypes.SOUL_FIRE : BlockTypes.FIRE;
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 for (int y = brushSize; y >= -brushSize; y--) {
@@ -190,7 +208,7 @@ public class HeatRayBrush extends AbstractBrush {
                                     currentLocation.getBlockX(),
                                     currentLocation.getBlockY(),
                                     currentLocation.getBlockZ(),
-                                    BlockTypes.FIRE
+                                    fire
                             );
                             continue;
                         }
@@ -246,12 +264,12 @@ public class HeatRayBrush extends AbstractBrush {
                                     );
                                 }
                             } else if (fireDensity >= this.requiredFireDensity) {
-                                if (currentBlockType != BlockTypes.FIRE) {
+                                if (currentBlockType != fire) {
                                     setBlock(
                                             currentLocation.getBlockX(),
                                             currentLocation.getBlockY(),
                                             currentLocation.getBlockZ(),
-                                            BlockTypes.FIRE
+                                            fire
                                     );
                                 }
                             } else if (airDensity >= this.requiredAirDensity) {
@@ -274,6 +292,10 @@ public class HeatRayBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
+                .message(Caption.of(
+                        "voxelsniper.brush.heat-ray.set-soul-fire",
+                        VoxelSniperText.getStatus(this.soulFire)
+                ))
                 .message(Caption.of(
                         "voxelsniper.brush.heat-ray.set-octaves",
                         this.octaves

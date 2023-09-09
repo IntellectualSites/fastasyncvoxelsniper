@@ -172,6 +172,7 @@
     "voxelsniper.brush.generate-tree.set-maximum-leaf-thickness": "&9Maximum Leaf Thickness set to: &f{0}",
 
     "voxelsniper.brush.heat-ray.info": "&6Heat Ray Brush Parameters:\n&b/b hr oct [n] -- Sets octave parameter to n for the noise generator.\n&b/b hr amp [n] -- Sets amplitude parameter to n for the noise generator.\n&b/b hr freq [n] -- Sets frequency parameter to n for the noise generator.",
+    "voxelsniper.brush.heat-ray.set-soul-fire": "&bSoul fire mode is {0}",
     "voxelsniper.brush.heat-ray.set-octaves": "&aOctaves set to: &f{0}",
     "voxelsniper.brush.heat-ray.set-amplitude": "&aAmplitude set to: &f{0}",
     "voxelsniper.brush.heat-ray.set-frequency": "&aFrequency set to: &f{0}",
