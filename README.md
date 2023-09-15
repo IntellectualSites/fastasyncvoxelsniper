@@ -48,7 +48,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.9.0")
+    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.9.4")
 }
 ```
 
@@ -57,7 +57,7 @@ dependencies {
 <dependency>
     <groupId>com.intellectualsites.fastasyncvoxelsniper</groupId>
     <artifactId>fastasyncvoxelsniper</artifactId>
-    <version>2.9.0</version>
+    <version>2.9.4</version>
     <scope>provided</scope>
 </dependency>
 ```
