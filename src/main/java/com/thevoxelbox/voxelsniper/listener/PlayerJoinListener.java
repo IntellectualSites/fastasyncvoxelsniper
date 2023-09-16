@@ -24,6 +24,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
     }
 
     @EventHandler
+    @SuppressWarnings("deprecation") // Paper deprecation
     @Override
     public void listen(PlayerJoinEvent event) {
         VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();

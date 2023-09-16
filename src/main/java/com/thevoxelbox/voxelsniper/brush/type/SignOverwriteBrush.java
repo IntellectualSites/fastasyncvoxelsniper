@@ -65,6 +65,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         this.side = (Side) getEnumProperty("default-side", Side.class, DEFAULT_SIDE);
     }
 
+    @SuppressWarnings("deprecation") // Paper deprecation
     @Override
     public void handleCommand(String[] parameters, Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();

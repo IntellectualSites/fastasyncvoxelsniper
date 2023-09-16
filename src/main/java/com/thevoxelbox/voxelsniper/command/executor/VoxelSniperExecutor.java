@@ -36,6 +36,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
     }
 
+    @SuppressWarnings("deprecation") // Paper deprecation
     @Override
     public void executeCommand(CommandSender sender, String[] arguments) {
         SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();

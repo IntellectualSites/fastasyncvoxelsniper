@@ -47,6 +47,7 @@ public class VoxelSniperText {
      * @param prefix    the prefix
      * @since 2.7.0
      */
+    @SuppressWarnings("deprecation") // Paper deprecation
     public static void print(CommandSender target, Component component, boolean prefix) {
         print(target, component, target instanceof Player player
                 ? TextUtils.getLocaleByMinecraftTag(player.getLocale())

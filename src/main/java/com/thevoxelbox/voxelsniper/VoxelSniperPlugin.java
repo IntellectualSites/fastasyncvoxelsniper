@@ -64,7 +64,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return plugin;
     }
 
-    @SuppressWarnings({"unused"})
+    @SuppressWarnings({"unused", "deprecation"}) // Paper deprecation
     @Override
     public void onEnable() {
         plugin = this;
