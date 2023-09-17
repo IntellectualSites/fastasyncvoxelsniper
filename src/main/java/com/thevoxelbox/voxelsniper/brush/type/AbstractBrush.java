@@ -109,7 +109,7 @@ public abstract class AbstractBrush implements Brush {
     public int clampY(int y) {
         int clampedY = y;
         int minHeight = editSession.getMinY();
-        if (clampedY <= minHeight) {
+        if (clampedY < minHeight) {
             clampedY = minHeight;
         } else {
             int maxHeight = editSession.getMaxY();
