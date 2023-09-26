@@ -20,6 +20,9 @@ import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.util.io.VoxelSniperResourceLoader;
 import io.papermc.lib.PaperLib;
+
+import java.net.URI;
+
 import org.apache.logging.log4j.Logger;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -35,7 +38,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.net.URLConnection;
 
 public class VoxelSniperPlugin extends JavaPlugin {
@@ -242,7 +244,8 @@ public class VoxelSniperPlugin extends JavaPlugin {
     // Borrowed from Vault
     private double updateCheck(double currentVersion) {
         try {
-            URL url = new URL("https://api.curseforge.com/servermods/files?projectids=454430");
+
+            var url = URI.create("https://api.curseforge.com/servermods/files?projectids=454430").toURL();
             URLConnection conn = url.openConnection();
             conn.setReadTimeout(5000);
             conn.addRequestProperty("User-Agent", "FastAsyncVoxelSniper Update Checker");
