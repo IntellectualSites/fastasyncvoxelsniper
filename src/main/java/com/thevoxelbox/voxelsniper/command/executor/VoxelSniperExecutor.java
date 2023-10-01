@@ -162,7 +162,7 @@ public class VoxelSniperExecutor implements CommandExecutor, TabCompleter {
                 PluginDescriptionFile description = plugin.getDescription();
                 VoxelSniperText.print(sender, Caption.of("voxelsniper.command.voxel-sniper.admin-info",
                         description.getName(), description.getVersion(), description.getDescription(),
-                        description.getWebsite(), "https://voxelsniper.fandom.com/wiki/VoxelSniper_Wiki",
+                        description.getWebsite(), "https://intellectualsites.gitbook.io/fastasyncvoxelsniper/",
                         "https://discord.gg/intellectualsites"
                 ));
                 return;
