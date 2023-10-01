@@ -164,7 +164,7 @@ publishing {
 
                 scm {
                     url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
-                    connection.set("scm:git:https://IntellectualSites@github.com/IntellectualSites/fastasyncvoxelsniper.git")
+                    connection.set("scm:git:https://github.com/IntellectualSites/fastasyncvoxelsniper.git")
                     developerConnection.set("scm:git:git@github.com:IntellectualSites/fastasyncvoxelsniper.git")
                     tag.set("${project.version}")
                 }
