@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.37"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.38"))
     // Platform expectations
     compileOnly("io.papermc.paper:paper-api")
     compileOnly("org.apache.logging.log4j:log4j-api")
@@ -164,8 +164,9 @@ publishing {
 
                 scm {
                     url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
-                    connection.set("scm:https://IntellectualSites@github.com/IntellectualSites/fastasyncvoxelsniper.git")
-                    developerConnection.set("scm:git://github.com/IntellectualSites/fastasyncvoxelsniper.git")
+                    connection.set("scm:git:https://github.com/IntellectualSites/fastasyncvoxelsniper.git")
+                    developerConnection.set("scm:git:git@github.com:IntellectualSites/fastasyncvoxelsniper.git")
+                    tag.set("${project.version}")
                 }
 
                 issueManagement {
