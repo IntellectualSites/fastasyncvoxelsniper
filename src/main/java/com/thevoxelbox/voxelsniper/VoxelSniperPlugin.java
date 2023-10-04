@@ -245,8 +245,8 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private double updateCheck(double currentVersion) {
         try {
 
-            var url = URI.create("https://api.curseforge.com/servermods/files?projectids=454430").toURL();
-            URLConnection conn = url.openConnection();
+            URI uri = URI.create("https://api.curseforge.com/servermods/files?projectids=454430");
+            URLConnection conn = uri.toURL().openConnection();
             conn.setReadTimeout(5000);
             conn.addRequestProperty("User-Agent", "FastAsyncVoxelSniper Update Checker");
             conn.setDoOutput(true);
