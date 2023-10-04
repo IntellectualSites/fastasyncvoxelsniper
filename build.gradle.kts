@@ -1,5 +1,7 @@
+import groovy.json.JsonSlurper
 import java.net.URI
 import io.papermc.hangarpublishplugin.model.Platforms
+import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     java
@@ -12,6 +14,7 @@ plugins {
     alias(libs.plugins.nexus)
     alias(libs.plugins.minotaur)
     alias(libs.plugins.hangar)
+    alias(libs.plugins.runPaper)
 }
 
 java {
@@ -240,3 +243,26 @@ hangarPublish {
         }
     }
 }
+
+tasks {
+    val lastSuccessfulBuildUrl = uri("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/api/json").toURL()
+    val artifact = ((JsonSlurper().parse(lastSuccessfulBuildUrl) as Map<*, *>)["artifacts"] as List<*>)
+            .map { it as Map<*, *> }
+            .map { it["fileName"] as String }
+            .first { it.contains("Bukkit") }
+
+    supportedVersions.forEach {
+        register<RunServer>("runServer-$it") {
+            minecraftVersion(it)
+            pluginJars(*rootProject.getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
+                    .toTypedArray())
+            jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
+            downloadPlugins {
+                url("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/artifact/artifacts/$artifact")
+            }
+            group = "run paper"
+            runDirectory.set(file("run-$it"))
+        }
+    }
+}
+
