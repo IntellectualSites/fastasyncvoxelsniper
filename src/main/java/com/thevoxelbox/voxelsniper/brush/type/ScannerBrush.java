@@ -99,7 +99,7 @@ public class ScannerBrush extends AbstractBrush {
         if (blockFace == Direction.NORTH) { // Scan south
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() + i) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
@@ -107,7 +107,7 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.SOUTH) { // Scan north
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ() - i) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
@@ -115,7 +115,7 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.EAST) { // Scan west
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() - i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
@@ -123,30 +123,25 @@ public class ScannerBrush extends AbstractBrush {
         } else if (blockFace == Direction.WEST) { // Scan east
             for (int i = 1; i < this.depth + 1; i++) {
                 if (getBlockType(targetBlock.getX() + i, clampY(targetBlock.getY()), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
             messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.UP) { // Scan down
-            for (int i = 1; i < this.depth + 1; i++) {
-                if ((targetBlock.getY() - i) <= getEditSession().getMinY()) {
-                    break;
-                }
+            EditSession editSession = getEditSession();
+            for (int i = 1; i < this.depth + 1 && targetBlock.getY() + i >= editSession.getMinY(); i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() - i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
             messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.not-found"));
         } else if (blockFace == Direction.DOWN) { // Scan up
-            for (int i = 1; i < this.depth + 1; i++) {
-                EditSession editSession = getEditSession();
-                if ((targetBlock.getY() + i) >= editSession.getMaxY()) {
-                    break;
-                }
+            EditSession editSession = getEditSession();
+            for (int i = 1; i < this.depth + 1 && targetBlock.getY() + i <= editSession.getMaxY(); i++) {
                 if (getBlockType(targetBlock.getX(), clampY(targetBlock.getY() + i), targetBlock.getZ()) == this.checkFor) {
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.fond", this.checkFor.getId(), i));
+                    messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.found", this.checkFor.getId(), i));
                     return;
                 }
             }
