@@ -153,12 +153,14 @@ publishing {
                         id.set("NotMyFault")
                         name.set("Alexander Brandes")
                         organization.set("IntellectualSites")
+                        organizationUrl.set("https://github.com/IntellectualSites/")
                         email.set("contact(at)notmyfault.dev")
                     }
                     developer {
                         id.set("Aurelien30000")
                         name.set("Aurelien30000")
                         organization.set("IntellectualSites")
+                        organizationUrl.set("https://github.com/IntellectualSites/")
                     }
                 }
 
