@@ -90,7 +90,7 @@ body:
       label: Checklist
       description: Make sure you have followed each of the steps outlined here.
       options:
-        - label: I have included a Fawe debugpaste.
+        - label: I have included a debugpaste.
           required: true
         - label: I am using the newest build from https://dev.bukkit.org/projects/favs and the issue still persists.
           required: true
