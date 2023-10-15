@@ -27,7 +27,7 @@ public class VoxelListBlocksArgument implements VoxelCommandElement {
      * Create a voxel list blocks argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public VoxelListBlocksArgument(VoxelSniperPlugin plugin) {
         this.plugin = plugin;
@@ -82,7 +82,7 @@ public class VoxelListBlocksArgument implements VoxelCommandElement {
      *
      * @param block  the block
      * @param remove whether the block should be removed or not
-     * @since TODO
+     * @since 3.0.0
      */
     public record BlockWrapper(BlockState block, boolean remove) {
 

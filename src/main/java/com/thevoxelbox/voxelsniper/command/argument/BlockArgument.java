@@ -18,7 +18,7 @@ public class BlockArgument extends AbstractPatternArgument<BaseBlock> {
      * Create a block argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public BlockArgument(VoxelSniperPlugin plugin) {
         super(plugin, WorldEdit.getInstance().getBlockFactory(), "voxelsniper.command.invalid-block");

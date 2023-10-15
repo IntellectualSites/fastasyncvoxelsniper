@@ -13,7 +13,7 @@ public interface SniperCommander {
      * Return the command sender
      *
      * @return the command sender
-     * @since TODO
+     * @since 3.0.0
      */
     CommandSender getCommandSender();
 
@@ -21,7 +21,7 @@ public interface SniperCommander {
      * Create a parser context from the sniper commander.
      *
      * @return the parser context
-     * @since TODO
+     * @since 3.0.0
      */
     default ParserContext createParserContext() {
         CommandSender sender = getCommandSender();

@@ -16,7 +16,7 @@ public class StencilFileArgument extends AbstractFileArgument {
      * Create a stencil file argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public StencilFileArgument(VoxelSniperPlugin plugin) {
         super(plugin, plugin.getDataFolder().toPath().resolve("stencils/"), ".vstencil");

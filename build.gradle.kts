@@ -59,7 +59,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "2.9.5-SNAPSHOT"
+version = "3.0.0-SNAPSHOT"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -205,7 +205,7 @@ modrinth {
     projectId.set("fastasyncvoxelsniper")
     versionName.set("${project.version}")
     versionNumber.set("${project.version}")
-    versionType.set("release")
+    versionType.set("beta") // TODO Change after 3.x release
     uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
     gameVersions.addAll(supportedVersions)
     loaders.addAll(listOf("paper", "purpur", "spigot"))
@@ -221,7 +221,7 @@ hangarPublish {
     publications.register("plugin") {
         version.set(project.version as String)
         id.set("FastAsyncVoxelSniper")
-        channel.set("Release")
+        channel.set("Prerelease") // TODO Change after 3.x release
         changelog.set("The changelog is available on GitHub: https://github" +
                 ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
         apiKey.set(System.getenv("HANGAR_TOKEN"))

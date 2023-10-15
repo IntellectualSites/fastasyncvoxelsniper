@@ -59,7 +59,7 @@ public class Sniper implements SniperCommander {
      * Create a sniper from a player.
      *
      * @param player the player
-     * @since TODO
+     * @since 3.0.0
      */
     public Sniper(Player player) {
         this.uuid = player.getUniqueId();

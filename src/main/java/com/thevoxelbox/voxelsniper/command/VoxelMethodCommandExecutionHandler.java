@@ -19,7 +19,7 @@ public class VoxelMethodCommandExecutionHandler<C> extends MethodCommandExecutio
      *
      * @param context the context
      * @throws Exception instantiation exception
-     * @since TODO
+     * @since 3.0.0
      */
     public VoxelMethodCommandExecutionHandler(
             CommandMethodContext<C> context,

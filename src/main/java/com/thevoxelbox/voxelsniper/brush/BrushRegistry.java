@@ -30,7 +30,7 @@ public class BrushRegistry {
      * Return the unique brushes properties.
      *
      * @return the unique brushes properties
-     * @since TODO
+     * @since 3.0.0
      */
     public Set<BrushProperties> getUniqueBrushesProperties() {
         return uniqueBrushesProperties;

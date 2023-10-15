@@ -44,7 +44,7 @@ public class CommandRegistrar {
     /**
      * Register the suggestions and parsers into the command manager.
      *
-     * @since TODO
+     * @since 3.0.0
      */
     public void registerSuggestionsAndParsers() {
         registerBiomeTypeArgument();

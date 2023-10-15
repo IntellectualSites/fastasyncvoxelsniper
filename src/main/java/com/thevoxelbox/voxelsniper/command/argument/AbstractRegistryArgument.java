@@ -25,7 +25,7 @@ public abstract class AbstractRegistryArgument<T extends Keyed> implements Voxel
      * @param plugin                   the plugin
      * @param registry                 the registry
      * @param parseExceptionCaptionKey the parse exception caption key
-     * @since TODO
+     * @since 3.0.0
      */
     public AbstractRegistryArgument(VoxelSniperPlugin plugin, NamespacedRegistry<T> registry, String parseExceptionCaptionKey) {
         this.plugin = plugin;

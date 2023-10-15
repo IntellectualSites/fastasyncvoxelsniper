@@ -96,7 +96,7 @@ public class CommandRegistry {
      * Initialize the command registry.
      *
      * @throws Exception initialization exception
-     * @since TODO
+     * @since 3.0.0
      */
     public void initialize() throws Exception {
         this.commandManager = createCommandManager();
@@ -418,7 +418,7 @@ public class CommandRegistry {
      * Register the elements from a voxel command element into the command manager.
      *
      * @param voxelCommandElement the voxel command element
-     * @since TODO
+     * @since 3.0.0
      */
     public void register(VoxelCommandElement voxelCommandElement) {
         annotationParser.parse(voxelCommandElement);
@@ -428,7 +428,7 @@ public class CommandRegistry {
      * Return the command manager.
      *
      * @return the command manager
-     * @since TODO
+     * @since 3.0.0
      */
     public BukkitCommandManager<SniperCommander> getCommandManager() {
         return commandManager;
@@ -438,7 +438,7 @@ public class CommandRegistry {
      * Return the annotation parser.
      *
      * @return the annotation parser
-     * @since TODO
+     * @since 3.0.0
      */
     public AnnotationParser<SniperCommander> getAnnotationParser() {
         return annotationParser;

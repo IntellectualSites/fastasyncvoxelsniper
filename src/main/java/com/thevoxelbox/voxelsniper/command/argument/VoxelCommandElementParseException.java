@@ -17,7 +17,7 @@ public class VoxelCommandElementParseException extends IllegalArgumentException 
      *
      * @param input        the input
      * @param errorMessage the error message
-     * @since TODO
+     * @since 3.0.0
      */
     public VoxelCommandElementParseException(String input, Component errorMessage) {
         this.input = input;
@@ -28,7 +28,7 @@ public class VoxelCommandElementParseException extends IllegalArgumentException 
      * Return the input.
      *
      * @return the input
-     * @since TODO
+     * @since 3.0.0
      */
     public String getInput() {
         return input;
@@ -38,7 +38,7 @@ public class VoxelCommandElementParseException extends IllegalArgumentException 
      * Return the error message.
      *
      * @return the error message
-     * @since TODO
+     * @since 3.0.0
      */
     public Component getErrorMessage() {
         return errorMessage;

@@ -25,7 +25,7 @@ public class BrushPropertiesArgument implements VoxelCommandElement {
      * Create a brush properties argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public BrushPropertiesArgument(VoxelSniperPlugin plugin) {
         this.plugin = plugin;

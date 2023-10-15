@@ -21,7 +21,7 @@ public class ToolkitArgument implements VoxelCommandElement {
      * Create a toolkit argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public ToolkitArgument(VoxelSniperPlugin plugin) {
         this.plugin = plugin;

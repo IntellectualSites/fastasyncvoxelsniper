@@ -16,7 +16,7 @@ public class EntityTypeArgument extends AbstractRegistryArgument<EntityType> {
      * Create an entity type argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public EntityTypeArgument(VoxelSniperPlugin plugin) {
         super(plugin, EntityType.REGISTRY, "voxelsniper.command.invalid-entity");

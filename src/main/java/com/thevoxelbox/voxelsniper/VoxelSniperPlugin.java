@@ -264,7 +264,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
      * Return the command manager.
      *
      * @return the command manager
-     * @since TODO
+     * @since 3.0.0
      */
     public CommandRegistry getCommandRegistry() {
         return this.commandRegistry;

@@ -13,7 +13,7 @@ public interface PerformerBrush extends Brush {
      * Return the performer.
      *
      * @return the performer
-     * @since TODO
+     * @since 3.0.0
      */
     Performer getPerformer();
 
@@ -21,7 +21,7 @@ public interface PerformerBrush extends Brush {
      * Set the performer.
      *
      * @param performer the performer
-     * @since TODO
+     * @since 3.0.0
      */
     void setPerformer(Performer performer);
 

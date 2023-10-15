@@ -12,7 +12,7 @@ public class SniperSender implements SniperCommander {
      * Create a sniper sender from a command sender.
      *
      * @param commandSender the command sender
-     * @since TODO
+     * @since 3.0.0
      */
     public SniperSender(CommandSender commandSender) {
         this.commandSender = commandSender;

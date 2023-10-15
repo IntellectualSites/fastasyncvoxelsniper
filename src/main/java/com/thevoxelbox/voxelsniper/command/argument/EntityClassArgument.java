@@ -45,7 +45,7 @@ public class EntityClassArgument implements VoxelCommandElement {
      * Create a toolkit argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public EntityClassArgument(VoxelSniperPlugin plugin) {
         this.plugin = plugin;

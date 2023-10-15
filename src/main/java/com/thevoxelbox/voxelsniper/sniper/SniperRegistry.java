@@ -39,7 +39,7 @@ public class SniperRegistry {
      *
      * @param commandSender the command sender
      * @return the sniper commander
-     * @since TODO
+     * @since 3.0.0
      */
     public SniperCommander getSniperCommander(CommandSender commandSender) {
         return commandSender instanceof Player player

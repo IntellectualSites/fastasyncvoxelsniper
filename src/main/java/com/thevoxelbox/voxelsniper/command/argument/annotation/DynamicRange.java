@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Used to specify min and max field values of numerical.
  *
- * @since TODO
+ * @since 3.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
@@ -20,7 +20,7 @@ public @interface DynamicRange {
      * Return the minimum field value accepted by the parser.
      *
      * @return minimum field value
-     * @since TODO
+     * @since 3.0.0
      */
     @NonNull String min() default "";
 
@@ -28,7 +28,7 @@ public @interface DynamicRange {
      * Return the maximum field value accepted by the parser.
      *
      * @return maximum field value
-     * @since TODO
+     * @since 3.0.0
      */
     @NonNull String max() default "";
 

@@ -27,7 +27,7 @@ public abstract class AbstractFileArgument implements VoxelCommandElement {
      * @param plugin    the plugin
      * @param rootPath  the root path
      * @param extension the extension
-     * @since TODO
+     * @since 3.0.0
      */
     public AbstractFileArgument(VoxelSniperPlugin plugin, Path rootPath, String extension) {
         this.plugin = plugin;

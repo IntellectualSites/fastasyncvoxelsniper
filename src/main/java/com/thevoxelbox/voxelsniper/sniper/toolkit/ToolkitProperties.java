@@ -176,7 +176,7 @@ public class ToolkitProperties {
      * Return the voxel list.
      *
      * @return the voxel list
-     * @since TODO
+     * @since 3.0.0
      */
     public Collection<BlockState> getVoxelList() {
         return Collections.unmodifiableCollection(this.voxelList);

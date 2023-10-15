@@ -17,7 +17,7 @@ public class PatternArgument extends AbstractPatternArgument<Pattern> {
      * Create a pattern argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public PatternArgument(VoxelSniperPlugin plugin) {
         super(plugin, plugin.getPatternParser(), "voxelsniper.command.invalid-pattern");

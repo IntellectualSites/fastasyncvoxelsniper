@@ -37,7 +37,7 @@ public final class MathHelper {
      *
      * @param clazz the class
      * @return the min number or NaN
-     * @since TODO
+     * @since 3.0.0
      */
     public static Number minNumberType(Class<?> clazz) {
         clazz = ClassUtils.primitiveToWrapper(clazz);
@@ -63,7 +63,7 @@ public final class MathHelper {
      *
      * @param clazz the class
      * @return the max number or NaN
-     * @since TODO
+     * @since 3.0.0
      */
     public static Number maxNumberType(Class<?> clazz) {
         clazz = ClassUtils.primitiveToWrapper(clazz);

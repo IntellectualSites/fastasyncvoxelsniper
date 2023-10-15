@@ -31,7 +31,7 @@ public class PerformerRegistry {
      * Return the unique performer properties.
      *
      * @return the unique performer properties
-     * @since TODO
+     * @since 3.0.0
      */
     public Set<PerformerProperties> getUniquePerformerProperties() {
         return uniquePerformerProperties;

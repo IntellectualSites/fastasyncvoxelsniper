@@ -16,7 +16,7 @@ public class BiomeTypeArgument extends AbstractRegistryArgument<BiomeType> {
      * Create a biome type argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public BiomeTypeArgument(VoxelSniperPlugin plugin) {
         super(plugin, BiomeType.REGISTRY, "voxelsniper.command.invalid-biome");

@@ -16,7 +16,7 @@ public class SignFileArgument extends AbstractFileArgument {
      * Create a sign file argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public SignFileArgument(VoxelSniperPlugin plugin) {
         super(plugin, plugin.getDataFolder().toPath().resolve("signs/"), ".vsign");

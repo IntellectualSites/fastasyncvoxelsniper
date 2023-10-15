@@ -16,7 +16,7 @@ public class BlockTypeArgument extends AbstractRegistryArgument<BlockType> {
      * Create a block type argument.
      *
      * @param plugin the plugin
-     * @since TODO
+     * @since 3.0.0
      */
     public BlockTypeArgument(VoxelSniperPlugin plugin) {
         super(plugin, BlockType.REGISTRY, "voxelsniper.command.invalid-block-type");

@@ -31,7 +31,7 @@ public abstract class AbstractPatternArgument<T extends Pattern> implements Voxe
      * @param plugin                   the plugin
      * @param factory                  the factory
      * @param parseExceptionCaptionKey the parse exception caption key
-     * @since TODO
+     * @since 3.0.0
      */
     public AbstractPatternArgument(VoxelSniperPlugin plugin, AbstractFactory<T> factory, String parseExceptionCaptionKey) {
         this.plugin = plugin;

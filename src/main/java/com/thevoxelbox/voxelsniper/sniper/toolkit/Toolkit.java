@@ -73,7 +73,7 @@ public class Toolkit {
      *
      * @param properties the properties
      * @return the performer
-     * @since TODO
+     * @since 3.0.0
      */
     public Performer usePerformer(PerformerProperties properties) {
         return createPerformer(properties);
