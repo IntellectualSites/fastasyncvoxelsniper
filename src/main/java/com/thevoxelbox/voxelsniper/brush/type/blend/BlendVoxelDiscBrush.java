@@ -1,31 +1,46 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
-import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b blend_voxel_disc|blendvoxeldisc|bvd")
+@CommandPermission("voxelsniper.brush.blendvoxeldisc")
 public class BlendVoxelDiscBrush extends AbstractBlendBrush {
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.blend-voxel-disc.info"));
-            return;
-        }
-        super.handleCommand(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.blend-voxel-disc.info"));
+    }
+
+    @CommandMethod("water")
+    public void onBrushWater(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushWaterCommand(snipe);
     }
 
     @Override

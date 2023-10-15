@@ -1,18 +1,23 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b canyon|ca")
+@CommandPermission("voxelsniper.brush.canyon")
 public class CanyonBrush extends AbstractBrush {
 
     private static final int SHIFT_LEVEL_MIN = -54;
@@ -33,53 +38,32 @@ public class CanyonBrush extends AbstractBrush {
         this.yLevel = getIntegerProperty("default-y-level", DEFAULT_Y_LEVEL);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.canyon.info"));
-        } else {
-            if (parameters.length == 2) {
-
-                if (firstParameter.equalsIgnoreCase("y")) {
-                    Integer yLevel = NumericParser.parseInteger(parameters[1]);
-                    if (yLevel != null) {
-                        if (yLevel < this.shiftLevelMin) {
-                            yLevel = this.shiftLevelMin;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.error.invalid-number-greater-equal",
-                                    this.shiftLevelMin
-                            ));
-                        } else if (yLevel > this.shiftLevelMax) {
-                            yLevel = this.shiftLevelMax;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.error.invalid-number-lower-equal",
-                                    this.shiftLevelMax
-                            ));
-                        }
-                        this.yLevel = yLevel;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.canyon.set-shift-level", this.yLevel));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("y"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.canyon.info"));
+    }
+
+    @CommandMethod("y <y-level>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-level") @DynamicRange(min = "shiftLevelMin", max = "shiftLevelMax") int yLevel
+    ) {
+        this.yLevel = yLevel;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.canyon.set-shift-level",
+                this.yLevel
+        ));
     }
 
     @Override
@@ -125,7 +109,10 @@ public class CanyonBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.canyon.set-shift-level", this.yLevel))
+                .message(Caption.of(
+                        "voxelsniper.brush.canyon.set-shift-level",
+                        this.yLevel
+                ))
                 .send();
     }
 

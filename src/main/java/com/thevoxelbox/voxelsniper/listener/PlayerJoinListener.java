@@ -45,7 +45,7 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
             }
         }
         if (config.isMessageOnLoginEnabled() && player.hasPermission("voxelsniper.sniper")) {
-            sniper.sendInfo(player, true);
+            sniper.sendInfo(true);
         }
     }
 

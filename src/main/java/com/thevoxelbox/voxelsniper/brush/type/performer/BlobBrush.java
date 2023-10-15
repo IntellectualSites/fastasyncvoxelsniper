@@ -1,15 +1,20 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b blob|splatblob")
+@CommandPermission("voxelsniper.brush.blob")
 public class BlobBrush extends AbstractPerformerBrush {
 
     @Override
@@ -20,46 +25,34 @@ public class BlobBrush extends AbstractPerformerBrush {
         this.growthPercent = getIntegerProperty("default-growth-percent", DEFAULT_GROWTH_PERCENT);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.blob.info", this.growthPercentMin,
-                    this.growthPercentMax, DEFAULT_GROWTH_PERCENT
-            ));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("g")) {
-                    Integer growthPercent = NumericParser.parseInteger(parameters[1]);
-                    if (growthPercent != null && growthPercent >= super.growthPercentMin && growthPercent <= super.growthPercentMax) {
-                        this.growthPercent = growthPercent;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.blob.set-growth-percent",
-                                DECIMAL_FORMAT.format(this.growthPercent / 100)
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
-                                this.growthPercentMin, this.growthPercentMax
-                        ));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("g"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.blob.info",
+                this.growthPercentMin, this.growthPercentMax, DEFAULT_GROWTH_PERCENT
+        ));
+    }
+
+    @CommandMethod("g <growth-percent>")
+    public void onBrushG(
+            final @NotNull Snipe snipe,
+            final @Argument("growth-percent") @DynamicRange(min = "growthPercentMin", max = "growthPercentMax") int growthPercent
+    ) {
+        this.growthPercent = growthPercent;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.blob.set-growth-percent",
+                DECIMAL_FORMAT.format(this.growthPercent / 100)
+        ));
     }
 
     @Override

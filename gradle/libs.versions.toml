@@ -2,6 +2,9 @@
 # Annotations
 annotations = "24.0.1"
 
+# Cloud command system
+cloud = "1.8.4"
+
 # Gradle plugins
 shadow = "8.1.1"
 pluginyml = "0.6.0"
@@ -13,6 +16,12 @@ hangar = "0.1.0"
 
 # Annotations
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+# Cloud command system
+cloudcore = { group = "cloud.commandframework", name = "cloud-core", version.ref = "cloud" }
+cloudannotations = { group = "cloud.commandframework", name = "cloud-annotations", version.ref = "cloud" }
+cloudbukkit = { group = "cloud.commandframework", name = "cloud-bukkit", version.ref = "cloud" }
+cloudpaper = { group = "cloud.commandframework", name = "cloud-paper", version.ref = "cloud" }
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }

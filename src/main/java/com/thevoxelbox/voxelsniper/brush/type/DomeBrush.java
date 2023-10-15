@@ -1,18 +1,32 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b dome|do")
+@CommandPermission("voxelsniper.brush.dome")
 public class DomeBrush extends AbstractBrush {
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {
@@ -31,7 +45,7 @@ public class DomeBrush extends AbstractBrush {
         int voxelHeight = toolkitProperties.getVoxelHeight();
         if (voxelHeight == 0) {
             SnipeMessenger messenger = snipe.createMessenger();
-            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-voxel-height", 0));
+            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-voxel-height", voxelHeight));
             return;
         }
         int absoluteHeight = Math.abs(voxelHeight);

@@ -1,66 +1,69 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b drain|dr")
+@CommandPermission("voxelsniper.brush.drain")
 public class DrainBrush extends AbstractBrush {
 
-    private double trueCircle;
+    private boolean trueCircle;
     private boolean disc;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.drain.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.trueCircle = 0.5;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.trueCircle = 0;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.parameter.true-circle",
-                            VoxelSniperText.getStatus(false)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("d")) {
-                    if (this.disc) {
-                        this.disc = false;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(false)));
-                    } else {
-                        this.disc = true;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(true)));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false", "d"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.drain.info"));
+    }
+
+    @CommandMethod("<true-circle>")
+    public void onBrushTruecircle(
+            final @NotNull Snipe snipe,
+            final @Argument("true-circle") @Liberal boolean trueCircle
+    ) {
+        this.trueCircle = trueCircle;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.parameter.true-circle",
+                VoxelSniperText.getStatus(this.trueCircle)
+        ));
+    }
+
+    @CommandMethod("d")
+    public void onBrushD(
+            final @NotNull Snipe snipe
+    ) {
+        this.disc = !this.disc;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.drain.disc",
+                VoxelSniperText.getStatus(this.disc)
+        ));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class DrainBrush extends AbstractBrush {
     private void drain(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         BlockVector3 targetBlock = getTargetBlock();
         int targetBlockX = targetBlock.getX();
         int targetBlockY = targetBlock.getY();
@@ -138,8 +141,14 @@ public class DrainBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
-                .message(Caption.of("voxelsniper.brush.drain.disc", VoxelSniperText.getStatus(this.disc)))
+                .message(Caption.of(
+                        "voxelsniper.brush.parameter.true-circle",
+                        VoxelSniperText.getStatus(this.trueCircle)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.drain.disc",
+                        VoxelSniperText.getStatus(this.disc)
+                ))
                 .send();
     }
 

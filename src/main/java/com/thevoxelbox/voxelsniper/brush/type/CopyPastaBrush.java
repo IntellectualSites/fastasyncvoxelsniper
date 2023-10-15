@@ -1,17 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b copy_pasta|copypasta|cp")
+@CommandPermission("voxelsniper.brush.copypasta")
 public class CopyPastaBrush extends AbstractBrush {
 
     private static final int BLOCK_LIMIT = 10000;
@@ -34,41 +38,69 @@ public class CopyPastaBrush extends AbstractBrush {
         this.blockLimit = getIntegerProperty("block-limit", BLOCK_LIMIT);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("air")) {
-                    this.pasteAir = !this.pasteAir;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.copy-pasta.set-paste-air",
-                            VoxelSniperText.getStatus(this.pasteAir)
-                    ));
-                } else if (Stream.of("0", "90", "180", "270")
-                        .anyMatch(firstParameter::equalsIgnoreCase)) {
-                    this.pivot = Integer.parseInt(firstParameter);
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.copy-pasta.set-pivot", this.pivot));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("air", "90", "180", "270", "0"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.copy-pasta.info"));
+    }
+
+    @CommandMethod("air")
+    public void onBrushAir(
+            final @NotNull Snipe snipe
+    ) {
+        this.pasteAir = !this.pasteAir;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.copy-pasta.set-paste-air",
+                VoxelSniperText.getStatus(this.pasteAir)
+        ));
+    }
+
+    private void onBrushPivotCommand(Snipe snipe, int pivot) {
+        this.pivot = pivot;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.copy-pasta.set-pivot",
+                this.pivot
+        ));
+    }
+
+    @CommandMethod("0")
+    public void onBrush0(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushPivotCommand(snipe, 0);
+    }
+
+    @CommandMethod("90")
+    public void onBrush90(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushPivotCommand(snipe, 90);
+    }
+
+    @CommandMethod("180")
+    public void onBrush180(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushPivotCommand(snipe, 180);
+    }
+
+    @CommandMethod("270")
+    public void onBrush270(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushPivotCommand(snipe, 270);
     }
 
     @Override
@@ -190,8 +222,14 @@ public class CopyPastaBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.copy-pasta.set-paste-air", VoxelSniperText.getStatus(this.pasteAir)))
-                .message(Caption.of("voxelsniper.brush.copy-pasta.set-pivot", this.pivot))
+                .message(Caption.of(
+                        "voxelsniper.brush.copy-pasta.set-paste-air",
+                        VoxelSniperText.getStatus(this.pasteAir)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.copy-pasta.set-pivot",
+                        this.pivot
+                ))
                 .send();
     }
 

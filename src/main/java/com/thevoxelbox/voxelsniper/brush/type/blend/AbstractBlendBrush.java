@@ -10,36 +10,22 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 public abstract class AbstractBlendBrush extends AbstractBrush {
 
     private boolean airExcluded = true;
     private boolean waterExcluded = true;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    protected void onBrushWaterCommand(Snipe snipe) {
+        this.waterExcluded = !this.waterExcluded;
+
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("water")) {
-            this.waterExcluded = !this.waterExcluded;
-            messenger.sendMessage(Caption.of("voxelsniper.brush.blend.set-water-mode", getStatus(this.waterExcluded)));
-        } else {
-            messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-        }
-    }
-
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("water"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.blend.set-water-mode",
+                getStatus(this.waterExcluded)
+        ));
     }
 
     @Override
@@ -93,7 +79,10 @@ public abstract class AbstractBlendBrush extends AbstractBrush {
                 .brushNameMessage()
                 .brushSizeMessage()
                 .patternMessage()
-                .message(Caption.of("voxelsniper.brush.blend.set-water-mode", getStatus(this.waterExcluded)))
+                .message(Caption.of(
+                        "voxelsniper.brush.blend.set-water-mode",
+                        getStatus(this.waterExcluded)
+                ))
                 .send();
     }
 

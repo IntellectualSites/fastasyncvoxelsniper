@@ -1,15 +1,29 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import org.jetbrains.annotations.NotNull;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b shell_ball|shellball|shb")
+@CommandPermission("voxelsniper.brush.shellball")
 public class ShellBallBrush extends AbstractBrush {
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {
@@ -99,7 +113,7 @@ public class ShellBallBrush extends AbstractBrush {
                 }
             }
         }
-        // This is needed because most uses of this brush will not be sible to the sniper.
+        // This is needed because most uses of this brush will not be visible to the sniper.
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of("voxelsniper.brush.shell.completed"));
     }

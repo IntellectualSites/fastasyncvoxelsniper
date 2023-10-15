@@ -7,12 +7,22 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
+import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
 public abstract class AbstractPerformer implements Performer {
 
-    private PerformerProperties properties;
+    protected PerformerProperties properties;
+
+    protected void onPerformerCommand(PerformerSnipe snipe) {
+        // Sends information about the brush and the performer.
+        Brush brush = snipe.getBrush();
+        Performer performer = snipe.getPerformer();
+        this.sendInfo(snipe);
+        performer.sendInfo(snipe);
+    }
 
     public void setBlock(EditSession editSession, int x, int y, int z, Pattern pattern) {
         if (pattern instanceof BlockType blockType) {

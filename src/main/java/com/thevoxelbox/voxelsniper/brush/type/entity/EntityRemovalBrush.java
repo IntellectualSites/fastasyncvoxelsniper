@@ -1,52 +1,40 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.EntityClassArgument;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b entity_removal|entityremoval|er")
+@CommandPermission("voxelsniper.brush.entityremoval")
 public class EntityRemovalBrush extends AbstractBrush {
 
-    private static final List<String> DEFAULT_EXEMPTIONS = Arrays.asList("org.bukkit.entity.Player",
-            "org.bukkit.entity.Hanging", "org.bukkit.entity.NPC"
+    private static final List<String> DEFAULT_EXEMPTIONS = Arrays.asList(
+            "org.bukkit.entity.Player",
+            "org.bukkit.entity.Hanging",
+            "org.bukkit.entity.NPC"
     );
 
-    private static final List<String> ENTITY_CLASSES = Arrays.stream(EntityType.values())
-            .map(EntityType::getEntityClass)
-            .flatMap(entityClass -> getEntityClassHierarchy(entityClass).stream())
-            .distinct()
-            .map(Class::getCanonicalName)
-            .toList();
-
     private List<String> exemptions;
-
-    private static List<Class<?>> getEntityClassHierarchy(Class<? extends Entity> entityClass) {
-        List<Class<?>> entityClassHierarchy = new ArrayList<>(10);
-        entityClassHierarchy.add(Entity.class);
-        Class<?> currentClass = entityClass;
-
-        while (currentClass != null && !currentClass.equals(Entity.class)) {
-            entityClassHierarchy.add(currentClass);
-            entityClassHierarchy.addAll(Arrays.asList(currentClass.getInterfaces()));
-
-            currentClass = currentClass.getSuperclass();
-        }
-        return entityClassHierarchy;
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -56,67 +44,59 @@ public class EntityRemovalBrush extends AbstractBrush {
         );
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.entity.removal"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(VoxelSniperText.formatList(
-                            ENTITY_CLASSES,
-                            String::compareTo,
-                            TextComponent::of,
-                            "voxelsniper.brush.entity-removal"
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("+")) {
-                    String exemptionToAdd = parameters[1];
-                    if (isEntityClass(exemptionToAdd)) {
-                        this.exemptions.add(exemptionToAdd);
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.entity-removal.add-entity-class", exemptionToAdd));
-                    } else {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.entity-removal.invalid-entity-class",
-                                exemptionToAdd
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("-")) {
-                    String exemptionToRemove = parameters[1];
-                    this.exemptions.remove(exemptionToRemove);
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.entity-removal.remove-entity-class", exemptionToRemove));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("+", "-", "list"), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("+")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(ENTITY_CLASSES.stream(), parameter, 1);
-            } else if (firstParameter.equalsIgnoreCase("-")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(this.exemptions.stream(), parameter, 1);
-            }
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.entity.removal"));
+    }
+
+    @CommandMethod("list")
+    public void onBrushList(
+            final @NotNull Snipe snipe
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(VoxelSniperText.formatList(
+                EntityClassArgument.ENTITY_CLASSES,
+                String::compareTo,
+                TextComponent::of,
+                "voxelsniper.brush.entity-removal"
+        ));
+    }
+
+    @CommandMethod("add <entity-class>")
+    public void onBrushPlus(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "entity-class", parserName = "entity-class_parser") Class<? extends Entity> entityClass
+    ) {
+        this.exemptions.add(entityClass.getCanonicalName());
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.entity-removal.add-entity-class",
+                entityClass
+        ));
+    }
+
+    @CommandMethod("remove <entity-class>")
+    public void onBrushMinus(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument(value = "entity-class", parserName = "entity-class_parser") Class<? extends Entity> entityClass
+    ) {
+        this.exemptions.remove(entityClass.getCanonicalName());
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.entity-removal.remove-entity-class",
+                entityClass
+        ));
     }
 
     @Override
@@ -165,18 +145,9 @@ public class EntityRemovalBrush extends AbstractBrush {
         });
     }
 
-    private boolean isEntityClass(String path) {
-        try {
-            Class<?> clazz = Class.forName(path);
-            return Entity.class.isAssignableFrom(clazz);
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
-
     private boolean isEntityClassInExemptionList(Class<? extends Entity> entityClass) {
-        // Create a list of superclasses and interfaces implemented by the current entity type
-        List<Class<?>> entityClassHierarchy = getEntityClassHierarchy(entityClass);
+        // Creates a list of superclasses and interfaces implemented by the current entity type.
+        List<Class<?>> entityClassHierarchy = EntityClassArgument.getEntityClassHierarchy(entityClass);
         return this.exemptions.stream()
                 .anyMatch(exemption -> entityClassHierarchy.stream()
                         .map(Class::getCanonicalName)

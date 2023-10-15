@@ -1,28 +1,27 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.item.ItemType;
 import com.sk89q.worldedit.world.item.ItemTypes;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import com.thevoxelbox.voxelsniper.command.TabCompleter;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
-
-public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
+@CommandMethod(value = "brush_toolkit|brushtoolkit|btool")
+@CommandDescription("Brush toolkit.")
+@CommandPermission("voxelsniper.sniper")
+public class BrushToolkitExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -30,108 +29,74 @@ public class BrushToolkitExecutor implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-sniper"));
-            return;
-        }
-        int length = arguments.length;
-        if (length == 0) {
+    @CommandMethod("assign <action> <toolkit-name>")
+    public void onBrushToolkitAssign(
+            final @NotNull Sniper sniper,
+            final @NotNull @Argument("action") ToolAction action,
+            final @NotNull @Argument("toolkit-name") String name
+    ) {
+        Player player = sniper.getPlayer();
+        PlayerInventory inventory = player.getInventory();
+        ItemStack itemInHand = inventory.getItemInMainHand();
+        ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
+        if (itemType == null || itemType == ItemTypes.AIR) {
             sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
-            sniper.print(Caption.of("voxelsniper.command.toolkit.remove-help-1"));
-            sniper.print(Caption.of("voxelsniper.command.toolkit.remove-help-2"));
             return;
         }
-        String firstArgument = arguments[0];
-        if (length == 3 && firstArgument.equalsIgnoreCase("assign")) {
-            ToolAction action = ToolAction.getToolAction(arguments[1]);
-            if (action == null) {
-                sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
-                return;
-            }
-            PlayerInventory inventory = player.getInventory();
-            ItemStack itemInHand = inventory.getItemInMainHand();
-            ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
-            if (itemType == ItemTypes.AIR) {
-                sniper.print(Caption.of("voxelsniper.command.toolkit.assign-help"));
-                return;
-            }
-            String toolkitName = arguments[2];
-            Toolkit toolkit = sniper.getToolkit(toolkitName);
-            if (toolkit == null) {
-                toolkit = new Toolkit(toolkitName);
-            }
-            toolkit.addToolAction(itemType, action);
-            sniper.addToolkit(toolkit);
-            sniper.print(Caption.of("voxelsniper.command.toolkit.assigned", itemInHand.getType().name(),
-                    toolkitName, action.name()
-            ));
+
+        Toolkit toolkit = sniper.getToolkit(name);
+        if (toolkit == null) {
+            toolkit = new Toolkit(name);
+        }
+        if (toolkit.isDefault()) {
+            sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
             return;
         }
-        if (length == 2 && firstArgument.equalsIgnoreCase("remove")) {
-            Toolkit toolkit = sniper.getToolkit(arguments[1]);
-            if (toolkit == null) {
-                sniper.print(Caption.of("voxelsniper.command.toolkit.not-found", arguments[1]));
-                return;
-            }
-            sniper.removeToolkit(toolkit);
-            return;
-        }
-        if (length == 1 && firstArgument.equalsIgnoreCase("remove")) {
-            PlayerInventory inventory = player.getInventory();
-            ItemStack itemInHand = inventory.getItemInMainHand();
-            ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
-            if (itemType == ItemTypes.AIR) {
-                sniper.print(Caption.of("voxelsniper.command.toolkit.empty-hands"));
-                return;
-            }
-            Toolkit toolkit = sniper.getCurrentToolkit();
-            if (toolkit == null) {
-                sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
-                return;
-            }
-            toolkit.removeToolAction(itemType);
-        }
+
+        toolkit.addToolAction(itemType, action);
+        sniper.addToolkit(toolkit);
+        sniper.print(Caption.of("voxelsniper.command.toolkit.assigned", itemType.getRichName(),
+                toolkit.getToolkitName(), action.name()
+        ));
     }
 
-
-    @Override
-    public List<String> complete(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null || arguments.length == 0) {
-            return Collections.emptyList();
+    @CommandMethod("remove <toolkit>")
+    public void onBrushToolkitRemove(
+            final @NotNull Sniper sniper,
+            final @NotNull @Argument("toolkit") Toolkit toolkit
+    ) {
+        if (toolkit.isDefault()) {
+            sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
+            return;
         }
 
-        String firstArgument = arguments[0];
-        if (arguments.length == 1) {
-            String argumentLowered = firstArgument.toLowerCase(Locale.ROOT);
-            return Stream.of("assign", "remove")
-                    .filter(subCommand -> subCommand.startsWith(argumentLowered))
-                    .toList();
+        sniper.removeToolkit(toolkit);
+        sniper.print(Caption.of("voxelsniper.command.toolkit.removed", toolkit.getToolkitName()));
+    }
+
+    @CommandMethod("remove")
+    public void onBrushToolkitRemove(
+            final @NotNull Sniper sniper
+    ) {
+        Player player = sniper.getPlayer();
+        PlayerInventory inventory = player.getInventory();
+        ItemStack itemInHand = inventory.getItemInMainHand();
+        ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
+        if (itemType == null || itemType == ItemTypes.AIR) {
+            sniper.print(Caption.of("voxelsniper.command.toolkit.empty-hands"));
+            return;
         }
-        if (arguments.length == 2 && firstArgument.equalsIgnoreCase("assign")) {
-            String argument = arguments[1];
-            String argumentLowered = argument.toLowerCase(Locale.ROOT);
-            return Stream.of("arrow", "gunpowder")
-                    .filter(tool -> tool.startsWith(argumentLowered))
-                    .toList();
+
+        Toolkit toolkit = sniper.getCurrentToolkit();
+        if (toolkit == null || toolkit.isDefault()) {
+            sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
+            return;
         }
-        if (arguments.length == 2 && firstArgument.equalsIgnoreCase("remove") ||
-                arguments.length == 3 && firstArgument.equalsIgnoreCase("assign")) {
-            String argument = arguments[arguments.length - 1];
-            String argumentLowered = argument.toLowerCase(Locale.ROOT);
-            return sniper.getToolkits().stream()
-                    .map(Toolkit::getToolkitName)
-                    .filter(toolkitName -> toolkitName.startsWith(argumentLowered))
-                    .toList();
-        }
-        return Collections.emptyList();
+
+        toolkit.removeToolAction(itemType);
+        sniper.print(Caption.of("voxelsniper.command.toolkit.unassigned", itemType.getRichName(),
+                toolkit.getToolkitName()
+        ));
     }
 
 }

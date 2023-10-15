@@ -1,10 +1,15 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
@@ -16,11 +21,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b jockey")
+@CommandPermission("voxelsniper.brush.jockey")
 public class JockeyBrush extends AbstractBrush {
 
     private static final int ENTITY_STACK_LIMIT = 50;
@@ -40,44 +48,60 @@ public class JockeyBrush extends AbstractBrush {
         this.jockeyType = (JockeyType) getEnumProperty("default-jockey-type", JockeyType.class, DEFAULT_JOCKEY_TYPE);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-        boolean stack = false;
-        boolean playerOnly = false;
-        boolean inverse = false;
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.jockey.info"));
-        } else {
-            if (parameters.length == 4) {
-                playerOnly = Boolean.parseBoolean(parameters[1]);
-                inverse = Boolean.parseBoolean(parameters[2]);
-                stack = Boolean.parseBoolean(parameters[3]);
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-                return;
-            }
-        }
-        if (inverse) {
-            this.jockeyType = playerOnly ? JockeyType.INVERT_PLAYER_ONLY : JockeyType.INVERT_ALL_ENTITIES;
-        } else if (stack) {
-            this.jockeyType = playerOnly ? JockeyType.STACK_PLAYER_ONLY : JockeyType.STACK_ALL_ENTITIES;
-        } else {
-            this.jockeyType = playerOnly ? JockeyType.NORMAL_PLAYER_ONLY : JockeyType.NORMAL_ALL_ENTITIES;
-        }
-        messenger.sendMessage(Caption.of("voxelsniper.brush.jockey.set-mode", this.jockeyType.getFullName()));
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length <= 3) {
-            int index = parameters.length - 1;
-            String parameter = parameters[index];
-            return super.sortCompletions(Stream.of("true", "false"), parameter, index);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.jockey.info"));
+    }
+
+    @CommandMethod("t <jockey-type>")
+    public void onBrushT(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("jockey-type") JockeyType jockeyType
+    ) {
+        this.jockeyType = jockeyType;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.jockey.set-mode",
+                this.jockeyType.getFullName()
+        ));
+    }
+
+    @CommandMethod("<player-only> <inverse> <stack>")
+    public void onBrushJockeytype(
+            final @NotNull Snipe snipe,
+            final @Argument("player-only") @Liberal boolean playerOnly,
+            final @Argument("inverse") @Liberal boolean inverse,
+            final @Argument("stack") @Liberal boolean stack
+    ) {
+        if (inverse) {
+            if (playerOnly) {
+                this.onBrushT(snipe, JockeyType.INVERT_PLAYER_ONLY);
+            } else {
+                this.onBrushT(snipe, JockeyType.INVERT_ALL_ENTITIES);
+            }
+        } else if (stack) {
+            if (playerOnly) {
+                this.onBrushT(snipe, JockeyType.STACK_PLAYER_ONLY);
+            } else {
+                this.onBrushT(snipe, JockeyType.STACK_ALL_ENTITIES);
+            }
+        } else {
+            if (playerOnly) {
+                this.onBrushT(snipe, JockeyType.NORMAL_PLAYER_ONLY);
+            } else {
+                this.onBrushT(snipe, JockeyType.NORMAL_ALL_ENTITIES);
+            }
         }
-        return super.handleCompletions(parameters, snipe);
     }
 
     @Override
@@ -198,14 +222,17 @@ public class JockeyBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.jockey.set-mode", this.jockeyType.getFullName()))
+                .message(Caption.of(
+                        "voxelsniper.brush.jockey.set-mode",
+                        this.jockeyType.getFullName()
+                ))
                 .send();
     }
 
     /**
      * Available types of jockey modes.
      */
-    private enum JockeyType {
+    public enum JockeyType {
 
         NORMAL_ALL_ENTITIES("normal-all-entities"),
         NORMAL_PLAYER_ONLY("normal-player-only"),

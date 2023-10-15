@@ -1,5 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
@@ -9,23 +12,21 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.world.entity.EntityType;
 import com.sk89q.worldedit.world.entity.EntityTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b entity|en")
+@CommandPermission("voxelsniper.brush.entity")
 public class EntityBrush extends AbstractBrush {
 
     private static final EntityType DEFAULT_ENTITY_TYPE = EntityTypes.ZOMBIE;
-
-    private static final List<String> ENTITIES = EntityType.REGISTRY.values().stream()
-            .map(entityType -> entityType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .toList();
 
     private EntityType entityType;
 
@@ -34,50 +35,47 @@ public class EntityBrush extends AbstractBrush {
         this.entityType = (EntityType) getRegistryProperty("default-entity-type", EntityType.REGISTRY, DEFAULT_ENTITY_TYPE);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.entity.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
-                            EntityType.REGISTRY.values(),
-                            (type, type2) -> type.getId().compareTo(type2.getId()),
-                            type -> TextComponent.of(type.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
-                            type -> type,
-                            this.entityType,
-                            "voxelsniper.brush.entity"
-                    ));
-                } else {
-                    EntityType currentEntity = EntityTypes.get(firstParameter);
-
-                    if (currentEntity != null) {
-                        this.entityType = currentEntity;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.entity.set-entity-type", this.entityType.getName()));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.entity.invalid-entity-type", firstParameter));
-                    }
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.concat(
-                    ENTITIES.stream(),
-                    Stream.of("list")
-            ), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.entity.info"));
+    }
+
+    @CommandMethod("list")
+    public void onBrushList(
+            final @NotNull Snipe snipe
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                EntityType.REGISTRY.values(),
+                (type, type2) -> type.getId().compareTo(type2.getId()),
+                type -> TextComponent.of(type.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
+                type -> type,
+                this.entityType,
+                "voxelsniper.brush.entity"
+        ));
+    }
+
+    @CommandMethod("<entity-type>")
+    public void onBrushEntitytype(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("entity-type") EntityType entityType
+    ) {
+        this.entityType = entityType;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.entity.set-entity-type",
+                this.entityType.getName()
+        ));
     }
 
     @Override
@@ -113,7 +111,7 @@ public class EntityBrush extends AbstractBrush {
                         break;
                     }
                 }
-            } catch (RuntimeException exception) {
+            } catch (RuntimeException e) {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.entity.cannot-spawn"));
             }
             return null;
@@ -123,7 +121,10 @@ public class EntityBrush extends AbstractBrush {
     @Override
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
-                .message(Caption.of("voxelsniper.brush.entity.set-entity-type", this.entityType.getName()))
+                .message(Caption.of(
+                        "voxelsniper.brush.entity.set-entity-type",
+                        this.entityType.getName()
+                ))
                 .brushSizeMessage()
                 .send();
     }

@@ -1,18 +1,32 @@
 package com.thevoxelbox.voxelsniper.performer.type.combo;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.Collection;
 
+@CommandMethod(value = "performer|perf|p include-combo|nc")
+@CommandPermission("voxelsniper.sniper")
 public class IncludeComboPerformer extends AbstractPerformer {
 
-    private List<BlockState> includeList;
+    private Collection<BlockState> includeList;
     private Pattern pattern;
+
+    @CommandMethod("")
+    public void onPerformer(
+            final @NotNull PerformerSnipe snipe,
+            final @NotNull IncludeComboPerformer performer
+    ) {
+        performer.onPerformerCommand(snipe);
+    }
+
 
     @Override
     public void initialize(PerformerSnipe snipe) {

@@ -23,7 +23,10 @@ public class BrushProperties {
      * @param creator          the creator
      */
     BrushProperties(
-            String name, @Nullable String permission, List<String> aliases, BrushPatternType brushPatternType,
+            String name,
+            @Nullable String permission,
+            List<String> aliases,
+            BrushPatternType brushPatternType,
             BrushCreator creator
     ) {
         this.name = name;
@@ -77,7 +80,7 @@ public class BrushProperties {
      * @since 2.6.0
      */
     public BrushPatternType getBrushPatternType() {
-        return brushPatternType;
+        return this.brushPatternType;
     }
 
 

@@ -1,13 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This brush only looks for solid blocks, and then changes those plus any air blocks touching them. If it works, this brush should be faster than the original
@@ -22,6 +26,9 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
  * of a 3d checkerboard of stone and air every other block, this brush should only be about 1.5x slower than the original brush. Savings increase for larger
  * brushes.
  */
+@RequireToolkit
+@CommandMethod(value = "brush|b block_reset_surface|blockresetsurface|brs")
+@CommandPermission("voxelsniper.brush.blockresetsurface")
 public class BlockResetSurfaceBrush extends AbstractBrush {
 
     private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
@@ -38,6 +45,13 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
             .add(BlockTypes.REPEATER)
             .add(BlockTypes.COMPARATOR)
             .build();
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {

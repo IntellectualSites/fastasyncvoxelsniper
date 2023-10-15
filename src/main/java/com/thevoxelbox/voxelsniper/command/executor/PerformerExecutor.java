@@ -1,21 +1,23 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
-import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
-import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class PerformerExecutor implements CommandExecutor {
+@RequireToolkit
+@CommandMethod(value = "performer|perf|p")
+@CommandDescription("Performer executor.")
+@CommandPermission("voxelsniper.sniper")
+public class PerformerExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -23,32 +25,18 @@ public class PerformerExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            return;
-        }
-        Toolkit toolkit = sniper.getCurrentToolkit();
-        if (toolkit == null) {
-            return;
-        }
-        ToolkitProperties toolkitProperties = toolkit.getProperties();
-        if (toolkitProperties == null) {
-            return;
-        }
-        BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
+    @CommandMethod("")
+    public void onPerformer(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit
+    ) {
         Brush brush = toolkit.getCurrentBrush();
-        if (!(brush instanceof PerformerBrush performer)) {
+        if (!(brush instanceof PerformerBrush)) {
             sniper.print(Caption.of("voxelsniper.command.performer.invalid-brush"));
             return;
         }
-        String[] parameters = arguments.length == 0 ? new String[]{"m"} : arguments;
-        Snipe snipe = new Snipe(sniper, toolkit, toolkitProperties, brushProperties, brush);
-        PerformerRegistry performerRegistry = this.plugin.getPerformerRegistry();
-        performer.handlePerformerCommand(parameters, snipe, performerRegistry);
+
+        sniper.sendInfo(true);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -8,52 +10,53 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b set_redstone_flip|setredstoneflip|setrf")
+@CommandPermission("voxelsniper.brush.setredstoneflip")
 public class SetRedstoneFlipBrush extends AbstractBrush {
 
     @Nullable
     private BlockVector3 block;
     private boolean northSouth = true;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (Stream.of("n", "s", "ns")
-                        .anyMatch(firstParameter::startsWith)) {
-                    this.northSouth = true;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.north-south"));
-                } else if (Stream.of("e", "w", "ew")
-                        .anyMatch(firstParameter::startsWith)) {
-                    this.northSouth = false;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.east-west"));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("n", "s", "ns", "e", "w", "ew"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.set-redstone-flip.info"));
+    }
+
+    @CommandMethod("ns|n|s")
+    public void onBrushNs(
+            final @NotNull Snipe snipe
+    ) {
+        this.northSouth = true;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.north-south"));
+    }
+
+    @CommandMethod("ew|e|w")
+    public void onBrushEw(
+            final @NotNull Snipe snipe
+    ) {
+        this.northSouth = false;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.east-west"));
     }
 
     @Override

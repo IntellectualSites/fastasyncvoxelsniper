@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.MessageSender;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.Collection;
 
 public class SnipeMessageSender {
 
@@ -59,7 +59,7 @@ public class SnipeMessageSender {
     }
 
     public SnipeMessageSender voxelListMessage() {
-        List<BlockState> voxelList = this.toolkitProperties.getVoxelList();
+        Collection<BlockState> voxelList = this.toolkitProperties.getVoxelList();
         this.messageSender.voxelListMessage(voxelList);
         return this;
     }

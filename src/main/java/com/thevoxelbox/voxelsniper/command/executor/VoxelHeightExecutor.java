@@ -1,17 +1,24 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import com.fastasyncworldedit.core.configuration.Caption;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class VoxelHeightExecutor implements CommandExecutor {
+@RequireToolkit
+@CommandMethod(value = "voxel_height|voxelheight|vh")
+@CommandDescription("VoxelHeight input.")
+@CommandPermission("voxelsniper.sniper")
+public class VoxelHeightExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -19,34 +26,17 @@ public class VoxelHeightExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            return;
-        }
-        Toolkit toolkit = sniper.getCurrentToolkit();
-        if (toolkit == null) {
-            return;
-        }
+    @CommandMethod("<height>")
+    public void onVoxelHeight(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit,
+            final @Argument("height") int height
+    ) {
+        Player player = sniper.getPlayer();
         ToolkitProperties toolkitProperties = toolkit.getProperties();
-        if (toolkitProperties == null) {
-            return;
-        }
-        int height;
-        try {
-            height = Integer.parseInt(arguments[0]);
-        } catch (NumberFormatException ignored) {
-            sniper.print(Caption.of("voxelsniper.command.voxel-height.invalid-input", arguments[0]));
-            return;
-        } catch (ArrayIndexOutOfBoundsException ignored) {
-            sniper.print(Caption.of("voxelsniper.command.voxel-height.invalid-input-none"));
-            return;
-        }
         toolkitProperties.setVoxelHeight(height);
-        Messenger messenger = new Messenger(plugin, sender);
+
+        Messenger messenger = new Messenger(plugin, player);
         messenger.sendVoxelHeightMessage(height);
     }
 

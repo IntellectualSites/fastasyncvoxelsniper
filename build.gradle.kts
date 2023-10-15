@@ -36,6 +36,12 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
 
+    // Cloud command system
+    implementation(libs.cloudcore)
+    implementation(libs.cloudannotations)
+    implementation(libs.cloudbukkit)
+    implementation(libs.cloudpaper)
+
     // Third party
     implementation("dev.notmyfault.serverlib:ServerLib")
     implementation("org.bstats:bstats-base")
@@ -97,6 +103,8 @@ tasks {
         this.archiveClassifier.set(null as String?)
         this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
         this.destinationDirectory.set(rootProject.tasks.shadowJar.get().destinationDirectory.get())
+        relocate("cloud.commandframework", "com.thevoxelbox.voxelsniper.cloud")
+        relocate("io.leangen.geantyref", "com.thevoxelbox.geantyref")
         relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper.serverlib")
         relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
         relocate("io.papermc.lib", "com.thevoxelbox.voxelsniper.paperlib")

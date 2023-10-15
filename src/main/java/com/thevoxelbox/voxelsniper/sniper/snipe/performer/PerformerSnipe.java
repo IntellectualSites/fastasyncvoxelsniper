@@ -69,4 +69,15 @@ public class PerformerSnipe extends Snipe {
         return this.performer;
     }
 
+    /**
+     * Return the performer as a specific type
+     *
+     * @param <T> the performer type
+     * @return the typed performer
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getTypedPerformer() {
+        return (T) this.performer;
+    }
+
 }

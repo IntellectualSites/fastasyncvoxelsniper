@@ -1,16 +1,21 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
-import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class DefaultExecutor implements CommandExecutor {
+@RequireToolkit
+@CommandMethod(value = "default|d")
+@CommandDescription("VoxelSniper Default.")
+@CommandPermission("voxelsniper.goto")
+public class DefaultExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
 
@@ -18,20 +23,11 @@ public class DefaultExecutor implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.command.missing-sniper"));
-            return;
-        }
-        Toolkit toolkit = sniper.getCurrentToolkit();
-        if (toolkit == null) {
-            sniper.print(Caption.of("voxelsniper.command.missing-toolkit"));
-            return;
-        }
+    @CommandMethod("")
+    public void onDefault(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit
+    ) {
         toolkit.reset();
         sniper.print(Caption.of("voxelsniper.command.default.reset"));
     }

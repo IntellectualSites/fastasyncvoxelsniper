@@ -27,6 +27,7 @@ public final class ArtHelper {
     public static void paint(Player player, Art art) {
         Painting bestMatch = matchPainting(player);
         if (bestMatch == null) {
+            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.no-match"));
             return;
         }
         if (art == null) {
@@ -40,12 +41,13 @@ public final class ArtHelper {
     public static void paintAuto(Player player, boolean back) {
         Painting bestMatch = matchPainting(player);
         if (bestMatch == null) {
+            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.no-match"));
             return;
         }
         Art bestMatchArt = bestMatch.getArt();
         int ordinal = bestMatchArt.ordinal() + (back ? -1 : 1);
         if (ordinal < 0 || ordinal >= Art.values().length) {
-            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.final-paiting"));
+            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.final-painting"));
             return;
         }
         Art ordinalArt = Art.values()[ordinal];

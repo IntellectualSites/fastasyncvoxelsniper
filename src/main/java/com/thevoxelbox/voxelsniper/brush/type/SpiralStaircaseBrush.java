@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -7,14 +9,16 @@ import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b spiral_staircase|spiralstaircase|sstair")
+@CommandPermission("voxelsniper.brush.spiralstaircase")
 public class SpiralStaircaseBrush extends AbstractBrush {
 
     private static final String DEFAULT_SDIRECT = "c";
@@ -29,43 +33,80 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         this.sopen = getStringProperty("default-sopen", DEFAULT_SOPEN);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (Stream.of("c", "cc")
-                        .anyMatch(firstParameter::equalsIgnoreCase)) {
-                    this.sdirect = firstParameter;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.set-turns", this.sdirect));
-                } else if (Stream.of("n", "e", "s", "w")
-                        .anyMatch(firstParameter::equalsIgnoreCase)) {
-                    this.sopen = firstParameter;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.spiral-staircase.set-opens", this.sopen));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of(
-                            "c", "cc",
-                            "n", "e", "s", "w"
-                    ), parameter, 0
-            );
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.spiral-staircase.info"));
+    }
+
+    private void onBrushSdirectCommand(Snipe snipe, String sdirect) {
+        this.sdirect = sdirect;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.spiral-staircase.set-turns",
+                this.sdirect
+        ));
+    }
+
+    @CommandMethod("c")
+    public void onBrushC(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSdirectCommand(snipe, "c");
+    }
+
+    @CommandMethod("cc")
+    public void onBrushCc(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSdirectCommand(snipe, "cc");
+    }
+
+    private void onBrushSopenCommand(Snipe snipe, String sopen) {
+        this.sopen = sopen;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.spiral-staircase.set-opens",
+                this.sopen
+        ));
+    }
+
+    @CommandMethod("n")
+    public void onBrushN(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSopenCommand(snipe, "n");
+    }
+
+    @CommandMethod("e")
+    public void onBrushE(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSopenCommand(snipe, "e");
+    }
+
+    @CommandMethod("s")
+    public void onBrushS(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSopenCommand(snipe, "s");
+    }
+
+    @CommandMethod("w")
+    public void onBrushW(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushSopenCommand(snipe, "w");
     }
 
     @Override
@@ -350,15 +391,24 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                 .brushSizeMessage()
                 .patternMessage()
                 .voxelHeightMessage()
-                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-type", getStairType(snipe).getFullName()))
-                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-turns", this.sdirect))
-                .message(Caption.of("voxelsniper.brush.spiral-staircase.set-opens", this.sopen))
+                .message(Caption.of(
+                        "voxelsniper.brush.spiral-staircase.set-type",
+                        getStairType(snipe).getFullName()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.spiral-staircase.set-turns",
+                        this.sdirect
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.spiral-staircase.set-opens",
+                        this.sopen
+                ))
                 .send();
     }
 
-    private enum StairType {
+    public enum StairType {
         BLOCK("block"),
-        STEP("ttep"),
+        STEP("step"),
         STAIR("stair");
 
         private final String name;
