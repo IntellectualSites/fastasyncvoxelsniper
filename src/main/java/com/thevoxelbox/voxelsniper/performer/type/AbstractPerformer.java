@@ -19,9 +19,8 @@ public abstract class AbstractPerformer implements Performer {
     protected void onPerformerCommand(PerformerSnipe snipe) {
         // Sends information about the brush and the performer.
         Brush brush = snipe.getBrush();
-        Performer performer = snipe.getPerformer();
+        brush.sendInfo(snipe);
         this.sendInfo(snipe);
-        performer.sendInfo(snipe);
     }
 
     public void setBlock(EditSession editSession, int x, int y, int z, Pattern pattern) {

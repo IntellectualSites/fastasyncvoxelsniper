@@ -6,11 +6,13 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.performer.type.AbstractPerformer;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
+@RequireToolkit
 @CommandMethod(value = "performer|perf|p material|mat|m")
 @CommandPermission("voxelsniper.sniper")
 public class MaterialPerformer extends AbstractPerformer {
@@ -19,10 +21,9 @@ public class MaterialPerformer extends AbstractPerformer {
 
     @CommandMethod("")
     public void onPerformer(
-            final @NotNull PerformerSnipe snipe,
-            final @NotNull MaterialPerformer performer
+            final @NotNull PerformerSnipe snipe
     ) {
-        performer.onPerformerCommand(snipe);
+        super.onPerformerCommand(snipe);
     }
 
     @Override
