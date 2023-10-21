@@ -59,7 +59,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "3.0.0-SNAPSHOT"
+version = "3.0.0-SNAPSHOT-2"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -127,6 +127,7 @@ javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElement
     skip()
 }
 
+/*
 signing {
     if (!version.toString().endsWith("-SNAPSHOT")) {
         val signingKey: String? by project
@@ -136,6 +137,7 @@ signing {
         sign(publishing.publications)
     }
 }
+ */
 
 publishing {
     publications {
