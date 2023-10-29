@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @RequireToolkit
 @CommandMethod(value = "default|d")
 @CommandDescription("VoxelSniper Default.")
-@CommandPermission("voxelsniper.goto")
+@CommandPermission("voxelsniper.sniper")
 public class DefaultExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
