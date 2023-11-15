@@ -41,6 +41,8 @@ See [here](https://github.com/IntellectualSites/.github/blob/main/CONTRIBUTING.m
 ## Maven Deployment
 Releases are published to the central repository, snapshots are published to S01 OSS Sonatype.
 
+Replace `VERSION` with the version you want to use.
+
 ### Gradle
 ```kotlin
 repositories {
@@ -48,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:2.9.4")
+    compileOnly("com.intellectualsites.fastasyncvoxelsniper:fastasyncvoxelsniper:VERSION")
 }
 ```
 
@@ -57,7 +59,7 @@ dependencies {
 <dependency>
     <groupId>com.intellectualsites.fastasyncvoxelsniper</groupId>
     <artifactId>fastasyncvoxelsniper</artifactId>
-    <version>2.9.4</version>
+    <version>VERSION</version>
     <scope>provided</scope>
 </dependency>
 ```
