@@ -62,7 +62,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "3.0.0-SNAPSHOT-3"
+version = "3.0.0"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -130,7 +130,6 @@ javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElement
     skip()
 }
 
-/*
 signing {
     if (!version.toString().endsWith("-SNAPSHOT")) {
         val signingKey: String? by project
@@ -140,7 +139,6 @@ signing {
         sign(publishing.publications)
     }
 }
- */
 
 publishing {
     publications {
@@ -210,7 +208,7 @@ modrinth {
     projectId.set("fastasyncvoxelsniper")
     versionName.set("${project.version}")
     versionNumber.set("${project.version}")
-    versionType.set("stable")
+    versionType.set("release")
     uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
     gameVersions.addAll(supportedVersions)
     loaders.addAll(listOf("paper", "purpur", "spigot"))
