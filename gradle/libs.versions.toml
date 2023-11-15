@@ -11,6 +11,7 @@ pluginyml = "0.6.0"
 nexus = "1.3.0"
 minotaur = "2.8.5"
 hangar = "0.1.0"
+runPaper = "2.2.0"
 
 [libraries]
 
@@ -29,3 +30,4 @@ pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" 
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
 hangar = { id = "io.papermc.hangar-publish-plugin", version.ref = "hangar" }
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
