@@ -207,7 +207,7 @@ modrinth {
     projectId.set("fastasyncvoxelsniper")
     versionName.set("${project.version}")
     versionNumber.set("${project.version}")
-    versionType.set("beta") // TODO Change after 3.x release
+    versionType.set("stable")
     uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
     gameVersions.addAll(supportedVersions)
     loaders.addAll(listOf("paper", "purpur", "spigot"))
@@ -223,7 +223,7 @@ hangarPublish {
     publications.register("plugin") {
         version.set(project.version as String)
         id.set("FastAsyncVoxelSniper")
-        channel.set("Prerelease") // TODO Change after 3.x release
+        channel.set("Release")
         changelog.set("The changelog is available on GitHub: https://github" +
                 ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
         apiKey.set(System.getenv("HANGAR_TOKEN"))
