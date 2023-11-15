@@ -36,6 +36,12 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
 
+    // Cloud command system
+    implementation(libs.cloudcore)
+    implementation(libs.cloudannotations)
+    implementation(libs.cloudbukkit)
+    implementation(libs.cloudpaper)
+
     // Third party
     implementation("dev.notmyfault.serverlib:ServerLib")
     implementation("org.bstats:bstats-base")
@@ -53,7 +59,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "2.9.5-SNAPSHOT"
+version = "3.0.0-SNAPSHOT-3"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -97,6 +103,8 @@ tasks {
         this.archiveClassifier.set(null as String?)
         this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
         this.destinationDirectory.set(rootProject.tasks.shadowJar.get().destinationDirectory.get())
+        relocate("cloud.commandframework", "com.thevoxelbox.voxelsniper.cloud")
+        relocate("io.leangen.geantyref", "com.thevoxelbox.geantyref")
         relocate("org.incendo.serverlib", "com.thevoxelbox.voxelsniper.serverlib")
         relocate("org.bstats", "com.thevoxelbox.voxelsniper.metrics")
         relocate("io.papermc.lib", "com.thevoxelbox.voxelsniper.paperlib")
@@ -119,6 +127,7 @@ javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElement
     skip()
 }
 
+/*
 signing {
     if (!version.toString().endsWith("-SNAPSHOT")) {
         val signingKey: String? by project
@@ -128,6 +137,7 @@ signing {
         sign(publishing.publications)
     }
 }
+ */
 
 publishing {
     publications {
@@ -197,7 +207,7 @@ modrinth {
     projectId.set("fastasyncvoxelsniper")
     versionName.set("${project.version}")
     versionNumber.set("${project.version}")
-    versionType.set("release")
+    versionType.set("stable")
     uploadFile.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
     gameVersions.addAll(supportedVersions)
     loaders.addAll(listOf("paper", "purpur", "spigot"))

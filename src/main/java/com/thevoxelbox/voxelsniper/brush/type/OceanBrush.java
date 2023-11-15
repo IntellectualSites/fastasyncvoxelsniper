@@ -1,5 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -7,17 +11,19 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b ocean|o")
+@CommandPermission("voxelsniper.brush.ocean")
 public class OceanBrush extends AbstractBrush {
 
     private static final int WATER_LEVEL_MIN = 12;
@@ -57,52 +63,46 @@ public class OceanBrush extends AbstractBrush {
         this.waterLevel = getIntegerProperty("default-water-lever", DEFAULT_WATER_LEVEL);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.ocean.info"));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("wlevel")) {
-                    Integer waterLevel = NumericParser.parseInteger(parameters[1]);
-                    if (waterLevel != null && waterLevel > this.waterLevelMin) {
-                        this.waterLevel = waterLevel;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.ocean.set-water-level", this.waterLevel));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", this.waterLevelMin));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("cfloor")) {
-                    this.coverFloor = Boolean.parseBoolean(parameters[1]);
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.ocean.set-floor-cover",
-                            VoxelSniperText.getStatus(this.coverFloor)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("wlevel", "cfloor"), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            if (firstParameter.equalsIgnoreCase("cfloor")) {
-                String parameter = parameters[1];
-                return super.sortCompletions(Stream.of("true", "false"), parameter, 1);
-            }
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.ocean.info"));
+    }
+
+    @CommandMethod("wlevel <water-level>")
+    public void onBrushWlevel(
+            final @NotNull Snipe snipe,
+            final @Argument("water-level") @DynamicRange(min = "waterLevelMin") int waterLevel
+    ) {
+        this.waterLevel = waterLevel;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.ocean.set-water-level",
+                this.waterLevel
+        ));
+    }
+
+    @CommandMethod("cfloor <cover-floor>")
+    public void onBrushCfloor(
+            final @NotNull Snipe snipe,
+            final @Argument("cover-floor") @Liberal boolean coverFloor
+    ) {
+        this.coverFloor = coverFloor;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.ocean.set-floor-cover",
+                VoxelSniperText.getStatus(this.coverFloor)
+        ));
     }
 
     @Override
@@ -122,10 +122,10 @@ public class OceanBrush extends AbstractBrush {
         int targetBlockX = targetBlock.getX();
         int targetBlockZ = targetBlock.getZ();
         int brushSize = toolkitProperties.getBrushSize();
-        int minX = (int) Math.floor(targetBlockX - brushSize);
-        int minZ = (int) Math.floor(targetBlockZ - brushSize);
-        int maxX = (int) Math.floor(targetBlockX + brushSize);
-        int maxZ = (int) Math.floor(targetBlockZ + brushSize);
+        int minX = targetBlockX - brushSize;
+        int minZ = targetBlockZ - brushSize;
+        int maxX = targetBlockX + brushSize;
+        int maxZ = targetBlockZ + brushSize;
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
                 int currentHeight = getHeight(x, z);
@@ -175,7 +175,10 @@ public class OceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.ocean.set-water-level", this.waterLevel))
+                .message(Caption.of(
+                        "voxelsniper.brush.ocean.set-water-level",
+                        this.waterLevel
+                ))
                 .message(Caption.of(
                         "voxelsniper.brush.ocean.set-floor-cover",
                         VoxelSniperText.getStatus(this.coverFloor)

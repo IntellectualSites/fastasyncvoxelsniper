@@ -1,62 +1,60 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b extrude|ex")
+@CommandPermission("voxelsniper.brush.extrude")
 public class ExtrudeBrush extends AbstractBrush {
 
-    private double trueCircle;
+    private boolean trueCircle;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.extrude.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.trueCircle = 0.5;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.trueCircle = 0;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.parameter.true-circle",
-                            VoxelSniperText.getStatus(false)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.extrude.info"));
+    }
+
+    @CommandMethod("<true-circle>")
+    public void onBrushTruecircle(
+            final @NotNull Snipe snipe,
+            final @Argument("true-circle") @Liberal boolean trueCircle
+    ) {
+        this.trueCircle = trueCircle;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.parameter.true-circle",
+                VoxelSniperText.getStatus(this.trueCircle)
+        ));
     }
 
     private void extrudeUpOrDown(Snipe snipe, boolean isUp) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         for (int x = -brushSize; x <= brushSize; x++) {
             double xSquared = Math.pow(x, 2);
             for (int z = -brushSize; z <= brushSize; z++) {
@@ -88,7 +86,7 @@ public class ExtrudeBrush extends AbstractBrush {
     private void extrudeNorthOrSouth(Snipe snipe, boolean isSouth) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         for (int x = -brushSize; x <= brushSize; x++) {
             double xSquared = Math.pow(x, 2);
             for (int y = -brushSize; y <= brushSize; y++) {
@@ -121,7 +119,7 @@ public class ExtrudeBrush extends AbstractBrush {
     private void extrudeEastOrWest(Snipe snipe, boolean isEast) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        double brushSizeSquared = Math.pow(brushSize + this.trueCircle, 2);
+        double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         for (int y = -brushSize; y <= brushSize; y++) {
             double ySquared = Math.pow(y, 2);
             for (int z = -brushSize; z <= brushSize; z++) {
@@ -204,7 +202,10 @@ public class ExtrudeBrush extends AbstractBrush {
                 .brushSizeMessage()
                 .voxelHeightMessage()
                 .voxelListMessage()
-                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle == 0.5)))
+                .message(Caption.of(
+                        "voxelsniper.brush.parameter.true-circle",
+                        VoxelSniperText.getStatus(this.trueCircle)
+                ))
                 .send();
     }
 

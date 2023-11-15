@@ -1,20 +1,26 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.painter.Painters;
-
-import java.util.List;
-import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A brush that creates a solid ball.
  */
+@RequireToolkit
+@CommandMethod(value = "brush|b ball|b")
+@CommandPermission("voxelsniper.brush.ball")
 public class BallBrush extends AbstractPerformerBrush {
 
     private boolean trueCircle;
@@ -23,40 +29,32 @@ public class BallBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.ball.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.trueCircle = true;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(true)));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.trueCircle = false;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.parameter.true-circle",
-                            VoxelSniperText.getStatus(false)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ball.info"));
+    }
+
+    @CommandMethod("<true-circle>")
+    public void onBrushTruecircle(
+            final @NotNull Snipe snipe,
+            final @Argument("true-circle") @Liberal boolean trueCircle
+    ) {
+        this.trueCircle = trueCircle;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.parameter.true-circle",
+                VoxelSniperText.getStatus(this.trueCircle)
+        ));
     }
 
     @Override
@@ -90,7 +88,10 @@ public class BallBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.brush.parameter.true-circle", VoxelSniperText.getStatus(this.trueCircle)))
+                .message(Caption.of(
+                        "voxelsniper.brush.parameter.true-circle",
+                        VoxelSniperText.getStatus(this.trueCircle)
+                ))
                 .send();
     }
 

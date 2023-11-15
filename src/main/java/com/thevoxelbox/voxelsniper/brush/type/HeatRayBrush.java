@@ -1,11 +1,17 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
@@ -13,14 +19,16 @@ import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.util.Vector;
 import org.bukkit.util.noise.PerlinNoiseGenerator;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b heat_ray|heatray|hr")
+@CommandPermission("voxelsniper.brush.heatray")
 public class HeatRayBrush extends AbstractBrush {
 
     private static final double REQUIRED_OBSIDIAN_DENSITY = 0.6;
@@ -48,11 +56,11 @@ public class HeatRayBrush extends AbstractBrush {
             .with(BlockCategories.WOODEN_FENCES)
             .with(BlockCategories.FENCE_GATES)
             .with(BlockCategories.SNOW)
+            .with(BlockCategories.FIRE)
             .with(MaterialSets.TORCHES)
             .with(MaterialSets.FLORA)
             .add(BlockTypes.SPONGE)
             .add(BlockTypes.COBWEB)
-            .add(BlockTypes.FIRE)
             .add(BlockTypes.LADDER)
             .build();
 
@@ -61,6 +69,7 @@ public class HeatRayBrush extends AbstractBrush {
     private double requiredFireDensity;
     private double requiredAirDensity;
 
+    private boolean soulFire;
     private int octaves;
     private double frequency;
     private double amplitude;
@@ -77,55 +86,74 @@ public class HeatRayBrush extends AbstractBrush {
         this.amplitude = getDoubleProperty("default-amplitude", DEFAULT_AMPLITUDE);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.info"));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("oct")) {
-                    Integer octaves = NumericParser.parseInteger(parameters[1]);
-                    if (octaves != null) {
-                        this.octaves = octaves;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-octaves", this.octaves));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("amp")) {
-                    Double amplitude = NumericParser.parseDouble(parameters[1]);
-                    if (amplitude != null) {
-                        this.amplitude = amplitude;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-amplitude", this.amplitude));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("freq")) {
-                    Double frequency = NumericParser.parseDouble(parameters[1]);
-                    if (frequency != null) {
-                        this.frequency = frequency;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.heat-ray.set-frequency", this.frequency));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("oct", "amp", "freq"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.heat-ray.info"));
+    }
+
+    @CommandMethod("<soul-fire>")
+    public void onBrushSoulfire(
+            final @NotNull Snipe snipe,
+            final @Argument("soul-fire") @Liberal boolean soulFire
+    ) {
+        this.soulFire = soulFire;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.heat-ray.set-soul-fire",
+                VoxelSniperText.getStatus(this.soulFire)
+        ));
+    }
+
+    @CommandMethod("oct <octaves>")
+    public void onBrushOct(
+            final @NotNull Snipe snipe,
+            final @Argument("octaves") @Range(min = "0") int octaves
+    ) {
+        this.octaves = octaves;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.heat-ray.set-octaves",
+                this.octaves
+        ));
+    }
+
+    @CommandMethod("amp <amplitude>")
+    public void onBrushAmp(
+            final @NotNull Snipe snipe,
+            final @Argument("amplitude") double amplitude
+    ) {
+        this.amplitude = amplitude;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.heat-ray.set-amplitude",
+                this.amplitude
+        ));
+    }
+
+    @CommandMethod("freq <frequency>")
+    public void onBrushFreq(
+            final @NotNull Snipe snipe,
+            final @Argument("frequency") double frequency
+    ) {
+        this.frequency = frequency;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.heat-ray.set-frequency",
+                this.frequency
+        ));
     }
 
     @Override
@@ -139,7 +167,7 @@ public class HeatRayBrush extends AbstractBrush {
     }
 
     /**
-     * Heat Ray executer.
+     * Heat Ray executor.
      */
     public void heatRay(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
@@ -148,6 +176,7 @@ public class HeatRayBrush extends AbstractBrush {
         Vector targetBlockVector = Vectors.toBukkit(targetBlock);
         Vector currentLocation = new Vector();
         int brushSize = toolkitProperties.getBrushSize();
+        BlockType fire = soulFire ? BlockTypes.SOUL_FIRE : BlockTypes.FIRE;
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 for (int y = brushSize; y >= -brushSize; y--) {
@@ -179,7 +208,7 @@ public class HeatRayBrush extends AbstractBrush {
                                     currentLocation.getBlockX(),
                                     currentLocation.getBlockY(),
                                     currentLocation.getBlockZ(),
-                                    BlockTypes.FIRE
+                                    fire
                             );
                             continue;
                         }
@@ -235,12 +264,12 @@ public class HeatRayBrush extends AbstractBrush {
                                     );
                                 }
                             } else if (fireDensity >= this.requiredFireDensity) {
-                                if (currentBlockType != BlockTypes.FIRE) {
+                                if (currentBlockType != fire) {
                                     setBlock(
                                             currentLocation.getBlockX(),
                                             currentLocation.getBlockY(),
                                             currentLocation.getBlockZ(),
-                                            BlockTypes.FIRE
+                                            fire
                                     );
                                 }
                             } else if (airDensity >= this.requiredAirDensity) {
@@ -263,9 +292,22 @@ public class HeatRayBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.brush.heat-ray.set-octaves", this.octaves))
-                .message(Caption.of("voxelsniper.brush.heat-ray.set-amplitude", this.amplitude))
-                .message(Caption.of("voxelsniper.brush.heat-ray.set-frequency", this.frequency))
+                .message(Caption.of(
+                        "voxelsniper.brush.heat-ray.set-soul-fire",
+                        VoxelSniperText.getStatus(this.soulFire)
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.heat-ray.set-octaves",
+                        this.octaves
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.heat-ray.set-amplitude",
+                        this.amplitude
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.heat-ray.set-frequency",
+                        this.frequency
+                ))
                 .send();
     }
 

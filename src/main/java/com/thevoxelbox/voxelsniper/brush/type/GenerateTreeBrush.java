@@ -1,5 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -7,19 +12,23 @@ import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSet;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
-import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
+@RequireToolkit
+@CommandMethod(value = "brush|b generate_tree|generatetree|gt")
+@CommandPermission("voxelsniper.brush.generatetree")
 public class GenerateTreeBrush extends AbstractBrush {
 
     private static final BlockType DEFAULT_LEAF_TYPE = BlockTypes.OAK_LEAVES;
@@ -43,14 +52,6 @@ public class GenerateTreeBrush extends AbstractBrush {
             .add(BlockTypes.WATER)
             .add(BlockTypes.SNOW)
             .build();
-
-    private static final List<String> LEAVES = BlockCategories.LEAVES.getAll().stream()
-            .map(leafType -> leafType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .toList();
-
-    private static final List<String> LOGS = BlockCategories.LOGS.getAll().stream()
-            .map(logType -> logType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .toList();
 
     // Tree variables.
     private final Random randGenerator = new Random();
@@ -97,212 +98,224 @@ public class GenerateTreeBrush extends AbstractBrush {
         this.nodeMax = getIntegerProperty("default-node-max", DEFAULT_NODE_MAX);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("default")) { // Default settings.
-                    // -------
-                    // Presets
-                    // -------
-                    resetValues();
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.reset"));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("lt")) { // Leaf Type
-                    BlockType leafType = BlockTypes.get(parameters[1]);
-                    if (leafType != null) {
-                        this.leafType = leafType;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-leaf-type", this.leafType.getId()));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.invalid-leaf-type", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("wt")) { // Wood Type
-                    BlockType woodType = BlockTypes.get(parameters[1]);
-                    if (woodType != null) {
-                        this.woodType = woodType;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-wood-type", this.woodType.getId()));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.invalid-wood-type", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("tt")) { // Tree Thickness
-                    Integer thickness = NumericParser.parseInteger(parameters[1]);
-                    if (thickness != null) {
-                        this.thickness = thickness;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-thickness", this.thickness));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("rf")) { // Root Float
-                    this.rootFloat = Boolean.parseBoolean(parameters[1]);
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-floating-roots", this.rootFloat));
-                } else if (firstParameter.equalsIgnoreCase("sh")) { // Starting Height
-                    Integer startHeight = NumericParser.parseInteger(parameters[1]);
-                    if (startHeight != null) {
-                        this.startHeight = startHeight;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-start-height", this.startHeight));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("rl")) { // Root Length
-                    Integer rootLength = NumericParser.parseInteger(parameters[1]);
-                    if (rootLength != null) {
-                        this.rootLength = rootLength;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-root-length", this.rootLength));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("ts")) { // Trunk Slope Chance
-                    Integer slopeChance = NumericParser.parseInteger(parameters[1]);
-                    if (slopeChance != null && slopeChance >= 0 && slopeChance <= 100) {
-                        this.slopeChance = slopeChance;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-trunk-slope", this.slopeChance));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("bl")) { // Branch Length
-                    Integer branchLenght = NumericParser.parseInteger(parameters[1]);
-                    if (branchLenght != null) {
-                        this.branchLength = branchLenght;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.generate-tree.set-branch-length", this.branchLength));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("minr")) { // Minimum Roots
-                    Integer minRoots = NumericParser.parseInteger(parameters[1]);
-                    if (minRoots != null) {
-                        this.minRoots = minRoots;
-                        if (this.minRoots > this.maxRoots) {
-                            this.minRoots = this.maxRoots;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.invalid-minimum-roots",
-                                    this.minRoots
-                            ));
-                        } else {
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.set-minimum-roots",
-                                    this.minRoots
-                            ));
-                        }
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("maxr")) { // Maximum Roots
-                    Integer maxRoots = NumericParser.parseInteger(parameters[1]);
-                    if (maxRoots != null) {
-                        this.maxRoots = maxRoots;
-                        if (this.minRoots > this.maxRoots) {
-                            this.maxRoots = this.minRoots;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.invalid-maximum-roots",
-                                    this.maxRoots
-                            ));
-                        } else {
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.set-maximum-roots",
-                                    this.maxRoots
-                            ));
-                        }
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("minh")) { // Height Minimum
-                    Integer heightMinimum = NumericParser.parseInteger(parameters[1]);
-                    if (heightMinimum != null) {
-                        this.heightMin = heightMinimum;
-                        if (this.heightMin > this.heightMax) {
-                            this.heightMin = this.heightMax;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.invalid-minimum-height",
-                                    this.heightMin
-                            ));
-                        } else {
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.set-minimum-height",
-                                    this.heightMin
-                            ));
-                        }
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("maxh")) { // Height Maximum
-                    Integer heightMaximum = NumericParser.parseInteger(parameters[1]);
-                    if (heightMaximum != null) {
-                        this.heightMax = heightMaximum;
-                        if (this.heightMin > this.heightMax) {
-                            this.heightMax = this.heightMin;
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.invalid-maximum-height",
-                                    this.heightMax
-                            ));
-                        } else {
-                            messenger.sendMessage(Caption.of(
-                                    "voxelsniper.brush.generate-tree.set-maximum-height",
-                                    this.heightMax
-                            ));
-                        }
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("minl")) { // Leaf Node Min Size
-                    Integer nodeMin = NumericParser.parseInteger(parameters[1]);
-                    if (nodeMin != null) {
-                        this.nodeMin = nodeMin;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.generate-tree.set-minimum-leaf-thickness",
-                                this.nodeMin
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("maxl")) { // Leaf Node Max Size
-                    Integer nodeMax = NumericParser.parseInteger(parameters[1]);
-                    if (nodeMax != null) {
-                        this.nodeMax = nodeMax;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.generate-tree.set-maximum-leaf-thickness",
-                                this.nodeMax
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of(
-                    "lt", "wt", "tt", "rf", "sh", "rl", "ts", "bl",
-                    "minr", "maxr", "minh", "maxh", "minl", "maxl", "default"
-            ), parameter, 0);
-        }
-        if (parameters.length == 2) {
-            String firstParameter = parameters[0];
-            String parameter = parameters[1];
-            if (firstParameter.equalsIgnoreCase("lt")) {
-                return super.sortCompletions(LEAVES.stream(), parameter, 1);
-            } else if (firstParameter.equalsIgnoreCase("wt")) {
-                return super.sortCompletions(LOGS.stream(), parameter, 1);
-            } else if (firstParameter.equalsIgnoreCase("rf")) {
-                return super.sortCompletions(Stream.of("true", "false"), parameter, 1);
-            }
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.generate-tree.info"));
+    }
+
+    @CommandMethod("default")
+    public void onBrushDefault(
+            final @NotNull Snipe snipe
+    ) {
+        this.resetValues();
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.reset"));
+    }
+
+    @CommandMethod("lt <leaf-type>")
+    public void onBrushLt(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("leaf-type") BlockType leafType
+    ) {
+        this.leafType = leafType;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-leaf-type",
+                this.leafType.getId()
+        ));
+    }
+
+    @CommandMethod("wt <wood-type>")
+    public void onBrushWt(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("wood-type") BlockType woodType
+    ) {
+        this.woodType = woodType;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-wood-type",
+                this.woodType.getId()
+        ));
+    }
+
+    @CommandMethod("tt <thickness>")
+    public void onBrushTt(
+            final @NotNull Snipe snipe,
+            final @Argument("thickness") @Range(min = "0") int thickness
+    ) {
+        this.thickness = thickness;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-thickness",
+                this.thickness
+        ));
+    }
+
+    @CommandMethod("rf <root-float>")
+    public void onBrushRf(
+            final @NotNull Snipe snipe,
+            final @Argument("root-float") @Liberal boolean rootFloat
+    ) {
+        this.rootFloat = rootFloat;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-floating-roots",
+                VoxelSniperText.getStatus(this.rootFloat)
+        ));
+    }
+
+    @CommandMethod("sh <start-height>")
+    public void onBrushSh(
+            final @NotNull Snipe snipe,
+            final @Argument("start-height") int startHeight
+    ) {
+        this.startHeight = startHeight;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-start-height",
+                this.startHeight
+        ));
+    }
+
+    @CommandMethod("rl <root-length>")
+    public void onBrushRl(
+            final @NotNull Snipe snipe,
+            final @Argument("root-length") @Range(min = "0") int rootLength
+    ) {
+        this.rootLength = rootLength;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-root-length",
+                this.rootLength
+        ));
+    }
+
+    @CommandMethod("ts <slope-chance>")
+    public void onBrushTs(
+            final @NotNull Snipe snipe,
+            final @Argument("slope-chance") @Range(min = "0", max = "100") int slopeChance
+    ) {
+        this.slopeChance = slopeChance;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-trunk-slope",
+                this.slopeChance
+        ));
+    }
+
+    @CommandMethod("bl <branch-length>")
+    public void onBrushBl(
+            final @NotNull Snipe snipe,
+            final @Argument("branch-length") @Range(min = "0") int branchLength
+    ) {
+        this.branchLength = branchLength;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-branch-length",
+                this.branchLength
+        ));
+    }
+
+    @CommandMethod("minr <min-roots>")
+    public void onBrushMinr(
+            final @NotNull Snipe snipe,
+            final @Argument("min-roots") @DynamicRange(min = "0", max = "maxRoots") int minRoots
+    ) {
+        this.minRoots = minRoots;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-minimum-roots",
+                this.minRoots
+        ));
+    }
+
+    @CommandMethod("maxr <max-roots>")
+    public void onBrushMaxr(
+            final @NotNull Snipe snipe,
+            final @Argument("max-roots") @DynamicRange(min = "minRoots") int maxRoots
+    ) {
+        this.maxRoots = maxRoots;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-maximum-roots",
+                this.maxRoots
+        ));
+    }
+
+    @CommandMethod("minh <height-min>")
+    public void onBrushMinh(
+            final @NotNull Snipe snipe,
+            final @Argument("height-min") @DynamicRange(min = "0", max = "heightMax") int heightMin
+    ) {
+        this.heightMin = heightMin;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-minimum-height",
+                this.heightMin
+        ));
+    }
+
+    @CommandMethod("maxh <height-max>")
+    public void onBrushMaxh(
+            final @NotNull Snipe snipe,
+            final @Argument("height-max") @DynamicRange(min = "heightMin") int heightMax
+    ) {
+        this.heightMax = heightMax;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-maximum-height",
+                this.heightMax
+        ));
+    }
+
+    @CommandMethod("minl <node-min>")
+    public void onBrushMinl(
+            final @NotNull Snipe snipe,
+            final @Argument("node-min") @DynamicRange(min = "0", max = "nodeMax") int nodeMin
+    ) {
+        this.nodeMin = nodeMin;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-minimum-leaf-thickness",
+                this.nodeMin
+        ));
+    }
+
+    @CommandMethod("maxl <node-max>")
+    public void onBrushMaxl(
+            final @NotNull Snipe snipe,
+            final @Argument("node-max") @DynamicRange(min = "nodeMin") int nodeMax
+    ) {
+        this.nodeMax = nodeMax;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.generate-tree.set-maximum-leaf-thickness",
+                this.nodeMax
+        ));
     }
 
     @Override
@@ -608,20 +621,62 @@ public class GenerateTreeBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-leaf-type", this.leafType.getId()))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-wood-type", this.woodType.getId()))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-thickness", this.thickness))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-floating-roots", this.rootFloat))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-start-height", this.startHeight))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-root-length", this.rootLength))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-trunk-slope", this.slopeChance))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-branch-length", this.branchLength))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-minimum-roots", this.minRoots))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-maximum-roots", this.maxRoots))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-minimum-height", this.heightMin))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-maximum-height", this.heightMax))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-minimum-leaf-thickness", this.nodeMin))
-                .message(Caption.of("voxelsniper.brush.generate-tree.set-maximum-leaf-thickness", this.nodeMax))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-leaf-type",
+                        this.leafType.getId()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-wood-type",
+                        this.woodType.getId()
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-thickness",
+                        this.thickness
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-floating-roots",
+                        this.rootFloat
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-start-height",
+                        this.startHeight
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-root-length",
+                        this.rootLength
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-trunk-slope",
+                        this.slopeChance
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-branch-length",
+                        this.branchLength
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-minimum-roots",
+                        this.minRoots
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-maximum-roots",
+                        this.maxRoots
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-minimum-height",
+                        this.heightMin
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-maximum-height",
+                        this.heightMax
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-minimum-leaf-thickness",
+                        this.nodeMin
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.generate-tree.set-maximum-leaf-thickness",
+                        this.nodeMax
+                ))
                 .send();
     }
 

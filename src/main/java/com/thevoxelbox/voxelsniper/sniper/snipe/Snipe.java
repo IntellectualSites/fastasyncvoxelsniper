@@ -61,4 +61,15 @@ public class Snipe {
         return this.brush;
     }
 
+    /**
+     * Return the brush as a specific type
+     *
+     * @param <T> the brush type
+     * @return the typed brush
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getTypedBrush() {
+        return (T) this.brush;
+    }
+
 }

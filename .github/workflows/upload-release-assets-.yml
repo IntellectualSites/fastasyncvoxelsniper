@@ -1,7 +1,7 @@
 name: Upload release assets
 on:
     release:
-        types: [published]
+        types: [published, prereleased]
 jobs:
     upload_asset:
         runs-on: ubuntu-latest
@@ -41,6 +41,6 @@ jobs:
                 game_endpoint: minecraft
                 token: ${{ secrets.CURSEFORGE_TOKEN }}
                 display_name: FastAsyncVoxelSniper ${{ github.event.release.tag_name }}
-                release_type: release
+                release_type: stable
                 changelog: "Click here to view changelog: https://github.com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${{ github.event.release.tag_name }}"
                 changelog_type: markdown

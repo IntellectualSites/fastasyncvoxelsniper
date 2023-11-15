@@ -1,16 +1,20 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b flat_ocean|flatocean|fo")
+@CommandPermission("voxelsniper.brush.flatocean")
 public class FlatOceanBrush extends AbstractBrush {
 
     private static final int DEFAULT_WATER_LEVEL = 29;
@@ -25,58 +29,56 @@ public class FlatOceanBrush extends AbstractBrush {
         this.floorLevel = getIntegerProperty("default-floor-level", DEFAULT_FLOOR_LEVEL);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.info"));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("yo")) {
-                    Integer newWaterLevel = NumericParser.parseInteger(parameters[1]);
-                    if (newWaterLevel != null) {
-                        if (newWaterLevel < this.floorLevel) {
-                            newWaterLevel = this.floorLevel + 1;
-                        }
-                        this.waterLevel = newWaterLevel;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.set-water-level", this.waterLevel));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("yl")) {
-                    EditSession editSession = getEditSession();
-                    Integer newFloorLevel = NumericParser.parseInteger(parameters[1]);
-                    if (newFloorLevel != null) {
-                        if (newFloorLevel > this.waterLevel) {
-                            newFloorLevel = this.waterLevel - 1;
-                            if (newFloorLevel <= editSession.getMinY()) {
-                                newFloorLevel = editSession.getMinY() + 1;
-                                this.waterLevel = editSession.getMinY() + 2;
-                            }
-                        }
-                        this.floorLevel = newFloorLevel;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.flat-ocean.set-ocean-level", this.floorLevel));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("yo", "yl"), parameter, 0);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.flat-ocean.info"));
+    }
+
+    @CommandMethod("yo <water-level>")
+    public void onBrushYo(
+            final @NotNull Snipe snipe,
+            final @Argument("water-level") int waterLevel
+    ) {
+        this.waterLevel = waterLevel < this.floorLevel ? this.floorLevel + 1 : waterLevel;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.flat-ocean.set-water-level",
+                this.waterLevel
+        ));
+    }
+
+    @CommandMethod("yl <floor-level>")
+    public void onBrushYl(
+            final @NotNull Snipe snipe,
+            final @Argument("floor-level") int floorLevel
+    ) {
+        int newFloorLevel = floorLevel;
+        if (newFloorLevel > this.waterLevel) {
+            EditSession editSession = this.getEditSession();
+            newFloorLevel = this.waterLevel - 1;
+
+            if (newFloorLevel <= editSession.getMinY()) {
+                newFloorLevel = editSession.getMinY() + 1;
+                this.waterLevel = editSession.getMinY() + 2;
+            }
         }
-        return super.handleCompletions(parameters, snipe);
+        this.floorLevel = newFloorLevel;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.flat-ocean.set-ocean-level",
+                this.floorLevel
+        ));
     }
 
     @Override
@@ -132,8 +134,14 @@ public class FlatOceanBrush extends AbstractBrush {
     public void sendInfo(Snipe snipe) {
         snipe.createMessageSender()
                 .brushNameMessage()
-                .message(Caption.of("voxelsniper.brush.flat-ocean.set-water-level", this.waterLevel))
-                .message(Caption.of("voxelsniper.brush.flat-ocean.set-ocean-level", this.floorLevel))
+                .message(Caption.of(
+                        "voxelsniper.brush.flat-ocean.set-water-level",
+                        this.waterLevel
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.flat-ocean.set-ocean-level",
+                        this.floorLevel
+                ))
                 .send();
     }
 

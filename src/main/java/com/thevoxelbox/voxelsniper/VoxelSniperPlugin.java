@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLConnection;
+import java.util.Comparator;
 
 public class VoxelSniperPlugin extends JavaPlugin {
 
@@ -59,6 +60,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
     private PerformerRegistry performerRegistry;
     private SniperRegistry sniperRegistry;
     private PatternParser patternParser;
+    private CommandRegistry commandRegistry;
     private double newVersion = 0;
     private double currentVersion = 0;
 
@@ -76,9 +78,10 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.sniperRegistry = new SniperRegistry();
         this.patternParser = new PatternParser(WorldEdit.getInstance());
         testRegistries();
+        this.commandRegistry = new CommandRegistry(this);
+        prepareCommands();
         loadCommands();
         loadListeners();
-        new FastAsyncVoxelSniper(this);
         // Enable metrics
         Metrics metrics = new Metrics(this, 6405);
         // Check if we are in a safe environment
@@ -150,10 +153,42 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return performerRegistry;
     }
 
+    private void testRegistries() {
+        // Load brushes and performers to ensure their configuration is up-to-date.
+        this.brushRegistry.getUniqueBrushesProperties().stream().sorted(Comparator.comparing(BrushProperties::getName))
+                .forEachOrdered(properties -> {
+                    Brush brush = properties.getCreator().create();
+                    brush.setProperties(properties);
+                    brush.loadProperties();
+                });
+        this.performerRegistry.getUniquePerformerProperties().stream().sorted(Comparator.comparing(PerformerProperties::getName))
+                .forEachOrdered(properties -> {
+                    Performer performer = properties.getCreator().create();
+                    performer.setProperties(properties);
+                    performer.loadProperties();
+                });
+    }
+
+    private void prepareCommands() {
+        try {
+            commandRegistry.initialize();
+        } catch (Exception e) {
+            LOGGER.warn("Unable to initialize the command system. FastAsyncVoxelSniper will be disabled!");
+            getServer().getPluginManager().disablePlugin(plugin);
+            throw new RuntimeException(e);
+        }
+    }
+
     private void loadCommands() {
-        CommandRegistry commandRegistry = new CommandRegistry(this);
-        CommandRegistrar commandRegistrar = new CommandRegistrar(this, commandRegistry);
-        commandRegistrar.registerCommands();
+        try {
+            CommandRegistrar commandRegistrar = new CommandRegistrar(this, commandRegistry);
+            commandRegistrar.registerSuggestionsAndParsers();
+            commandRegistrar.registerCommands();
+        } catch (Exception e) {
+            LOGGER.warn("Unable to register the commands. FastAsyncVoxelSniper will be disabled!");
+            getServer().getPluginManager().disablePlugin(plugin);
+            throw new RuntimeException(e);
+        }
     }
 
     private void loadListeners() {
@@ -167,22 +202,6 @@ public class VoxelSniperPlugin extends JavaPlugin {
         this.reloadConfig();
         this.voxelSniperConfig = loadConfig();
         testRegistries();
-    }
-
-    private void testRegistries() {
-        // Load brushes and performers to ensure their configuration is up-to-date.
-        this.brushRegistry.getBrushesProperties().keySet().stream().sorted().forEachOrdered(key -> {
-            BrushProperties properties = this.brushRegistry.getBrushProperties(key);
-            Brush brush = properties.getCreator().create();
-            brush.setProperties(properties);
-            brush.loadProperties();
-        });
-        this.performerRegistry.getPerformerProperties().keySet().stream().sorted().forEachOrdered(key -> {
-            PerformerProperties properties = this.performerRegistry.getPerformerProperties(key);
-            Performer performer = properties.getCreator().create();
-            performer.setProperties(properties);
-            performer.loadProperties();
-        });
     }
 
     /**
@@ -201,7 +220,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
      * @since 2.7.0
      */
     public TranslationManager getTranslationManager() {
-        return translationManager.getValue();
+        return this.translationManager.getValue();
     }
 
     /**
@@ -238,7 +257,17 @@ public class VoxelSniperPlugin extends JavaPlugin {
      * @since 2.6.0
      */
     public PatternParser getPatternParser() {
-        return patternParser;
+        return this.patternParser;
+    }
+
+    /**
+     * Return the command manager.
+     *
+     * @return the command manager
+     * @since 3.0.0
+     */
+    public CommandRegistry getCommandRegistry() {
+        return this.commandRegistry;
     }
 
     // Borrowed from Vault
@@ -254,7 +283,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
             final String response = reader.readLine();
             final JSONArray array = (JSONArray) JSONValue.parse(response);
 
-            if (array.size() == 0) {
+            if (array.isEmpty()) {
                 LOGGER.warn("No files found, or Feed URL is bad.");
                 return currentVersion;
             }

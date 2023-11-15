@@ -7,7 +7,6 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -42,16 +41,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Sniper {
-
-    private static final String DEFAULT_TOOLKIT_NAME = "default";
+public class Sniper implements SniperCommander {
 
     private final UUID uuid;
+    private Player player;
     private final List<Toolkit> toolkits = new ArrayList<>();
     private boolean enabled = true;
 
     public Sniper(UUID uuid) {
         this.uuid = uuid;
+        this.player = null;
+        Toolkit defaultToolkit = createDefaultToolkit();
+        this.toolkits.add(defaultToolkit);
+    }
+
+    /**
+     * Create a sniper from a player.
+     *
+     * @param player the player
+     * @since 3.0.0
+     */
+    public Sniper(Player player) {
+        this.uuid = player.getUniqueId();
+        this.player = player;
         Toolkit defaultToolkit = createDefaultToolkit();
         this.toolkits.add(defaultToolkit);
     }
@@ -64,11 +76,18 @@ public class Sniper {
     }
 
     public Player getPlayer() {
-        Player player = Bukkit.getPlayer(this.uuid);
+        if (player == null || !player.isValid()) {
+            player = Bukkit.getPlayer(this.uuid);
+        }
         if (player == null) {
             throw new UnknownSniperPlayerException();
         }
         return player;
+    }
+
+    @Override
+    public CommandSender getCommandSender() {
+        return getPlayer();
     }
 
     @Nullable
@@ -78,7 +97,7 @@ public class Sniper {
         ItemStack itemInHand = inventory.getItemInMainHand();
         ItemType itemType = BukkitAdapter.asItemType(itemInHand.getType());
         if (itemType == ItemTypes.AIR) {
-            return getToolkit(DEFAULT_TOOLKIT_NAME);
+            return getToolkit(Toolkit.DEFAULT_NAME);
         }
         return getToolkit(itemType);
     }
@@ -125,13 +144,11 @@ public class Sniper {
     ) {
         {
             switch (action) {
-                case LEFT_CLICK_AIR:
-                case LEFT_CLICK_BLOCK:
-                case RIGHT_CLICK_AIR:
-                case RIGHT_CLICK_BLOCK:
-                    break;
-                default:
+                case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK, RIGHT_CLICK_AIR, RIGHT_CLICK_BLOCK -> {
+                }
+                default -> {
                     return false;
+                }
             }
             if (toolkits.isEmpty()) {
                 return false;
@@ -151,7 +168,7 @@ public class Sniper {
             print(Caption.of("voxelsniper.sniper.missing-permission", permission));
             return false;
         }
-        BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
+        com.sk89q.worldedit.entity.Player wePlayer = BukkitAdapter.adapt(player);
         LocalSession session = wePlayer.getSession();
         QueueHandler queue = Fawe.instance().getQueueHandler();
         queue.async(() -> {
@@ -175,7 +192,7 @@ public class Sniper {
     }
 
     public synchronized boolean snipeOnCurrentThread(
-            com.sk89q.worldedit.entity.Player fp,
+            com.sk89q.worldedit.entity.Player wePlayer,
             Player player,
             Action action,
             @Nullable Block clickedBlock,
@@ -184,9 +201,9 @@ public class Sniper {
             ToolAction toolAction,
             BrushProperties currentBrushProperties
     ) {
-        LocalSession session = fp.getSession();
+        LocalSession session = wePlayer.getSession();
         synchronized (session) {
-            EditSession editSession = session.createEditSession(fp);
+            EditSession editSession = session.createEditSession(wePlayer);
 
             try {
                 ToolkitProperties toolkitProperties = toolkit.getProperties();
@@ -306,26 +323,27 @@ public class Sniper {
                 return false;
             } catch (Throwable t) {
                 t.printStackTrace();
+                print(Caption.of("voxelsniper.error.unexpected"));
                 return false;
             } finally {
                 session.remember(editSession);
                 editSession.flushQueue();
-                WorldEdit.getInstance().flushBlockBag(fp, editSession);
+                WorldEdit.getInstance().flushBlockBag(wePlayer, editSession);
             }
         }
     }
 
-    public void sendInfo(CommandSender sender, boolean prefix) {
+    public void sendInfo(boolean prefix) {
         Toolkit toolkit = getCurrentToolkit();
         if (toolkit == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit-none"));
+            print(Caption.of("voxelsniper.sniper.current-toolkit-none"), true);
             return;
         }
-        VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.current-toolkit", toolkit.getToolkitName()), prefix);
+        print(Caption.of("voxelsniper.sniper.current-toolkit", toolkit.getToolkitName()), prefix);
         BrushProperties brushProperties = toolkit.getCurrentBrushProperties();
         Brush brush = toolkit.getCurrentBrush();
         if (brush == null) {
-            VoxelSniperText.print(sender, Caption.of("voxelsniper.sniper.no-brush-selected", toolkit.getToolkitName()), false);
+            print(Caption.of("voxelsniper.sniper.no-brush-selected", toolkit.getToolkitName()), false);
             return;
         }
         ToolkitProperties toolkitProperties = toolkit.getProperties();
@@ -336,23 +354,7 @@ public class Sniper {
         }
     }
 
-    /**
-     * Sends a component to a sniper. This method adds the prefix and handle translations.
-     *
-     * @param component component
-     * @since 2.7.0
-     */
-    public void print(Component component) {
-        print(component, true);
-    }
-
-    /**
-     * Sends a component to a sniper. This method potentially adds the prefix and handle translations.
-     *
-     * @param component component
-     * @param prefix    prefix
-     * @since 2.7.0
-     */
+    @Override
     public void print(Component component, boolean prefix) {
         Player player = getPlayer();
         VoxelSniperText.print(player, component, prefix);

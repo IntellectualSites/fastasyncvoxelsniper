@@ -5,6 +5,9 @@ import com.thevoxelbox.voxelsniper.BrushRegistrar;
 import com.thevoxelbox.voxelsniper.brush.Brush;
 import com.thevoxelbox.voxelsniper.brush.property.BrushCreator;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import com.thevoxelbox.voxelsniper.performer.Performer;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerCreator;
+import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -13,6 +16,7 @@ import java.util.Map;
 
 public class Toolkit {
 
+    public static final String DEFAULT_NAME = "default";
     private static final BrushProperties DEFAULT_BRUSH_PROPERTIES = BrushRegistrar.DEFAULT_BRUSH_PROPERTIES;
 
     private final String toolkitName;
@@ -64,6 +68,17 @@ public class Toolkit {
         return brush;
     }
 
+    /**
+     * Use a performer. Initializes and returns it.
+     *
+     * @param properties the properties
+     * @return the performer
+     * @since 3.0.0
+     */
+    public Performer usePerformer(PerformerProperties properties) {
+        return createPerformer(properties);
+    }
+
     private Brush createBrush(BrushProperties properties) {
         BrushCreator creator = properties.getCreator();
         Brush brush = creator.create();
@@ -71,6 +86,14 @@ public class Toolkit {
         brush.loadProperties();
         this.brushes.put(properties, brush);
         return brush;
+    }
+
+    private Performer createPerformer(PerformerProperties properties) {
+        PerformerCreator performerCreator = properties.getCreator();
+        Performer performer = performerCreator.create();
+        performer.setProperties(properties);
+        performer.loadProperties();
+        return performer;
     }
 
     @Nullable
@@ -85,6 +108,15 @@ public class Toolkit {
 
     public String getToolkitName() {
         return this.toolkitName;
+    }
+
+    /**
+     * Return whether the toolkit is the default one or not.
+     *
+     * @return whether the toolkit is the default one or not
+     */
+    public boolean isDefault() {
+        return toolkitName.equals(DEFAULT_NAME);
     }
 
     public BrushProperties getCurrentBrushProperties() {
@@ -102,5 +134,6 @@ public class Toolkit {
     public ToolkitProperties getProperties() {
         return this.properties;
     }
+
 
 }

@@ -1,17 +1,25 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b rotation_2d|rotation2d|rot2d|rot2")
+@CommandPermission("voxelsniper.brush.rot2d")
 public class Rotation2DBrush extends AbstractBrush {
 
     private static final int DEFAULT_ANGLE = 0;
@@ -21,30 +29,35 @@ public class Rotation2DBrush extends AbstractBrush {
 
     private double angle = DEFAULT_ANGLE;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.rotation-2d.info", 180, DECIMAL_FORMAT.format(Math.PI)));
-        } else {
-            if (parameters.length == 1) {
-                Double degreesAngle = NumericParser.parseDouble(firstParameter);
-                if (degreesAngle != null) {
-                    this.angle = Math.toRadians(degreesAngle);
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.rotation-2d.set-angle",
-                            DECIMAL_FORMAT.format(this.angle),
-                            DECIMAL_FORMAT.format(degreesAngle)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", firstParameter));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.rotation-2d.info",
+                180, DECIMAL_FORMAT.format(Math.PI)
+        ));
+    }
+
+    @CommandMethod("<degrees-angle>")
+    public void onBrushDegreesangle(
+            final @NotNull Snipe snipe,
+            final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
+    ) {
+        this.angle = Math.toRadians(degreesAngle);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.rotation-2d.set-angle",
+                DECIMAL_FORMAT.format(this.angle),
+                DECIMAL_FORMAT.format(degreesAngle)
+        ));
     }
 
     @Override

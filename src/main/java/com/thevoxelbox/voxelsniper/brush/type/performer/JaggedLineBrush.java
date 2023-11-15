@@ -1,22 +1,29 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b jagged_line|jaggedline|jagged|j")
+@CommandPermission("voxelsniper.brush.jaggedline")
 public class JaggedLineBrush extends AbstractPerformerBrush {
 
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
@@ -46,61 +53,52 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         this.spread = getIntegerProperty("default-spread", DEFAULT_SPREAD);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of(
-                    "voxelsniper.performer-brush.jagged-line.info",
-                    getIntegerProperty("default-recursion", DEFAULT_RECURSION),
-                    this.recursionMin,
-                    this.recursionMax,
-                    getIntegerProperty("default-spread", DEFAULT_SPREAD)
-            ));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("r")) {
-                    Integer recursions = NumericParser.parseInteger(parameters[1]);
-                    if (recursions != null && recursions >= this.recursionMin && recursions <= this.recursionMax) {
-                        this.recursions = recursions;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.jagged-line.set-recursions",
-                                this.recursions
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
-                                recursionMin, recursionMax
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("s")) {
-                    Integer spread = NumericParser.parseInteger(parameters[1]);
-                    if (spread != null) {
-                        this.spread = spread;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.jagged-line.set-spread",
-                                this.spread
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("r", "s"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of(
+                "voxelsniper.performer-brush.jagged-line.info",
+                this.getIntegerProperty("default-recursion", DEFAULT_RECURSION),
+                this.recursionMin,
+                this.recursionMax,
+                this.getIntegerProperty("default-spread", DEFAULT_SPREAD)
+        ));
+    }
+
+    @CommandMethod("r <recursions>")
+    public void onBrushR(
+            final @NotNull Snipe snipe,
+            final @Argument("recursions") @DynamicRange(min = "recursionMin", max = "recursionMax") int recursions
+    ) {
+        this.recursions = recursions;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.jagged-line.set-recursions",
+                this.recursions
+        ));
+    }
+
+    @CommandMethod("s <spread>")
+    public void onBrushS(
+            final @NotNull Snipe snipe,
+            final @Argument("spread") @Range(min = "0") int spread
+    ) {
+        this.spread = spread;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.jagged-line.set-spread",
+                this.spread
+        ));
     }
 
     @Override
@@ -151,9 +149,9 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
             while (iterator.hasNext()) {
                 Block block = iterator.next();
                 for (int i = 0; i < this.recursions; i++) {
-                    int x = Math.round(block.getX() + this.random.nextInt(this.spread * 2) - this.spread);
-                    int y = Math.round(block.getY() + this.random.nextInt(this.spread * 2) - this.spread);
-                    int z = Math.round(block.getZ() + this.random.nextInt(this.spread * 2) - this.spread);
+                    int x = block.getX() + this.random.nextInt(this.spread * 2) - this.spread;
+                    int y = block.getY() + this.random.nextInt(this.spread * 2) - this.spread;
+                    int z = block.getZ() + this.random.nextInt(this.spread * 2) - this.spread;
                     this.performer.perform(getEditSession(), x, clampY(y), z, clampY(x, y, z));
                 }
             }

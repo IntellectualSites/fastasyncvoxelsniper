@@ -1,28 +1,29 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.Vectors;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Stream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b three_point_circle|threepointcircle|tpc")
+@CommandPermission("voxelsniper.brush.threepointcircle")
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
     private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
-
-    private static final List<String> TOLERANCES = Arrays.stream(Tolerance.values())
-            .map(Tolerance::getName)
-            .toList();
 
     @Nullable
     private Vector coordinatesOne;
@@ -38,55 +39,47 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         this.tolerance = (Tolerance) getEnumProperty("default-tolerance", Tolerance.class, DEFAULT_TOLERANCE);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.three-point-circle.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("list")) {
-                    messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
-                            Arrays.stream(Tolerance.values()).toList(),
-                            (tolerance, tolerance2) -> tolerance.getName().compareTo(tolerance2.getName()),
-                            Tolerance::getFullName,
-                            tolerance -> tolerance,
-                            this.tolerance,
-                            "voxelsniper.brush.three-point-circle"
-                    ));
-                } else {
-                    try {
-                        this.tolerance = Tolerance.valueOf(firstParameter.toUpperCase(Locale.ROOT));
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.three-point-circle.set-tolerance",
-                                this.tolerance.getFullName()
-                        ));
-                    } catch (IllegalArgumentException exception) {
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.performer-brush.three-point-circle.invalid-tolerance",
-                                firstParameter
-                        ));
-                    }
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(
-                    Stream.concat(
-                            TOLERANCES.stream(),
-                            Stream.of("list")
-                    ), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.three-point-circle.info"));
+    }
+
+    @CommandMethod("list")
+    public void onBrushList(
+            final @NotNull Snipe snipe
+    ) {
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
+                Arrays.stream(Tolerance.values()).toList(),
+                (tolerance, tolerance2) -> tolerance.getName().compareTo(tolerance2.getName()),
+                Tolerance::getFullName,
+                tolerance -> tolerance,
+                this.tolerance,
+                "voxelsniper.brush.three-point-circle"
+        ));
+    }
+
+    @CommandMethod("<tolerance>")
+    public void onBrushTolerance(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("tolerance") Tolerance tolerance
+    ) {
+        this.tolerance = tolerance;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.three-point-circle.set-tolerance",
+                this.tolerance.getFullName()
+        ));
     }
 
     @Override
@@ -214,7 +207,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
                 .send();
     }
 
-    private enum Tolerance {
+    public enum Tolerance {
 
         DEFAULT("default", 1000),
         ACCURATE("accurate", 10),

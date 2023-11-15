@@ -1,15 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b checker_voxel_disc|checkervoxeldisc|cvd")
+@CommandPermission("voxelsniper.brush.checkervoxeldisc")
 public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 
     private boolean useWorldCoordinates = true;
@@ -18,39 +24,32 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("true")) {
-                    this.useWorldCoordinates = true;
-                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
-                            ".set-using-world-coordinates", VoxelSniperText.getStatus(true)));
-                } else if (firstParameter.equalsIgnoreCase("false")) {
-                    this.useWorldCoordinates = false;
-                    messenger.sendMessage(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
-                            ".set-using-world-coordinates", VoxelSniperText.getStatus(false)));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("true", "false"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.checker-voxel-disc.info"));
+    }
+
+    @CommandMethod("<use-world-coordinates>")
+    public void onBrushUseworldcoordinates(
+            final @NotNull Snipe snipe,
+            final @Argument("use-world-coordinates") @Liberal boolean useWorldCoordinates
+    ) {
+        this.useWorldCoordinates = useWorldCoordinates;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.performer-brush.checker-voxel-disc.set-using-world-coordinates",
+                VoxelSniperText.getStatus(this.useWorldCoordinates)
+        ));
     }
 
     @Override
@@ -89,8 +88,10 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .brushSizeMessage()
-                .message(Caption.of("voxelsniper.performer-brush.checker-voxel-disc" +
-                        ".set-using-world-coordinates", VoxelSniperText.getStatus(this.useWorldCoordinates)))
+                .message(Caption.of(
+                        "voxelsniper.performer-brush.checker-voxel-disc.set-using-world-coordinates",
+                        VoxelSniperText.getStatus(this.useWorldCoordinates)
+                ))
                 .send();
     }
 

@@ -3,28 +3,16 @@ package com.thevoxelbox.voxelsniper.brush;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 
-import java.util.List;
-
-public interface Brush {
+public interface Brush extends VoxelCommandElement {
 
     /**
-     * Handles parameters passed to brushes.
-     *
-     * @param parameters Array of string containing parameters
-     * @param snipe      Snipe
+     * Load brush properties.
      */
-    void handleCommand(String[] parameters, Snipe snipe);
-
-    /**
-     * Handles parameters completers passed to brushes.
-     *
-     * @param parameters Array of string containing parameters
-     * @param snipe      Snipe
-     */
-    List<String> handleCompletions(String[] parameters, Snipe snipe);
+    void loadProperties();
 
     /**
      * Perform brush action.
@@ -71,10 +59,5 @@ public interface Brush {
      * @param properties brush properties
      */
     void setProperties(BrushProperties properties);
-
-    /**
-     * Load brush properties.
-     */
-    void loadProperties();
 
 }

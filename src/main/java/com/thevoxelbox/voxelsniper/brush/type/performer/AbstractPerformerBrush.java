@@ -4,13 +4,11 @@ import com.thevoxelbox.voxelsniper.PerformerRegistrar;
 import com.thevoxelbox.voxelsniper.brush.PerformerBrush;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
 import com.thevoxelbox.voxelsniper.performer.Performer;
-import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerCreator;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.performer.PerformerSnipe;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public abstract class AbstractPerformerBrush extends AbstractBrush implements PerformerBrush {
@@ -63,28 +61,6 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
     }
 
     @Override
-    public void handlePerformerCommand(String[] parameters, Snipe snipe, PerformerRegistry performerRegistry) {
-        String parameter = parameters[0];
-        PerformerProperties performerProperties = performerRegistry.getPerformerProperties(parameter);
-        if (performerProperties == null) {
-            super.handleCommand(parameters, snipe);
-            return;
-        }
-        this.performerProperties = performerProperties;
-        PerformerCreator performerCreator = this.performerProperties.getCreator();
-        this.performer = performerCreator.create();
-        this.performer.setProperties(this.performerProperties);
-        this.performer.loadProperties();
-        sendInfo(snipe);
-        PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
-        this.performer.sendInfo(performerSnipe);
-        if (parameters.length > 1) {
-            String[] additionalArguments = Arrays.copyOfRange(parameters, 1, parameters.length);
-            super.handleCommand(additionalArguments, snipe);
-        }
-    }
-
-    @Override
     public void initialize(Snipe snipe) {
         PerformerSnipe performerSnipe = new PerformerSnipe(snipe, this.performerProperties, this.performer);
         this.performer.initialize(performerSnipe);
@@ -96,8 +72,15 @@ public abstract class AbstractPerformerBrush extends AbstractBrush implements Pe
         this.performer.sendInfo(performerSnipe);
     }
 
+    @Override
     public Performer getPerformer() {
         return this.performer;
+    }
+
+    @Override
+    public void setPerformer(Performer performer) {
+        this.performer = performer;
+        this.performerProperties = performer.getProperties();
     }
 
 }

@@ -1,15 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b ruler|r")
+@CommandPermission("voxelsniper.brush.ruler")
 public class RulerBrush extends AbstractBrush {
 
     private static final int DEFAULT_X_OFFSET = 0;
@@ -23,46 +27,56 @@ public class RulerBrush extends AbstractBrush {
     private int yOffset = DEFAULT_Y_OFFSET;
     private int zOffset = DEFAULT_Z_OFFSET;
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("ruler")) {
-                    this.zOffset = 0;
-                    this.yOffset = 0;
-                    this.xOffset = 0;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.ruler-mode"));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 3) {
-                Integer xOffset = NumericParser.parseInteger(parameters[0]);
-                Integer yOffset = NumericParser.parseInteger(parameters[1]);
-                Integer zOffset = NumericParser.parseInteger(parameters[2]);
-                this.xOffset = xOffset == null ? 0 : xOffset;
-                this.yOffset = yOffset == null ? 0 : yOffset;
-                this.zOffset = zOffset == null ? 0 : zOffset;
-                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-x-offset", this.xOffset));
-                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-y-offset", this.yOffset));
-                messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.set-z-offset", this.zOffset));
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("ruler"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.ruler.info"));
+    }
+
+    @CommandMethod("ruler")
+    public void onBrushRuler(
+            final @NotNull Snipe snipe
+    ) {
+        this.xOffset = 0;
+        this.yOffset = 0;
+        this.zOffset = 0;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.ruler-mode"));
+    }
+
+    @CommandMethod("<x-offset> <y-offset> <z-offset>")
+    public void onBrushOffsets(
+            final @NotNull Snipe snipe,
+            final @Argument("x-offset") int xOffset,
+            final @Argument("y-offset") int yOffset,
+            final @Argument("z-offset") int zOffset
+    ) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        this.zOffset = zOffset;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.ruler.set-x-offset",
+                this.xOffset
+        ));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.ruler.set-y-offset",
+                this.yOffset
+        ));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.ruler.set-z-offset",
+                this.zOffset
+        ));
     }
 
     @Override
@@ -99,9 +113,9 @@ public class RulerBrush extends AbstractBrush {
                 .subtract(this.coordinates)
                 .length() * 100) / 100.0;
         double blockDistance = Math.round((Math.abs(Math.max(Math.max(
-                Math.abs(targetBlock.getX() - this.coordinates.getX()),
-                Math.abs(targetBlock.getY() - this.coordinates.getY())
-        ), Math.abs(targetBlock.getZ() - this.coordinates.getZ()))) + 1) * 100) / 100.0;
+                Math.abs((double) targetBlock.getX() - this.coordinates.getX()),
+                Math.abs((double) targetBlock.getY() - this.coordinates.getY())
+        ), Math.abs((double) targetBlock.getZ() - this.coordinates.getZ()))) + 1) * 100) / 100.0;
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.euclidean-distance", distance));
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.block-distance", blockDistance));
     }
@@ -111,9 +125,18 @@ public class RulerBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .patternMessage()
-                .message(Caption.of("voxelsniper.brush.ruler.set-x-offset", this.xOffset))
-                .message(Caption.of("voxelsniper.brush.ruler.set-y-offset", this.yOffset))
-                .message(Caption.of("voxelsniper.brush.ruler.set-z-offset", this.zOffset))
+                .message(Caption.of(
+                        "voxelsniper.brush.ruler.set-x-offset",
+                        this.xOffset
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.ruler.set-y-offset",
+                        this.yOffset
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.ruler.set-z-offset",
+                        this.zOffset
+                ))
                 .send();
     }
 

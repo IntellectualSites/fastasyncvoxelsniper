@@ -1,18 +1,23 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b scanner|sc")
+@CommandPermission("voxelsniper.brush.scanner")
 public class ScannerBrush extends AbstractBrush {
 
     private static final int DEPTH_MIN = 1;
@@ -34,39 +39,32 @@ public class ScannerBrush extends AbstractBrush {
         this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.info"));
-        } else {
-            if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("d")) {
-                    Integer depth = NumericParser.parseInteger(parameters[1]);
-                    if (depth != null) {
-                        this.depth = depth < this.depthMin ? this.depthMin : Math.min(depth, this.depthMax);
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.scanner.set-depth", this.depth));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("d"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.scanner.info"));
+    }
+
+    @CommandMethod("d <depth>")
+    public void onBrushD(
+            final @NotNull Snipe snipe,
+            final @Argument("depth") @DynamicRange(min = "depthMin", max = "depthMax") int depth
+    ) {
+        this.depth = depth;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.scanner.set-depth",
+                this.depth
+        ));
     }
 
     @Override
@@ -154,7 +152,10 @@ public class ScannerBrush extends AbstractBrush {
         snipe.createMessageSender()
                 .brushNameMessage()
                 .patternMessage()
-                .message(Caption.of("voxelsniper.brush.scanner.set-depth", this.depth))
+                .message(Caption.of(
+                        "voxelsniper.brush.scanner.set-depth",
+                        this.depth
+                ))
                 .send();
     }
 

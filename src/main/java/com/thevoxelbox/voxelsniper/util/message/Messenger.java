@@ -8,7 +8,7 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Collection;
 
 public class Messenger {
 
@@ -53,7 +53,7 @@ public class Messenger {
         sendMessage(Caption.of("voxelsniper.messenger.voxel-height", voxelHeight));
     }
 
-    public void sendVoxelListMessage(List<? extends BlockState> voxelList) {
+    public void sendVoxelListMessage(Collection<? extends BlockState> voxelList) {
         if (voxelList.isEmpty()) {
             sendMessage(Caption.of("voxelsniper.messenger.voxel.list-empty"));
             return;

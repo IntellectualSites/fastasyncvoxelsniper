@@ -1,22 +1,28 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Stream;
-
+@RequireToolkit
+@CommandMethod(value = "brush|b splatter_overlay|splatteroverlay|sover")
+@CommandPermission("voxelsniper.brush.splatteroverlay")
 public class SplatterOverlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
@@ -35,109 +41,127 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         this.yOffset = getIntegerProperty("default-y-offset", DEFAULT_Y_OFFSET);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.splatter-overlay.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("all")) {
-                    this.allBlocks = true;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.splatter-overlay.set-overlay-all",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("some")) {
-                    this.allBlocks = false;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.splatter-overlay.set-overlay-natural",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("randh")) {
-                    this.randomizeHeight = !this.randomizeHeight;
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.splatter-overlay.set-randomize-height",
-                            VoxelSniperText.getStatus(true)
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("d")) {
-                    Integer depth = NumericParser.parseInteger(parameters[1]);
-                    if (depth != null) {
-                        this.depth = depth < 1 ? 1 : depth;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.splatter-overlay.set-depth", this.depth));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("s")) {
-                    Integer seedPercent = NumericParser.parseInteger(parameters[1]);
-                    if (seedPercent != null && seedPercent >= super.seedPercentMin && seedPercent <= super.seedPercentMax) {
-                        this.seedPercent = seedPercent;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.splatter-overlay.set-seed-parcent",
-                                DECIMAL_FORMAT.format(this.seedPercent / 100)
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
-                                this.seedPercentMin, this.seedPercentMax
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("g")) {
-                    Integer growthPercent = NumericParser.parseInteger(parameters[1]);
-                    if (growthPercent != null && growthPercent >= super.growthPercentMin && growthPercent <= super.growthPercentMax) {
-                        this.growthPercent = growthPercent;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.splatter-overlay.set-growth-percent",
-                                DECIMAL_FORMAT.format(this.growthPercent / 100)
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
-                                this.growthPercentMin, this.growthPercentMax
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("r")) {
-                    Integer splatterRecursions = NumericParser.parseInteger(parameters[1]);
-                    if (splatterRecursions != null && splatterRecursions >= super.splatterRecursionsMin
-                            && splatterRecursions <= super.splatterRecursionsMax) {
-                        this.splatterRecursions = splatterRecursions;
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.splatter-overlay.set-splatter-recursions",
-                                this.splatterRecursions
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number-between", parameters[1],
-                                this.splatterRecursionsMin, this.splatterRecursionsMax
-                        ));
-                    }
-                } else if (firstParameter.equalsIgnoreCase("yoff")) {
-                    Integer yOffset = NumericParser.parseInteger(parameters[1]);
-                    if (yOffset != null) {
-                        this.yOffset = yOffset;
-                        messenger.sendMessage(Caption.of("voxelsniper.brush.splatter-overlay.set-y-offset", this.yOffset));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("all", "some", "d", "s", "g", "r", "randh", "yoff"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.splatter-overlay.info"));
+    }
+
+    @CommandMethod("all")
+    public void onBrushAll(
+            final @NotNull Snipe snipe
+    ) {
+        this.allBlocks = true;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-overlay-all",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("some")
+    public void onBrushSome(
+            final @NotNull Snipe snipe
+    ) {
+        this.allBlocks = false;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-overlay-natural",
+                VoxelSniperText.getStatus(true)
+        ));
+    }
+
+    @CommandMethod("randh")
+    public void onBrushRandh(
+            final @NotNull Snipe snipe
+    ) {
+        this.randomizeHeight = !this.randomizeHeight;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-randomize-height",
+                VoxelSniperText.getStatus(this.randomizeHeight)
+        ));
+    }
+
+    @CommandMethod("d <depth>")
+    public void onBrushD(
+            final @NotNull Snipe snipe,
+            final @Argument("depth") @Range(min = "1") int depth
+    ) {
+        this.depth = depth;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-depth",
+                this.depth
+        ));
+    }
+
+    @CommandMethod("s <seed-percent>")
+    public void onBrushS(
+            final @NotNull Snipe snipe,
+            final @Argument("seed-percent") @DynamicRange(min = "seedPercentMin", max = "seedPercentMax") int seedPercent
+    ) {
+        this.seedPercent = seedPercent;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-seed-percent",
+                DECIMAL_FORMAT.format(this.seedPercent / 100)
+        ));
+    }
+
+    @CommandMethod("g <growth-percent>")
+    public void onBrushG(
+            final @NotNull Snipe snipe,
+            final @Argument("growth-percent") @DynamicRange(min = "growthPercentMin", max = "growthPercentMax") int growthPercent
+    ) {
+        this.growthPercent = growthPercent;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-growth-percent",
+                DECIMAL_FORMAT.format(this.growthPercent / 100)
+        ));
+    }
+
+    @CommandMethod("r <splatter-recursions>")
+    public void onBrushR(
+            final @NotNull Snipe snipe,
+            final @Argument("splatter-recursions") @DynamicRange(min = "splatterRecursionsMin", max = "splatterRecursionsMax") int splatterRecursions
+    ) {
+        this.splatterRecursions = splatterRecursions;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-splatter-recursions",
+                this.splatterRecursions
+        ));
+    }
+
+    @CommandMethod("yoff <y-offset>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-offset") int yOffset
+    ) {
+        this.yOffset = yOffset;
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.splatter-overlay.set-y-offset",
+                this.yOffset
+        ));
     }
 
     @Override
@@ -412,7 +436,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                 ))
                 .message(Caption.of("voxelsniper.brush.splatter-overlay.set-depth", this.depth))
                 .message(Caption.of(
-                        "voxelsniper.brush.splatter-overlay.set-seed-parcent",
+                        "voxelsniper.brush.splatter-overlay.set-seed-percent",
                         DECIMAL_FORMAT.format(this.seedPercent / 100)
                 ))
                 .message(Caption.of(
@@ -423,7 +447,10 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                         "voxelsniper.brush.splatter-overlay.set-splatter-recursions",
                         this.splatterRecursions
                 ))
-                .message(Caption.of("voxelsniper.brush.splatter-overlay.set-y-offset", this.yOffset))
+                .message(Caption.of(
+                        "voxelsniper.brush.splatter-overlay.set-y-offset",
+                        this.yOffset
+                ))
                 .send();
     }
 

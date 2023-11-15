@@ -1,112 +1,82 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.extension.input.InputParseException;
-import com.sk89q.worldedit.extension.input.ParserContext;
-import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
-import com.thevoxelbox.voxelsniper.command.CommandExecutor;
-import com.thevoxelbox.voxelsniper.command.TabCompleter;
+import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.config.VoxelSniperConfig;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
-import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.BlockTracer;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.message.Messenger;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
-public class VoxelExecutor implements CommandExecutor, TabCompleter {
+@RequireToolkit
+@CommandMethod(value = "voxel|v|voxel_ink|voxelink|vi")
+@CommandDescription("Voxel input.")
+@CommandPermission("voxelsniper.sniper")
+public class VoxelExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
+    private final VoxelSniperConfig config;
 
     public VoxelExecutor(VoxelSniperPlugin plugin) {
         this.plugin = plugin;
+        this.config = plugin.getVoxelSniperConfig();
     }
 
-    @Override
-    public void executeCommand(CommandSender sender, String[] arguments) {
-        SniperRegistry sniperRegistry = this.plugin.getSniperRegistry();
-        Player player = (Player) sender;
-        Sniper sniper = sniperRegistry.registerAndGetSniper(player);
-        if (sniper == null) {
-            return;
-        }
-        Toolkit toolkit = sniper.getCurrentToolkit();
-        if (toolkit == null) {
-            return;
-        }
+    @CommandMethod("[pattern]")
+    public void onVoxel(
+            final @NotNull Sniper sniper,
+            final @NotNull Toolkit toolkit,
+            final @Nullable @Argument(value = "pattern", parserName = "pattern_parser") BrushPattern brushPattern
+    ) {
+        Player player = sniper.getPlayer();
         ToolkitProperties toolkitProperties = toolkit.getProperties();
-        if (toolkitProperties == null) {
-            return;
-        }
-        Messenger messenger = new Messenger(plugin, sender);
-        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-        List<String> liteSniperRestrictedPatterns = config.getLitesniperRestrictedMaterials();
-        if (arguments.length == 0) {
+
+        if (brushPattern == null) {
             BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
             BlockVector3 targetBlock = blockTracer.getTargetBlock();
             if (targetBlock != null) {
-                BlockType targetBlockType = BukkitAdapter.asBlockType(
+                BlockState targetBlockState = BukkitAdapter.adapt(
                         player.getWorld().getBlockAt(
                                 targetBlock.getX(),
                                 targetBlock.getY(),
                                 targetBlock.getZ()
-                        ).getType());
-
-                if (targetBlockType == null) {
-                    sniper.print(Caption.of("voxelsniper.command.invalid-block"));
+                        ).getBlockData());
+                if (targetBlockState == null) {
+                    sniper.print(Caption.of("voxelsniper.command.invalid-target-block"));
                     return;
                 }
-                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(
-                        targetBlockType.getResource())) {
+
+                BlockType targetBlockType = targetBlockState.getBlockType();
+                if (!player.hasPermission("voxelsniper.ignorelimitations") && config
+                        .getLitesniperRestrictedMaterials()
+                        .contains(targetBlockType.getResource())) {
                     sniper.print(Caption.of("voxelsniper.command.not-allowed", targetBlockType.getId()));
                     return;
                 }
 
-                toolkitProperties.setPattern(new BrushPattern(targetBlockType));
-                messenger.sendPatternMessage(toolkitProperties.getPattern());
+                toolkitProperties.setPattern(new BrushPattern(targetBlockState));
             }
         } else {
-            BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
-            ParserContext parserContext = new ParserContext();
-            parserContext.setSession(wePlayer.getSession());
-            parserContext.setWorld(wePlayer.getWorld());
-            parserContext.setActor(wePlayer);
-            parserContext.setRestricted(false);
-            try {
-                String argument = arguments[0].toLowerCase(Locale.ROOT);
-                Pattern pattern = plugin.getPatternParser().parseFromInput(argument, parserContext);
-
-                if (!sender.hasPermission("voxelsniper.ignorelimitations") && liteSniperRestrictedPatterns.contains(argument)) {
-                    sniper.print(Caption.of("voxelsniper.command.not-allowed", argument));
-                    return;
-                }
-
-                toolkitProperties.setPattern(new BrushPattern(pattern, argument));
-                messenger.sendPatternMessage(toolkitProperties.getPattern());
-            } catch (InputParseException e) {
-                sniper.print(Caption.of("voxelsniper.command.voxel-executor.invalid-pattern", arguments[0]));
-            }
+            toolkitProperties.setPattern(brushPattern);
         }
-    }
 
-    @Override
-    public List<String> complete(CommandSender sender, String[] arguments) {
-        if (arguments.length == 1) {
-            return plugin.getPatternParser().getSuggestions(arguments[0]);
-        }
-        return Collections.emptyList();
+        Messenger messenger = new Messenger(plugin, player);
+        messenger.sendPatternMessage(toolkitProperties.getPattern());
     }
 
 }

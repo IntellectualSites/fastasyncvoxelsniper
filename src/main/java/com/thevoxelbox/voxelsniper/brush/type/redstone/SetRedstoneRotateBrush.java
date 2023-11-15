@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -8,14 +10,26 @@ import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import com.thevoxelbox.voxelsniper.brush.type.AbstractBrush;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b set_redstone_rotate|setredstonerotatep|setrr")
+@CommandPermission("voxelsniper.brush.setredstonerotate")
 public class SetRedstoneRotateBrush extends AbstractBrush {
 
     @Nullable
     private BlockVector3 block;
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {

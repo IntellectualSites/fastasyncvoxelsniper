@@ -85,7 +85,13 @@ public class BrushPropertiesBuilder {
         if (this.creator == null) {
             throw new RuntimeException("Brush creator must be specified.");
         }
-        return new BrushProperties(this.name, this.permission, this.aliases, this.brushPatternType, this.creator);
+        return new BrushProperties(
+                this.name,
+                this.permission,
+                this.aliases,
+                this.brushPatternType,
+                this.creator
+        );
     }
 
 }

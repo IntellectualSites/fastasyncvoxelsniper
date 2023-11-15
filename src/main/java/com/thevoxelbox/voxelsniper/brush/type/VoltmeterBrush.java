@@ -1,5 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -7,14 +9,26 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.jetbrains.annotations.NotNull;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b voltmeter|volt")
+@CommandPermission("voxelsniper.brush.voltmeter")
 public class VoltmeterBrush extends AbstractBrush {
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {
@@ -36,7 +50,10 @@ public class VoltmeterBrush extends AbstractBrush {
             return;
         }
         int power = blockData.getState(powerProperty);
-        messenger.sendMessage(Caption.of("voxelsniper.brush.voltmeter.data", power));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.voltmeter.data",
+                power
+        ));
     }
 
     private void volt(Snipe snipe) {

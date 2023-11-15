@@ -1,15 +1,46 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
+import org.jetbrains.annotations.NotNull;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b canyon_selection|canyonselection|cas")
+@CommandPermission("voxelsniper.brush.canyonselection")
 public class CanyonSelectionBrush extends CanyonBrush {
 
     private boolean first = true;
     private int fx;
     private int fz;
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrush(snipe);
+    }
+
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfo(snipe);
+    }
+
+    @CommandMethod("y <y-level>")
+    public void onBrushY(
+            final @NotNull Snipe snipe,
+            final @Argument("y-level") @DynamicRange(min = "shiftLevelMin", max = "shiftLevelMax") int yLevel
+    ) {
+        super.onBrushY(snipe, yLevel);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {

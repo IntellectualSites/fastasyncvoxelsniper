@@ -1,15 +1,22 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b random_erode|randomerode|re")
+@CommandPermission("voxelsniper.brush.randomerode")
 public class RandomErodeBrush extends AbstractBrush {
 
     private static final double TRUE_CIRCLE = 0.5;
@@ -17,24 +24,31 @@ public class RandomErodeBrush extends AbstractBrush {
     private final Random generator = new Random();
     private BlockWrapper[][][] snap;
     private int brushSize;
-    private int erodeFace;
-    private int fillFace;
-    private int erodeRecursion;
-    private int fillRecursion;
+    private int erodeFaces;
+    private int fillFaces;
+    private int erodeRecursions;
+    private int fillRecursions;
+
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
     @Override
     public void handleArrowAction(Snipe snipe) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         this.snap = new BlockWrapper[0][0][0];
-        this.erodeFace = this.generator.nextInt(5) + 1;
-        this.fillFace = this.generator.nextInt(3) + 3;
-        this.erodeRecursion = this.generator.nextInt(3);
-        this.fillRecursion = this.generator.nextInt(3);
-        if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+        this.erodeFaces = this.generator.nextInt(5) + 1;
+        this.fillFaces = this.generator.nextInt(3) + 3;
+        this.erodeRecursions = this.generator.nextInt(3);
+        this.fillRecursions = this.generator.nextInt(3);
+        if (this.fillRecursions == 0 && this.erodeRecursions == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
             // chance to be zero though, for more interestingness -Gav
-            this.erodeRecursion = this.generator.nextInt(2) + 1;
-            this.fillRecursion = this.generator.nextInt(2) + 1;
+            this.erodeRecursions = this.generator.nextInt(2) + 1;
+            this.fillRecursions = this.generator.nextInt(2) + 1;
         }
         randomErosion(snipe);
     }
@@ -44,14 +58,14 @@ public class RandomErodeBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         this.brushSize = toolkitProperties.getBrushSize();
         this.snap = new BlockWrapper[0][0][0];
-        this.erodeFace = this.generator.nextInt(3) + 3;
-        this.fillFace = this.generator.nextInt(5) + 1;
-        this.erodeRecursion = this.generator.nextInt(3);
-        this.fillRecursion = this.generator.nextInt(3);
-        if (this.fillRecursion == 0 && this.erodeRecursion == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
+        this.erodeFaces = this.generator.nextInt(3) + 3;
+        this.fillFaces = this.generator.nextInt(5) + 1;
+        this.erodeRecursions = this.generator.nextInt(3);
+        this.fillRecursions = this.generator.nextInt(3);
+        if (this.fillRecursions == 0 && this.erodeRecursions == 0) { // if they are both zero, it will lead to a null pointer exception. Still want to give them a
             // chance to be zero though, for more interestingness -Gav
-            this.erodeRecursion = this.generator.nextInt(2) + 1;
-            this.fillRecursion = this.generator.nextInt(2) + 1;
+            this.erodeRecursions = this.generator.nextInt(2) + 1;
+            this.fillRecursions = this.generator.nextInt(2) + 1;
         }
         randomFilling(snipe);
     }
@@ -77,7 +91,7 @@ public class RandomErodeBrush extends AbstractBrush {
             if (!this.snap[x][y][z - 1].isSolid()) {
                 i++;
             }
-            return (i >= this.erodeFace);
+            return (i >= this.erodeFaces);
         } else {
             return false;
         }
@@ -118,7 +132,7 @@ public class RandomErodeBrush extends AbstractBrush {
                 this.snap[x][y][z].setType(getBlockType(block.getX(), block.getY(), block.getZ()));
                 d++;
             }
-            return (d >= this.fillFace);
+            return (d >= this.fillFaces);
         }
     }
 
@@ -147,8 +161,8 @@ public class RandomErodeBrush extends AbstractBrush {
 
     @SuppressWarnings("unused")
     private void randomErosion(Snipe snipe) {
-        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
-            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
+        if (this.erodeFaces >= 0 && this.erodeFaces <= 6) {
+            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursions; currentErodeRecursion++) {
                 getMatrix();
                 double brushSizeSquared = Math.pow(this.brushSize + TRUE_CIRCLE, 2);
                 for (int z = 1; z < this.snap.length - 1; z++) {
@@ -167,9 +181,9 @@ public class RandomErodeBrush extends AbstractBrush {
                 }
             }
         }
-        if (this.fillFace >= 0 && this.fillFace <= 6) {
+        if (this.fillFaces >= 0 && this.fillFaces <= 6) {
             double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
-            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++) {
+            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursions; currentFillRecursion++) {
                 this.getMatrix();
                 for (int z = 1; z < this.snap.length - 1; z++) {
                     double zSquared = Math.pow(z - (this.brushSize + 1), 2);
@@ -191,9 +205,9 @@ public class RandomErodeBrush extends AbstractBrush {
 
     @SuppressWarnings("unused")
     private void randomFilling(Snipe snipe) {
-        if (this.fillFace >= 0 && this.fillFace <= 6) {
+        if (this.fillFaces >= 0 && this.fillFaces <= 6) {
             double bSquared = Math.pow(this.brushSize + 0.5, 2);
-            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursion; currentFillRecursion++) {
+            for (int currentFillRecursion = 0; currentFillRecursion < this.fillRecursions; currentFillRecursion++) {
                 this.getMatrix();
                 for (int z = 1; z < this.snap.length - 1; z++) {
                     double zSquared = Math.pow(z - (this.brushSize + 1), 2);
@@ -211,9 +225,9 @@ public class RandomErodeBrush extends AbstractBrush {
                 }
             }
         }
-        if (this.erodeFace >= 0 && this.erodeFace <= 6) {
+        if (this.erodeFaces >= 0 && this.erodeFaces <= 6) {
             double bSquared = Math.pow(this.brushSize + TRUE_CIRCLE, 2);
-            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursion; currentErodeRecursion++) {
+            for (int currentErodeRecursion = 0; currentErodeRecursion < this.erodeRecursions; currentErodeRecursion++) {
                 this.getMatrix();
                 for (int z = 1; z < this.snap.length - 1; z++) {
                     double zSquared = Math.pow(z - (this.brushSize + 1), 2);

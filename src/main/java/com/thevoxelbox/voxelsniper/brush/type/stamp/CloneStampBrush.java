@@ -1,90 +1,95 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
-
-import java.util.List;
-import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set.
  */
+@RequireToolkit
+@CommandMethod(value = "brush|b clone_stamp|clonestamp|cs")
+@CommandPermission("voxelsniper.brush.clonestamp")
 public class CloneStampBrush extends AbstractStampBrush {
 
     private static final StampType DEFAULT_STAMP_TYPE = StampType.DEFAULT;
 
     @Override
     public void loadProperties() {
-        this.setStamp((StampType) getEnumProperty("default-stamp-type", StampType.class, DEFAULT_STAMP_TYPE));
+        this.stamp = ((StampType) getEnumProperty("default-stamp-type", StampType.class, DEFAULT_STAMP_TYPE));
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
+
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.clone-stamp.info"));
+    }
+
+    @CommandMethod("<stamp-type>")
+    public void onBrushStamptype(
+            final @NotNull Snipe snipe,
+            final @NotNull @Argument("stamp-type") StampType stampType
+    ) {
+        this.stamp = stampType;
+        this.reSort();
+
         SnipeMessenger messenger = snipe.createMessenger();
-        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        String firstParameter = parameters[0];
-
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.clone-stamp.info"));
-        } else {
-            if (parameters.length == 1) {
-                if (firstParameter.equalsIgnoreCase("a")) {
-                    setStamp(StampType.NO_AIR);
-                    reSort();
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.clone-stamp.set-stamp-type",
-                            StampType.NO_AIR.getFullName()
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("f")) {
-                    setStamp(StampType.FILL);
-                    reSort();
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.clone-stamp.set-stamp-type",
-                            StampType.FILL.getFullName()
-                    ));
-                } else if (firstParameter.equalsIgnoreCase("d")) {
-                    setStamp(StampType.DEFAULT);
-                    reSort();
-                    messenger.sendMessage(Caption.of(
-                            "voxelsniper.brush.clone-stamp.set-stamp-type",
-                            StampType.DEFAULT.getFullName()
-                    ));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else if (parameters.length == 2) {
-                if (firstParameter.equalsIgnoreCase("c")) {
-                    Integer cylinderCenter = NumericParser.parseInteger(parameters[1]);
-                    if (cylinderCenter != null) {
-                        toolkitProperties.setCylinderCenter(cylinderCenter);
-                        messenger.sendMessage(Caption.of(
-                                "voxelsniper.brush.clone-stamp.set-center",
-                                toolkitProperties.getCylinderCenter()
-                        ));
-                    } else {
-                        messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[1]));
-                    }
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters"));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.clone-stamp.set-stamp-type",
+                StampType.FILL.getFullName()
+        ));
     }
 
-    @Override
-    public List<String> handleCompletions(String[] parameters, Snipe snipe) {
-        if (parameters.length == 1) {
-            String parameter = parameters[0];
-            return super.sortCompletions(Stream.of("f", "a", "d", "c"), parameter, 0);
-        }
-        return super.handleCompletions(parameters, snipe);
+    @CommandMethod("a")
+    public void onBrushA(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushStamptype(snipe, StampType.NO_AIR);
+    }
+
+    @CommandMethod("f")
+    public void onBrushF(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushStamptype(snipe, StampType.FILL);
+    }
+
+    @CommandMethod("d")
+    public void onBrushD(
+            final @NotNull Snipe snipe
+    ) {
+        this.onBrushStamptype(snipe, StampType.DEFAULT);
+    }
+
+    @CommandMethod("c <center>")
+    public void onBrushC(
+            final @NotNull Snipe snipe,
+            final @Argument("center") int center
+    ) {
+        ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
+        toolkitProperties.setCylinderCenter(center);
+
+        SnipeMessenger messenger = snipe.createMessenger();
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.clone-stamp.set-center",
+                toolkitProperties.getCylinderCenter()
+        ));
     }
 
     @Override

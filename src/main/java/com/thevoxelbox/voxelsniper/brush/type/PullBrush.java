@@ -1,19 +1,26 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
-import com.thevoxelbox.voxelsniper.util.text.NumericParser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b pull")
+@CommandPermission("voxelsniper.brush.pull")
 public class PullBrush extends AbstractBrush {
 
     private static final int DEFAULT_PINCH = 1;
@@ -31,28 +38,38 @@ public class PullBrush extends AbstractBrush {
         this.bubble = getIntegerProperty("default-bubble", DEFAULT_BUBBLE);
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
+
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.pull.info"));
+    }
+
+    @CommandMethod("<pinch> <bubble>")
+    public void onBrushPinchbubble(
+            final @NotNull Snipe snipe,
+            final @Argument("pinch") double pinch,
+            final @Argument("bubble") double bubble
+    ) {
+        this.pinch = 1 - pinch;
+        this.bubble = bubble;
+
         SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.brush.pull.info"));
-        } else {
-            if (parameters.length == 1) {
-                Double pinch = NumericParser.parseDouble(firstParameter);
-                Double bubble = NumericParser.parseDouble(firstParameter);
-                if (pinch != null && bubble != null) {
-                    this.pinch = 1 - pinch;
-                    this.bubble = bubble;
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.pull.set-pinch", this.pinch));
-                    messenger.sendMessage(Caption.of("voxelsniper.brush.pull.set-bubble", this.bubble));
-                } else {
-                    messenger.sendMessage(Caption.of("voxelsniper.error.invalid-number", parameters[0]));
-                }
-            } else {
-                messenger.sendMessage(Caption.of("voxelsniper.error.brush.invalid-parameters-length"));
-            }
-        }
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.pull.set-pinch",
+                this.pinch
+        ));
+        messenger.sendMessage(Caption.of(
+                "voxelsniper.brush.pull.set-bubble",
+                this.bubble
+        ));
     }
 
     @Override
@@ -234,8 +251,14 @@ public class PullBrush extends AbstractBrush {
                 .brushNameMessage()
                 .brushSizeMessage()
                 .voxelHeightMessage()
-                .message(Caption.of("voxelsniper.brush.pull.set-pinch", -this.pinch + 1))
-                .message(Caption.of("voxelsniper.brush.pull.set-bubble", this.bubble))
+                .message(Caption.of(
+                        "voxelsniper.brush.pull.set-pinch",
+                        -this.pinch + 1
+                ))
+                .message(Caption.of(
+                        "voxelsniper.brush.pull.set-bubble",
+                        this.bubble
+                ))
                 .send();
     }
 

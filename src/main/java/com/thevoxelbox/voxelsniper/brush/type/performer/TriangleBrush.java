@@ -1,14 +1,21 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
 import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import com.thevoxelbox.voxelsniper.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
+@RequireToolkit
+@CommandMethod(value = "brush|b triangle|tri")
+@CommandPermission("voxelsniper.brush.triangle")
 public class TriangleBrush extends AbstractPerformerBrush {
 
     private final double[] coordinatesOne = new double[3]; // Three corners
@@ -25,14 +32,18 @@ public class TriangleBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @Override
-    public void handleCommand(String[] parameters, Snipe snipe) {
-        SnipeMessenger messenger = snipe.createMessenger();
-        String firstParameter = parameters[0];
+    @CommandMethod("")
+    public void onBrush(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushCommand(snipe);
+    }
 
-        if (firstParameter.equalsIgnoreCase("info")) {
-            messenger.sendMessage(Caption.of("voxelsniper.performer-brush.triangle.info"));
-        }
+    @CommandMethod("info")
+    public void onBrushInfo(
+            final @NotNull Snipe snipe
+    ) {
+        super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.triangle.info"));
     }
 
     @Override
