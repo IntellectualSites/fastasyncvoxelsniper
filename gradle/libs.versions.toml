@@ -9,7 +9,7 @@ cloud = "1.8.4"
 shadow = "8.1.1"
 pluginyml = "0.6.0"
 nexus = "1.3.0"
-minotaur = "2.8.4"
+minotaur = "2.8.5"
 hangar = "0.1.0"
 
 [libraries]
