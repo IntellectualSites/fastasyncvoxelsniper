@@ -23,7 +23,7 @@ jobs:
                   HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
             - name: Upload Release Assets
               if: always()
-              uses: AButler/upload-release-assets@v2.0
+              uses: AButler/upload-release-assets@v3.0
               with:
                   files: 'build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar'
                   repo-token: ${{ secrets.GITHUB_TOKEN }}

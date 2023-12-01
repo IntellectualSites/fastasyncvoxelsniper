@@ -56,7 +56,7 @@ jobs:
                   target-branch: main
             - name: Publish to GitHub actions
               if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-              uses: AButler/upload-release-assets@v2.0
+              uses: AButler/upload-release-assets@v3.0
               with:
                   files: build/libs/fastasyncvoxelsniper-${{ github.event.release.tag_name }}.jar
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
