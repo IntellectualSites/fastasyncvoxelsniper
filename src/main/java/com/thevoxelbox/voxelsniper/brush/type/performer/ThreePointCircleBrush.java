@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b three_point_circle|threepointcircle|tpc")
-@CommandPermission("voxelsniper.brush.threepointcircle")
+@Command(value = "brush|b three_point_circle|threepointcircle|tpc")
+@Permission("voxelsniper.brush.threepointcircle")
 public class ThreePointCircleBrush extends AbstractPerformerBrush {
 
     private static final Tolerance DEFAULT_TOLERANCE = Tolerance.DEFAULT;
@@ -39,21 +39,21 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         this.tolerance = (Tolerance) getEnumProperty("default-tolerance", Tolerance.class, DEFAULT_TOLERANCE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.three-point-circle.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -68,7 +68,7 @@ public class ThreePointCircleBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("<tolerance>")
+    @Command("<tolerance>")
     public void onBrushTolerance(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("tolerance") Tolerance tolerance

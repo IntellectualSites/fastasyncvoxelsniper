@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
@@ -14,25 +14,25 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b splatter_voxel_disc|splattervoxeldisc|svd")
-@CommandPermission("voxelsniper.brush.splattervoxel")
+@Command(value = "brush|b splatter_voxel_disc|splattervoxeldisc|svd")
+@Permission("voxelsniper.brush.splattervoxel")
 public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.splatter-voxel-disc.info"));
     }
 
-    @CommandMethod("s <seed-percent>")
+    @Command("s <seed-percent>")
     public void onBrushS(
             final @NotNull Snipe snipe,
             final @Argument("seed-percent") @DynamicRange(min = "seedPercentMin", max = "seedPercentMax") int seedPercent
@@ -46,7 +46,7 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("g <growth-percent>")
+    @Command("g <growth-percent>")
     public void onBrushG(
             final @NotNull Snipe snipe,
             final @Argument("growth-percent") @DynamicRange(min = "growthPercentMin", max = "growthPercentMax") int growthPercent
@@ -60,7 +60,7 @@ public class SplatterVoxelDiscBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("r <splatter-recursions>")
+    @Command("r <splatter-recursions>")
     public void onBrushR(
             final @NotNull Snipe snipe,
             final @Argument("splatter-recursions") @DynamicRange(min = "splatterRecursionsMin", max = "splatterRecursionsMax") int splatterRecursions

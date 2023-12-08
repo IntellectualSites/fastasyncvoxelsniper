@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -18,8 +18,8 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b rotation_2d|rotation2d|rot2d|rot2")
-@CommandPermission("voxelsniper.brush.rot2d")
+@Command(value = "brush|b rotation_2d|rotation2d|rot2d|rot2")
+@Permission("voxelsniper.brush.rot2d")
 public class Rotation2DBrush extends AbstractBrush {
 
     private static final int DEFAULT_ANGLE = 0;
@@ -29,14 +29,14 @@ public class Rotation2DBrush extends AbstractBrush {
 
     private double angle = DEFAULT_ANGLE;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -45,7 +45,7 @@ public class Rotation2DBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<degrees-angle>")
+    @Command("<degrees-angle>")
     public void onBrushDegreesangle(
             final @NotNull Snipe snipe,
             final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle

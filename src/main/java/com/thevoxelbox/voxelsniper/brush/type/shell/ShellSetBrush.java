@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b shell_set|shellset|shs")
-@CommandPermission("voxelsniper.brush.shellset")
+@Command(value = "brush|b shell_set|shellset|shs")
+@Permission("voxelsniper.brush.shellset")
 public class ShellSetBrush extends AbstractBrush {
 
     private static final int MAX_SIZE = 5000000;
@@ -35,7 +35,7 @@ public class ShellSetBrush extends AbstractBrush {
         this.maxSize = getIntegerProperty("max-size", MAX_SIZE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

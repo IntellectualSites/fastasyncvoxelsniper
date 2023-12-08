@@ -1,14 +1,14 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.sk89q.worldedit.world.entity.EntityType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.stream.Stream;
 
 public class EntityTypeArgument extends AbstractRegistryArgument<EntityType> {
 
@@ -23,13 +23,13 @@ public class EntityTypeArgument extends AbstractRegistryArgument<EntityType> {
     }
 
     @Suggestions("entity-type_suggestions")
-    public List<String> suggestEntityTypes(CommandContext<SniperCommander> commandContext, String input) {
+    public Stream<String> suggestEntityTypes(CommandContext<SniperCommander> commandContext, String input) {
         return super.suggestValues(commandContext, input);
     }
 
     @Parser(suggestions = "entity-type_suggestions")
-    public EntityType parseEntityType(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        return super.parseValue(commandContext, inputQueue);
+    public EntityType parseEntityType(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        return super.parseValue(commandContext, commandInput);
     }
 
 }

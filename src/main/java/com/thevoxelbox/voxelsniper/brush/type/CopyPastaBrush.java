@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -14,8 +14,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b copy_pasta|copypasta|cp")
-@CommandPermission("voxelsniper.brush.copypasta")
+@Command(value = "brush|b copy_pasta|copypasta|cp")
+@Permission("voxelsniper.brush.copypasta")
 public class CopyPastaBrush extends AbstractBrush {
 
     private static final int BLOCK_LIMIT = 10000;
@@ -38,21 +38,21 @@ public class CopyPastaBrush extends AbstractBrush {
         this.blockLimit = getIntegerProperty("block-limit", BLOCK_LIMIT);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.copy-pasta.info"));
     }
 
-    @CommandMethod("air")
+    @Command("air")
     public void onBrushAir(
             final @NotNull Snipe snipe
     ) {
@@ -75,28 +75,28 @@ public class CopyPastaBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("0")
+    @Command("0")
     public void onBrush0(
             final @NotNull Snipe snipe
     ) {
         this.onBrushPivotCommand(snipe, 0);
     }
 
-    @CommandMethod("90")
+    @Command("90")
     public void onBrush90(
             final @NotNull Snipe snipe
     ) {
         this.onBrushPivotCommand(snipe, 90);
     }
 
-    @CommandMethod("180")
+    @Command("180")
     public void onBrush180(
             final @NotNull Snipe snipe
     ) {
         this.onBrushPivotCommand(snipe, 180);
     }
 
-    @CommandMethod("270")
+    @Command("270")
     public void onBrush270(
             final @NotNull Snipe snipe
     ) {

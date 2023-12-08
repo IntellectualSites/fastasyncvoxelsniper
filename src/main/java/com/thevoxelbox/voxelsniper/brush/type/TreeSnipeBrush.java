@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b tree_snipe|treesnipe|tree|t")
-@CommandPermission("voxelsniper.brush.treesnipe")
+@Command(value = "brush|b tree_snipe|treesnipe|tree|t")
+@Permission("voxelsniper.brush.treesnipe")
 public class TreeSnipeBrush extends AbstractBrush {
 
     private static final TreeGenerator.TreeType DEFAULT_TREE_TYPE = TreeGenerator.TreeType.TREE;
@@ -36,21 +36,21 @@ public class TreeSnipeBrush extends AbstractBrush {
         );
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.tree-snipe.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -65,7 +65,7 @@ public class TreeSnipeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<tree-type>")
+    @Command("<tree-type>")
     public void onBrushTreetype(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("tree-type") TreeGenerator.TreeType treeType

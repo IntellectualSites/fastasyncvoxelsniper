@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.canyon;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -16,8 +16,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b canyon|ca")
-@CommandPermission("voxelsniper.brush.canyon")
+@Command(value = "brush|b canyon|ca")
+@Permission("voxelsniper.brush.canyon")
 public class CanyonBrush extends AbstractBrush {
 
     private static final int SHIFT_LEVEL_MIN = -54;
@@ -38,21 +38,21 @@ public class CanyonBrush extends AbstractBrush {
         this.yLevel = getIntegerProperty("default-y-level", DEFAULT_Y_LEVEL);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.canyon.info"));
     }
 
-    @CommandMethod("y <y-level>")
+    @Command("y <y-level>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("y-level") @DynamicRange(min = "shiftLevelMin", max = "shiftLevelMax") int yLevel

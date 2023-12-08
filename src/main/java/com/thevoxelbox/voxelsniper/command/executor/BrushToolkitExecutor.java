@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.world.item.ItemType;
@@ -18,9 +18,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
-@CommandMethod(value = "brush_toolkit|brushtoolkit|btool")
+@Command(value = "brush_toolkit|brushtoolkit|btool")
 @CommandDescription("Brush toolkit.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class BrushToolkitExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -29,10 +29,10 @@ public class BrushToolkitExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("assign <action> <toolkit-name>")
+    @Command("assign <action> <toolkit-name>")
     public void onBrushToolkitAssign(
             final @NotNull Sniper sniper,
-            final @NotNull @Argument("action") ToolAction action,
+            final @NotNull ToolAction action,
             final @NotNull @Argument("toolkit-name") String name
     ) {
         Player player = sniper.getPlayer();
@@ -60,10 +60,10 @@ public class BrushToolkitExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod("remove <toolkit>")
+    @Command("remove <toolkit>")
     public void onBrushToolkitRemove(
             final @NotNull Sniper sniper,
-            final @NotNull @Argument("toolkit") Toolkit toolkit
+            final @NotNull Toolkit toolkit
     ) {
         if (toolkit.isDefault()) {
             sniper.print(Caption.of("voxelsniper.command.toolkit.default-tool"));
@@ -74,7 +74,7 @@ public class BrushToolkitExecutor implements VoxelCommandElement {
         sniper.print(Caption.of("voxelsniper.command.toolkit.removed", toolkit.getToolkitName()));
     }
 
-    @CommandMethod("remove")
+    @Command("remove")
     public void onBrushToolkitRemove(
             final @NotNull Sniper sniper
     ) {

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.shell;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -14,11 +14,11 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b shell_voxel|shellvoxel|shv")
-@CommandPermission("voxelsniper.brush.shellvoxel")
+@Command(value = "brush|b shell_voxel|shellvoxel|shv")
+@Permission("voxelsniper.brush.shellvoxel")
 public class ShellVoxelBrush extends AbstractBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

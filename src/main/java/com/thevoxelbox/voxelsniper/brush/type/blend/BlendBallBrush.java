@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.blend;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -18,25 +18,25 @@ import java.util.Map;
 import java.util.Set;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b blend_ball|blendball|bb")
-@CommandPermission("voxelsniper.brush.blendball")
+@Command(value = "brush|b blend_ball|blendball|bb")
+@Permission("voxelsniper.brush.blendball")
 public class BlendBallBrush extends AbstractBlendBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.blend-ball.info"));
     }
 
-    @CommandMethod("water")
+    @Command("water")
     public void onBrushWater(
             final @NotNull Snipe snipe
     ) {

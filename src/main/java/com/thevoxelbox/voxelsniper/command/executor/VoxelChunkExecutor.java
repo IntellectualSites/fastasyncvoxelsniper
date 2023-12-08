@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
@@ -12,9 +12,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@CommandMethod(value = "voxel_chunk|voxelchunk|vchunk")
+@Command(value = "voxel_chunk|voxelchunk|vchunk")
 @CommandDescription("Update the chunk you are standing in.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelChunkExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -23,7 +23,7 @@ public class VoxelChunkExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onVoxelChunk(
             final @NotNull Sniper sniper
     ) {

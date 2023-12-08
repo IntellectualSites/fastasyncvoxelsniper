@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -18,8 +18,8 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b rotation_3d|rotation3d|rot3d|rot3")
-@CommandPermission("voxelsniper.brush.rot3d")
+@Command(value = "brush|b rotation_3d|rotation3d|rot3d|rot3")
+@Permission("voxelsniper.brush.rot3d")
 public class Rotation3DBrush extends AbstractBrush {
 
     private static final int DEFAULT_SE_YAW = 0;
@@ -33,14 +33,14 @@ public class Rotation3DBrush extends AbstractBrush {
     private double sePitch = DEFAULT_SE_PITCH;
     private double seRoll = DEFAULT_SE_ROLL;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -49,7 +49,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("p <degrees-angle>")
+    @Command("p <degrees-angle>")
     public void onBrushP(
             final @NotNull Snipe snipe,
             final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
@@ -64,7 +64,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("r <degrees-angle>")
+    @Command("r <degrees-angle>")
     public void onBrushR(
             final @NotNull Snipe snipe,
             final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle
@@ -79,7 +79,7 @@ public class Rotation3DBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("y <degrees-angle>")
+    @Command("y <degrees-angle>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle

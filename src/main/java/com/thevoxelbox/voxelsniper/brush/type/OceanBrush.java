@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -22,8 +22,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b ocean|o")
-@CommandPermission("voxelsniper.brush.ocean")
+@Command(value = "brush|b ocean|o")
+@Permission("voxelsniper.brush.ocean")
 public class OceanBrush extends AbstractBrush {
 
     private static final int WATER_LEVEL_MIN = 12;
@@ -63,21 +63,21 @@ public class OceanBrush extends AbstractBrush {
         this.waterLevel = getIntegerProperty("default-water-lever", DEFAULT_WATER_LEVEL);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.ocean.info"));
     }
 
-    @CommandMethod("wlevel <water-level>")
+    @Command("wlevel <water-level>")
     public void onBrushWlevel(
             final @NotNull Snipe snipe,
             final @Argument("water-level") @DynamicRange(min = "waterLevelMin") int waterLevel
@@ -91,7 +91,7 @@ public class OceanBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("cfloor <cover-floor>")
+    @Command("cfloor <cover-floor>")
     public void onBrushCfloor(
             final @NotNull Snipe snipe,
             final @Argument("cover-floor") @Liberal boolean coverFloor

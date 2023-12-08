@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.rotation;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 // The X Y and Z variable names in this file do NOT MAKE ANY SENSE. Do not attempt to actually figure out what on earth is going on here. Just go to the
 // original 2d horizontal brush if you wish to make anything similar to this, and start there. I didn't bother renaming everything.
 @RequireToolkit
-@CommandMethod(value = "brush|b rotation_2d_vert|rotation2dvert|rot2dv|rot2v")
-@CommandPermission("voxelsniper.brush.rot2dvert")
+@Command(value = "brush|b rotation_2d_vert|rotation2dvert|rot2dv|rot2v")
+@Permission("voxelsniper.brush.rot2dvert")
 public class Rotation2DVerticalBrush extends AbstractBrush {
 
     private static final int DEFAULT_ANGLE = 0;
@@ -31,14 +31,14 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
 
     private double angle = DEFAULT_ANGLE;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -47,7 +47,7 @@ public class Rotation2DVerticalBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<degrees-angle>")
+    @Command("<degrees-angle>")
     public void onBrushDegreesangle(
             final @NotNull Snipe snipe,
             final @Argument("degrees-angle") @Range(min = "0", max = "360") int degreesAngle

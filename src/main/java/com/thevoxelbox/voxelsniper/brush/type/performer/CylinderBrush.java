@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -15,8 +15,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b cylinder|c")
-@CommandPermission("voxelsniper.brush.cylinder")
+@Command(value = "brush|b cylinder|c")
+@Permission("voxelsniper.brush.cylinder")
 public class CylinderBrush extends AbstractPerformerBrush {
 
     private boolean trueCircle;
@@ -25,21 +25,21 @@ public class CylinderBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.cylinder.info"));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle
@@ -53,7 +53,7 @@ public class CylinderBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("h <height>")
+    @Command("h <height>")
     public void onBrushH(
             final @NotNull Snipe snipe,
             final @Argument("height") int height
@@ -68,7 +68,7 @@ public class CylinderBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("c <center>")
+    @Command("c <center>")
     public void onBrushC(
             final @NotNull Snipe snipe,
             final @Argument("center") int center

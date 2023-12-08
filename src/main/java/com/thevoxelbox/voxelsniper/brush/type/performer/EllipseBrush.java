@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -15,8 +15,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b ellipse|el")
-@CommandPermission("voxelsniper.brush.ellipse")
+@Command(value = "brush|b ellipse|el")
+@Permission("voxelsniper.brush.ellipse")
 public class EllipseBrush extends AbstractPerformerBrush {
 
     private static final double TWO_PI = (2 * Math.PI);
@@ -53,21 +53,21 @@ public class EllipseBrush extends AbstractPerformerBrush {
         this.steps = getIntegerProperty("default-steps", DEFAULT_STEPS);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ellipse.info"));
     }
 
-    @CommandMethod("fill")
+    @Command("fill")
     public void onBrushFill(
             final @NotNull Snipe snipe
     ) {
@@ -80,7 +80,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("x <x-scl>")
+    @Command("x <x-scl>")
     public void onBrushX(
             final @NotNull Snipe snipe,
             final @Argument("x-scl") @DynamicRange(min = "sclMin", max = "sclMax") int xscl
@@ -94,7 +94,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("y <y-scl>")
+    @Command("y <y-scl>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("y-scl") @DynamicRange(min = "sclMin", max = "sclMax") int yscl
@@ -108,7 +108,7 @@ public class EllipseBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("t <steps>")
+    @Command("t <steps>")
     public void onBrushT(
             final @NotNull Snipe snipe,
             final @Argument("steps") @DynamicRange(min = "stepsMin", max = "stepsMax") int steps

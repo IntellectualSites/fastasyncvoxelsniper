@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.brush.type.blend.BlendBallBrush;
@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolAction;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b erode_blend|erode_blend_ball|erodeblend|erodeblendball|eb")
-@CommandPermission("voxelsniper.brush.erodeblend")
+@Command(value = "brush|b erode_blend|erode_blend_ball|erodeblend|erodeblendball|eb")
+@Permission("voxelsniper.brush.erodeblend")
 public class ErodeBlendBrush extends AbstractBrush {
 
     private final BlendBallBrush blendBall;
@@ -25,7 +25,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode = new ErodeBrush();
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
@@ -33,7 +33,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrush(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -41,14 +41,14 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrushInfo(snipe);
     }
 
-    @CommandMethod("water")
+    @Command("water")
     public void onBrushWater(
             final @NotNull Snipe snipe
     ) {
         this.blendBall.onBrushWater(snipe);
     }
 
-    @CommandMethod("<preset>")
+    @Command("<preset>")
     public void onBrushPreset(
             final @NotNull Snipe snipe,
 
@@ -57,7 +57,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrushPreset(snipe, preset);
     }
 
-    @CommandMethod("e <erosion-faces>")
+    @Command("e <erosion-faces>")
     public void onBrushErosionfaces(
             final @NotNull Snipe snipe,
             final @Argument("erosion-faces") @Range(min = "0") int erosionFaces
@@ -65,7 +65,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrushErosionfaces(snipe, erosionFaces);
     }
 
-    @CommandMethod("E <erosion-recursions>")
+    @Command("E <erosion-recursions>")
     public void onBrushErosionrecursion(
             final @NotNull Snipe snipe,
             final @Argument("erosion-recursions") @Range(min = "0") int erosionRecursions
@@ -73,7 +73,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrushErosionrecursion(snipe, erosionRecursions);
     }
 
-    @CommandMethod("f <fill-faces>")
+    @Command("f <fill-faces>")
     public void onBrushFillfaces(
             final @NotNull Snipe snipe,
             final @Argument("fill-faces") @Range(min = "0") int fillFaces
@@ -81,7 +81,7 @@ public class ErodeBlendBrush extends AbstractBrush {
         this.erode.onBrushFillfaces(snipe, fillFaces);
     }
 
-    @CommandMethod("F <fill-recursions>")
+    @Command("F <fill-recursions>")
     public void onBrushFillrecursion(
             final @NotNull Snipe snipe,
             final @Argument("fill-recursions") @Range(min = "0") int fillRecursions

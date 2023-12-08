@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.disc;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
 import com.thevoxelbox.voxelsniper.brush.type.performer.AbstractPerformerBrush;
@@ -11,15 +11,15 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b voxel_disc_face|voxeldiscface|vdf")
-@CommandPermission("voxelsniper.brush.voxel_disc")
+@Command(value = "brush|b voxel_disc_face|voxeldiscface|vdf")
+@Permission("voxelsniper.brush.voxel_disc")
 public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
 
     @Override
     public void loadProperties() {
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
