@@ -11,18 +11,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerQuitListener implements Listener<PlayerQuitEvent> {
 
     private final VoxelSniperPlugin plugin;
+    private final VoxelSniperConfig config;
 
     public PlayerQuitListener(VoxelSniperPlugin plugin) {
         this.plugin = plugin;
+        this.config = plugin.getVoxelSniperConfig();
     }
 
     @EventHandler
     @Override
     public void listen(final PlayerQuitEvent event) {
-        VoxelSniperConfig config = this.plugin.getVoxelSniperConfig();
-        if (!config.arePersistentSessionsEnabled()) {
-            unregisterSniper(event.getPlayer());
-        }
+        unregisterSniper(event.getPlayer());
     }
 
     private void unregisterSniper(Player player) {
@@ -31,7 +30,11 @@ public class PlayerQuitListener implements Listener<PlayerQuitEvent> {
         if (sniper == null) {
             return;
         }
-        sniperRegistry.unregister(sniper);
+
+        sniper.setPlayer(null);
+        if (!config.arePersistentSessionsEnabled()) {
+            sniperRegistry.unregister(sniper);
+        }
     }
 
 }

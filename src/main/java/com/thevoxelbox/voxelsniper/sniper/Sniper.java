@@ -76,13 +76,23 @@ public class Sniper implements SniperCommander {
     }
 
     public Player getPlayer() {
-        if (player == null || !player.isValid()) {
+        if (player == null) {
             player = Bukkit.getPlayer(this.uuid);
         }
         if (player == null) {
             throw new UnknownSniperPlayerException();
         }
         return player;
+    }
+
+    /**
+     * Set the player.
+     *
+     * @param player the player
+     * @since TODO
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override

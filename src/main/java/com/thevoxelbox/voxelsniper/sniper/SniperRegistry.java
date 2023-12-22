@@ -60,6 +60,8 @@ public class SniperRegistry {
         if (sniper == null) {
             sniper = new Sniper(player);
             register(sniper);
+        } else {
+            sniper.setPlayer(player);
         }
         return sniper;
     }
