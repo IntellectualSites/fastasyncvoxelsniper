@@ -89,7 +89,7 @@ public class Sniper implements SniperCommander {
      * Set the player.
      *
      * @param player the player
-     * @since TODO
+     * @since 3.1.0
      */
     public void setPlayer(Player player) {
         this.player = player;
