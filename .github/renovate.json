@@ -6,6 +6,5 @@
   ],
   "automerge": true,
   "labels": ["Renovate"],
-  "rebaseWhen": "conflicted",
-  "schedule": ["on the first day of the month"]
+  "rebaseWhen": "conflicted"
 }
