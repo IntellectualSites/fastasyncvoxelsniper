@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.input.InputParseException;
@@ -14,9 +14,7 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.stream.Stream;
 
 public class VoxelListBlocksArgument implements VoxelCommandElement {
@@ -34,37 +32,32 @@ public class VoxelListBlocksArgument implements VoxelCommandElement {
     }
 
     @Suggestions("voxel-list-block_suggestions")
-    public List<String> suggestVoxelListBlocks(CommandContext<SniperCommander> commandContext, String input) {
+    public Stream<String> suggestVoxelListBlocks(CommandContext<SniperCommander> commandContext, String input) {
         return WorldEdit.getInstance().getBlockFactory()
                 .getSuggestions(input.startsWith("-") ? input.substring(1) : input).stream()
-                .flatMap(id -> Stream.of(id, "-" + id))
-                .toList();
+                .flatMap(id -> Stream.of(id, "-" + id));
     }
 
     @Parser(suggestions = "voxel-list-block_suggestions")
-    public BlockWrapper[] parseVoxelListBlock(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        if (inputQueue.isEmpty()) {
-            throw new NoInputProvidedException(VoxelListBlocksArgument.class, commandContext);
-        }
-
-        BlockWrapper[] blockWrappers = new BlockWrapper[inputQueue.size()];
+    public BlockWrapper[] parseVoxelListBlock(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        BlockWrapper[] blockWrappers = new BlockWrapper[commandInput.remainingTokens()];
         int i = 0;
-        while (!inputQueue.isEmpty()) {
-            String input = inputQueue.peek();
-            SniperCommander commander = commandContext.getSender();
+        while (commandInput.hasRemainingInput()) {
+            SniperCommander commander = commandContext.sender();
             ParserContext parserContext = commander.createParserContext();
 
-            boolean remove = input.startsWith("-");
+            boolean remove = commandInput.peekString().startsWith("-");
             if (remove) {
-                input = input.substring(1);
+                commandInput.moveCursor(1);
             }
+
+            String input = commandInput.readString();
             try {
                 BaseBlock baseBlock = WorldEdit.getInstance().getBlockFactory().parseFromInput(
-                        input.toLowerCase(Locale.ROOT),
+                        commandInput.readString().toLowerCase(Locale.ROOT),
                         parserContext
                 );
 
-                inputQueue.remove();
                 blockWrappers[i++] = new BlockWrapper(baseBlock.toBlockState(), remove);
             } catch (InputParseException e) {
                 throw new VoxelCommandElementParseException(input, Caption.of(

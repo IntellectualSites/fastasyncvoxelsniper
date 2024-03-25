@@ -1,10 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.property.BrushProperties;
@@ -19,9 +18,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b")
+@Command(value = "brush|b")
 @CommandDescription("Brush executor.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class BrushExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -32,7 +31,7 @@ public class BrushExecutor implements VoxelCommandElement {
         this.config = this.plugin.getVoxelSniperConfig();
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit
@@ -49,11 +48,11 @@ public class BrushExecutor implements VoxelCommandElement {
         sniper.sendInfo(true);
     }
 
-    @CommandMethod("<size>")
+    @Command("<size>")
     public void onBrushSize(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,
-            final @Argument("size") @Range(min = "0", max = "500") int size
+            final @Range(min = "0", max = "500") int size
     ) {
         ToolkitProperties toolkitProperties = toolkit.getProperties();
         Player player = sniper.getPlayer();

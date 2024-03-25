@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -14,8 +14,8 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b block_reset|blockreset|br")
-@CommandPermission("voxelsniper.brush.blockreset")
+@Command(value = "brush|b block_reset|blockreset|br")
+@Permission("voxelsniper.brush.blockreset")
 public class BlockResetBrush extends AbstractBrush {
 
     private static final MaterialSet DENIED_UPDATES = MaterialSet.builder()
@@ -32,7 +32,7 @@ public class BlockResetBrush extends AbstractBrush {
             .add(BlockTypes.COMPARATOR)
             .build();
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

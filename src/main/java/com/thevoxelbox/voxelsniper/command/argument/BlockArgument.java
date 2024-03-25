@@ -1,8 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
@@ -10,7 +11,6 @@ import com.thevoxelbox.voxelsniper.brush.property.BrushPattern;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
 import java.util.List;
-import java.util.Queue;
 
 public class BlockArgument extends AbstractPatternArgument<BaseBlock> {
 
@@ -30,8 +30,8 @@ public class BlockArgument extends AbstractPatternArgument<BaseBlock> {
     }
 
     @Parser(name = "block_parser", suggestions = "block_suggestions")
-    public BrushPattern parseBlock(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        return super.parsePattern(commandContext, inputQueue);
+    public BrushPattern parseBlock(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        return super.parsePattern(commandContext, commandInput);
     }
 
     @Override

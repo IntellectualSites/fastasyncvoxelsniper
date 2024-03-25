@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -17,8 +17,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b fill_down|filldown|fd")
-@CommandPermission("voxelsniper.brush.filldown")
+@Command(value = "brush|b fill_down|filldown|fd")
+@Permission("voxelsniper.brush.filldown")
 public class FillDownBrush extends AbstractPerformerBrush {
 
     private boolean trueCircle;
@@ -33,14 +33,14 @@ public class FillDownBrush extends AbstractPerformerBrush {
         }
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -50,7 +50,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle
@@ -64,7 +64,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("all")
+    @Command("all")
     public void onBrushAll(
             final @NotNull Snipe snipe
     ) {
@@ -77,7 +77,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("some")
+    @Command("some")
     public void onBrushSome(
             final @NotNull Snipe snipe
     ) {
@@ -92,7 +92,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("e")
+    @Command("e")
     public void onBrushE(
             final @NotNull Snipe snipe
     ) {
@@ -112,7 +112,7 @@ public class FillDownBrush extends AbstractPerformerBrush {
         }
     }
 
-    @CommandMethod("y <min-y>")
+    @Command("y <min-y>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("min-y") int minY

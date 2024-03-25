@@ -1,13 +1,16 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import cloud.commandframework.annotations.MethodCommandExecutionHandler;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.CommandExecutionException;
+import org.incendo.cloud.annotations.MethodCommandExecutionHandler;
+import org.incendo.cloud.annotations.method.ParameterValue;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.CommandExecutionException;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class VoxelMethodCommandExecutionHandler<C> extends MethodCommandExecutionHandler<C> {
 
@@ -36,11 +39,10 @@ public class VoxelMethodCommandExecutionHandler<C> extends MethodCommandExecutio
             this.methodHandle
                     .bindTo(executorInstanceSupplier.apply(commandContext))
                     .invokeWithArguments(
-                            this.createParameterValues(
-                                    commandContext,
-                                    commandContext.flags(),
-                                    super.parameters()
-                            )
+                            this.createParameterValues(commandContext)
+                                .stream()
+                                .map(ParameterValue::value)
+                                .collect(Collectors.toList())
                     );
         } catch (final Error e) {
             throw e;

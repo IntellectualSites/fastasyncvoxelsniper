@@ -1,14 +1,16 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.sk89q.worldedit.world.block.BlockType;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 public class BlockTypeArgument extends AbstractRegistryArgument<BlockType> {
 
@@ -23,13 +25,13 @@ public class BlockTypeArgument extends AbstractRegistryArgument<BlockType> {
     }
 
     @Suggestions("block-type_suggestions")
-    public List<String> suggestBlockTypes(CommandContext<SniperCommander> commandContext, String input) {
+    public Stream<String> suggestBlockTypes(CommandContext<SniperCommander> commandContext, String input) {
         return super.suggestValues(commandContext, input);
     }
 
     @Parser(suggestions = "block-type_suggestions")
-    public BlockType parseBlockType(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        return super.parseValue(commandContext, inputQueue);
+    public BlockType parseBlockType(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        return super.parseValue(commandContext, commandInput);
     }
 
 }

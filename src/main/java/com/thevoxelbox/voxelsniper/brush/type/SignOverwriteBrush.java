@@ -1,11 +1,11 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Greedy;
-import cloud.commandframework.annotations.specifier.Liberal;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Greedy;
+import org.incendo.cloud.annotation.specifier.Liberal;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Capability;
@@ -41,8 +41,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b sign_overwrite|signoverwrite|sio")
-@CommandPermission("voxelsniper.brush.signoverwrite")
+@Command(value = "brush|b sign_overwrite|signoverwrite|sio")
+@Permission("voxelsniper.brush.signoverwrite")
 public class SignOverwriteBrush extends AbstractBrush {
 
     private static final Side DEFAULT_SIDE = Side.FRONT;
@@ -70,21 +70,21 @@ public class SignOverwriteBrush extends AbstractBrush {
         this.side = (Side) getEnumProperty("default-side", Side.class, DEFAULT_SIDE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.sign-overwrite.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -99,7 +99,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("clear|c")
+    @Command("clear|c")
     public void onBrushClear(
             final @NotNull Snipe snipe
     ) {
@@ -109,7 +109,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared"));
     }
 
-    @CommandMethod("clearall|ca")
+    @Command("clearall|ca")
     public void onBrushClearall(
             final @NotNull Snipe snipe
     ) {
@@ -120,7 +120,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.cleared-reset"));
     }
 
-    @CommandMethod("side <side>")
+    @Command("side <side>")
     public void onBrushSide(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("side") Side side
@@ -139,7 +139,7 @@ public class SignOverwriteBrush extends AbstractBrush {
     }
 
     @SuppressWarnings("deprecation") // Paper deprecation
-    @CommandMethod("<line> set <text>")
+    @Command("<line> set <text>")
     public void onBrushLineSet(
             final @NotNull Snipe snipe,
             final @Argument("line") @Range(min = "1", max = "4") int line,
@@ -169,7 +169,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<line> toggle")
+    @Command("<line> toggle")
     public void onBrushLineToggle(
             final @NotNull Snipe snipe,
             final @Argument("line") @Range(min = "1", max = "4") int line
@@ -185,7 +185,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("multiple|m <ranged-mode>")
+    @Command("multiple|m <ranged-mode>")
     public void onBrushMultiple(
             final @NotNull Snipe snipe,
             final @Argument("ranged-mode") @Liberal boolean rangedMode
@@ -210,7 +210,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         }
     }
 
-    @CommandMethod("save|s <sign>")
+    @Command("save|s <sign>")
     public void onBrushSave(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "sign", parserName = "sign-file_parser") File sign
@@ -218,7 +218,7 @@ public class SignOverwriteBrush extends AbstractBrush {
         this.saveBufferToFile(snipe, sign);
     }
 
-    @CommandMethod("open|o <sign>")
+    @Command("open|o <sign>")
     public void onBrushOpen(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "sign", parserName = "sign-file_parser") File sign

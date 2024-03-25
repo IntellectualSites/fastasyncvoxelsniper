@@ -23,6 +23,12 @@ java {
 
 repositories {
     mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots/") {
+        name = "sonatypeOssSnapshots"
+        mavenContent {
+            snapshotsOnly()
+        }
+    }
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
 }
 
@@ -82,6 +88,7 @@ tasks {
     compileJava {
         options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000"))
         options.compilerArgs.add("-Xlint:all")
+        options.compilerArgs.add("-parameters")
         for (disabledLint in arrayOf("processing", "path", "fallthrough", "serial"))
             options.compilerArgs.add("-Xlint:$disabledLint")
         options.isDeprecation = true

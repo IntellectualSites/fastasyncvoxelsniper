@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.BrushRegistry;
@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 public class BrushPropertiesArgument implements VoxelCommandElement {
 
@@ -33,26 +34,21 @@ public class BrushPropertiesArgument implements VoxelCommandElement {
     }
 
     @Suggestions("brush-properties_suggestions")
-    public List<String> suggestBrushProperties(CommandContext<SniperCommander> commandContext, String input) {
-        SniperCommander commander = commandContext.getSender();
+    public Stream<String> suggestBrushProperties(CommandContext<SniperCommander> commandContext, String input) {
+        SniperCommander commander = commandContext.sender();
         CommandSender sender = commander.getCommandSender();
         return brushRegistry.getBrushesProperties().entrySet().stream()
                 .filter(entry -> {
                     String permission = entry.getValue().getPermission();
                     return permission == null || sender.hasPermission(permission);
                 })
-                .map(Map.Entry::getKey)
-                .toList();
+                .map(Map.Entry::getKey);
     }
 
     @Parser(name = "brush-properties_parser", suggestions = "brush-properties_suggestions")
-    public BrushProperties parseBrushProperties(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(BrushPropertiesArgument.class, commandContext);
-        }
-
-        SniperCommander commander = commandContext.getSender();
+    public BrushProperties parseBrushProperties(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        SniperCommander commander = commandContext.sender();
+        String input = commandInput.readString();
         BrushProperties properties = brushRegistry.getBrushProperties(input);
         if (properties == null) {
             throw new VoxelCommandElementParseException(input, Caption.of(
@@ -69,7 +65,6 @@ public class BrushPropertiesArgument implements VoxelCommandElement {
             ));
         }
 
-        inputQueue.remove();
         return properties;
     }
 

@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Direction;
@@ -17,27 +17,27 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b extrude|ex")
-@CommandPermission("voxelsniper.brush.extrude")
+@Command(value = "brush|b extrude|ex")
+@Permission("voxelsniper.brush.extrude")
 public class ExtrudeBrush extends AbstractBrush {
 
     private boolean trueCircle;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.extrude.info"));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle

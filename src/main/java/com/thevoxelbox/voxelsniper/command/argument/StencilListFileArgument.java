@@ -1,14 +1,14 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
 import java.io.File;
-import java.util.List;
-import java.util.Queue;
+import java.util.stream.Stream;
 
 public class StencilListFileArgument extends AbstractFileArgument {
 
@@ -23,13 +23,13 @@ public class StencilListFileArgument extends AbstractFileArgument {
     }
 
     @Suggestions("stencil-list-file_suggestions")
-    public List<String> suggestStencilListFiles(CommandContext<SniperCommander> commandContext, String input) {
+    public Stream<String> suggestStencilListFiles(CommandContext<SniperCommander> commandContext, String input) {
         return super.suggestFiles(commandContext, input);
     }
 
     @Parser(name = "stencil-list-file_parser", suggestions = "stencil-list-file_suggestions")
-    public File parseStencilListFile(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        return super.parseFile(commandContext, inputQueue);
+    public File parseStencilListFile(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        return super.parseFile(commandContext, commandInput);
     }
 
 }

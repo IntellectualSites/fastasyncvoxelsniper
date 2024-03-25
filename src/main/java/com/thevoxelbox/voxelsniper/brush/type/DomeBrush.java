@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b dome|do")
-@CommandPermission("voxelsniper.brush.dome")
+@Command(value = "brush|b dome|do")
+@Permission("voxelsniper.brush.dome")
 public class DomeBrush extends AbstractBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
