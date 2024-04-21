@@ -16,8 +16,8 @@ jobs:
                   distribution: temurin
                   cache: gradle
                   java-version: 17
-            - name: Upload to Modrinth and Hangar
-              run: ./gradlew clean build modrinth publishAllPublicationsToHangar
+            - name: Upload to Modrinth
+              run: ./gradlew clean build modrinth
               env:
                   MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
                   HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}

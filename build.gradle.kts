@@ -62,7 +62,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "3.1.1-SNAPSHOT"
+version = "3.1.1"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -100,6 +100,12 @@ tasks {
         opt.addBooleanOption("html5", true)
         opt.links("https://jd.papermc.io/paper/1.20/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
+        opt.noTimestamp()
+    }
+
+    withType<AbstractArchiveTask>().configureEach {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
     }
 
     shadowJar {
@@ -131,7 +137,7 @@ javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElement
 }
 
 signing {
-    if (!version.toString().endsWith("-SNAPSHOT")) {
+    if (!project.hasProperty("skip.signing") && !version.toString().endsWith("-SNAPSHOT")) {
         val signingKey: String? by project
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKey, signingPassword)
