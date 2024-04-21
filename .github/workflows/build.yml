@@ -31,7 +31,7 @@ jobs:
                   fi
             - name: Publish Release
               if: ${{ runner.os == 'Linux' && env.STATUS == 'release' && github.event_name == 'push' && github.ref == 'refs/heads/main'}}
-              run: ./gradlew publishToSonatype closeSonatypeStagingRepository --info
+              run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
               env:
                   ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
                   ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
