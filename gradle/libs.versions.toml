@@ -11,7 +11,7 @@ pluginyml = "0.6.0"
 nexus = "2.0.0"
 minotaur = "2.8.7"
 hangar = "0.1.2"
-runPaper = "2.2.4"
+runPaper = "2.3.0"
 
 [libraries]
 
