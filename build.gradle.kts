@@ -98,7 +98,7 @@ tasks {
                 "implNote:a:Implementation Note:"
         )
         opt.addBooleanOption("html5", true)
-        opt.links("https://jd.papermc.io/paper/1.20/")
+        opt.links("https://jd.papermc.io/paper/1.21/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
         opt.noTimestamp()
     }
