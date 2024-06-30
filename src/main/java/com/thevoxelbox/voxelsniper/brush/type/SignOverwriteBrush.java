@@ -7,6 +7,10 @@ import cloud.commandframework.annotations.specifier.Greedy;
 import cloud.commandframework.annotations.specifier.Liberal;
 import cloud.commandframework.annotations.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
+import com.sk89q.jnbt.CompoundTag;
+import com.sk89q.jnbt.ListTag;
+import com.sk89q.jnbt.StringTag;
+import com.sk89q.jnbt.Tag;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Capability;
 import com.sk89q.worldedit.internal.Constants;
@@ -17,9 +21,6 @@ import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.sk89q.worldedit.util.formatting.text.TranslatableComponent;
 import com.sk89q.worldedit.util.formatting.text.serializer.gson.GsonComponentSerializer;
 import com.sk89q.worldedit.util.formatting.text.serializer.legacy.LegacyComponentSerializer;
-import com.sk89q.worldedit.util.nbt.CompoundBinaryTag;
-import com.sk89q.worldedit.util.nbt.ListBinaryTag;
-import com.sk89q.worldedit.util.nbt.StringBinaryTag;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -37,8 +38,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequireToolkit
 @CommandMethod(value = "brush|b sign_overwrite|signoverwrite|sio")
@@ -242,15 +246,15 @@ public class SignOverwriteBrush extends AbstractBrush {
         BlockVector3 targetBlock = getTargetBlock();
         BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
         if (isSign(block.getBlockType())) {
-            CompoundBinaryTag tag = block.getNbt();
+            CompoundTag tag = block.getNbtData();
             if (tag == null) {
                 return;
             }
 
             if (isHangingSignsSupported()) {
                 // 1.20+ behavior, with two-side text.
-                CompoundBinaryTag text = tag.getCompound(side.getTagName());
-                ListBinaryTag messages = text.getList("messages");
+                CompoundTag text = (CompoundTag) tag.getValue().get(side.getTagName());
+                ListTag messages = text.getListTag("messages");
                 for (int i = 0; i < this.signTextLines.length; i++) {
                     if (this.signLinesEnabled[i]) {
                         this.signTextLines[i] = fromJson(messages.getString(i));
@@ -282,34 +286,40 @@ public class SignOverwriteBrush extends AbstractBrush {
     /**
      * Sets the text of a given sign.
      */
+    @SuppressWarnings("deprecation") // Use JNBT to support Adventure-NBT and LinBus
     private void setSignText(int x, int y, int z, BaseBlock block) {
-        CompoundBinaryTag tag = block.getNbt();
+        CompoundTag tag = block.getNbtData();
         if (tag == null) {
             return;
         }
 
+        Map<String, Tag> root = new HashMap<>(tag.getValue());
         if (isHangingSignsSupported()) {
             // 1.20+ behavior, with two-sided text.
-            CompoundBinaryTag text = tag.getCompound(side.getTagName());
-            ListBinaryTag messages = text.getList("messages");
+            CompoundTag text = (CompoundTag) root.get(side.getTagName());
+            ListTag messages = text.getListTag("messages");
+            List<StringTag> lines = new ArrayList<>();
             for (int i = 0; i < this.signTextLines.length; i++) {
                 if (this.signLinesEnabled[i]) {
-                    messages = messages.set(i, StringBinaryTag.stringBinaryTag(toJson(this.signTextLines[i])), ignored -> {
-                    });
+                    lines.add(new StringTag(toJson(this.signTextLines[i])));
+                    continue;
                 }
+                lines.add((StringTag) messages.getIfExists(i));
             }
-            text = text.put("messages", messages);
-            tag = tag.put(side.getTagName(), text);
+            Map<String, Tag> textValue = new HashMap<>(text.getValue());
+            textValue.put("messages", new ListTag(StringTag.class, lines));
+            text = new CompoundTag(textValue);
+            root.put(side.getTagName(), text);
         } else {
             // Legacy behavior with only one-sided text.
             for (int i = 0; i < this.signTextLines.length; i++) {
                 if (this.signLinesEnabled[i]) {
-                    tag = tag.putString("Text" + (i + 1), toJson(this.signTextLines[i]));
+                    root.put("Text" + (i + 1), new StringTag(toJson(this.signTextLines[i])));
                 }
             }
         }
 
-        block = block.toBaseBlock(tag);
+        block = block.toBaseBlock(new CompoundTag(root));
         setBlock(x, y, z, block);
     }
 

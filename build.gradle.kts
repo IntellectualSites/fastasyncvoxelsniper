@@ -207,7 +207,7 @@ nexusPublishing {
 }
 
 // Keep in sync with FAWE versions
-val supportedVersions = listOf("1.18.2", "1.19.4", "1.20", "1.20.1", "1.20.4")
+val supportedVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.4", "1.20.6")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
@@ -258,18 +258,23 @@ tasks {
         project.ext["faweArtifact"] = artifact
     }
 
-    supportedVersions.forEach {
-        register<RunServer>("runServer-$it") {
+    supportedVersions.forEach { version ->
+        register<RunServer>("runServer-$version") {
             dependsOn(getByName("cacheLatestFaweArtifact"))
-            minecraftVersion(it)
+            minecraftVersion(version)
             pluginJars(*rootProject.getTasksByName("shadowJar", false).map { (it as Jar).archiveFile }
                     .toTypedArray())
             jvmArgs("-DPaper.IgnoreJavaVersion=true", "-Dcom.mojang.eula.agree=true")
             downloadPlugins {
                 url("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/artifact/artifacts/${project.ext["faweArtifact"]}")
             }
+            // Run explicitly using JDK 21
+            val javaToolchains  = project.extensions.getByType<JavaToolchainService>()
+            javaLauncher.set(javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(21))
+            })
             group = "run paper"
-            runDirectory.set(file("run-$it"))
+            runDirectory.set(file("run-$version"))
         }
     }
 }
