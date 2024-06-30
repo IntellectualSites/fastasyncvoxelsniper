@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b ellipsoid|elo")
-@CommandPermission("voxelsniper.brush.ellipsoid")
+@Command(value = "brush|b ellipsoid|elo")
+@Permission("voxelsniper.brush.ellipsoid")
 public class EllipsoidBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_X_RAD = 0;
@@ -27,21 +27,21 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
     private double yRad = DEFAULT_Y_RAD;
     private double zRad = DEFAULT_Z_RAD;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ellipsoid.info"));
     }
 
-    @CommandMethod("<offset>")
+    @Command("<offset>")
     public void onBrushOffset(
             final @NotNull Snipe snipe,
             final @Argument("offset") @Liberal boolean offset
@@ -55,7 +55,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("x <x-rad>")
+    @Command("x <x-rad>")
     public void onBrushX(
             final @NotNull Snipe snipe,
             final @Argument("x-rad") int xRad
@@ -69,7 +69,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("y <y-rad>")
+    @Command("y <y-rad>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("y-rad") int yRad
@@ -83,7 +83,7 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("z <z-rad>")
+    @Command("z <z-rad>")
     public void onBrushZ(
             final @NotNull Snipe snipe,
             final @Argument("z-rad") int zRad

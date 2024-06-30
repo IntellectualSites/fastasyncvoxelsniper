@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.performer.type.combo;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 @RequireToolkit
-@CommandMethod(value = "performer|perf|p exclude-combo|xc")
-@CommandPermission("voxelsniper.sniper")
+@Command(value = "performer|perf|p exclude-combo|xc")
+@Permission("voxelsniper.sniper")
 public class ExcludeComboPerformer extends AbstractPerformer {
 
     private Collection<BlockState> excludeList;
     private Pattern pattern;
 
-    @CommandMethod("")
+    @Command("")
     public void onPerformer(
             final @NotNull PerformerSnipe snipe
     ) {

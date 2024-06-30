@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -32,8 +32,8 @@ import java.util.Locale;
 import java.util.Random;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b punish|p")
-@CommandPermission("voxelsniper.brush.punish")
+@Command(value = "brush|b punish|p")
+@Permission("voxelsniper.brush.punish")
 public class PunishBrush extends AbstractPerformerBrush {
 
     private static final int TICKS_PER_SECOND = 20;
@@ -71,21 +71,21 @@ public class PunishBrush extends AbstractPerformerBrush {
         this.punishDuration = getIntegerProperty("default-punish-duration", DEFAULT_PUNISH_DURATION);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.punish.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -100,7 +100,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("toggleSelf")
+    @Command("toggleSelf")
     public void onBrushToggleself(
             final @NotNull Snipe snipe
     ) {
@@ -114,7 +114,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         }
     }
 
-    @CommandMethod("toggleHypnoLandscape")
+    @Command("toggleHypnoLandscape")
     public void onBrushToggleHypnoLandscape(
             final @NotNull Snipe snipe
     ) {
@@ -127,7 +127,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("<punishment>")
+    @Command("<punishment>")
     public void onBrushPunishment(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("punishment") Punishment punishment
@@ -141,7 +141,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("toggleSM <player>")
+    @Command("toggleSM <player>")
     public void onBrushTogglesm(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("player") Player player

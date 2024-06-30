@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -17,8 +17,8 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b spiral_staircase|spiralstaircase|sstair")
-@CommandPermission("voxelsniper.brush.spiralstaircase")
+@Command(value = "brush|b spiral_staircase|spiralstaircase|sstair")
+@Permission("voxelsniper.brush.spiralstaircase")
 public class SpiralStaircaseBrush extends AbstractBrush {
 
     private static final String DEFAULT_SDIRECT = "c";
@@ -33,14 +33,14 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         this.sopen = getStringProperty("default-sopen", DEFAULT_SOPEN);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -57,14 +57,14 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("c")
+    @Command("c")
     public void onBrushC(
             final @NotNull Snipe snipe
     ) {
         this.onBrushSdirectCommand(snipe, "c");
     }
 
-    @CommandMethod("cc")
+    @Command("cc")
     public void onBrushCc(
             final @NotNull Snipe snipe
     ) {
@@ -81,28 +81,28 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("n")
+    @Command("n")
     public void onBrushN(
             final @NotNull Snipe snipe
     ) {
         this.onBrushSopenCommand(snipe, "n");
     }
 
-    @CommandMethod("e")
+    @Command("e")
     public void onBrushE(
             final @NotNull Snipe snipe
     ) {
         this.onBrushSopenCommand(snipe, "e");
     }
 
-    @CommandMethod("s")
+    @Command("s")
     public void onBrushS(
             final @NotNull Snipe snipe
     ) {
         this.onBrushSopenCommand(snipe, "s");
     }
 
-    @CommandMethod("w")
+    @Command("w")
     public void onBrushW(
             final @NotNull Snipe snipe
     ) {

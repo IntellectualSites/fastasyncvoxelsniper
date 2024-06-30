@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.stamp;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -16,8 +16,8 @@ import org.jetbrains.annotations.NotNull;
  * The CloneStamp class is used to create a collection of blocks in a cylinder shape according to the selection the player has set.
  */
 @RequireToolkit
-@CommandMethod(value = "brush|b clone_stamp|clonestamp|cs")
-@CommandPermission("voxelsniper.brush.clonestamp")
+@Command(value = "brush|b clone_stamp|clonestamp|cs")
+@Permission("voxelsniper.brush.clonestamp")
 public class CloneStampBrush extends AbstractStampBrush {
 
     private static final StampType DEFAULT_STAMP_TYPE = StampType.DEFAULT;
@@ -27,21 +27,21 @@ public class CloneStampBrush extends AbstractStampBrush {
         this.stamp = ((StampType) getEnumProperty("default-stamp-type", StampType.class, DEFAULT_STAMP_TYPE));
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.clone-stamp.info"));
     }
 
-    @CommandMethod("<stamp-type>")
+    @Command("<stamp-type>")
     public void onBrushStamptype(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("stamp-type") StampType stampType
@@ -56,28 +56,28 @@ public class CloneStampBrush extends AbstractStampBrush {
         ));
     }
 
-    @CommandMethod("a")
+    @Command("a")
     public void onBrushA(
             final @NotNull Snipe snipe
     ) {
         this.onBrushStamptype(snipe, StampType.NO_AIR);
     }
 
-    @CommandMethod("f")
+    @Command("f")
     public void onBrushF(
             final @NotNull Snipe snipe
     ) {
         this.onBrushStamptype(snipe, StampType.FILL);
     }
 
-    @CommandMethod("d")
+    @Command("d")
     public void onBrushD(
             final @NotNull Snipe snipe
     ) {
         this.onBrushStamptype(snipe, StampType.DEFAULT);
     }
 
-    @CommandMethod("c <center>")
+    @Command("c <center>")
     public void onBrushC(
             final @NotNull Snipe snipe,
             final @Argument("center") int center

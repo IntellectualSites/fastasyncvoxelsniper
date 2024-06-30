@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockTypes;
@@ -16,27 +16,27 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b clean_snow|cleansnow|cls")
-@CommandPermission("voxelsniper.brush.cleansnow")
+@Command(value = "brush|b clean_snow|cleansnow|cls")
+@Permission("voxelsniper.brush.cleansnow")
 public class CleanSnowBrush extends AbstractBrush {
 
     private boolean trueCircle;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.clean-snow.info"));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle

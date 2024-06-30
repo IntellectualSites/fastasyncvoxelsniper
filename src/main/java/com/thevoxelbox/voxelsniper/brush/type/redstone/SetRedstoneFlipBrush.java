@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -17,29 +17,29 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b set_redstone_flip|setredstoneflip|setrf")
-@CommandPermission("voxelsniper.brush.setredstoneflip")
+@Command(value = "brush|b set_redstone_flip|setredstoneflip|setrf")
+@Permission("voxelsniper.brush.setredstoneflip")
 public class SetRedstoneFlipBrush extends AbstractBrush {
 
     @Nullable
     private BlockVector3 block;
     private boolean northSouth = true;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.set-redstone-flip.info"));
     }
 
-    @CommandMethod("ns|n|s")
+    @Command("ns|n|s")
     public void onBrushNs(
             final @NotNull Snipe snipe
     ) {
@@ -49,7 +49,7 @@ public class SetRedstoneFlipBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.set-redstone-flip.north-south"));
     }
 
-    @CommandMethod("ew|e|w")
+    @Command("ew|e|w")
     public void onBrushEw(
             final @NotNull Snipe snipe
     ) {

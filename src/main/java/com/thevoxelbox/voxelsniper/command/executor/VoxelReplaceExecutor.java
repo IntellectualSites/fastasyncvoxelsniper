@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @RequireToolkit
-@CommandMethod(value = "voxel_replace|voxelreplace|vr|voxel_ink_replace|voxelinkreplace|vir")
+@Command(value = "voxel_replace|voxelreplace|vr|voxel_ink_replace|voxelinkreplace|vir")
 @CommandDescription("VoxelReplace input.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelReplaceExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -37,7 +37,7 @@ public class VoxelReplaceExecutor implements VoxelCommandElement {
         this.config = plugin.getVoxelSniperConfig();
     }
 
-    @CommandMethod("[block]")
+    @Command("[block]")
     public void onVoxelReplace(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,

@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -20,27 +20,27 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b comet|meteor|com|met")
-@CommandPermission("voxelsniper.brush.comet")
+@Command(value = "brush|b comet|meteor|com|met")
+@Permission("voxelsniper.brush.comet")
 public class CometBrush extends AbstractBrush {
 
     private boolean useBigBalls;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.comet.info"));
     }
 
-    @CommandMethod("<use-big-balls>")
+    @Command("<use-big-balls>")
     public void onBrushBigballs(
             final @NotNull Snipe snipe,
             final @Argument("use-big-balls") @Liberal boolean useBigBalls
@@ -54,14 +54,14 @@ public class CometBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("balls big")
+    @Command("balls big")
     public void onBrushBallsBig(
             final @NotNull Snipe snipe
     ) {
         this.onBrushBigballs(snipe, true);
     }
 
-    @CommandMethod("balls small")
+    @Command("balls small")
     public void onBrushBallsSmall(
             final @NotNull Snipe snipe
     ) {
