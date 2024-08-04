@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.stencil;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b stencil_list|stencillist|sl")
-@CommandPermission("voxelsniper.brush.stencillist")
+@Command(value = "brush|b stencil_list|stencillist|sl")
+@Permission("voxelsniper.brush.stencillist")
 public class StencilListBrush extends AbstractBrush {
 
     private static final String NO_FILE_LOADED = "NoFileLoaded";
@@ -47,14 +47,14 @@ public class StencilListBrush extends AbstractBrush {
         this.pasteOption = (byte) getIntegerProperty("default-paste-option", DEFAULT_PASTE_OPTION);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -81,7 +81,7 @@ public class StencilListBrush extends AbstractBrush {
         }
     }
 
-    @CommandMethod("full <stencil-list>")
+    @Command("full <stencil-list>")
     public void onBrushFull(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
@@ -89,7 +89,7 @@ public class StencilListBrush extends AbstractBrush {
         this.onBrushPasteCommand(snipe, (byte) 0, stencilList);
     }
 
-    @CommandMethod("fill <stencil-list>")
+    @Command("fill <stencil-list>")
     public void onBrushFill(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
@@ -97,7 +97,7 @@ public class StencilListBrush extends AbstractBrush {
         this.onBrushPasteCommand(snipe, (byte) 1, stencilList);
     }
 
-    @CommandMethod("replace <stencil-list>")
+    @Command("replace <stencil-list>")
     public void onBrushReplace(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList
@@ -105,7 +105,7 @@ public class StencilListBrush extends AbstractBrush {
         this.onBrushPasteCommand(snipe, (byte) 2, stencilList);
     }
 
-    @CommandMethod("<stencil-list>")
+    @Command("<stencil-list>")
     public void onBrushStencillist(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "stencil-list", parserName = "stencil-list-file_parser") File stencilList

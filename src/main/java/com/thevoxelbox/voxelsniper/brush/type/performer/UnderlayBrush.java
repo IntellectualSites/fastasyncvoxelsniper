@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -17,8 +17,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b underlay|under")
-@CommandPermission("voxelsniper.brush.underlay")
+@Command(value = "brush|b underlay|under")
+@Permission("voxelsniper.brush.underlay")
 public class UnderlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
@@ -32,21 +32,21 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.underlay.info"));
     }
 
-    @CommandMethod("all")
+    @Command("all")
     public void onBrushAll(
             final @NotNull Snipe snipe
     ) {
@@ -59,7 +59,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("some")
+    @Command("some")
     public void onBrushSome(
             final @NotNull Snipe snipe
     ) {
@@ -72,7 +72,7 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("d <depth>")
+    @Command("d <depth>")
     public void onBrushD(
             final @NotNull Snipe snipe,
             final @Argument("depth") @Range(min = "1") int depth

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.NamespacedRegistry;
@@ -9,9 +9,8 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.SniperCommander;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
+import java.util.stream.Stream;
 
 public abstract class AbstractRegistryArgument<T extends Keyed> implements VoxelCommandElement {
 
@@ -33,17 +32,12 @@ public abstract class AbstractRegistryArgument<T extends Keyed> implements Voxel
         this.parseExceptionCaptionKey = parseExceptionCaptionKey;
     }
 
-    protected List<String> suggestValues(CommandContext<SniperCommander> commandContext, String input) {
-        return registry.getSuggestions(input)
-                .toList();
+    protected Stream<String> suggestValues(CommandContext<SniperCommander> commandContext, String input) {
+        return registry.getSuggestions(input);
     }
 
-    protected T parseValue(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(AbstractRegistryArgument.class, commandContext);
-        }
-
+    protected T parseValue(CommandContext<SniperCommander> commandContext, CommandInput commandInput) {
+        final String input = commandInput.readString();
         T value = registry.get(input.toLowerCase(Locale.ROOT));
         if (value == null) {
             throw new VoxelCommandElementParseException(input, Caption.of(
@@ -52,7 +46,6 @@ public abstract class AbstractRegistryArgument<T extends Keyed> implements Voxel
             ));
         }
 
-        inputQueue.remove();
         return value;
     }
 

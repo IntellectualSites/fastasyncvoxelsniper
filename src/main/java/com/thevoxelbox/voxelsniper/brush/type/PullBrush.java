@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b pull")
-@CommandPermission("voxelsniper.brush.pull")
+@Command(value = "brush|b pull")
+@Permission("voxelsniper.brush.pull")
 public class PullBrush extends AbstractBrush {
 
     private static final int DEFAULT_PINCH = 1;
@@ -38,21 +38,21 @@ public class PullBrush extends AbstractBrush {
         this.bubble = getIntegerProperty("default-bubble", DEFAULT_BUBBLE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.pull.info"));
     }
 
-    @CommandMethod("<pinch> <bubble>")
+    @Command("<pinch> <bubble>")
     public void onBrushPinchbubble(
             final @NotNull Snipe snipe,
             final @Argument("pinch") double pinch,

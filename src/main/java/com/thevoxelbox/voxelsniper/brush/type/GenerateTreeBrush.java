@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -27,8 +27,8 @@ import java.util.Random;
 
 // Proposal: Use /v and /vr for leave and wood material // or two more parameters -- Monofraps
 @RequireToolkit
-@CommandMethod(value = "brush|b generate_tree|generatetree|gt")
-@CommandPermission("voxelsniper.brush.generatetree")
+@Command(value = "brush|b generate_tree|generatetree|gt")
+@Permission("voxelsniper.brush.generatetree")
 public class GenerateTreeBrush extends AbstractBrush {
 
     private static final BlockType DEFAULT_LEAF_TYPE = BlockTypes.OAK_LEAVES;
@@ -98,21 +98,21 @@ public class GenerateTreeBrush extends AbstractBrush {
         this.nodeMax = getIntegerProperty("default-node-max", DEFAULT_NODE_MAX);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.generate-tree.info"));
     }
 
-    @CommandMethod("default")
+    @Command("default")
     public void onBrushDefault(
             final @NotNull Snipe snipe
     ) {
@@ -122,7 +122,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.reset"));
     }
 
-    @CommandMethod("lt <leaf-type>")
+    @Command("lt <leaf-type>")
     public void onBrushLt(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("leaf-type") BlockType leafType
@@ -136,7 +136,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("wt <wood-type>")
+    @Command("wt <wood-type>")
     public void onBrushWt(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("wood-type") BlockType woodType
@@ -150,7 +150,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("tt <thickness>")
+    @Command("tt <thickness>")
     public void onBrushTt(
             final @NotNull Snipe snipe,
             final @Argument("thickness") @Range(min = "0") int thickness
@@ -164,7 +164,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("rf <root-float>")
+    @Command("rf <root-float>")
     public void onBrushRf(
             final @NotNull Snipe snipe,
             final @Argument("root-float") @Liberal boolean rootFloat
@@ -178,7 +178,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("sh <start-height>")
+    @Command("sh <start-height>")
     public void onBrushSh(
             final @NotNull Snipe snipe,
             final @Argument("start-height") int startHeight
@@ -192,7 +192,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("rl <root-length>")
+    @Command("rl <root-length>")
     public void onBrushRl(
             final @NotNull Snipe snipe,
             final @Argument("root-length") @Range(min = "0") int rootLength
@@ -206,7 +206,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("ts <slope-chance>")
+    @Command("ts <slope-chance>")
     public void onBrushTs(
             final @NotNull Snipe snipe,
             final @Argument("slope-chance") @Range(min = "0", max = "100") int slopeChance
@@ -220,7 +220,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("bl <branch-length>")
+    @Command("bl <branch-length>")
     public void onBrushBl(
             final @NotNull Snipe snipe,
             final @Argument("branch-length") @Range(min = "0") int branchLength
@@ -234,7 +234,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("minr <min-roots>")
+    @Command("minr <min-roots>")
     public void onBrushMinr(
             final @NotNull Snipe snipe,
             final @Argument("min-roots") @DynamicRange(min = "0", max = "maxRoots") int minRoots
@@ -248,7 +248,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("maxr <max-roots>")
+    @Command("maxr <max-roots>")
     public void onBrushMaxr(
             final @NotNull Snipe snipe,
             final @Argument("max-roots") @DynamicRange(min = "minRoots") int maxRoots
@@ -262,7 +262,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("minh <height-min>")
+    @Command("minh <height-min>")
     public void onBrushMinh(
             final @NotNull Snipe snipe,
             final @Argument("height-min") @DynamicRange(min = "0", max = "heightMax") int heightMin
@@ -276,7 +276,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("maxh <height-max>")
+    @Command("maxh <height-max>")
     public void onBrushMaxh(
             final @NotNull Snipe snipe,
             final @Argument("height-max") @DynamicRange(min = "heightMin") int heightMax
@@ -290,7 +290,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("minl <node-min>")
+    @Command("minl <node-min>")
     public void onBrushMinl(
             final @NotNull Snipe snipe,
             final @Argument("node-min") @DynamicRange(min = "0", max = "nodeMax") int nodeMin
@@ -304,7 +304,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("maxl <node-max>")
+    @Command("maxl <node-max>")
     public void onBrushMaxl(
             final @NotNull Snipe snipe,
             final @Argument("node-max") @DynamicRange(min = "nodeMin") int nodeMax

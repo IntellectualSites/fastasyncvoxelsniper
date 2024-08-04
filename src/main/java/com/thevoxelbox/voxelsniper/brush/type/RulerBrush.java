@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -12,8 +12,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b ruler|r")
-@CommandPermission("voxelsniper.brush.ruler")
+@Command(value = "brush|b ruler|r")
+@Permission("voxelsniper.brush.ruler")
 public class RulerBrush extends AbstractBrush {
 
     private static final int DEFAULT_X_OFFSET = 0;
@@ -27,21 +27,21 @@ public class RulerBrush extends AbstractBrush {
     private int yOffset = DEFAULT_Y_OFFSET;
     private int zOffset = DEFAULT_Z_OFFSET;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.ruler.info"));
     }
 
-    @CommandMethod("ruler")
+    @Command("ruler")
     public void onBrushRuler(
             final @NotNull Snipe snipe
     ) {
@@ -53,7 +53,7 @@ public class RulerBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.ruler-mode"));
     }
 
-    @CommandMethod("<x-offset> <y-offset> <z-offset>")
+    @Command("<x-offset> <y-offset> <z-offset>")
     public void onBrushOffsets(
             final @NotNull Snipe snipe,
             final @Argument("x-offset") int xOffset,

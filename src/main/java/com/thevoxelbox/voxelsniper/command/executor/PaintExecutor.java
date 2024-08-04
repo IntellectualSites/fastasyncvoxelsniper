@@ -1,9 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
@@ -13,9 +12,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@CommandMethod(value = "paint")
+@Command(value = "paint")
 @CommandDescription("Change the selected painting to another painting.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class PaintExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -24,7 +23,7 @@ public class PaintExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onPaint(
             final @NotNull Sniper sniper
     ) {
@@ -32,7 +31,7 @@ public class PaintExecutor implements VoxelCommandElement {
         ArtHelper.paintAuto(player, false);
     }
 
-    @CommandMethod("back")
+    @Command("back")
     public void onPaintBack(
             final @NotNull Sniper sniper
     ) {
@@ -40,10 +39,10 @@ public class PaintExecutor implements VoxelCommandElement {
         ArtHelper.paintAuto(player, true);
     }
 
-    @CommandMethod("<art>")
+    @Command("<art>")
     public void onPaintArt(
             final @NotNull Sniper sniper,
-            final @Nullable @Argument("art") Art art
+            final @Nullable Art art
     ) {
         Player player = sniper.getPlayer();
         ArtHelper.paint(player, art);

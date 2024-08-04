@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Queue;
 import java.util.stream.Stream;
 
 public abstract class AbstractFileArgument implements VoxelCommandElement {
@@ -41,29 +39,22 @@ public abstract class AbstractFileArgument implements VoxelCommandElement {
         }
     }
 
-    protected List<String> suggestFiles(CommandContext<SniperCommander> commandContext, String input) {
+    protected Stream<String> suggestFiles(CommandContext<SniperCommander> commandContext, String input) {
         Path inputPath = rootPath.resolve(input);
         try (Stream<Path> files = Files.list(Files.isDirectory(inputPath) ? inputPath : inputPath.getParent())) {
             return files.map(path -> path.getFileName().toString())
-                    .flatMap(path -> Stream.of(path, path.replace(extension, "")))
-                    .toList();
+                    .flatMap(path -> Stream.of(path, path.replace(extension, "")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected File parseFile(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(AbstractFileArgument.class, commandContext);
-        }
-
+    protected File parseFile(CommandContext<SniperCommander> commandContext, CommandInput input) {
+        final String fileName = input.readString();
         try {
-            File file = rootPath.resolve(input.endsWith(extension) ? input : input + extension).toFile();
-            inputQueue.remove();
-            return file;
+            return rootPath.resolve(fileName.endsWith(extension) ? fileName : fileName + extension).toFile();
         } catch (Exception e) {
-            throw new VoxelCommandElementParseException(input, Caption.of(
+            throw new VoxelCommandElementParseException(fileName, Caption.of(
                     "voxelsniper.command.invalid-file",
                     input
             ));

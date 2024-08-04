@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -14,8 +14,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b checker_voxel_disc|checkervoxeldisc|cvd")
-@CommandPermission("voxelsniper.brush.checkervoxeldisc")
+@Command(value = "brush|b checker_voxel_disc|checkervoxeldisc|cvd")
+@Permission("voxelsniper.brush.checkervoxeldisc")
 public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
 
     private boolean useWorldCoordinates = true;
@@ -24,21 +24,21 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.checker-voxel-disc.info"));
     }
 
-    @CommandMethod("<use-world-coordinates>")
+    @Command("<use-world-coordinates>")
     public void onBrushUseworldcoordinates(
             final @NotNull Snipe snipe,
             final @Argument("use-world-coordinates") @Liberal boolean useWorldCoordinates

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -18,8 +18,8 @@ import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b biome|bio")
-@CommandPermission("voxelsniper.brush.biome")
+@Command(value = "brush|b biome|bio")
+@Permission("voxelsniper.brush.biome")
 public class BiomeBrush extends AbstractBrush {
 
     private static final BiomeType DEFAULT_BIOME_TYPE = BiomeTypes.PLAINS;
@@ -31,21 +31,21 @@ public class BiomeBrush extends AbstractBrush {
         this.biomeType = (BiomeType) getRegistryProperty("default-biome-type", BiomeType.REGISTRY, DEFAULT_BIOME_TYPE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.biome.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -60,7 +60,7 @@ public class BiomeBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<biome-type>")
+    @Command("<biome-type>")
     public void onBrushBiometype(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("biome-type") BiomeType biomeType

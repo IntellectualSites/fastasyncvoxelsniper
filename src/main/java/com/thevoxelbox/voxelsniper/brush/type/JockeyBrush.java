@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b jockey")
-@CommandPermission("voxelsniper.brush.jockey")
+@Command(value = "brush|b jockey")
+@Permission("voxelsniper.brush.jockey")
 public class JockeyBrush extends AbstractBrush {
 
     private static final int ENTITY_STACK_LIMIT = 50;
@@ -48,21 +48,21 @@ public class JockeyBrush extends AbstractBrush {
         this.jockeyType = (JockeyType) getEnumProperty("default-jockey-type", JockeyType.class, DEFAULT_JOCKEY_TYPE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.jockey.info"));
     }
 
-    @CommandMethod("t <jockey-type>")
+    @Command("t <jockey-type>")
     public void onBrushT(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("jockey-type") JockeyType jockeyType
@@ -76,7 +76,7 @@ public class JockeyBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<player-only> <inverse> <stack>")
+    @Command("<player-only> <inverse> <stack>")
     public void onBrushJockeytype(
             final @NotNull Snipe snipe,
             final @Argument("player-only") @Liberal boolean playerOnly,

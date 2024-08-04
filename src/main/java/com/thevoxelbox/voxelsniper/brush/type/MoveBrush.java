@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
@@ -20,8 +20,8 @@ import java.util.List;
  * Moves a selection blockPositionY a certain amount.
  */
 @RequireToolkit
-@CommandMethod(value = "brush|b move|mv")
-@CommandPermission("voxelsniper.brush.move")
+@Command(value = "brush|b move|mv")
+@Permission("voxelsniper.brush.move")
 public class MoveBrush extends AbstractBrush {
 
     private static final int MAX_BLOCK_COUNT = 5000000;
@@ -43,21 +43,21 @@ public class MoveBrush extends AbstractBrush {
         this.maxBlockCount = getIntegerProperty("max-block-count", MAX_BLOCK_COUNT);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.move.info"));
     }
 
-    @CommandMethod("reset")
+    @Command("reset")
     public void onBrushReset(
             final @NotNull Snipe snipe
     ) {
@@ -80,7 +80,7 @@ public class MoveBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("x <x-direction>")
+    @Command("x <x-direction>")
     public void onBrushX(
             final @NotNull Snipe snipe,
             final @Argument("x-direction") int xDirection
@@ -94,7 +94,7 @@ public class MoveBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("y <y-direction>")
+    @Command("y <y-direction>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("y-direction") int yDirection
@@ -108,7 +108,7 @@ public class MoveBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("z <z-direction>")
+    @Command("z <z-direction>")
     public void onBrushZ(
             final @NotNull Snipe snipe,
             final @Argument("z-direction") int zDirection

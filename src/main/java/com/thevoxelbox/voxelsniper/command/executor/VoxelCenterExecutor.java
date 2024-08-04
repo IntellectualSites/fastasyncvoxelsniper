@@ -1,9 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -15,9 +14,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "voxel_center|voxelcenter|vc")
+@Command(value = "voxel_center|voxelcenter|vc")
 @CommandDescription("VoxelCenter & VoxelCentroid input.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelCenterExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -26,11 +25,11 @@ public class VoxelCenterExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("<center>")
+    @Command("<center>")
     public void onVoxelCenter(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,
-            final @Argument("center") int center
+            final int center
     ) {
         Player player = sniper.getPlayer();
         ToolkitProperties toolkitProperties = toolkit.getProperties();

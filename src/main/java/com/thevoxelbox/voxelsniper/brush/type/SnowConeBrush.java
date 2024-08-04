@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -16,11 +16,11 @@ import com.thevoxelbox.voxelsniper.util.material.Materials;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b snow_cone|snowcone|snow")
-@CommandPermission("voxelsniper.brush.snowcone")
+@Command(value = "brush|b snow_cone|snowcone|snow")
+@Permission("voxelsniper.brush.snowcone")
 public class SnowConeBrush extends AbstractBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

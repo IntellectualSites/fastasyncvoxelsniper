@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
@@ -14,7 +14,6 @@ import org.bukkit.entity.EntityType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
 
 public class EntityClassArgument implements VoxelCommandElement {
 
@@ -57,12 +56,8 @@ public class EntityClassArgument implements VoxelCommandElement {
     }
 
     @Parser(name = "entity-class_parser", suggestions = "entity-class_suggestions")
-    public Class<? extends Entity> parseEntityClass(CommandContext<Sniper> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(EntityClassArgument.class, commandContext);
-        }
-
+    public Class<? extends Entity> parseEntityClass(CommandContext<Sniper> commandContext, CommandInput commandInput) {
+        String input = commandInput.readString();
         Class<? extends Entity> clazz = getEntityClass(input);
         if (clazz == null) {
             throw new VoxelCommandElementParseException(input, Caption.of(
@@ -71,7 +66,6 @@ public class EntityClassArgument implements VoxelCommandElement {
             ));
         }
 
-        inputQueue.remove();
         return clazz;
     }
 
