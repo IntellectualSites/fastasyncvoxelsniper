@@ -6,7 +6,7 @@ annotations = "24.1.0"
 cloud = "1.8.4"
 
 # Gradle plugins
-shadow = "8.1.1"
+shadow = "8.3.0"
 pluginyml = "0.6.0"
 nexus = "2.0.0"
 minotaur = "2.8.7"
@@ -25,7 +25,7 @@ cloudbukkit = { group = "cloud.commandframework", name = "cloud-bukkit", version
 cloudpaper = { group = "cloud.commandframework", name = "cloud-paper", version.ref = "cloud" }
 
 [plugins]
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
 nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
