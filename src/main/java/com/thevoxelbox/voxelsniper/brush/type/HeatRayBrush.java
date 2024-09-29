@@ -1,10 +1,10 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b heat_ray|heatray|hr")
-@CommandPermission("voxelsniper.brush.heatray")
+@Command(value = "brush|b heat_ray|heatray|hr")
+@Permission("voxelsniper.brush.heatray")
 public class HeatRayBrush extends AbstractBrush {
 
     private static final double REQUIRED_OBSIDIAN_DENSITY = 0.6;
@@ -86,21 +86,21 @@ public class HeatRayBrush extends AbstractBrush {
         this.amplitude = getDoubleProperty("default-amplitude", DEFAULT_AMPLITUDE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.heat-ray.info"));
     }
 
-    @CommandMethod("<soul-fire>")
+    @Command("<soul-fire>")
     public void onBrushSoulfire(
             final @NotNull Snipe snipe,
             final @Argument("soul-fire") @Liberal boolean soulFire
@@ -114,7 +114,7 @@ public class HeatRayBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("oct <octaves>")
+    @Command("oct <octaves>")
     public void onBrushOct(
             final @NotNull Snipe snipe,
             final @Argument("octaves") @Range(min = "0") int octaves
@@ -128,7 +128,7 @@ public class HeatRayBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("amp <amplitude>")
+    @Command("amp <amplitude>")
     public void onBrushAmp(
             final @NotNull Snipe snipe,
             final @Argument("amplitude") double amplitude
@@ -142,7 +142,7 @@ public class HeatRayBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("freq <frequency>")
+    @Command("freq <frequency>")
     public void onBrushFreq(
             final @NotNull Snipe snipe,
             final @Argument("frequency") double frequency

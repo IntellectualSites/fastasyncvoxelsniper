@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -16,8 +16,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b scanner|sc")
-@CommandPermission("voxelsniper.brush.scanner")
+@Command(value = "brush|b scanner|sc")
+@Permission("voxelsniper.brush.scanner")
 public class ScannerBrush extends AbstractBrush {
 
     private static final int DEPTH_MIN = 1;
@@ -39,21 +39,21 @@ public class ScannerBrush extends AbstractBrush {
         this.depth = getIntegerProperty("default-depth", DEFAULT_DEPTH);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.scanner.info"));
     }
 
-    @CommandMethod("d <depth>")
+    @Command("d <depth>")
     public void onBrushD(
             final @NotNull Snipe snipe,
             final @Argument("depth") @DynamicRange(min = "depthMin", max = "depthMax") int depth

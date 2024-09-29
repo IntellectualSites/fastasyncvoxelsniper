@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.redstone;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.registry.state.PropertyKey;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -17,14 +17,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b set_redstone_rotate|setredstonerotatep|setrr")
-@CommandPermission("voxelsniper.brush.setredstonerotate")
+@Command(value = "brush|b set_redstone_rotate|setredstonerotatep|setrr")
+@Permission("voxelsniper.brush.setredstonerotate")
 public class SetRedstoneRotateBrush extends AbstractBrush {
 
     @Nullable
     private BlockVector3 block;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

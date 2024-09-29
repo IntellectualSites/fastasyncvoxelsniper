@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockCategories;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -14,8 +14,8 @@ import com.thevoxelbox.voxelsniper.util.material.MaterialSets;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b eraser|erase")
-@CommandPermission("voxelsniper.brush.eraser")
+@Command(value = "brush|b eraser|erase")
+@Permission("voxelsniper.brush.eraser")
 public class EraserBrush extends AbstractBrush {
 
     private static final MaterialSet EXCLUSIVE_MATERIALS = MaterialSet.builder()
@@ -33,7 +33,7 @@ public class EraserBrush extends AbstractBrush {
             .with(MaterialSets.LIQUIDS)
             .build();
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

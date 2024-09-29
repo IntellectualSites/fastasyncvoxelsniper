@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -18,28 +18,28 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b drain|dr")
-@CommandPermission("voxelsniper.brush.drain")
+@Command(value = "brush|b drain|dr")
+@Permission("voxelsniper.brush.drain")
 public class DrainBrush extends AbstractBrush {
 
     private boolean trueCircle;
     private boolean disc;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.drain.info"));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle
@@ -53,7 +53,7 @@ public class DrainBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("d")
+    @Command("d")
     public void onBrushD(
             final @NotNull Snipe snipe
     ) {

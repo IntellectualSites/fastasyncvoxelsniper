@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer.splatter;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -21,8 +21,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b splatter_overlay|splatteroverlay|sover")
-@CommandPermission("voxelsniper.brush.splatteroverlay")
+@Command(value = "brush|b splatter_overlay|splatteroverlay|sover")
+@Permission("voxelsniper.brush.splatteroverlay")
 public class SplatterOverlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
@@ -41,21 +41,21 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         this.yOffset = getIntegerProperty("default-y-offset", DEFAULT_Y_OFFSET);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.splatter-overlay.info"));
     }
 
-    @CommandMethod("all")
+    @Command("all")
     public void onBrushAll(
             final @NotNull Snipe snipe
     ) {
@@ -68,7 +68,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("some")
+    @Command("some")
     public void onBrushSome(
             final @NotNull Snipe snipe
     ) {
@@ -81,7 +81,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("randh")
+    @Command("randh")
     public void onBrushRandh(
             final @NotNull Snipe snipe
     ) {
@@ -94,7 +94,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("d <depth>")
+    @Command("d <depth>")
     public void onBrushD(
             final @NotNull Snipe snipe,
             final @Argument("depth") @Range(min = "1") int depth
@@ -108,7 +108,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("s <seed-percent>")
+    @Command("s <seed-percent>")
     public void onBrushS(
             final @NotNull Snipe snipe,
             final @Argument("seed-percent") @DynamicRange(min = "seedPercentMin", max = "seedPercentMax") int seedPercent
@@ -122,7 +122,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("g <growth-percent>")
+    @Command("g <growth-percent>")
     public void onBrushG(
             final @NotNull Snipe snipe,
             final @Argument("growth-percent") @DynamicRange(min = "growthPercentMin", max = "growthPercentMax") int growthPercent
@@ -136,7 +136,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("r <splatter-recursions>")
+    @Command("r <splatter-recursions>")
     public void onBrushR(
             final @NotNull Snipe snipe,
             final @Argument("splatter-recursions") @DynamicRange(min = "splatterRecursionsMin", max = "splatterRecursionsMax") int splatterRecursions
@@ -150,7 +150,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("yoff <y-offset>")
+    @Command("yoff <y-offset>")
     public void onBrushY(
             final @NotNull Snipe snipe,
             final @Argument("y-offset") int yOffset

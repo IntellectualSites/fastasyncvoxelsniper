@@ -1,10 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.intellectualsites.paster.IncendoPaster;
@@ -29,9 +28,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-@CommandMethod("voxel_sniper|voxelsniper|vs|favs|fastasyncvoxelsniper")
+@Command("voxel_sniper|voxelsniper|vs|favs|fastasyncvoxelsniper")
 @CommandDescription("FastAsyncVoxelSniper Settings.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelSniperExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -40,7 +39,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod(value = "")
+    @Command(value = "")
     public void onVoxelSniper(
             final @NotNull Sniper sniper
     ) {
@@ -48,7 +47,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         sniper.sendInfo(false);
     }
 
-    @CommandMethod("brushes")
+    @Command("brushes")
     public void onVoxelSniperBrushes(
             final @NotNull SniperCommander commander
     ) {
@@ -65,7 +64,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod("brusheslong")
+    @Command("brusheslong")
     public void onVoxelSniperBrusheslong(
             final @NotNull SniperCommander commander
     ) {
@@ -83,11 +82,11 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
     }
 
     @RequireToolkit
-    @CommandMethod(value = "range [range]")
+    @Command(value = "range [range]")
     public void onVoxelSniperRange(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,
-            final @Nullable @Argument("range") @Range(min = "1") Integer range
+            final @Nullable  @Range(min = "1") Integer range
     ) {
         ToolkitProperties toolkitProperties = toolkit.getProperties();
         toolkitProperties.setBlockTracerRange(range);
@@ -98,7 +97,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod("perf|performer")
+    @Command("perf|performer")
     public void onVoxelSniperPerformer(
             final @NotNull SniperCommander commander
     ) {
@@ -116,7 +115,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod("perflong|performerlong")
+    @Command("perflong|performerlong")
     public void onVoxelSniperPerformerlong(
             final @NotNull SniperCommander commander
     ) {
@@ -134,7 +133,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod(value = "enable")
+    @Command(value = "enable")
     public void onVoxelSniperEnable(
             final @NotNull Sniper sniper
     ) {
@@ -145,7 +144,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod(value = "disable")
+    @Command(value = "disable")
     public void onVoxelSniperDisable(
             final @NotNull Sniper sniper
     ) {
@@ -156,7 +155,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod(value = "toggle")
+    @Command(value = "toggle")
     public void onVoxelSniperToggle(
             final @NotNull Sniper sniper
     ) {
@@ -168,7 +167,7 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
     }
 
     @SuppressWarnings("deprecation") // Paper deprecation
-    @CommandMethod("info")
+    @Command("info")
     public void onVoxelSniperInfo(
             final @NotNull SniperCommander commander
     ) {
@@ -180,8 +179,8 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         ));
     }
 
-    @CommandMethod("reload")
-    @CommandPermission("voxelsniper.admin")
+    @Command("reload")
+    @Permission("voxelsniper.admin")
     public void onVoxelSniperReload(
             final @NotNull SniperCommander commander
     ) {
@@ -189,8 +188,8 @@ public class VoxelSniperExecutor implements VoxelCommandElement {
         commander.print(Caption.of("voxelsniper.command.voxel-sniper.config-reload"));
     }
 
-    @CommandMethod("debugpaste")
-    @CommandPermission("voxelsniper.admin")
+    @Command("debugpaste")
+    @Permission("voxelsniper.admin")
     public void onVoxelSniperDebugpaste(
             final @NotNull SniperCommander commander
     ) {

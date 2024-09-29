@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @RequireToolkit
-@CommandMethod(value = "voxel|v|voxel_ink|voxelink|vi")
+@Command(value = "voxel|v|voxel_ink|voxelink|vi")
 @CommandDescription("Voxel input.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -37,7 +37,7 @@ public class VoxelExecutor implements VoxelCommandElement {
         this.config = plugin.getVoxelSniperConfig();
     }
 
-    @CommandMethod("[pattern]")
+    @Command("[pattern]")
     public void onVoxel(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,

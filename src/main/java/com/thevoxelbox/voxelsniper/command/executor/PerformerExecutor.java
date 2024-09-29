@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.brush.Brush;
@@ -14,9 +14,9 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "performer|perf|p")
+@Command(value = "performer|perf|p")
 @CommandDescription("Performer executor.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class PerformerExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -25,7 +25,7 @@ public class PerformerExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onPerformer(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit

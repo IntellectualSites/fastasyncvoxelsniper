@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
@@ -21,8 +21,8 @@ import java.util.List;
  * Regenerates the target chunk.
  */
 @RequireToolkit
-@CommandMethod(value = "brush|b regenerate_chunk|regeneratechunk|rc")
-@CommandPermission("voxelsniper.brush.ellipsoid")
+@Command(value = "brush|b regenerate_chunk|regeneratechunk|rc")
+@Permission("voxelsniper.brush.ellipsoid")
 public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
@@ -33,21 +33,21 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
     private BiomeType biomeType = null;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.regenerate-chunk.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -62,7 +62,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("default")
+    @Command("default")
     public void onBrushDefault(
             final @NotNull Snipe snipe
     ) {
@@ -75,7 +75,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<biome-type>")
+    @Command("<biome-type>")
     public void onBrushBiometype(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("biome-type") BiomeType biomeType

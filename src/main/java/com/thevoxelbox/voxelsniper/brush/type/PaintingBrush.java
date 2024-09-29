@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.snipe.Snipe;
@@ -13,11 +13,11 @@ import org.jetbrains.annotations.NotNull;
  * Painting scrolling Brush.
  */
 @RequireToolkit
-@CommandMethod(value = "brush|b painting|paint")
-@CommandPermission("voxelsniper.brush.painting")
+@Command(value = "brush|b painting|paint")
+@Permission("voxelsniper.brush.painting")
 public class PaintingBrush extends AbstractBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

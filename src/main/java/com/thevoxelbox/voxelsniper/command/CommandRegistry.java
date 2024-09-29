@@ -1,30 +1,25 @@
 package com.thevoxelbox.voxelsniper.command;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.annotations.AnnotationParser;
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.MethodCommandExecutionHandler;
-import cloud.commandframework.annotations.injection.ParameterInjectorRegistry;
-import cloud.commandframework.arguments.CommandArgument;
-import cloud.commandframework.arguments.parser.StandardParameters;
-import cloud.commandframework.arguments.standard.EnumArgument;
-import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.bukkit.CloudBukkitCapabilities;
-import cloud.commandframework.captions.CaptionVariable;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.ArgumentParseException;
-import cloud.commandframework.exceptions.CommandExecutionException;
-import cloud.commandframework.exceptions.InvalidCommandSenderException;
-import cloud.commandframework.exceptions.InvalidSyntaxException;
-import cloud.commandframework.exceptions.NoPermissionException;
-import cloud.commandframework.exceptions.parsing.ParserException;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
-import cloud.commandframework.keys.CloudKey;
-import cloud.commandframework.keys.SimpleCloudKey;
-import cloud.commandframework.meta.CommandMeta;
-import cloud.commandframework.paper.PaperCommandManager;
-import cloud.commandframework.services.types.ConsumerService;
+import org.incendo.cloud.Command;
+import org.incendo.cloud.SenderMapper;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.MethodCommandExecutionHandler;
+import org.incendo.cloud.injection.ParameterInjectorRegistry;
+import org.incendo.cloud.parser.standard.EnumParser;
+import org.incendo.cloud.bukkit.BukkitCommandManager;
+import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
+import org.incendo.cloud.caption.CaptionVariable;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.exception.ArgumentParseException;
+import org.incendo.cloud.exception.InvalidCommandSenderException;
+import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.exception.NoPermissionException;
+import org.incendo.cloud.exception.handling.ExceptionHandler;
+import org.incendo.cloud.exception.parsing.ParserException;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.key.CloudKey;
+import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.services.type.ConsumerService;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.util.formatting.text.TextComponent;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
@@ -48,6 +43,7 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import io.leangen.geantyref.TypeToken;
 import org.apache.commons.lang3.ClassUtils;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.AnnotationParser;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -59,19 +55,19 @@ import java.util.Map;
 
 public class CommandRegistry {
 
-    public static final CloudKey<Snipe> SNIPE_KEY = createTypeKey(
+    public static final CloudKey<Snipe> SNIPE_KEY = createCloudKey(
             "snipe", Snipe.class
     );
-    public static final CloudKey<PerformerSnipe> PERFORMER_SNIPE_KEY = createTypeKey(
+    public static final CloudKey<PerformerSnipe> PERFORMER_SNIPE_KEY = createCloudKey(
             "snipe", PerformerSnipe.class
     );
-    public static final CloudKey<Toolkit> TOOLKIT_KEY = createTypeKey(
+    public static final CloudKey<Toolkit> TOOLKIT_KEY = createCloudKey(
             "toolkit", Toolkit.class
     );
 
     private static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
     private static final String NO_DESCRIPTION = "No Description.";
-    private static final CommandMeta.Key<Boolean> REQUIRE_TOOLKIT = createMetaKey(
+    private static final CloudKey<Boolean> REQUIRE_TOOLKIT = createCloudKey(
             "require-toolkit",
             Boolean.class
     );
@@ -107,15 +103,14 @@ public class CommandRegistry {
         // Creates the command manager according to the server platform.
         PaperCommandManager<SniperCommander> commandManager = new PaperCommandManager<>(
                 plugin,
-                CommandExecutionCoordinator.simpleCoordinator(),
-                commandSender -> plugin.getSniperRegistry().getSniperCommander(commandSender),
-                SniperCommander::getCommandSender
+                ExecutionCoordinator.simpleCoordinator(),
+                SenderMapper.create(
+                        commandSender -> plugin.getSniperRegistry().getSniperCommander(commandSender),
+                        SniperCommander::getCommandSender
+                )
         );
 
         // Handles extra registrations.
-        commandManager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(
-                FilteringCommandSuggestionProcessor.Filter.<SniperCommander>contains(true).andTrimBeforeLastSpace()
-        ));
         if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             commandManager.registerAsynchronousCompletions();
         }
@@ -138,18 +133,16 @@ public class CommandRegistry {
         // Handles post-processor.
         commandManager.registerCommandPostProcessor(context -> {
             // Ensures that we are working with a voxel sniper annotated command.
-            CommandContext<SniperCommander> commandContext = context.getCommandContext();
-            Command<SniperCommander> command = context.getCommand();
-            if (!(commandContext.getSender() instanceof Sniper sniper)
-                    || !(command.getCommandExecutionHandler() instanceof MethodCommandExecutionHandler<SniperCommander> handler)) {
+            CommandContext<SniperCommander> commandContext = context.commandContext();
+            Command<SniperCommander> command = context.command();
+            if (!(commandContext.sender() instanceof Sniper sniper)
+                    || !(command.commandExecutionHandler() instanceof MethodCommandExecutionHandler<SniperCommander> handler)) {
                 return;
             }
 
             Toolkit toolkit;
             // Toolkit requirement relies on the custom annotation.
-            if (command.getCommandMeta()
-                    .get(REQUIRE_TOOLKIT)
-                    .orElse(false)) {
+            if (command.commandMeta().getOrDefault(REQUIRE_TOOLKIT, false)) {
                 if ((toolkit = sniper.getCurrentToolkit()) == null) {
                     sniper.print(Caption.of("voxelsniper.command.missing-toolkit"));
                     ConsumerService.interrupt();
@@ -181,54 +174,49 @@ public class CommandRegistry {
         });
 
         // Handles exceptions.
-        commandManager.registerExceptionHandler(InvalidSyntaxException.class, (commander, e) ->
-                commander.print(Caption.of(
+        commandManager.exceptionController().registerHandler(InvalidSyntaxException.class, ctx ->
+                ctx.context().sender().print(Caption.of(
                         "voxelsniper.command.invalid-command-syntax",
-                        e.getCorrectSyntax()
-                )));
-        commandManager.registerExceptionHandler(InvalidCommandSenderException.class, (commander, e) ->
-                commander.print(Caption.of(
+                        ctx.exception().correctSyntax()
+                ))
+        ).registerHandler(InvalidCommandSenderException.class, ctx ->
+                ctx.context().sender().print(Caption.of(
                         "voxelsniper.command.invalid-sender-type",
-                        e.getRequiredSender().getSimpleName()
-                )));
-        commandManager.registerExceptionHandler(NoPermissionException.class, (commander, e) ->
-                commander.print(Caption.of(
+                        ctx.exception().requiredSender().getSimpleName()
+                ))
+        ).registerHandler(NoPermissionException.class, ctx ->
+                ctx.context().sender().print(Caption.of(
                         "voxelsniper.command.missing-permission",
-                        e.getMissingPermission()
-                )));
-        commandManager.registerExceptionHandler(ArgumentParseException.class, (commander, e) -> {
-            Throwable t = e.getCause();
-
-            if (t instanceof VoxelCommandElementParseException ve) {
-                commander.print(ve.getErrorMessage());
-            } else if (t instanceof EnumArgument.EnumParseException ee) {
-                commander.print(Caption.of(
+                        ctx.exception().missingPermission()
+                ))
+        ).registerHandler(
+                ArgumentParseException.class,
+                ExceptionHandler.unwrappingHandler()
+        ).registerHandler(VoxelCommandElementParseException.class, ctx ->
+               ctx.context().sender().print(ctx.exception().getErrorMessage())
+        ).registerHandler(EnumParser.EnumParseException.class, ctx ->
+                ctx.context().sender().print(Caption.of(
                         "voxelsniper.command.invalid-enum",
-                        ee.getInput(),
+                        ctx.exception().input(),
                         VoxelSniperText.formatList(
-                                Arrays.stream(ee.getEnumClass().getEnumConstants()).toList(),
+                                Arrays.stream(ctx.exception().enumClass().getEnumConstants()).toList(),
                                 (value, value2) -> Integer.compare(value.ordinal(), value2.ordinal()),
                                 value -> TextComponent.of(value.name().toLowerCase(Locale.ROOT)),
                                 "voxelsniper.command.invalid-enum"
                         )
-                ));
-            } else if (t instanceof ParserException pe) {
-                commander.print(Caption.of(
-                        pe.errorCaption()
-                                .getKey()
+                ))
+        ).registerHandler(ParserException.class, ctx ->
+                ctx.context().sender().print(Caption.of(
+                        ctx.exception().errorCaption()
+                                .key()
                                 .replace("argument.parse.failure.", "voxelsniper.command.invalid-"),
-                        Arrays.stream(pe.captionVariables())
-                                .map(CaptionVariable::getValue)
+                        Arrays.stream(ctx.exception().captionVariables())
+                                .map(CaptionVariable::value)
                                 .toArray(Object[]::new)
-                ));
-            } else {
-                commander.print(Caption.of("voxelsniper.error.unexpected"));
-                e.printStackTrace();
-            }
-        });
-        commandManager.registerExceptionHandler(CommandExecutionException.class, (commander, e) -> {
-            commander.print(Caption.of("voxelsniper.error.unexpected"));
-            e.printStackTrace();
+                ))
+        ).registerHandler(Throwable.class, ctx -> {
+            ctx.context().sender().print(Caption.of("voxelsniper.error.unexpected"));
+            ctx.exception().printStackTrace();
         });
 
         return commandManager;
@@ -238,11 +226,7 @@ public class CommandRegistry {
         // Creates the annotation parser.
         AnnotationParser<SniperCommander> annotationParser = new AnnotationParser<>(
                 commandManager,
-                SniperCommander.class,
-                parserParameters -> CommandMeta.simple()
-                        .with(CommandMeta.DESCRIPTION, parserParameters
-                                .get(StandardParameters.DESCRIPTION, NO_DESCRIPTION))
-                        .build()
+                SniperCommander.class
         );
 
         // Handles the custom annotations.
@@ -290,7 +274,7 @@ public class CommandRegistry {
             MethodCommandExecutionHandler<SniperCommander> handler,
             Object instance
     ) {
-        SniperCommander commander = commandContext.getSender();
+        SniperCommander commander = commandContext.sender();
         MethodCommandExecutionHandler.CommandMethodContext<SniperCommander> methodContext = handler.context();
 
         // Dynamic range is based on executor instance fields, we must postprocess them manually.
@@ -310,9 +294,7 @@ public class CommandRegistry {
                 argumentName = this.annotationParser.processString(argumentAnnotation.value());
             }
 
-            CommandArgument<SniperCommander, Number> argument =
-                    (CommandArgument<SniperCommander, Number>) methodContext.commandArguments().get(argumentName);
-            double number = commandContext.get(argument).doubleValue();
+            double number = commandContext.<Number>get(argumentName).doubleValue();
 
             DynamicRange dynamicRangeAnnotation = parameter.getAnnotation(DynamicRange.class);
             String min = dynamicRangeAnnotation.min();
@@ -444,12 +426,8 @@ public class CommandRegistry {
         return annotationParser;
     }
 
-    private static <T> CloudKey<T> createTypeKey(String id, Class<T> clazz) {
-        return SimpleCloudKey.of("voxelsniper-" + id, TypeToken.get(clazz));
-    }
-
-    private static <T> CommandMeta.Key<T> createMetaKey(String id, Class<T> clazz) {
-        return CommandMeta.Key.of(TypeToken.get(clazz), "voxelsniper-" + id);
+    private static <T> CloudKey<T> createCloudKey(String id, Class<T> clazz) {
+        return CloudKey.of("voxelsniper-" + id, TypeToken.get(clazz));
     }
 
 }

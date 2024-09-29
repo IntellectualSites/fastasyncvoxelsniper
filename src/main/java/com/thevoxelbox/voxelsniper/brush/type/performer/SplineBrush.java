@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -18,8 +18,8 @@ import java.util.List;
  * the splines will be included.
  */
 @RequireToolkit
-@CommandMethod(value = "brush|b spline|sp")
-@CommandPermission("voxelsniper.brush.ellipsoid")
+@Command(value = "brush|b spline|sp")
+@Permission("voxelsniper.brush.ellipsoid")
 public class SplineBrush extends AbstractPerformerBrush {
 
     private final List<BlockVector3> endPts = new ArrayList<>();
@@ -32,21 +32,21 @@ public class SplineBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.spline.info"));
     }
 
-    @CommandMethod("ss")
+    @Command("ss")
     public void onBrushSs(
             final @NotNull Snipe snipe
     ) {
@@ -62,7 +62,7 @@ public class SplineBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("sc")
+    @Command("sc")
     public void onBrushSc(
             final @NotNull Snipe snipe
     ) {
@@ -78,14 +78,14 @@ public class SplineBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("clear")
+    @Command("clear")
     public void onBrushClear(
             final @NotNull Snipe snipe
     ) {
         this.clear(snipe);
     }
 
-    @CommandMethod("ren")
+    @Command("ren")
     public void onBrushRen(
             final @NotNull Snipe snipe
     ) {

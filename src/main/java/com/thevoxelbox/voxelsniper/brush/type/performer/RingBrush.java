@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Liberal;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Liberal;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -14,8 +14,8 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b ring|ri")
-@CommandPermission("voxelsniper.brush.ring")
+@Command(value = "brush|b ring|ri")
+@Permission("voxelsniper.brush.ring")
 public class RingBrush extends AbstractPerformerBrush {
 
     private static final double DEFAULT_INNER_SIZE = 0.0;
@@ -24,21 +24,21 @@ public class RingBrush extends AbstractPerformerBrush {
 
     private double innerSize = DEFAULT_INNER_SIZE;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.performer-brush.ring.info"));
     }
 
-    @CommandMethod("<true-circle>")
+    @Command("<true-circle>")
     public void onBrushTruecircle(
             final @NotNull Snipe snipe,
             final @Argument("true-circle") @Liberal boolean trueCircle
@@ -52,7 +52,7 @@ public class RingBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("ir <inner-size>")
+    @Command("ir <inner-size>")
     public void onBrushIr(
             final @NotNull Snipe snipe,
             final @Argument("inner-size") double innerSize

@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.DynamicRange;
@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b blob|splatblob")
-@CommandPermission("voxelsniper.brush.blob")
+@Command(value = "brush|b blob|splatblob")
+@Permission("voxelsniper.brush.blob")
 public class BlobBrush extends AbstractPerformerBrush {
 
     @Override
@@ -25,14 +25,14 @@ public class BlobBrush extends AbstractPerformerBrush {
         this.growthPercent = getIntegerProperty("default-growth-percent", DEFAULT_GROWTH_PERCENT);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -41,7 +41,7 @@ public class BlobBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("g <growth-percent>")
+    @Command("g <growth-percent>")
     public void onBrushG(
             final @NotNull Snipe snipe,
             final @Argument("growth-percent") @DynamicRange(min = "growthPercentMin", max = "growthPercentMax") int growthPercent

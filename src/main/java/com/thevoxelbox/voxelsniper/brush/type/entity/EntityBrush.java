@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
@@ -22,8 +22,8 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b entity|en")
-@CommandPermission("voxelsniper.brush.entity")
+@Command(value = "brush|b entity|en")
+@Permission("voxelsniper.brush.entity")
 public class EntityBrush extends AbstractBrush {
 
     private static final EntityType DEFAULT_ENTITY_TYPE = EntityTypes.ZOMBIE;
@@ -35,21 +35,21 @@ public class EntityBrush extends AbstractBrush {
         this.entityType = (EntityType) getRegistryProperty("default-entity-type", EntityType.REGISTRY, DEFAULT_ENTITY_TYPE);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.entity.info"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -64,7 +64,7 @@ public class EntityBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("<entity-type>")
+    @Command("<entity-type>")
     public void onBrushEntitytype(
             final @NotNull Snipe snipe,
             final @NotNull @Argument("entity-type") EntityType entityType

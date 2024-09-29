@@ -1,17 +1,16 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.annotations.parser.Parser;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.stream.Stream;
 
 public class ToolkitArgument implements VoxelCommandElement {
 
@@ -28,22 +27,17 @@ public class ToolkitArgument implements VoxelCommandElement {
     }
 
     @Suggestions("toolkit_suggestions")
-    public List<String> suggestToolkits(CommandContext<Sniper> commandContext, String input) {
-        Sniper sniper = commandContext.getSender();
+    public Stream<String> suggestToolkits(CommandContext<Sniper> commandContext, String input) {
+        Sniper sniper = commandContext.sender();
         return sniper.getToolkits().stream()
                 .filter(toolkit -> !toolkit.isDefault())
-                .map(Toolkit::getToolkitName)
-                .toList();
+                .map(Toolkit::getToolkitName);
     }
 
     @Parser(suggestions = "toolkit_suggestions")
-    public Toolkit parseToolkit(CommandContext<Sniper> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(ToolkitArgument.class, commandContext);
-        }
-
-        Sniper sniper = commandContext.getSender();
+    public Toolkit parseToolkit(CommandContext<Sniper> commandContext, CommandInput commandInput) {
+        String input = commandInput.readString();
+        Sniper sniper = commandContext.sender();
         Toolkit toolkit = sniper.getToolkit(input);
         if (toolkit == null) {
             throw new VoxelCommandElementParseException(input, Caption.of(
@@ -52,7 +46,6 @@ public class ToolkitArgument implements VoxelCommandElement {
             ));
         }
 
-        inputQueue.remove();
         return toolkit;
     }
 

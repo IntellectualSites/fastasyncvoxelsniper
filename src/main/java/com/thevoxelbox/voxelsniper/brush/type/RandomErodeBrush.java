@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockType;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b random_erode|randomerode|re")
-@CommandPermission("voxelsniper.brush.randomerode")
+@Command(value = "brush|b random_erode|randomerode|re")
+@Permission("voxelsniper.brush.randomerode")
 public class RandomErodeBrush extends AbstractBrush {
 
     private static final double TRUE_CIRCLE = 0.5;
@@ -29,7 +29,7 @@ public class RandomErodeBrush extends AbstractBrush {
     private int erodeRecursions;
     private int fillRecursions;
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {

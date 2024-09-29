@@ -3,7 +3,8 @@
 annotations = "25.0.0"
 
 # Cloud command system
-cloud = "1.8.4"
+cloud = "2.0.0-beta.1"
+cloudMinecraft = "2.0.0-SNAPSHOT"
 
 # Gradle plugins
 shadow = "8.3.2"
@@ -19,10 +20,10 @@ runPaper = "2.3.1"
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 
 # Cloud command system
-cloudcore = { group = "cloud.commandframework", name = "cloud-core", version.ref = "cloud" }
-cloudannotations = { group = "cloud.commandframework", name = "cloud-annotations", version.ref = "cloud" }
-cloudbukkit = { group = "cloud.commandframework", name = "cloud-bukkit", version.ref = "cloud" }
-cloudpaper = { group = "cloud.commandframework", name = "cloud-paper", version.ref = "cloud" }
+cloudcore = { group = "org.incendo", name = "cloud-core", version.ref = "cloud" }
+cloudannotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "cloudMinecraft" }
+cloudbukkit = { group = "org.incendo", name = "cloud-bukkit", version.ref = "cloudMinecraft" }
+cloudpaper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloudMinecraft" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

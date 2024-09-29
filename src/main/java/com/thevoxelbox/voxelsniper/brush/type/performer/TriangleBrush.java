@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.thevoxelbox.voxelsniper.command.argument.annotation.RequireToolkit;
@@ -14,8 +14,8 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b triangle|tri")
-@CommandPermission("voxelsniper.brush.triangle")
+@Command(value = "brush|b triangle|tri")
+@Permission("voxelsniper.brush.triangle")
 public class TriangleBrush extends AbstractPerformerBrush {
 
     private final double[] coordinatesOne = new double[3]; // Three corners
@@ -32,14 +32,14 @@ public class TriangleBrush extends AbstractPerformerBrush {
     public void loadProperties() {
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {

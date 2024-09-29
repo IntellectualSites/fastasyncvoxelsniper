@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type.entity;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -24,8 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b entity_removal|entityremoval|er")
-@CommandPermission("voxelsniper.brush.entityremoval")
+@Command(value = "brush|b entity_removal|entityremoval|er")
+@Permission("voxelsniper.brush.entityremoval")
 public class EntityRemovalBrush extends AbstractBrush {
 
     private static final List<String> DEFAULT_EXEMPTIONS = Arrays.asList(
@@ -44,21 +44,21 @@ public class EntityRemovalBrush extends AbstractBrush {
         );
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.entity.removal"));
     }
 
-    @CommandMethod("list")
+    @Command("list")
     public void onBrushList(
             final @NotNull Snipe snipe
     ) {
@@ -71,7 +71,7 @@ public class EntityRemovalBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("add <entity-class>")
+    @Command("add <entity-class>")
     public void onBrushPlus(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "entity-class", parserName = "entity-class_parser") Class<? extends Entity> entityClass
@@ -85,7 +85,7 @@ public class EntityRemovalBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("remove <entity-class>")
+    @Command("remove <entity-class>")
     public void onBrushMinus(
             final @NotNull Snipe snipe,
             final @NotNull @Argument(value = "entity-class", parserName = "entity-class_parser") Class<? extends Entity> entityClass

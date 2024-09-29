@@ -1,8 +1,8 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -13,8 +13,8 @@ import com.thevoxelbox.voxelsniper.sniper.snipe.message.SnipeMessenger;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b flat_ocean|flatocean|fo")
-@CommandPermission("voxelsniper.brush.flatocean")
+@Command(value = "brush|b flat_ocean|flatocean|fo")
+@Permission("voxelsniper.brush.flatocean")
 public class FlatOceanBrush extends AbstractBrush {
 
     private static final int DEFAULT_WATER_LEVEL = 29;
@@ -29,21 +29,21 @@ public class FlatOceanBrush extends AbstractBrush {
         this.floorLevel = getIntegerProperty("default-floor-level", DEFAULT_FLOOR_LEVEL);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
         super.onBrushInfoCommand(snipe, Caption.of("voxelsniper.brush.flat-ocean.info"));
     }
 
-    @CommandMethod("yo <water-level>")
+    @Command("yo <water-level>")
     public void onBrushYo(
             final @NotNull Snipe snipe,
             final @Argument("water-level") int waterLevel
@@ -57,7 +57,7 @@ public class FlatOceanBrush extends AbstractBrush {
         ));
     }
 
-    @CommandMethod("yl <floor-level>")
+    @Command("yl <floor-level>")
     public void onBrushYl(
             final @NotNull Snipe snipe,
             final @Argument("floor-level") int floorLevel

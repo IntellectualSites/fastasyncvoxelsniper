@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.performer.type.material;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.world.block.BaseBlock;
@@ -13,13 +13,13 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "performer|perf|p material|mat|m")
-@CommandPermission("voxelsniper.sniper")
+@Command(value = "performer|perf|p material|mat|m")
+@Permission("voxelsniper.sniper")
 public class MaterialPerformer extends AbstractPerformer {
 
     private Pattern pattern;
 
-    @CommandMethod("")
+    @Command("")
     public void onPerformer(
             final @NotNull PerformerSnipe snipe
     ) {

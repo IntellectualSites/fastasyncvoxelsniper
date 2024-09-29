@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.brush.type.performer;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Range;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotation.specifier.Range;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b jagged_line|jaggedline|jagged|j")
-@CommandPermission("voxelsniper.brush.jaggedline")
+@Command(value = "brush|b jagged_line|jaggedline|jagged|j")
+@Permission("voxelsniper.brush.jaggedline")
 public class JaggedLineBrush extends AbstractPerformerBrush {
 
     private static final Vector HALF_BLOCK_OFFSET = new Vector(0.5, 0.5, 0.5);
@@ -53,14 +53,14 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         this.spread = getIntegerProperty("default-spread", DEFAULT_SPREAD);
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
         super.onBrushCommand(snipe);
     }
 
-    @CommandMethod("info")
+    @Command("info")
     public void onBrushInfo(
             final @NotNull Snipe snipe
     ) {
@@ -73,7 +73,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("r <recursions>")
+    @Command("r <recursions>")
     public void onBrushR(
             final @NotNull Snipe snipe,
             final @Argument("recursions") @DynamicRange(min = "recursionMin", max = "recursionMax") int recursions
@@ -87,7 +87,7 @@ public class JaggedLineBrush extends AbstractPerformerBrush {
         ));
     }
 
-    @CommandMethod("s <spread>")
+    @Command("s <spread>")
     public void onBrushS(
             final @NotNull Snipe snipe,
             final @Argument("spread") @Range(min = "0") int spread

@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.command.argument;
 
-import cloud.commandframework.context.CommandContext;
-import cloud.commandframework.exceptions.parsing.NoInputProvidedException;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 
 public abstract class AbstractPatternArgument<T extends Pattern> implements VoxelCommandElement {
 
@@ -44,32 +43,27 @@ public abstract class AbstractPatternArgument<T extends Pattern> implements Voxe
         return factory.getSuggestions(input);
     }
 
-    protected BrushPattern parsePattern(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {
-        String input = inputQueue.peek();
-        if (input == null) {
-            throw new NoInputProvidedException(AbstractPatternArgument.class, commandContext);
-        }
-
-        SniperCommander commander = commandContext.getSender();
+    protected BrushPattern parsePattern(CommandContext<SniperCommander> commandContext, CommandInput input) {
+        SniperCommander commander = commandContext.sender();
         ParserContext parserContext = commander.createParserContext();
+        String patternString = input.readString();
         try {
             T pattern = factory.parseFromInput(
-                    input.toLowerCase(Locale.ROOT),
+                    patternString.toLowerCase(Locale.ROOT),
                     parserContext
             );
             CommandSender sender = commander.getCommandSender();
             if (!sender.hasPermission("voxelsniper.ignorelimitations")
-                    && config.getLitesniperRestrictedMaterials().contains(getPatternResource(input, pattern))) {
-                throw new VoxelCommandElementParseException(input, Caption.of(
+                    && config.getLitesniperRestrictedMaterials().contains(getPatternResource(patternString, pattern))) {
+                throw new VoxelCommandElementParseException(patternString, Caption.of(
                         "voxelsniper.command.not-allowed",
                         input
                 ));
             }
 
-            inputQueue.remove();
-            return new BrushPattern(pattern, input);
+            return new BrushPattern(pattern, patternString);
         } catch (InputParseException e) {
-            throw new VoxelCommandElementParseException(input, Caption.of(
+            throw new VoxelCommandElementParseException(patternString, Caption.of(
                     parseExceptionCaptionKey,
                     input
             ));

@@ -1,9 +1,8 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
@@ -13,9 +12,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@CommandMethod(value = "goto")
+@Command(value = "goto")
 @CommandDescription("Warp to the specified coordinates.")
-@CommandPermission("voxelsniper.goto")
+@Permission("voxelsniper.goto")
 public class GotoExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -24,11 +23,11 @@ public class GotoExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("<x> <z>")
+    @Command("<x> <z>")
     public void onGoto(
             final @NotNull Sniper sniper,
-            final @Argument("x") int x,
-            final @Argument("z") int z
+            final int x,
+            final int z
     ) {
         Player player = sniper.getPlayer();
 

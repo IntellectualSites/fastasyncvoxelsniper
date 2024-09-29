@@ -1,9 +1,9 @@
 package com.thevoxelbox.voxelsniper.command.executor;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.CommandDescription;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 @RequireToolkit
-@CommandMethod(value = "voxel_list|voxellist|vl")
+@Command(value = "voxel_list|voxellist|vl")
 @CommandDescription("Voxel block exclusions list.")
-@CommandPermission("voxelsniper.sniper")
+@Permission("voxelsniper.sniper")
 public class VoxelListExecutor implements VoxelCommandElement {
 
     private final VoxelSniperPlugin plugin;
@@ -34,7 +34,7 @@ public class VoxelListExecutor implements VoxelCommandElement {
         this.plugin = plugin;
     }
 
-    @CommandMethod("")
+    @Command("")
     public void onVoxelList(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit
@@ -58,7 +58,7 @@ public class VoxelListExecutor implements VoxelCommandElement {
         messenger.sendVoxelListMessage(voxelList);
     }
 
-    @CommandMethod("clear")
+    @Command("clear")
     public void onVoxelListClear(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit
@@ -72,7 +72,7 @@ public class VoxelListExecutor implements VoxelCommandElement {
         messenger.sendVoxelListMessage(voxelList);
     }
 
-    @CommandMethod("<blocks>")
+    @Command("<blocks>")
     public void onVoxelListBlocks(
             final @NotNull Sniper sniper,
             final @NotNull Toolkit toolkit,

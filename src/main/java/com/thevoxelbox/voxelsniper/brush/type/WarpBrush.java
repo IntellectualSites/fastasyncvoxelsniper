@@ -1,7 +1,7 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import com.fastasyncworldedit.core.Fawe;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -14,11 +14,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
-@CommandMethod(value = "brush|b warp|world")
-@CommandPermission("voxelsniper.brush.warp")
+@Command(value = "brush|b warp|world")
+@Permission("voxelsniper.brush.warp")
 public class WarpBrush extends AbstractBrush {
 
-    @CommandMethod("")
+    @Command("")
     public void onBrush(
             final @NotNull Snipe snipe
     ) {
