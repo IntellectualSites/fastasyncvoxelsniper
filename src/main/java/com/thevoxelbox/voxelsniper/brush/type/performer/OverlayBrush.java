@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 @RequireToolkit
 @CommandMethod(value = "brush|b overlay|over")
-@CommandPermission("overlay")
+@CommandPermission("voxelsniper.brush.overlay")
 public class OverlayBrush extends AbstractPerformerBrush {
 
     private static final int DEFAULT_DEPTH = 3;
