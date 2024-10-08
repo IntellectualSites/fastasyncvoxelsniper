@@ -1,6 +1,6 @@
 [versions]
 # Annotations
-annotations = "25.0.0"
+annotations = "26.0.0"
 
 # Cloud command system
 cloud = "1.8.4"
