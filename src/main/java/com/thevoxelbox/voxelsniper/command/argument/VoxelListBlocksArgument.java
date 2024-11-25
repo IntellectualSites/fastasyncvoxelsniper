@@ -36,7 +36,7 @@ public class VoxelListBlocksArgument implements VoxelCommandElement {
     @Suggestions("voxel-list-block_suggestions")
     public List<String> suggestVoxelListBlocks(CommandContext<SniperCommander> commandContext, String input) {
         return WorldEdit.getInstance().getBlockFactory()
-                .getSuggestions(input.startsWith("-") ? input.substring(1) : input).stream()
+                .getSuggestions(input.startsWith("-") ? input.substring(1) : input, new ParserContext()).stream()
                 .flatMap(id -> Stream.of(id, "-" + id))
                 .toList();
     }

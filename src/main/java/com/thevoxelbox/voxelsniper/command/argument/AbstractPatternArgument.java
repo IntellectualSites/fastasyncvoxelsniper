@@ -41,7 +41,7 @@ public abstract class AbstractPatternArgument<T extends Pattern> implements Voxe
     }
 
     protected List<String> suggestPatterns(CommandContext<SniperCommander> commandContext, String input) {
-        return factory.getSuggestions(input);
+        return factory.getSuggestions(input, new ParserContext());
     }
 
     protected BrushPattern parsePattern(CommandContext<SniperCommander> commandContext, Queue<String> inputQueue) {

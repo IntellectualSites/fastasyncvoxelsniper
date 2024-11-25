@@ -8,10 +8,14 @@ import com.thevoxelbox.voxelsniper.VoxelSniperPlugin;
 import com.thevoxelbox.voxelsniper.command.VoxelCommandElement;
 import com.thevoxelbox.voxelsniper.sniper.Sniper;
 import com.thevoxelbox.voxelsniper.util.ArtHelper;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Art;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 @CommandMethod(value = "paint")
 @CommandDescription("Change the selected painting to another painting.")
@@ -43,10 +47,13 @@ public class PaintExecutor implements VoxelCommandElement {
     @CommandMethod("<art>")
     public void onPaintArt(
             final @NotNull Sniper sniper,
-            final @Nullable @Argument("art") Art art
+            final @Nullable @Argument("art") String art
     ) {
         Player player = sniper.getPlayer();
-        ArtHelper.paint(player, art);
+
+        Registry<Art> artRegistry = Registry.ART;
+
+        ArtHelper.paint(player, Optional.ofNullable(art).map(a -> artRegistry.get(Key.key(a))).orElse(null));
     }
 
 }

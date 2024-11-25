@@ -12,11 +12,15 @@ nexus = "2.0.0"
 minotaur = "2.8.7"
 hangar = "0.1.2"
 runPaper = "2.3.1"
+paperApi = "1.21.3-R0.1-SNAPSHOT"
 
 [libraries]
 
 # Annotations
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+
+# Paper
+paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paperApi" }
 
 # Cloud command system
 cloudcore = { group = "cloud.commandframework", name = "cloud-core", version.ref = "cloud" }
