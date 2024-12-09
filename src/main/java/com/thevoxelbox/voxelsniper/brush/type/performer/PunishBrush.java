@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 @RequireToolkit
@@ -226,10 +227,10 @@ public class PunishBrush extends AbstractPerformerBrush {
             Location location = entity.getLocation();
             if (location.distanceSquared(targetLocation) < brushSizeSquare) {
                 entity.setFireTicks(0);
-                entity.removePotionEffect(Registry.EFFECT.get(NamespacedKey.fromString("blindness")));
-                entity.removePotionEffect(Registry.EFFECT.get(NamespacedKey.fromString("nausea")));
-                entity.removePotionEffect(Registry.EFFECT.get(NamespacedKey.fromString("slowness")));
-                entity.removePotionEffect(Registry.EFFECT.get(NamespacedKey.fromString("jump_boost")));
+                entity.removePotionEffect(Objects.requireNonNull(Registry.EFFECT.get(NamespacedKey.minecraft("blindness"))));
+                entity.removePotionEffect(Objects.requireNonNull(Registry.EFFECT.get(NamespacedKey.minecraft("nausea"))));
+                entity.removePotionEffect(Objects.requireNonNull(Registry.EFFECT.get(NamespacedKey.minecraft("slowness"))));
+                entity.removePotionEffect(Objects.requireNonNull(Registry.EFFECT.get(NamespacedKey.minecraft("jump_boost"))));
             }
         }
     }
@@ -242,71 +243,71 @@ public class PunishBrush extends AbstractPerformerBrush {
                     .strikeLightning(entity.getLocation());
             case BLINDNESS -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("blindness"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("blindness"))
             );
-            case DRUNK -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("nausea")));
-            case SLOW -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("slowness")));
+            case DRUNK -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("nausea")));
+            case SLOW -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("slowness")));
             case JUMP -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("jump_boost"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("jump_boost"))
             );
             case ABSORPTION -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("absorption"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("absorption"))
             );
             case DAMAGE_RESISTANCE -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("resistance"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("resistance"))
             );
-            case FAST_DIGGING -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("haste")));
+            case FAST_DIGGING -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("haste")));
             case FIRE_RESISTANCE -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("fire_resistance"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("fire_resistance"))
             );
             case HEAL -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("instant_health"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("instant_health"))
             );
             case HEALTH_BOOST -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("health_boost"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("health_boost"))
             );
-            case HUNGER -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("hunger")));
+            case HUNGER -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("hunger")));
             case INCREASE_DAMAGE -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("strenght"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("strenght"))
             );
             case INVISIBILITY -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("invisibility"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("invisibility"))
             );
             case NIGHT_VISION -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("night_vision"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("night_vision"))
             );
-            case POISON -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("poison")));
+            case POISON -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("poison")));
             case REGENERATION -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("regeneration"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("regeneration"))
             );
             case SATURATION -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("saturation"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("saturation"))
             );
             case SLOW_DIGGING -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("mining_fatigue"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("mining_fatigue"))
             );
-            case SPEED -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("speed")));
+            case SPEED -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("speed")));
             case WATER_BREATHING -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("water_breathing"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("water_breathing"))
             );
             case WEAKNESS -> addEffect(
                     entity,
-                    Registry.EFFECT.get(NamespacedKey.fromString("weakness"))
+                    Registry.EFFECT.get(NamespacedKey.minecraft("weakness"))
             );
-            case WITHER -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("wither")));
+            case WITHER -> addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("wither")));
             case KILL -> entity.setHealth(0.0d);
             case RANDOMTP -> {
                 Random random = new Random();
@@ -316,10 +317,10 @@ public class PunishBrush extends AbstractPerformerBrush {
                 entity.teleport(targetLocation);
             }
             case ALL_POTION -> {
-                addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("blindness")));
-                addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("nausea")));
-                addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("slowness")));
-                addEffect(entity, Registry.EFFECT.get(NamespacedKey.fromString("jump_boost")));
+                addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("blindness")));
+                addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("nausea")));
+                addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("slowness")));
+                addEffect(entity, Registry.EFFECT.get(NamespacedKey.minecraft("jump_boost")));
             }
             case FORCE -> {
                 Vector playerVector = Vectors.toBukkit(getTargetBlock());
