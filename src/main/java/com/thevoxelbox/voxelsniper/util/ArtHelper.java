@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.util;
 
+import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.Art;
@@ -59,9 +60,12 @@ public final class ArtHelper {
             return;
         }
 
-        Art ordinalArt =  arts.get(index);
-        bestMatch.setArt(ordinalArt);
-        VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.set", ordinalArt));
+        Art ordinalArt = arts.get(index);
+        // snipe is called asynchronously, #setArt modifies the world via Bukkit API and needs to be run on ticking thread
+        Fawe.instance().getQueueHandler().sync(() -> {
+            bestMatch.setArt(ordinalArt);
+            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.set", ordinalArt));
+        });
     }
 
     @Nullable
