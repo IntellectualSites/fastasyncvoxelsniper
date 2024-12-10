@@ -1,16 +1,20 @@
 package com.thevoxelbox.voxelsniper.util;
 
+import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import org.bukkit.Art;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public final class ArtHelper {
 
@@ -44,15 +48,24 @@ public final class ArtHelper {
             VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.no-match"));
             return;
         }
+
+        Registry<Art> artRegistry = Registry.ART;
+
+        List<Art> arts = artRegistry.stream().toList();
+
         Art bestMatchArt = bestMatch.getArt();
-        int ordinal = bestMatchArt.ordinal() + (back ? -1 : 1);
-        if (ordinal < 0 || ordinal >= Art.values().length) {
+        int index = arts.indexOf(bestMatchArt) + (back ? -1 : 1);
+        if (index < 0 || index >= arts.size()) {
             VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.final-painting"));
             return;
         }
-        Art ordinalArt = Art.values()[ordinal];
-        bestMatch.setArt(ordinalArt);
-        VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.set", ordinalArt));
+
+        Art ordinalArt = arts.get(index);
+        // snipe is called asynchronously, #setArt modifies the world via Bukkit API and needs to be run on ticking thread
+        Fawe.instance().getQueueHandler().sync(() -> {
+            bestMatch.setArt(ordinalArt);
+            VoxelSniperText.print(player, Caption.of("voxelsniper.art.paint.set", ordinalArt));
+        });
     }
 
     @Nullable
