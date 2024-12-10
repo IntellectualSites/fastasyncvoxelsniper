@@ -207,7 +207,7 @@ nexusPublishing {
 }
 
 // Keep in sync with FAWE versions
-val supportedVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.4", "1.20.6")
+val supportedVersions = listOf("1.20.2", "1.20.4", "1.20.6", "1.21.3")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
@@ -254,7 +254,7 @@ tasks {
         val artifact = ((JsonSlurper().parse(lastSuccessfulBuildUrl) as Map<*, *>)["artifacts"] as List<*>)
                 .map { it as Map<*, *> }
                 .map { it["fileName"] as String }
-                .first { it -> it.contains("Bukkit") }
+                .first { it -> it.contains("Paper") }
         project.ext["faweArtifact"] = artifact
     }
 
