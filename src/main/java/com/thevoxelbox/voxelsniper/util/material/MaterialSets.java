@@ -45,7 +45,7 @@ public final class MaterialSets {
             .with(BlockCategories.FLOWERS)
             .with(MUSHROOMS)
             .with(STEMS)
-            .add(BlockTypes.GRASS)
+            .add(BlockTypes.GRASS_BLOCK)
             .add(BlockTypes.TALL_GRASS)
             .add(BlockTypes.DEAD_BUSH)
             .add(BlockTypes.WHEAT)

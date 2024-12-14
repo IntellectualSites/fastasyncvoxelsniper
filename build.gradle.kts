@@ -18,7 +18,7 @@ plugins {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 repositories {
@@ -29,7 +29,7 @@ repositories {
 dependencies {
     implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
     // Platform expectations
-    compileOnly("io.papermc.paper:paper-api")
+    compileOnly(libs.paper)
     compileOnly("org.apache.logging.log4j:log4j-api")
 
     // Annotations
@@ -54,7 +54,7 @@ dependencies {
 }
 
 tasks.compileJava.configure {
-    options.release.set(17)
+    options.release.set(21)
 }
 
 configurations.all {
@@ -69,7 +69,7 @@ bukkit {
     main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
     authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
             "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
-    apiVersion = "1.13"
+    apiVersion = "1.20"
     version = project.version.toString()
     softDepend = listOf("VoxelModPackPlugin")
     depend = listOf("FastAsyncWorldEdit")
@@ -207,7 +207,7 @@ nexusPublishing {
 }
 
 // Keep in sync with FAWE versions
-val supportedVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.4", "1.20.6")
+val supportedVersions = listOf("1.20.2", "1.20.4", "1.20.6", "1.21.3")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
@@ -254,7 +254,7 @@ tasks {
         val artifact = ((JsonSlurper().parse(lastSuccessfulBuildUrl) as Map<*, *>)["artifacts"] as List<*>)
                 .map { it as Map<*, *> }
                 .map { it["fileName"] as String }
-                .first { it -> it.contains("Bukkit") }
+                .first { it -> it.contains("Paper") }
         project.ext["faweArtifact"] = artifact
     }
 
