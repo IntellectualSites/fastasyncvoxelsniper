@@ -24,10 +24,11 @@ java {
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven { url = uri("https://maven.enginehub.org/repo/") }
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.51"))
     // Platform expectations
     compileOnly(libs.paper)
     compileOnly("org.apache.logging.log4j:log4j-api")

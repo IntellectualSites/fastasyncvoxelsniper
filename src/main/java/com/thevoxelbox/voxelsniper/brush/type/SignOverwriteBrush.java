@@ -293,7 +293,7 @@ public class SignOverwriteBrush extends AbstractBrush {
             return;
         }
 
-        Map<String, Tag> root = new HashMap<>(tag.getValue());
+        Map<String, Tag<?, ?>> root = new HashMap<>(tag.getValue());
         if (isHangingSignsSupported()) {
             // 1.20+ behavior, with two-sided text.
             CompoundTag text = (CompoundTag) root.get(side.getTagName());
@@ -306,7 +306,7 @@ public class SignOverwriteBrush extends AbstractBrush {
                 }
                 lines.add((StringTag) messages.getIfExists(i));
             }
-            Map<String, Tag> textValue = new HashMap<>(text.getValue());
+            Map<String, Tag<?, ?>> textValue = new HashMap<>(text.getValue());
             textValue.put("messages", new ListTag(StringTag.class, lines));
             text = new CompoundTag(textValue);
             root.put(side.getTagName(), text);
