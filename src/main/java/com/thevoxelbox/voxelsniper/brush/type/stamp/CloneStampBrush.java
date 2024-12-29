@@ -112,7 +112,7 @@ public class CloneStampBrush extends AbstractStampBrush {
         this.solid.clear();
         this.sorted = false;
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockY = targetBlock.getY();
+        int targetBlockY = targetBlock.y();
         int yStartingPoint = targetBlockY + toolkitProperties.getCylinderCenter();
         int yEndPoint = targetBlockY + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
         EditSession editSession = getEditSession();
@@ -138,8 +138,8 @@ public class CloneStampBrush extends AbstractStampBrush {
             }
         }
         double bSquared = Math.pow(brushSize, 2);
-        int targetBlockX = targetBlock.getX();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockZ = targetBlock.z();
         for (int z = yStartingPoint; z < yEndPoint; z++) {
             this.clone.add(new StampBrushBlockWrapper(clampY(targetBlockX, z, targetBlockZ), 0, z - yStartingPoint, 0));
             for (int y = 1; y <= brushSize; y++) {

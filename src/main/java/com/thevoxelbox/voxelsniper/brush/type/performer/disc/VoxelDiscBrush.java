@@ -40,9 +40,9 @@ public class VoxelDiscBrush extends AbstractPerformerBrush {
     private void disc(Snipe snipe, BlockVector3 targetBlock) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = brushSize; x >= -toolkitProperties.getBrushSize(); x--) {
             for (int z = toolkitProperties.getBrushSize(); z >= -toolkitProperties.getBrushSize(); z--) {
                 this.performer.perform(

@@ -119,8 +119,8 @@ public class OceanBrush extends AbstractBrush {
     private void oceanator(ToolkitProperties toolkitProperties) {
         EditSession editSession = getEditSession();
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockX = targetBlock.getX();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockZ = targetBlock.z();
         int brushSize = toolkitProperties.getBrushSize();
         int minX = targetBlockX - brushSize;
         int minZ = targetBlockZ - brushSize;

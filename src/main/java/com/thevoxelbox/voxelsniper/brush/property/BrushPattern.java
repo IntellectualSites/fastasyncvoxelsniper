@@ -33,7 +33,7 @@ public class BrushPattern {
      * @since 2.6.0
      */
     public BrushPattern(BlockType blockType) {
-        this(blockType, blockType.getId());
+        this(blockType, blockType.id());
     }
 
     /**

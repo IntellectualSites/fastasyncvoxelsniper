@@ -56,12 +56,12 @@ public class BlockResetBrush extends AbstractBrush {
             for (int x = -brushSize; x <= brushSize; x++) {
                 for (int y = -brushSize; y <= brushSize; y++) {
                     BlockVector3 targetBlock = getTargetBlock();
-                    BlockType blockType = getBlockType(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + z);
+                    BlockType blockType = getBlockType(targetBlock.x() + x, targetBlock.y() + y, targetBlock.z() + z);
                     if (!DENIED_UPDATES.contains(blockType)) {
                         setBlockData(
-                                targetBlock.getX() + x,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + z,
+                                targetBlock.x() + x,
+                                targetBlock.y() + y,
+                                targetBlock.z() + z,
                                 blockType.getDefaultState()
                         );
                     }

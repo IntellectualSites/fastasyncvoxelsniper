@@ -108,15 +108,15 @@ public class CopyPastaBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
         if (this.points == 0) {
-            this.firstPoint[0] = targetBlock.getX();
-            this.firstPoint[1] = targetBlock.getY();
-            this.firstPoint[2] = targetBlock.getZ();
+            this.firstPoint[0] = targetBlock.x();
+            this.firstPoint[1] = targetBlock.y();
+            this.firstPoint[2] = targetBlock.z();
             messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
             this.points = 1;
         } else if (this.points == 1) {
-            this.secondPoint[0] = targetBlock.getX();
-            this.secondPoint[1] = targetBlock.getY();
-            this.secondPoint[2] = targetBlock.getZ();
+            this.secondPoint[0] = targetBlock.x();
+            this.secondPoint[1] = targetBlock.y();
+            this.secondPoint[2] = targetBlock.z();
             messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.second-point"));
             this.points = 2;
         } else {
@@ -138,9 +138,9 @@ public class CopyPastaBrush extends AbstractBrush {
                 doCopy(snipe);
             } else if (this.numBlocks > 0 && this.numBlocks < this.blockLimit) {
                 BlockVector3 targetBlock = this.getTargetBlock();
-                this.pastePoint[0] = targetBlock.getX();
-                this.pastePoint[1] = targetBlock.getY();
-                this.pastePoint[2] = targetBlock.getZ();
+                this.pastePoint[0] = targetBlock.x();
+                this.pastePoint[1] = targetBlock.y();
+                this.pastePoint[2] = targetBlock.z();
                 doPasta(snipe);
             } else {
                 messenger.sendMessage(Caption.of("voxelsniper.error.unexpected"));

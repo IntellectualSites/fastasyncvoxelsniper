@@ -144,11 +144,11 @@ public class RandomErodeBrush extends AbstractBrush {
 
     private void setSnap(int brushSize, BlockVector3 targetBlock) {
         this.snap = new BlockWrapper[brushSize][brushSize][brushSize];
-        int sx = targetBlock.getX() - (this.brushSize + 1);
+        int sx = targetBlock.x() - (this.brushSize + 1);
         for (int x = 0; x < this.snap.length; x++) {
-            int sz = targetBlock.getZ() - (this.brushSize + 1);
+            int sz = targetBlock.z() - (this.brushSize + 1);
             for (int z = 0; z < this.snap.length; z++) {
-                int sy = targetBlock.getY() - (this.brushSize + 1);
+                int sy = targetBlock.y() - (this.brushSize + 1);
                 for (int y = 0; y < this.snap.length; y++) {
                     this.snap[x][y][z] = new BlockWrapper(sx, clampY(sy), sz, clampY(sx, sy, sz));
                     sy++;

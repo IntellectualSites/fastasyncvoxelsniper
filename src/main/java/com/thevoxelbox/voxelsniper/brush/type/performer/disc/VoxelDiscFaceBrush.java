@@ -61,9 +61,9 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
     private void discNorthSouth(Snipe snipe, BlockVector3 targetBlock) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = brushSize; x >= -brushSize; x--) {
             for (int y = brushSize; y >= -brushSize; y--) {
                 this.performer.perform(
@@ -80,9 +80,9 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
     private void discEastWest(Snipe snipe, BlockVector3 targetBlock) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = brushSize; x >= -brushSize; x--) {
             for (int y = brushSize; y >= -brushSize; y--) {
                 this.performer.perform(
@@ -99,9 +99,9 @@ public class VoxelDiscFaceBrush extends AbstractPerformerBrush {
     private void disc(Snipe snipe, BlockVector3 targetBlock) {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = brushSize; x >= -brushSize; x--) {
             for (int y = brushSize; y >= -brushSize; y--) {
                 this.performer.perform(

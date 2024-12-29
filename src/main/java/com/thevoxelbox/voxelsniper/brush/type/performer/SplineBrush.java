@@ -135,9 +135,9 @@ public class SplineBrush extends AbstractPerformerBrush {
             this.endPts.add(targetBlock);
             messenger.sendMessage(Caption.of(
                     "voxelsniper.performer-brush.spline.add-endpoint",
-                    targetBlock.getX(),
-                    targetBlock.getY(),
-                    targetBlock.getZ()
+                    targetBlock.x(),
+                    targetBlock.y(),
+                    targetBlock.z()
             ));
             return;
         }
@@ -147,9 +147,9 @@ public class SplineBrush extends AbstractPerformerBrush {
         this.ctrlPts.add(targetBlock);
         messenger.sendMessage(Caption.of(
                 "voxelsniper.performer-brush.spline.add-control-point",
-                targetBlock.getX(),
-                targetBlock.getY(),
-                targetBlock.getZ()
+                targetBlock.x(),
+                targetBlock.y(),
+                targetBlock.z()
         ));
     }
 
@@ -163,9 +163,9 @@ public class SplineBrush extends AbstractPerformerBrush {
             this.endPts.add(targetBlock);
             messenger.sendMessage(Caption.of(
                     "voxelsniper.performer-brush.spline.remove-endpoint",
-                    targetBlock.getX(),
-                    targetBlock.getY(),
-                    targetBlock.getZ()
+                    targetBlock.x(),
+                    targetBlock.y(),
+                    targetBlock.z()
             ));
             return;
         }
@@ -176,9 +176,9 @@ public class SplineBrush extends AbstractPerformerBrush {
         this.ctrlPts.remove(targetBlock);
         messenger.sendMessage(Caption.of(
                 "voxelsniper.performer-brush.spline.remove-control-point",
-                targetBlock.getX(),
-                targetBlock.getY(),
-                targetBlock.getZ()
+                targetBlock.x(),
+                targetBlock.y(),
+                targetBlock.z()
         ));
     }
 
@@ -196,11 +196,11 @@ public class SplineBrush extends AbstractPerformerBrush {
                     .subtract(b);
             for (double t = 0.0; t < 1.0; t += 0.01) {
                 int px = (int) Math.round(a.getX() * (t * t * t) + b.getX() * (t * t) + c.getX() * t + this.endPts.get(0)
-                        .getX());
+                        .x());
                 int py = (int) Math.round(a.getY() * (t * t * t) + b.getY() * (t * t) + c.getY() * t + this.endPts.get(0)
-                        .getY());
+                        .y());
                 int pz = (int) Math.round(a.getZ() * (t * t * t) + b.getZ() * (t * t) + c.getZ() * t + this.endPts.get(0)
-                        .getZ());
+                        .z());
                 Point point = new Point(px, py, pz);
                 if (!this.spline.contains(point)) {
                     this.spline.add(point);
@@ -261,9 +261,9 @@ public class SplineBrush extends AbstractPerformerBrush {
         private int z;
 
         private Point(BlockVector3 block) {
-            this.x = block.getX();
-            this.y = block.getY();
-            this.z = block.getZ();
+            this.x = block.x();
+            this.y = block.y();
+            this.z = block.z();
         }
 
         private Point(int x, int y, int z) {

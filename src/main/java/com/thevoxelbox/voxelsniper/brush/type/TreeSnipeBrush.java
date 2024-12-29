@@ -91,19 +91,19 @@ public class TreeSnipeBrush extends AbstractBrush {
     }
 
     private void single(Snipe snipe, BlockVector3 targetBlock) {
-        BlockState currentBlockData = getBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ());
-        setBlock(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), BlockTypes.GRASS_BLOCK);
+        BlockState currentBlockData = getBlock(targetBlock.x(), targetBlock.y() - 1, targetBlock.z());
+        setBlock(targetBlock.x(), targetBlock.y() - 1, targetBlock.z(), BlockTypes.GRASS_BLOCK);
         if (!generateTree(targetBlock, this.treeType)) {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(Caption.of("voxelsniper.brush.tree-snipe.generate-failed"));
         }
-        setBlockData(targetBlock.getX(), targetBlock.getY() - 1, targetBlock.getZ(), currentBlockData);
+        setBlockData(targetBlock.x(), targetBlock.y() - 1, targetBlock.z(), currentBlockData);
     }
 
     private int getYOffset() {
         BlockVector3 targetBlock = getTargetBlock();
         EditSession editSession = getEditSession();
-        return IntStream.range(1, (editSession.getMaxY() - targetBlock.getY()))
+        return IntStream.range(1, (editSession.getMaxY() - targetBlock.y()))
                 .filter(i -> Materials.isEmpty(getBlockType(targetBlock.add(0, i + 1, 0))))
                 .findFirst()
                 .orElse(0);

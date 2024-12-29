@@ -99,8 +99,8 @@ public class CylinderBrush extends AbstractPerformerBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         SnipeMessenger messenger = snipe.createMessenger();
         int brushSize = toolkitProperties.getBrushSize();
-        int yStartingPoint = targetBlock.getY() + toolkitProperties.getCylinderCenter();
-        int yEndPoint = targetBlock.getY() + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
+        int yStartingPoint = targetBlock.y() + toolkitProperties.getCylinderCenter();
+        int yEndPoint = targetBlock.y() + toolkitProperties.getVoxelHeight() + toolkitProperties.getCylinderCenter();
         if (yEndPoint < yStartingPoint) {
             yEndPoint = yStartingPoint;
         }
@@ -126,8 +126,8 @@ public class CylinderBrush extends AbstractPerformerBrush {
                 messenger.sendMessage(Caption.of("voxelsniper.warning.brush.off-world-end"));
             }
         }
-        int blockX = targetBlock.getX();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockZ = targetBlock.z();
         double bSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         for (int y = yEndPoint; y >= yStartingPoint; y--) {
             for (int x = brushSize; x >= 0; x--) {

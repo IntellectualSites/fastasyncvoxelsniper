@@ -12,7 +12,7 @@ nexus = "2.0.0"
 minotaur = "2.8.7"
 hangar = "0.1.2"
 runPaper = "2.3.1"
-paperApi = "1.21.3-R0.1-SNAPSHOT"
+paperApi = "1.21.4-R0.1-SNAPSHOT"
 
 [libraries]
 

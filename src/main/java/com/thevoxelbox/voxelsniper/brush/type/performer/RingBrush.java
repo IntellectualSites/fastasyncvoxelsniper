@@ -83,9 +83,9 @@ public class RingBrush extends AbstractPerformerBrush {
         int brushSize = toolkitProperties.getBrushSize();
         double outerSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         double innerSquared = Math.pow(this.innerSize, 2);
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = brushSize; x >= 0; x--) {
             double xSquared = Math.pow(x, 2);
             for (int z = brushSize; z >= 0; z--) {

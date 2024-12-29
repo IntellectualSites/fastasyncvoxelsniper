@@ -115,13 +115,13 @@ public class Rotation3DBrush extends AbstractBrush {
         int brushSize = (this.brushSize * 2) + 1;
         this.snap = new BlockState[brushSize][brushSize][brushSize];
         BlockVector3 targetBlock = this.getTargetBlock();
-        int sx = targetBlock.getX() - this.brushSize;
+        int sx = targetBlock.x() - this.brushSize;
         //int sy = this.getTargetBlock().getY() - this.brushSize; Not used
         for (int x = 0; x < this.snap.length; x++) {
             double xSquared = Math.pow(x - this.brushSize, 2);
             for (int z = 0; z < this.snap.length; z++) {
                 double zSquared = Math.pow(z - this.brushSize, 2);
-                int sz = targetBlock.getZ() - this.brushSize;
+                int sz = targetBlock.z() - this.brushSize;
                 for (int y = 0; y < this.snap.length; y++) {
                     if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
                         this.snap[x][y][z] = getBlock(sx, clampY(sz), sz);
@@ -177,9 +177,9 @@ public class Rotation3DBrush extends AbstractBrush {
                             continue;
                         }
                         this.setBlockData(
-                                targetBlock.getX() + (int) newxyX,
-                                targetBlock.getY() + (int) newyzY,
-                                targetBlock.getZ() + (int) newyzZ,
+                                targetBlock.x() + (int) newxyX,
+                                targetBlock.y() + (int) newyzY,
+                                targetBlock.z() + (int) newyzZ,
                                 blockData
                         );
                     }
@@ -188,15 +188,15 @@ public class Rotation3DBrush extends AbstractBrush {
         }
         for (int x = 0; x < this.snap.length; x++) {
             double xSquared = Math.pow(x - this.brushSize, 2);
-            int fx = x + targetBlock.getX() - this.brushSize;
+            int fx = x + targetBlock.x() - this.brushSize;
             for (int z = 0; z < this.snap.length; z++) {
                 double zSquared = Math.pow(z - this.brushSize, 2);
-                int fz = z + targetBlock.getZ() - this.brushSize;
+                int fz = z + targetBlock.z() - this.brushSize;
                 for (int y = 0; y < this.snap.length; y++) {
                     if (xSquared + zSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
                         if (!doNotFill[x][y][z]) {
                             // smart fill stuff
-                            int fy = y + targetBlock.getY() - this.brushSize;
+                            int fy = y + targetBlock.y() - this.brushSize;
                             BlockType a = getBlockType(fx + 1, fy, fz);
                             BlockType b = getBlockType(fx, fy, fz - 1);
                             BlockType c = getBlockType(fx, fy, fz + 1);

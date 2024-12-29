@@ -93,9 +93,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public BlockState clampY(BlockVector3 position) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         return clampY(x, y, z);
     }
 
@@ -161,16 +161,16 @@ public abstract class AbstractBrush implements Brush {
 
     public Entity createEntity(BlockVector3 location, org.bukkit.entity.Entity bukkitEntity) {
         return editSession.createEntity(
-                new Location(editSession, location.getX(), location.getY(), location.getZ()),
+                new Location(editSession, location.x(), location.y(), location.z()),
                 BukkitAdapter.adapt(bukkitEntity).getState()
         );
     }
 
     public Direction getDirection(BlockVector3 first, BlockVector3 second) {
         for (Direction direction : Direction.values()) {
-            if (first.getX() + direction.getX() == second.getX()
-                    && first.getY() + direction.getY() == second.getY()
-                    && first.getZ() + direction.getZ() == second.getZ()) {
+            if (first.x() + direction.getX() == second.x()
+                    && first.y() + direction.getY() == second.y()
+                    && first.z() + direction.getZ() == second.z()) {
                 return direction;
             }
         }
@@ -178,9 +178,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public BlockVector3 getRelativeBlock(BlockVector3 origin, Direction direction) {
-        int x = origin.getX();
-        int y = origin.getY();
-        int z = origin.getZ();
+        int x = origin.x();
+        int y = origin.y();
+        int z = origin.z();
         return getRelativeBlock(x, y, z, direction);
     }
 
@@ -189,9 +189,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public BlockType getBlockType(BlockVector3 position) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         return getBlockType(x, y, z);
     }
 
@@ -201,9 +201,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlock(BlockVector3 position, Pattern pattern) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         setBlock(x, y, z, pattern);
     }
 
@@ -216,9 +216,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlockData(BlockVector3 position, BlockState blockState) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         setBlockData(x, y, z, blockState);
     }
 
@@ -238,9 +238,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public BaseBlock getFullBlock(BlockVector3 position) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         return getFullBlock(x, y, z);
     }
 
@@ -249,9 +249,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public BlockState getBlock(BlockVector3 position) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         return getBlock(x, y, z);
     }
 
@@ -260,9 +260,9 @@ public abstract class AbstractBrush implements Brush {
     }
 
     public void setBlock(BlockVector3 position, BaseBlock block) {
-        int x = position.getX();
-        int y = position.getY();
-        int z = position.getZ();
+        int x = position.x();
+        int y = position.y();
+        int z = position.z();
         setBlock(x, y, z, block);
     }
 
@@ -379,7 +379,7 @@ public abstract class AbstractBrush implements Brush {
             String propertyName, NamespacedRegistry<? extends Keyed> registry, Keyed
             defaultValue
     ) {
-        Object propertyValue = this.getProperty(propertyName, defaultValue, defaultValue.getId());
+        Object propertyValue = this.getProperty(propertyName, defaultValue, defaultValue.id());
 
         if (propertyValue instanceof String) {
             Object registryValue = registry.get(((String) propertyValue).toLowerCase(Locale.ROOT));

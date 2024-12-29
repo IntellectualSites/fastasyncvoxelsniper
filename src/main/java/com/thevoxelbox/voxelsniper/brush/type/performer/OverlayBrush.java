@@ -108,9 +108,9 @@ public class OverlayBrush extends AbstractPerformerBrush {
                 // check if column is valid
                 // column is valid if it has no solid block right above the clicked layer
                 BlockVector3 targetBlock = getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockY = targetBlock.getY();
-                int blockZ = targetBlock.getZ();
+                int blockX = targetBlock.x();
+                int blockY = targetBlock.y();
+                int blockZ = targetBlock.z();
                 BlockType type = getBlockType(blockX + x, blockY + 1, blockZ + z);
                 if (isIgnoredBlock(type)) {
                     if (Math.pow(x, 2) + Math.pow(z, 2) <= brushSizeSquared) {
@@ -160,9 +160,9 @@ public class OverlayBrush extends AbstractPerformerBrush {
             for (int x = brushSize; x >= -brushSize; x--) {
                 boolean surfaceFound = false;
                 BlockVector3 targetBlock = this.getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockY = targetBlock.getY();
-                int blockZ = targetBlock.getZ();
+                int blockX = targetBlock.x();
+                int blockY = targetBlock.y();
+                int blockZ = targetBlock.z();
                 for (int y = blockY; y >= editSession.getMinY() && !surfaceFound; y--) { // start scanning from the height you clicked at
                     boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
                     if (noSurfaceFound) { // if haven't already found the surface in this column

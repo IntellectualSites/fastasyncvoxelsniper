@@ -89,9 +89,9 @@ public class RulerBrush extends AbstractBrush {
             messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
             this.first = !this.first;
         } else {
-            int x = targetBlock.getX();
-            int y = targetBlock.getY();
-            int z = targetBlock.getZ();
+            int x = targetBlock.x();
+            int y = targetBlock.y();
+            int z = targetBlock.z();
             setBlock(x + this.xOffset, y + this.yOffset, z + this.zOffset, toolkitProperties.getPattern().getPattern());
         }
     }
@@ -106,16 +106,16 @@ public class RulerBrush extends AbstractBrush {
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.format"));
         BlockVector3 targetBlock = getTargetBlock();
 
-        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.x-change", (targetBlock.getX() - this.coordinates.getX())));
-        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.y-change", (targetBlock.getY() - this.coordinates.getY())));
-        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.z-change", (targetBlock.getZ() - this.coordinates.getZ())));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.x-change", (targetBlock.x() - this.coordinates.x())));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.y-change", (targetBlock.y() - this.coordinates.y())));
+        messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.z-change", (targetBlock.z() - this.coordinates.z())));
         double distance = Math.round(targetBlock
                 .subtract(this.coordinates)
                 .length() * 100) / 100.0;
         double blockDistance = Math.round((Math.abs(Math.max(Math.max(
-                Math.abs((double) targetBlock.getX() - this.coordinates.getX()),
-                Math.abs((double) targetBlock.getY() - this.coordinates.getY())
-        ), Math.abs((double) targetBlock.getZ() - this.coordinates.getZ()))) + 1) * 100) / 100.0;
+                Math.abs((double) targetBlock.x() - this.coordinates.x()),
+                Math.abs((double) targetBlock.y() - this.coordinates.y())
+        ), Math.abs((double) targetBlock.z() - this.coordinates.z()))) + 1) * 100) / 100.0;
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.euclidean-distance", distance));
         messenger.sendMessage(Caption.of("voxelsniper.brush.ruler.block-distance", blockDistance));
     }

@@ -229,9 +229,9 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 BlockVector3 targetBlock = this.getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockZ = targetBlock.getZ();
-                for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) {
+                int blockX = targetBlock.x();
+                int blockZ = targetBlock.z();
+                for (int y = targetBlock.y(); y >= editSession.getMinY(); y--) {
                     // start scanning from the height you clicked at
                     boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
                     if (noSurfaceFound) {
@@ -341,9 +341,9 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 BlockVector3 targetBlock = this.getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockZ = targetBlock.getZ();
-                for (int y = targetBlock.getY(); y >= editSession.getMinY(); y--) { // start scanning from the height you clicked at
+                int blockX = targetBlock.x();
+                int blockZ = targetBlock.z();
+                for (int y = targetBlock.y(); y >= editSession.getMinY(); y--) { // start scanning from the height you clicked at
                     boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
                     if (noSurfaceFound) {
                         // if haven't already found the surface in this column
@@ -360,7 +360,7 @@ public class SplatterOverlayBrush extends AbstractPerformerBrush {
                                 if (Materials.isEmpty(getBlockType(
                                         blockX + x,
                                         y + 1,
-                                        targetBlock.getZ() + z
+                                        targetBlock.z() + z
                                 ))) {
                                     // must start at surface... this prevents it filling stuff in if
                                     // you click in a wall and it starts out below surface.

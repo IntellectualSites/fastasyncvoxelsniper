@@ -49,7 +49,7 @@ public class VoxelListExecutor implements VoxelCommandElement {
         }
 
         BlockState blockState = BukkitAdapter.adapt(player.getWorld().getBlockAt(
-                targetBlock.getX(), targetBlock.getY(), targetBlock.getZ()
+                targetBlock.x(), targetBlock.y(), targetBlock.z()
         ).getBlockData());
         toolkitProperties.addToVoxelList(blockState);
 

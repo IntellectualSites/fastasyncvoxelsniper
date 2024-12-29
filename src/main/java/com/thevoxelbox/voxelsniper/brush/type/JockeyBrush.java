@@ -136,8 +136,8 @@ public class JockeyBrush extends AbstractBrush {
         Player player = sniper.getPlayer();
         BlockVector3 targetBlock = getTargetBlock();
         World world = BukkitAdapter.adapt(getEditSession().getWorld());
-        int targetChunkX = targetBlock.getX() >> 4;
-        int targetChunkZ = targetBlock.getZ() >> 4;
+        int targetChunkX = targetBlock.x() >> 4;
+        int targetChunkZ = targetBlock.z() >> 4;
         double range = Double.MAX_VALUE;
         Entity closest = null;
         for (int x = targetChunkX - 1; x <= targetChunkX + 1; x++) {

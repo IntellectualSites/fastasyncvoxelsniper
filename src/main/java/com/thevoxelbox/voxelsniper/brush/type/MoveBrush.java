@@ -177,13 +177,13 @@ public class MoveBrush extends AbstractBrush {
             } catch (RuntimeException e) {
                 messenger.sendMessage(Caption.of("voxelsniper.brush.move.invalid-new-selection"));
             }
-            locations.forEach(block -> setBlock(block.getX(), block.getY(), block.getZ(), BlockTypes.AIR));
+            locations.forEach(block -> setBlock(block.x(), block.y(), block.z(), BlockTypes.AIR));
             for (BlockVector3 block : locations) {
                 setBlockData(
-                        block.getX() + direction[0],
-                        block.getY() + direction[1],
-                        block.getZ() + direction[2],
-                        getBlock(block.getX(), block.getY(), block.getZ())
+                        block.x() + direction[0],
+                        block.y() + direction[1],
+                        block.z() + direction[2],
+                        getBlock(block.x(), block.y(), block.z())
                 );
             }
         }
@@ -239,12 +239,12 @@ public class MoveBrush extends AbstractBrush {
         public boolean calculateRegion() {
             if (this.location1 != null && this.location2 != null) {
                 if (world1.getName().equals(world2.getName())) {
-                    int x1 = this.location1.getBlockX();
-                    int x2 = this.location2.getBlockX();
-                    int y1 = this.location1.getBlockY();
-                    int y2 = this.location2.getBlockY();
-                    int z1 = this.location1.getBlockZ();
-                    int z2 = this.location2.getBlockZ();
+                    int x1 = this.location1.x();
+                    int x2 = this.location2.x();
+                    int y1 = this.location1.y();
+                    int y2 = this.location2.y();
+                    int z1 = this.location1.z();
+                    int z2 = this.location2.z();
                     int lowX = Math.min(x1, x2);
                     int lowY = Math.min(y1, y2);
                     int lowZ = Math.min(z1, z2);

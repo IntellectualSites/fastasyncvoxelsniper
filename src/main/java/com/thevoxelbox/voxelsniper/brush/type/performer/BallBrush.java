@@ -78,7 +78,7 @@ public class BallBrush extends AbstractPerformerBrush {
                 .trueCircle(this.trueCircle)
                 .blockSetter(position -> {
                     BlockState block = clampY(position);
-                    this.performer.perform(getEditSession(), position.getX(), clampY(position.getY()), position.getZ(), block);
+                    this.performer.perform(getEditSession(), position.x(), clampY(position.y()), position.z(), block);
                 })
                 .paint();
     }

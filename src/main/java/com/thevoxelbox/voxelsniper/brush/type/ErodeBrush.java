@@ -190,9 +190,9 @@ public class ErodeBrush extends AbstractBrush {
         int currentIteration = blockChangeTracker.nextIteration();
         BlockVector3 targetBlock = getTargetBlock();
         int brushSize = toolkitProperties.getBrushSize();
-        for (int x = targetBlock.getX() - brushSize; x <= targetBlock.getX() + brushSize; ++x) {
-            for (int z = targetBlock.getZ() - brushSize; z <= targetBlock.getZ() + brushSize; ++z) {
-                for (int y = targetBlock.getY() - brushSize; y <= targetBlock.getY() + brushSize; ++y) {
+        for (int x = targetBlock.x() - brushSize; x <= targetBlock.x() + brushSize; ++x) {
+            for (int z = targetBlock.z() - brushSize; z <= targetBlock.z() + brushSize; ++z) {
+                for (int y = targetBlock.y() - brushSize; y <= targetBlock.y() + brushSize; ++y) {
                     Vector currentPosition = new Vector(x, y, z);
                     if (currentPosition.isInSphere(targetBlockVector, brushSize)) {
                         BlockWrapper currentBlock = blockChangeTracker.get(currentPosition, currentIteration);
@@ -247,9 +247,9 @@ public class ErodeBrush extends AbstractBrush {
         int currentIteration = blockChangeTracker.nextIteration();
         BlockVector3 targetBlock = this.getTargetBlock();
         int brushSize = toolkitProperties.getBrushSize();
-        for (int x = targetBlock.getX() - brushSize; x <= targetBlock.getX() + brushSize; ++x) {
-            for (int z = targetBlock.getZ() - brushSize; z <= targetBlock.getZ() + brushSize; ++z) {
-                for (int y = targetBlock.getY() - brushSize; y <= targetBlock.getY() + brushSize; ++y) {
+        for (int x = targetBlock.x() - brushSize; x <= targetBlock.x() + brushSize; ++x) {
+            for (int z = targetBlock.z() - brushSize; z <= targetBlock.z() + brushSize; ++z) {
+                for (int y = targetBlock.y() - brushSize; y <= targetBlock.y() + brushSize; ++y) {
                     Vector currentPosition = new Vector(x, y, z);
                     if (currentPosition.isInSphere(targetBlockVector, brushSize)) {
                         BlockWrapper currentBlock = blockChangeTracker.get(currentPosition, currentIteration);

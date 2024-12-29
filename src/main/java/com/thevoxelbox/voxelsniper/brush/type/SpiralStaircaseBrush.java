@@ -294,9 +294,9 @@ public class SpiralStaircaseBrush extends AbstractBrush {
         for (int x = 2 * brushSize; x >= 0; x--) {
             for (int i = voxelHeight - 1; i >= 0; i--) {
                 for (int z = 2 * brushSize; z >= 0; z--) {
-                    int blockPositionX = targetBlock.getX();
-                    int blockPositionY = targetBlock.getY();
-                    int blockPositionZ = targetBlock.getZ();
+                    int blockPositionX = targetBlock.x();
+                    int blockPositionY = targetBlock.y();
+                    int blockPositionZ = targetBlock.z();
 
                     BlockVector3 position = BlockVector3.at(
                             blockPositionX - brushSize + x,
@@ -321,7 +321,7 @@ public class SpiralStaircaseBrush extends AbstractBrush {
                         } else if (stairType == StairType.STEP) {
                             setBlock(position, toolkitProperties.getPattern().asBlockType());
                         } else if (stairType == StairType.STAIR) {
-                            BlockType newState = BlockTypes.get(toolkitProperties.getPattern().asBlockType().getId()
+                            BlockType newState = BlockTypes.get(toolkitProperties.getPattern().asBlockType().id()
                                     .replace("stairs", "slab"));
                             setBlockData(
                                     up ? BlockVector3.at(

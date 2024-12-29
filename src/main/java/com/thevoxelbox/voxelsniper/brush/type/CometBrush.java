@@ -80,9 +80,9 @@ public class CometBrush extends AbstractBrush {
 
     private void doFireball(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        int x = targetBlock.getX();
-        int y = targetBlock.getY();
-        int z = targetBlock.getZ();
+        int x = targetBlock.x();
+        int y = targetBlock.y();
+        int z = targetBlock.z();
         Vector targetCoordinates = new Vector(x + 0.5 * x / Math.abs(x), y + 0.5, z + 0.5 * z / Math.abs(z));
         Sniper sniper = snipe.getSniper();
         Player player = sniper.getPlayer();

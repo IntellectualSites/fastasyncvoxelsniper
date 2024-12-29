@@ -182,9 +182,9 @@ public class SplatterVoxelBrush extends AbstractPerformerBrush {
             }
         }
         // Make the changes
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         for (int x = 2 * brushSize; x >= 0; x--) {
             for (int y = 2 * brushSize; y >= 0; y--) {
                 for (int z = 2 * brushSize; z >= 0; z--) {

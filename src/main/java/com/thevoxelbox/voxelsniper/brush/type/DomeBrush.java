@@ -60,9 +60,9 @@ public class DomeBrush extends AbstractBrush {
             for (double stepV = -Math.PI; stepV <= -(Math.PI / 2); stepV += stepSize) {
                 double x = brushSize * Math.cos(u) * Math.cos(stepV);
                 double z = brushSize * Math.cos(u) * Math.sin(stepV);
-                double targetBlockX = block.getX() + 0.5;
-                double targetBlockZ = block.getZ() + 0.5;
-                int targetY = NumberConversions.floor(block.getY() + (negative ? -y : y));
+                double targetBlockX = block.x() + 0.5;
+                double targetBlockZ = block.z() + 0.5;
+                int targetY = NumberConversions.floor(block.y() + (negative ? -y : y));
                 int currentBlockXAdd = NumberConversions.floor(targetBlockX + x);
                 int currentBlockZAdd = NumberConversions.floor(targetBlockZ + z);
                 int currentBlockXSubtract = NumberConversions.floor(targetBlockX - x);

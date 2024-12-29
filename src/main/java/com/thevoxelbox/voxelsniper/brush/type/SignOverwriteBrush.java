@@ -244,7 +244,7 @@ public class SignOverwriteBrush extends AbstractBrush {
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+        BaseBlock block = getFullBlock(targetBlock.x(), targetBlock.y(), targetBlock.z());
         if (isSign(block.getBlockType())) {
             CompoundTag tag = block.getNbtData();
             if (tag == null) {
@@ -328,9 +328,9 @@ public class SignOverwriteBrush extends AbstractBrush {
      */
     private void setSingle(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        BaseBlock block = getFullBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+        BaseBlock block = getFullBlock(targetBlock.x(), targetBlock.y(), targetBlock.z());
         if (isSign(block.getBlockType())) {
-            setSignText(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ(), block);
+            setSignText(targetBlock.x(), targetBlock.y(), targetBlock.z(), block);
         } else {
             SnipeMessenger messenger = snipe.createMessenger();
             messenger.sendMessage(Caption.of("voxelsniper.brush.sign-overwrite.invalid-block"));
@@ -345,12 +345,12 @@ public class SignOverwriteBrush extends AbstractBrush {
         BlockVector3 targetBlock = getTargetBlock();
         int brushSize = toolkitProperties.getBrushSize();
         int voxelHeight = toolkitProperties.getVoxelHeight();
-        int minX = targetBlock.getX() - brushSize;
-        int maxX = targetBlock.getX() + brushSize;
-        int minY = targetBlock.getY() - voxelHeight;
-        int maxY = targetBlock.getY() + voxelHeight;
-        int minZ = targetBlock.getZ() - brushSize;
-        int maxZ = targetBlock.getZ() + brushSize;
+        int minX = targetBlock.x() - brushSize;
+        int maxX = targetBlock.x() + brushSize;
+        int minY = targetBlock.y() - voxelHeight;
+        int maxY = targetBlock.y() + voxelHeight;
+        int minZ = targetBlock.z() - brushSize;
+        int maxZ = targetBlock.z() + brushSize;
         boolean signFound = false; // indicates whether or not a sign was set
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {

@@ -101,14 +101,14 @@ public class FlatOceanBrush extends AbstractBrush {
 
     private void flatOceanAtTarget(int additionalX, int additionalZ) {
         BlockVector3 targetBlock = getTargetBlock();
-        int blockX = targetBlock.getX();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockZ = targetBlock.z();
         flatOcean((blockX + additionalX) >> 4, (blockZ + additionalZ) >> 4);
     }
 
     private void flatOceanAtTarget() {
         BlockVector3 targetBlock = getTargetBlock();
-        flatOcean(targetBlock.getX() >> 4, targetBlock.getZ() >> 4);
+        flatOcean(targetBlock.x() >> 4, targetBlock.z() >> 4);
     }
 
     private void flatOcean(int chunkX, int chunkZ) {
