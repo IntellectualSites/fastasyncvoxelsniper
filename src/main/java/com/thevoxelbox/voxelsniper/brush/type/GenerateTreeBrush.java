@@ -132,7 +132,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.generate-tree.set-leaf-type",
-                this.leafType.getId()
+                this.leafType.id()
         ));
     }
 
@@ -146,7 +146,7 @@ public class GenerateTreeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.generate-tree.set-wood-type",
-                this.woodType.getId()
+                this.woodType.id()
         ));
     }
 
@@ -323,9 +323,9 @@ public class GenerateTreeBrush extends AbstractBrush {
         this.branchBlocksLocation.clear();
         // Sets the location variables.
         BlockVector3 targetBlock = this.getTargetBlock();
-        this.blockPositionX = targetBlock.getX();
-        this.blockPositionY = targetBlock.getY() + this.startHeight;
-        this.blockPositionZ = targetBlock.getZ();
+        this.blockPositionX = targetBlock.x();
+        this.blockPositionY = targetBlock.y() + this.startHeight;
+        this.blockPositionZ = targetBlock.z();
         // Generates the roots.
         rootGen();
         // Generates the trunk, which also generates branches.
@@ -333,9 +333,9 @@ public class GenerateTreeBrush extends AbstractBrush {
         // Each branch block was saved in an array. This is now fed through an array.
         // This array takes each branch block and constructs a leaf node around it.
         for (BlockVector3 blockLocation : this.branchBlocksLocation) {
-            this.blockPositionX = blockLocation.getX();
-            this.blockPositionY = blockLocation.getY();
-            this.blockPositionZ = blockLocation.getZ();
+            this.blockPositionX = blockLocation.x();
+            this.blockPositionY = blockLocation.y();
+            this.blockPositionZ = blockLocation.z();
             this.createLeafNode();
         }
     }
@@ -623,11 +623,11 @@ public class GenerateTreeBrush extends AbstractBrush {
                 .brushNameMessage()
                 .message(Caption.of(
                         "voxelsniper.brush.generate-tree.set-leaf-type",
-                        this.leafType.getId()
+                        this.leafType.id()
                 ))
                 .message(Caption.of(
                         "voxelsniper.brush.generate-tree.set-wood-type",
-                        this.woodType.getId()
+                        this.woodType.id()
                 ))
                 .message(Caption.of(
                         "voxelsniper.brush.generate-tree.set-thickness",

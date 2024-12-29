@@ -43,7 +43,7 @@ public class VoltmeterBrush extends AbstractBrush {
     private void data(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
-        BlockState blockData = getBlock(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ());
+        BlockState blockData = getBlock(targetBlock.x(), clampY(targetBlock.y()), targetBlock.z());
         BlockType type = blockData.getBlockType();
         Property<Integer> powerProperty = type.getProperty("power");
         if (powerProperty == null) {
@@ -61,7 +61,7 @@ public class VoltmeterBrush extends AbstractBrush {
         BlockVector3 targetBlock = getTargetBlock();
         TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
-            Block block = world.getBlockAt(targetBlock.getX(), clampY(targetBlock.getY()), targetBlock.getZ());
+            Block block = world.getBlockAt(targetBlock.x(), clampY(targetBlock.y()), targetBlock.z());
             boolean indirect = block.isBlockIndirectlyPowered();
             boolean direct = block.isBlockPowered();
             messenger.sendMessage(Caption.of(

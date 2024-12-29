@@ -180,9 +180,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                                 currX++;
@@ -197,9 +197,9 @@ public class StencilListBrush extends AbstractBrush {
                             }
                         } else {
                             setBlockData(
-                                    targetBlock.getX() + currX,
-                                    clampY(targetBlock.getY() + currY),
-                                    targetBlock.getZ() + currZ,
+                                    targetBlock.x() + currX,
+                                    clampY(targetBlock.y() + currY),
+                                    targetBlock.z() + currZ,
                                     blockDataReader.readBlockData(in)
                             );
                             currX++;
@@ -220,14 +220,14 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && clampY(
-                                        targetBlock.getX() + currX,
-                                        targetBlock.getY() + currY,
-                                        targetBlock.getZ() + currZ
+                                        targetBlock.x() + currX,
+                                        targetBlock.y() + currY,
+                                        targetBlock.z() + currZ
                                 ).isAir()) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -244,14 +244,14 @@ public class StencilListBrush extends AbstractBrush {
                         } else {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                    targetBlock.getX() + currX,
-                                    targetBlock.getY() + currY,
-                                    targetBlock.getZ() + currZ
+                                    targetBlock.x() + currX,
+                                    targetBlock.y() + currY,
+                                    targetBlock.z() + currZ
                             ).isAir()) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -274,9 +274,9 @@ public class StencilListBrush extends AbstractBrush {
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -294,9 +294,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -369,9 +369,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                                 currX--;
@@ -386,9 +386,9 @@ public class StencilListBrush extends AbstractBrush {
                             }
                         } else {
                             setBlockData(
-                                    targetBlock.getX() + currX,
-                                    clampY(targetBlock.getY() + currY),
-                                    targetBlock.getZ() + currZ,
+                                    targetBlock.x() + currX,
+                                    clampY(targetBlock.y() + currY),
+                                    targetBlock.z() + currZ,
                                     blockDataReader.readBlockData(in)
                             );
                             currX--;
@@ -409,14 +409,14 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                        targetBlock.getX() + currX,
-                                        targetBlock.getY() + currY,
-                                        targetBlock.getZ() + currZ
+                                        targetBlock.x() + currX,
+                                        targetBlock.y() + currY,
+                                        targetBlock.z() + currZ
                                 ).isAir()) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -433,14 +433,14 @@ public class StencilListBrush extends AbstractBrush {
                         } else {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                    targetBlock.getX() + currX,
-                                    targetBlock.getY() + currY,
-                                    targetBlock.getZ() + currZ
+                                    targetBlock.x() + currX,
+                                    targetBlock.y() + currY,
+                                    targetBlock.z() + currZ
                             ).isAir()) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -463,9 +463,9 @@ public class StencilListBrush extends AbstractBrush {
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -483,9 +483,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -558,9 +558,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                                 currZ++;
@@ -575,9 +575,9 @@ public class StencilListBrush extends AbstractBrush {
                             }
                         } else {
                             setBlockData(
-                                    targetBlock.getX() + currX,
-                                    clampY(targetBlock.getY() + currY),
-                                    targetBlock.getZ() + currZ,
+                                    targetBlock.x() + currX,
+                                    clampY(targetBlock.y() + currY),
+                                    targetBlock.z() + currZ,
                                     blockDataReader.readBlockData(in)
                             );
                             currZ++;
@@ -599,18 +599,18 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                        targetBlock.getX() + currX,
-                                        targetBlock.getY() + currY,
-                                        targetBlock.getZ() + currZ
+                                        targetBlock.x() + currX,
+                                        targetBlock.y() + currY,
+                                        targetBlock.z() + currZ
                                 ).isAir()) { // no reason to paste air over
                                     // air, and it prevents us
                                     // most of the time from
                                     // having to even check the
                                     // block.
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -627,17 +627,17 @@ public class StencilListBrush extends AbstractBrush {
                         } else {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                    targetBlock.getX() + currX,
-                                    targetBlock.getY() + currY,
-                                    targetBlock.getZ() + currZ
+                                    targetBlock.x() + currX,
+                                    targetBlock.y() + currY,
+                                    targetBlock.z() + currZ
                             ).isAir()) { // no reason to paste air over
                                 // air, and it prevents us most of
                                 // the time from having to even
                                 // check the block.
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -660,9 +660,9 @@ public class StencilListBrush extends AbstractBrush {
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -680,9 +680,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -755,9 +755,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                                 currZ--;
@@ -772,9 +772,9 @@ public class StencilListBrush extends AbstractBrush {
                             }
                         } else {
                             setBlockData(
-                                    targetBlock.getX() + currX,
-                                    clampY(targetBlock.getY() + currY),
-                                    targetBlock.getZ() + currZ,
+                                    targetBlock.x() + currX,
+                                    clampY(targetBlock.y() + currY),
+                                    targetBlock.z() + currZ,
                                     blockDataReader.readBlockData(in)
                             );
                             currZ--;
@@ -795,14 +795,14 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                        targetBlock.getX() + currX,
-                                        targetBlock.getY() + currY,
-                                        targetBlock.getZ() + currZ
+                                        targetBlock.x() + currX,
+                                        targetBlock.y() + currY,
+                                        targetBlock.z() + currZ
                                 ).isAir()) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -819,14 +819,14 @@ public class StencilListBrush extends AbstractBrush {
                         } else {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType()) && this.clampY(
-                                    targetBlock.getX() + currX,
-                                    targetBlock.getY() + currY,
-                                    targetBlock.getZ() + currZ
+                                    targetBlock.x() + currX,
+                                    targetBlock.y() + currY,
+                                    targetBlock.z() + currZ
                             ).isAir()) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }
@@ -849,9 +849,9 @@ public class StencilListBrush extends AbstractBrush {
                             for (int j = 0; j < numLoops; j++) {
                                 if (!Materials.isEmpty(blockData.getBlockType())) {
                                     setBlockData(
-                                            targetBlock.getX() + currX,
-                                            clampY(targetBlock.getY() + currY),
-                                            targetBlock.getZ() + currZ,
+                                            targetBlock.x() + currX,
+                                            clampY(targetBlock.y() + currY),
+                                            targetBlock.z() + currZ,
                                             blockData
                                     );
                                 }
@@ -869,9 +869,9 @@ public class StencilListBrush extends AbstractBrush {
                             blockData = blockDataReader.readBlockData(in);
                             if (!Materials.isEmpty(blockData.getBlockType())) {
                                 setBlockData(
-                                        targetBlock.getX() + currX,
-                                        clampY(targetBlock.getY() + currY),
-                                        targetBlock.getZ() + currZ,
+                                        targetBlock.x() + currX,
+                                        clampY(targetBlock.y() + currY),
+                                        targetBlock.z() + currZ,
                                         blockData
                                 );
                             }

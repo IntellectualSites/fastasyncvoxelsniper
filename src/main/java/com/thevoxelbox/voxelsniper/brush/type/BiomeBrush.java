@@ -52,8 +52,8 @@ public class BiomeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
                 BiomeTypes.values(),
-                (type, type2) -> type.getId().compareTo(type2.getId()),
-                type -> TextComponent.of(type.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
+                (type, type2) -> type.id().compareTo(type2.id()),
+                type -> TextComponent.of(type.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
                 type -> type,
                 this.biomeType,
                 "voxelsniper.brush.biome"
@@ -70,7 +70,7 @@ public class BiomeBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.biome.set-biome",
-                this.biomeType.getId()
+                this.biomeType.id()
         ));
     }
 
@@ -90,8 +90,8 @@ public class BiomeBrush extends AbstractBrush {
         double brushSizeSquared = Math.pow(brushSize, 2);
         EditSession editSession = getEditSession();
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockX = targetBlock.getX();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockZ = targetBlock.z();
         for (int x = -brushSize; x <= brushSize; x++) {
             double xSquared = Math.pow(x, 2);
             for (int z = -brushSize; z <= brushSize; z++) {
@@ -127,7 +127,7 @@ public class BiomeBrush extends AbstractBrush {
                 .brushNameMessage()
                 .message(Caption.of(
                         "voxelsniper.brush.biome.set-biome",
-                        this.biomeType.getId()
+                        this.biomeType.id()
                 ))
                 .send();
     }

@@ -186,7 +186,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         BlockVector3 targetBlock = getTargetBlock();
         TaskManager.taskManager().sync(() -> {
             World world = BukkitAdapter.adapt(getEditSession().getWorld());
-            Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+            Location targetLocation = new Location(world, targetBlock.x(), targetBlock.y(), targetBlock.z());
             List<LivingEntity> entities = world.getLivingEntities();
             int numPunishApps = 0;
             for (LivingEntity entity : entities) {
@@ -221,7 +221,7 @@ public class PunishBrush extends AbstractPerformerBrush {
         int brushSizeSquare = brushSize * brushSize;
         World world = BukkitAdapter.adapt(getEditSession().getWorld());
         BlockVector3 targetBlock = getTargetBlock();
-        Location targetLocation = new Location(world, targetBlock.getX(), targetBlock.getY(), targetBlock.getZ());
+        Location targetLocation = new Location(world, targetBlock.x(), targetBlock.y(), targetBlock.z());
         List<LivingEntity> entities = world.getLivingEntities();
         for (LivingEntity entity : entities) {
             Location location = entity.getLocation();
@@ -312,7 +312,7 @@ public class PunishBrush extends AbstractPerformerBrush {
             case RANDOMTP -> {
                 Random random = new Random();
                 Location targetLocation = entity.getLocation();
-                targetLocation.setX(targetLocation.getX() + (random.nextInt(this.maxRandomTeleportationRange) - this.maxRandomTeleportationRange / 2.0));
+                targetLocation.setX(targetLocation.x() + (random.nextInt(this.maxRandomTeleportationRange) - this.maxRandomTeleportationRange / 2.0));
                 targetLocation.setZ(targetLocation.getZ() + (random.nextInt(this.maxRandomTeleportationRange) - this.maxRandomTeleportationRange / 2.0));
                 entity.teleport(targetLocation);
             }
@@ -339,8 +339,8 @@ public class PunishBrush extends AbstractPerformerBrush {
                     for (int z = this.punishLevel; z >= -this.punishLevel; z--) {
                         for (int x = this.punishLevel; x >= -this.punishLevel; x--) {
                             for (int y = this.punishLevel; y >= -this.punishLevel; y--) {
-                                target.setX(location.getX() + x);
-                                target.setY(location.getY() + y);
+                                target.setX(location.x() + x);
+                                target.setY(location.y() + y);
                                 target.setZ(location.getZ() + z);
                                 if (this.hypnoAffectLandscape && Materials.isEmpty(BukkitAdapter.asBlockType(target
                                         .getBlock()

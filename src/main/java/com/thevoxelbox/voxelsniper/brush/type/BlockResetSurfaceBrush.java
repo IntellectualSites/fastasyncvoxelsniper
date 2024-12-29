@@ -97,9 +97,9 @@ public class BlockResetSurfaceBrush extends AbstractBrush {
 
     private BlockState getBlockAtRelativeToTarget(int x, int y, int z) {
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockX = targetBlock.getX();
-        int targetBlockY = targetBlock.getY();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockY = targetBlock.y();
+        int targetBlockZ = targetBlock.z();
         return getBlock(targetBlockX + x, targetBlockY + y, targetBlockZ + z);
     }
 

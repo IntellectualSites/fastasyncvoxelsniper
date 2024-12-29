@@ -72,16 +72,16 @@ public class DiscBrush extends AbstractPerformerBrush {
         double radiusSquared = (brushSize + (this.trueCircle ? 0.5 : 0)) * (brushSize + (this.trueCircle ? 0.5 : 0));
         MutableBlockVector3 currentPoint = new MutableBlockVector3(targetBlock);
         for (int x = -brushSize; x <= brushSize; x++) {
-            currentPoint.mutX(targetBlock.getX() + x);
+            currentPoint.mutX(targetBlock.x() + x);
             for (int z = -brushSize; z <= brushSize; z++) {
-                currentPoint.mutZ(targetBlock.getZ() + z);
+                currentPoint.mutZ(targetBlock.z() + z);
                 if (targetBlock.distanceSq(currentPoint) <= radiusSquared) {
                     this.performer.perform(
                             getEditSession(),
-                            currentPoint.getBlockX(),
-                            clampY(currentPoint.getBlockY()),
-                            currentPoint.getBlockZ(),
-                            clampY(currentPoint.getBlockX(), currentPoint.getBlockY(), currentPoint.getBlockZ())
+                            currentPoint.x(),
+                            clampY(currentPoint.y()),
+                            currentPoint.z(),
+                            clampY(currentPoint.x(), currentPoint.y(), currentPoint.z())
                     );
                 }
             }

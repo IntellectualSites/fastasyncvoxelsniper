@@ -72,12 +72,12 @@ public class SetBrush extends AbstractPerformerBrush {
             this.block = null;
             return true;
         }
-        int x1 = this.block.getX();
-        int x2 = block.getX();
-        int y1 = this.block.getY();
-        int y2 = block.getY();
-        int z1 = this.block.getZ();
-        int z2 = block.getZ();
+        int x1 = this.block.x();
+        int x2 = block.x();
+        int y1 = this.block.y();
+        int y2 = block.y();
+        int z1 = this.block.z();
+        int z2 = block.z();
         int lowX = Math.min(x1, x2);
         int lowY = Math.min(y1, y2);
         int lowZ = Math.min(z1, z2);

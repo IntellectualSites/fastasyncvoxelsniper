@@ -180,9 +180,9 @@ public class HeatRayBrush extends AbstractBrush {
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 for (int y = brushSize; y >= -brushSize; y--) {
-                    currentLocation.setX(targetBlock.getX() + x);
-                    currentLocation.setY(targetBlock.getY() + y);
-                    currentLocation.setZ(targetBlock.getZ() + z);
+                    currentLocation.setX(targetBlock.x() + x);
+                    currentLocation.setY(targetBlock.y() + y);
+                    currentLocation.setZ(targetBlock.z() + z);
                     Vector currentLocationVector = currentLocation.clone();
                     if (currentLocationVector.isInSphere(targetBlockVector, brushSize)) {
                         BlockState currentBlock = getBlock(

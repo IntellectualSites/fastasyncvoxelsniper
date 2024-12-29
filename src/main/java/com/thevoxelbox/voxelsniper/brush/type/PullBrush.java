@@ -102,17 +102,17 @@ public class PullBrush extends AbstractBrush {
             // Z - Axis
             for (int z = -brushSize; z <= brushSize; z++) {
                 int zSquared = z * z;
-                int actualZ = targetBlock.getZ() + z;
+                int actualZ = targetBlock.z() + z;
                 // X - Axis
                 for (int x = -brushSize; x <= brushSize; x++) {
                     int xSquared = x * x;
-                    int actualX = targetBlock.getX() + x;
+                    int actualX = targetBlock.x() + x;
                     // Down the Y - Axis
                     for (int y = brushSize; y >= -brushSize; y--) {
                         double volume = zSquared + xSquared + (y * y);
                         // Is this in the range of the brush?
-                        if (volume <= brushSizeSquared && !getBlock(actualX, targetBlock.getY() + y, actualZ).isAir()) {
-                            int actualY = targetBlock.getY() + y;
+                        if (volume <= brushSizeSquared && !getBlock(actualX, targetBlock.y() + y, actualZ).isAir()) {
+                            int actualY = targetBlock.y() + y;
                             // Starting strength and new Position
                             double str = this.getStr(volume / brushSizeSquared);
                             int lastStr = (int) (this.voxelHeight * str);
@@ -124,7 +124,7 @@ public class PullBrush extends AbstractBrush {
                                 str = 0.8;
                             }
                             while (lastStr > 0) {
-                                if (actualY < targetBlock.getY()) {
+                                if (actualY < targetBlock.y()) {
                                     str *= str;
                                 }
                                 lastStr = (int) (this.voxelHeight * str);
@@ -144,14 +144,14 @@ public class PullBrush extends AbstractBrush {
         } else {
             for (int z = -brushSize; z <= brushSize; z++) {
                 double zSquared = Math.pow(z, 2);
-                int actualZ = targetBlock.getZ() + z;
+                int actualZ = targetBlock.z() + z;
                 for (int x = -brushSize; x <= brushSize; x++) {
                     double xSquared = Math.pow(x, 2);
-                    int actualX = targetBlock.getX() + x;
+                    int actualX = targetBlock.x() + x;
                     for (int y = -brushSize; y <= brushSize; y++) {
                         double volume = (xSquared + Math.pow(y, 2) + zSquared);
-                        if (volume <= brushSizeSquared && !getBlock(actualX, targetBlock.getY() + y, actualZ).isAir()) {
-                            int actualY = targetBlock.getY() + y;
+                        if (volume <= brushSizeSquared && !getBlock(actualX, targetBlock.y() + y, actualZ).isAir()) {
+                            int actualY = targetBlock.y() + y;
                             lastY = actualY + (int) (this.voxelHeight * this.getStr(volume / brushSizeSquared));
                             setBlock(actualX, clampY(lastY), actualZ,
                                     getBlockType(actualX, actualY, actualZ)
@@ -159,8 +159,8 @@ public class PullBrush extends AbstractBrush {
                             y++;
                             double volume2 = (xSquared + Math.pow(y, 2) + zSquared);
                             while (volume2 <= brushSizeSquared) {
-                                int blockY = targetBlock.getY() + y + (int) (this.voxelHeight * this.getStr(volume2 / brushSizeSquared));
-                                BlockType blockType = getBlockType(actualX, targetBlock.getY() + y, actualZ);
+                                int blockY = targetBlock.y() + y + (int) (this.voxelHeight * this.getStr(volume2 / brushSizeSquared));
+                                BlockType blockType = getBlockType(actualX, targetBlock.y() + y, actualZ);
                                 for (int i = blockY; i < lastY; i++) {
                                     setBlock(actualX, clampY(i), actualZ, blockType);
                                 }
@@ -188,19 +188,19 @@ public class PullBrush extends AbstractBrush {
         for (int z = -brushSize; z <= brushSize; z++) {
             double zSquared = Math.pow(z, 2);
             BlockVector3 targetBlock = getTargetBlock();
-            int actualZ = targetBlock.getZ() + z;
+            int actualZ = targetBlock.z() + z;
             for (int x = -brushSize; x <= brushSize; x++) {
                 double xSquared = Math.pow(x, 2);
-                int actualX = targetBlock.getX() + x;
+                int actualX = targetBlock.x() + x;
                 for (int y = -brushSize; y <= brushSize; y++) {
                     double volume = (xSquared + Math.pow(y, 2) + zSquared);
                     if (volume <= bSquared) {
-                        if (this.isSurface(actualX, targetBlock.getY() + y, actualZ)) {
+                        if (this.isSurface(actualX, targetBlock.y() + y, actualZ)) {
                             this.surface.add(new PullBrushBlockWrapper(
                                     actualX,
-                                    clampY(targetBlock.getY() + y),
+                                    clampY(targetBlock.y() + y),
                                     actualZ,
-                                    this.clampY(actualX, targetBlock.getY() + y, actualZ),
+                                    this.clampY(actualX, targetBlock.y() + y, actualZ),
                                     this.getStr(volume / bSquared)
                             ));
                         }

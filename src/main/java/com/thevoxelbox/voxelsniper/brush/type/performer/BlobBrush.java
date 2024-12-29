@@ -140,13 +140,13 @@ public class BlobBrush extends AbstractPerformerBrush {
                         BlockVector3 targetBlock = this.getTargetBlock();
                         this.performer.perform(
                                 getEditSession(),
-                                targetBlock.getX() - brushSize + x,
-                                clampY(targetBlock.getY() - brushSize + z),
-                                targetBlock.getZ() - brushSize + y,
+                                targetBlock.x() - brushSize + x,
+                                clampY(targetBlock.y() - brushSize + z),
+                                targetBlock.z() - brushSize + y,
                                 this.clampY(
-                                        targetBlock.getX() - brushSize + x,
-                                        targetBlock.getY() - brushSize + z,
-                                        targetBlock.getZ() - brushSize + y
+                                        targetBlock.x() - brushSize + x,
+                                        targetBlock.y() - brushSize + z,
+                                        targetBlock.z() - brushSize + y
                                 )
                         );
                     }
@@ -222,13 +222,13 @@ public class BlobBrush extends AbstractPerformerBrush {
                         BlockVector3 targetBlock = this.getTargetBlock();
                         this.performer.perform(
                                 getEditSession(),
-                                targetBlock.getX() - brushSize + x,
-                                clampY(targetBlock.getY() - brushSize + z),
-                                targetBlock.getZ() - brushSize + y,
+                                targetBlock.x() - brushSize + x,
+                                clampY(targetBlock.y() - brushSize + z),
+                                targetBlock.z() - brushSize + y,
                                 this.clampY(
-                                        targetBlock.getX() - brushSize + x,
-                                        targetBlock.getY() - brushSize + z,
-                                        targetBlock.getZ() - brushSize + y
+                                        targetBlock.x() - brushSize + x,
+                                        targetBlock.y() - brushSize + z,
+                                        targetBlock.z() - brushSize + y
                                 )
                         );
                     }

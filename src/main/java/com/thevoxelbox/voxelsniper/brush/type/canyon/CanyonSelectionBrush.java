@@ -55,8 +55,8 @@ public class CanyonSelectionBrush extends CanyonBrush {
     private void execute(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
-        int chunkX = targetBlock.getX() >> 4;
-        int chunkZ = targetBlock.getZ() >> 4;
+        int chunkX = targetBlock.x() >> 4;
+        int chunkZ = targetBlock.z() >> 4;
         if (this.first) {
             this.fx = chunkX;
             this.fz = chunkZ;

@@ -208,7 +208,7 @@ nexusPublishing {
 }
 
 // Keep in sync with FAWE versions
-val supportedVersions = listOf("1.20.2", "1.20.4", "1.20.6", "1.21.3")
+val supportedVersions = listOf("1.20.2", "1.20.4", "1.20.6", "1.21.3", "1.21.4")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))

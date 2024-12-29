@@ -271,7 +271,7 @@ public class VoxelSniperConfigLoader {
      * @param blockType default type
      */
     protected void setDefaultBlockMaterial(BlockType blockType) {
-        this.config.set(DEFAULT_BLOCK_MATERIAL, blockType.getId());
+        this.config.set(DEFAULT_BLOCK_MATERIAL, blockType.id());
     }
 
     /**
@@ -295,7 +295,7 @@ public class VoxelSniperConfigLoader {
      * @param blockType default type
      */
     protected void setDefaultReplaceBlockMaterial(BlockType blockType) {
-        this.config.set(DEFAULT_REPLACE_BLOCK_MATERIAL, blockType.getId());
+        this.config.set(DEFAULT_REPLACE_BLOCK_MATERIAL, blockType.id());
     }
 
     /**

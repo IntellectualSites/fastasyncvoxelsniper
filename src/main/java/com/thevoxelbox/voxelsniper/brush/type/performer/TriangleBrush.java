@@ -59,9 +59,9 @@ public class TriangleBrush extends AbstractPerformerBrush {
     private void triangleA(Snipe snipe) {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockX = targetBlock.getX();
-        int targetBlockY = targetBlock.getY();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockY = targetBlock.y();
+        int targetBlockZ = targetBlock.z();
         double x = targetBlockX + 0.5 * targetBlockX / Math.abs(targetBlockX);
         double y = targetBlockY + 0.5;
         double z = targetBlockZ + 0.5 * targetBlockZ / Math.abs(targetBlockZ);

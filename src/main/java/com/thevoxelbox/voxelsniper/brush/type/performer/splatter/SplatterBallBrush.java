@@ -182,9 +182,9 @@ public class SplatterBallBrush extends AbstractPerformerBrush {
             }
         }
         // Make the changes
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         double rSquared = Math.pow(brushSize + 1, 2);
         for (int x = 2 * brushSize; x >= 0; x--) {
             double xSquared = Math.pow(x - brushSize - 1, 2);

@@ -152,9 +152,9 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         boolean found = false;
                         for (y = -toolkitProperties.getVoxelHeight(); y < toolkitProperties.getVoxelHeight(); y++) {
                             BlockType currentBlockType = getBlockType(
-                                    targetBlock.getX() + x,
-                                    targetBlock.getY() + y,
-                                    targetBlock.getZ() + z
+                                    targetBlock.x() + x,
+                                    targetBlock.y() + y,
+                                    targetBlock.z() + z
                             );
                             if (!Materials.isEmpty(currentBlockType)) {
                                 found = true;
@@ -166,19 +166,19 @@ public class FillDownBrush extends AbstractPerformerBrush {
                         }
                         y--;
                     }
-                    for (; y >= -(targetBlock.getY() - minY); --y) {
+                    for (; y >= -(targetBlock.y() - minY); --y) {
                         BlockState currentBlockState = getBlock(
-                                targetBlock.getX() + x,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + z
+                                targetBlock.x() + x,
+                                targetBlock.y() + y,
+                                targetBlock.z() + z
                         );
                         if (Materials.isEmpty(currentBlockState.getBlockType())
                                 || (this.fillLiquid && Materials.isLiquid(currentBlockState.getBlockType()))) {
                             this.performer.perform(
                                     getEditSession(),
-                                    targetBlock.getX() + x,
-                                    targetBlock.getY() + y,
-                                    targetBlock.getZ() + z,
+                                    targetBlock.x() + x,
+                                    targetBlock.y() + y,
+                                    targetBlock.z() + z,
                                     currentBlockState
                             );
                         } else {

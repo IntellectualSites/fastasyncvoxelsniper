@@ -24,7 +24,7 @@ public final class Vectors {
     }
 
     public static Vector toBukkit(BlockVector3 vector) {
-        return new Vector(vector.getX(), vector.getY(), vector.getZ());
+        return new Vector(vector.x(), vector.y(), vector.z());
     }
 
 }

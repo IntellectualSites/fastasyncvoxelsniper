@@ -71,9 +71,9 @@ public class CleanSnowBrush extends AbstractBrush {
                 for (int z = (brushSize + 1) * 2; z >= 0; z--) {
                     if (xSquared + MathHelper.square(z - brushSize) + ySquared <= brushSizeSquared) {
                         BlockVector3 targetBlock = getTargetBlock();
-                        int targetBlockX = targetBlock.getX();
-                        int targetBlockY = targetBlock.getY();
-                        int targetBlockZ = targetBlock.getZ();
+                        int targetBlockX = targetBlock.x();
+                        int targetBlockY = targetBlock.y();
+                        int targetBlockZ = targetBlock.z();
                         if (clampY(
                                 targetBlockX + x - brushSize,
                                 targetBlockY + z - brushSize,

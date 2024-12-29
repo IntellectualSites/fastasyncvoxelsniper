@@ -28,10 +28,10 @@ public class SnipeBrush extends AbstractPerformerBrush {
         BlockVector3 targetBlock = getTargetBlock();
         this.performer.perform(
                 getEditSession(),
-                targetBlock.getX(),
-                targetBlock.getY(),
-                targetBlock.getZ(),
-                getBlock(targetBlock.getX(), targetBlock.getY(), targetBlock.getZ())
+                targetBlock.x(),
+                targetBlock.y(),
+                targetBlock.z(),
+                getBlock(targetBlock.x(), targetBlock.y(), targetBlock.z())
         );
     }
 
@@ -40,10 +40,10 @@ public class SnipeBrush extends AbstractPerformerBrush {
         BlockVector3 lastBlock = getLastBlock();
         this.performer.perform(
                 getEditSession(),
-                lastBlock.getX(),
-                lastBlock.getY(),
-                lastBlock.getZ(),
-                getBlock(lastBlock.getX(), lastBlock.getY(), lastBlock.getZ())
+                lastBlock.x(),
+                lastBlock.y(),
+                lastBlock.z(),
+                getBlock(lastBlock.x(), lastBlock.y(), lastBlock.z())
         );
     }
 

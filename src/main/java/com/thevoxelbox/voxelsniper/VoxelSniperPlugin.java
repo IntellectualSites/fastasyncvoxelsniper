@@ -288,7 +288,7 @@ public class VoxelSniperPlugin extends JavaPlugin {
                 return currentVersion;
             }
             newVersionTitle =
-                    ((String) ((JSONObject) array.get(array.size() - 1)).get("name")).replace("FastAsyncVoxelSniper", "").trim();
+                    ((String) ((JSONObject) array.getLast()).get("name")).replace("FastAsyncVoxelSniper", "").trim();
             return Double.parseDouble(newVersionTitle.replaceFirst("\\.", "").trim());
         } catch (IOException ignored) {
             LOGGER.error("Unable to connect to api.curseforge.com to check for updates. Improper firewall configuration?");

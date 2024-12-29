@@ -63,9 +63,9 @@ public class ExtrudeBrush extends AbstractBrush {
                     for (int y = 0; y < Math.abs(toolkitProperties.getVoxelHeight()); y++) {
                         int tempY = y * direction;
                         BlockVector3 targetBlock = getTargetBlock();
-                        int targetBlockX = targetBlock.getX();
-                        int targetBlockY = targetBlock.getY();
-                        int targetBlockZ = targetBlock.getZ();
+                        int targetBlockX = targetBlock.x();
+                        int targetBlockY = targetBlock.y();
+                        int targetBlockZ = targetBlock.z();
                         perform(
                                 targetBlockX + x,
                                 targetBlockY + tempY,
@@ -96,17 +96,17 @@ public class ExtrudeBrush extends AbstractBrush {
                         int tempZ = z * direction;
                         BlockVector3 targetBlock = this.getTargetBlock();
                         perform(
-                                targetBlock.getX() + x,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + tempZ,
-                                clampY(targetBlock.getX() + x, targetBlock.getY() + y, targetBlock.getZ() + tempZ),
-                                targetBlock.getX() + x,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + tempZ + direction,
+                                targetBlock.x() + x,
+                                targetBlock.y() + y,
+                                targetBlock.z() + tempZ,
+                                clampY(targetBlock.x() + x, targetBlock.y() + y, targetBlock.z() + tempZ),
+                                targetBlock.x() + x,
+                                targetBlock.y() + y,
+                                targetBlock.z() + tempZ + direction,
                                 this.clampY(
-                                        targetBlock.getX() + x,
-                                        targetBlock.getY() + y,
-                                        targetBlock.getZ() + tempZ + direction
+                                        targetBlock.x() + x,
+                                        targetBlock.y() + y,
+                                        targetBlock.z() + tempZ + direction
                                 ),
                                 toolkitProperties
                         );
@@ -129,17 +129,17 @@ public class ExtrudeBrush extends AbstractBrush {
                         int tempX = x * direction;
                         BlockVector3 targetBlock = this.getTargetBlock();
                         perform(
-                                targetBlock.getX() + tempX,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + z,
-                                this.clampY(targetBlock.getX() + tempX, targetBlock.getY() + y, targetBlock.getZ() + z),
-                                targetBlock.getX() + tempX + direction,
-                                targetBlock.getY() + y,
-                                targetBlock.getZ() + z,
+                                targetBlock.x() + tempX,
+                                targetBlock.y() + y,
+                                targetBlock.z() + z,
+                                this.clampY(targetBlock.x() + tempX, targetBlock.y() + y, targetBlock.z() + z),
+                                targetBlock.x() + tempX + direction,
+                                targetBlock.y() + y,
+                                targetBlock.z() + z,
                                 this.clampY(
-                                        targetBlock.getX() + tempX + direction,
-                                        targetBlock.getY() + y,
-                                        targetBlock.getZ() + z
+                                        targetBlock.x() + tempX + direction,
+                                        targetBlock.y() + y,
+                                        targetBlock.z() + z
                                 ),
                                 toolkitProperties
                         );

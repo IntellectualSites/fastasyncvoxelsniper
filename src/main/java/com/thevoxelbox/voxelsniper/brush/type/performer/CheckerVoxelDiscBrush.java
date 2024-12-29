@@ -69,14 +69,14 @@ public class CheckerVoxelDiscBrush extends AbstractPerformerBrush {
         int brushSize = toolkitProperties.getBrushSize();
         for (int x = brushSize; x >= -brushSize; x--) {
             for (int y = brushSize; y >= -brushSize; y--) {
-                int sum = this.useWorldCoordinates ? target.getX() + x + target.getZ() + y : x + y;
+                int sum = this.useWorldCoordinates ? target.x() + x + target.z() + y : x + y;
                 if (sum % 2 != 0) {
                     this.performer.perform(
                             getEditSession(),
-                            target.getX() + x,
-                            clampY(target.getY()),
-                            target.getZ() + y,
-                            this.clampY(target.getX() + x, target.getY(), target.getZ() + y)
+                            target.x() + x,
+                            clampY(target.y()),
+                            target.z() + y,
+                            this.clampY(target.x() + x, target.y(), target.z() + y)
                     );
                 }
             }

@@ -133,9 +133,9 @@ public class StencilBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         BlockVector3 targetBlock = getTargetBlock();
         if (this.point == 1) {
-            this.firstPoint[0] = targetBlock.getX();
-            this.firstPoint[1] = targetBlock.getZ();
-            this.firstPoint[2] = targetBlock.getY();
+            this.firstPoint[0] = targetBlock.x();
+            this.firstPoint[1] = targetBlock.z();
+            this.firstPoint[2] = targetBlock.y();
             messenger.sendMessage(Caption.of("voxelsniper.brush.parameter.first-point"));
             messenger.sendMessage(Caption.of(
                     "voxelsniper.brush.stencil.coordinates",
@@ -143,9 +143,9 @@ public class StencilBrush extends AbstractBrush {
             ));
             this.point = 2;
         } else if (this.point == 2) {
-            this.secondPoint[0] = targetBlock.getX();
-            this.secondPoint[1] = targetBlock.getZ();
-            this.secondPoint[2] = targetBlock.getY();
+            this.secondPoint[0] = targetBlock.x();
+            this.secondPoint[1] = targetBlock.z();
+            this.secondPoint[2] = targetBlock.y();
             if ((Math.abs(this.firstPoint[0] - this.secondPoint[0]) * Math.abs(this.firstPoint[1] - this.secondPoint[1]) * Math.abs(
                     this.firstPoint[2] - this.secondPoint[2])) > this.maxAreaVolume) {
                 messenger.sendMessage(Caption.of(
@@ -164,9 +164,9 @@ public class StencilBrush extends AbstractBrush {
                 this.point = 3;
             }
         } else if (this.point == 3) {
-            this.pastePoint[0] = targetBlock.getX();
-            this.pastePoint[1] = targetBlock.getZ();
-            this.pastePoint[2] = targetBlock.getY();
+            this.pastePoint[0] = targetBlock.x();
+            this.pastePoint[1] = targetBlock.z();
+            this.pastePoint[2] = targetBlock.y();
             messenger.sendMessage(Caption.of("voxelsniper.brush.stencil.paste-point"));
             messenger.sendMessage(Caption.of(
                     "voxelsniper.brush.stencil.coordinates",
@@ -205,9 +205,9 @@ public class StencilBrush extends AbstractBrush {
                 int currY = -this.yRef;
                 BlockState blockData;
                 BlockVector3 targetBlock = getTargetBlock();
-                int blockPositionX = targetBlock.getX();
-                int blockPositionY = targetBlock.getY();
-                int blockPositionZ = targetBlock.getZ();
+                int blockPositionX = targetBlock.x();
+                int blockPositionY = targetBlock.y();
+                int blockPositionZ = targetBlock.z();
                 if (this.pasteOption == 0) {
                     for (int i = 1; i < numRuns + 1; i++) {
                         if (in.readBoolean()) {

@@ -110,9 +110,9 @@ public class EllipsoidBrush extends AbstractPerformerBrush {
     }
 
     private void execute(BlockVector3 targetBlock) {
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         this.performer.perform(getEditSession(), blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
         double trueOffset = this.offset ? 0.5 : 0;
         for (double x = 0; x <= this.xRad; x++) {

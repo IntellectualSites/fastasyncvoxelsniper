@@ -104,9 +104,9 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 BlockVector3 targetBlock = getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockY = targetBlock.getY();
-                int blockZ = targetBlock.getZ();
+                int blockX = targetBlock.x();
+                int blockY = targetBlock.y();
+                int blockZ = targetBlock.z();
                 for (int y = blockY; y < blockY + this.depth; y++) { // start scanning from the height you clicked at
                     boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
                     if (noSurfaceFound) {
@@ -161,9 +161,9 @@ public class UnderlayBrush extends AbstractPerformerBrush {
         for (int z = brushSize; z >= -brushSize; z--) {
             for (int x = brushSize; x >= -brushSize; x--) {
                 BlockVector3 targetBlock = getTargetBlock();
-                int blockX = targetBlock.getX();
-                int blockY = targetBlock.getY();
-                int blockZ = targetBlock.getZ();
+                int blockX = targetBlock.x();
+                int blockY = targetBlock.y();
+                int blockZ = targetBlock.z();
                 for (int y = blockY; y < blockY + this.depth; y++) { // start scanning from the height you clicked at
                     boolean noSurfaceFound = !memory[x + brushSize][z + brushSize];
                     if (!noSurfaceFound) {

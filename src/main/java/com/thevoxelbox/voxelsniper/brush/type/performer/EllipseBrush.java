@@ -144,9 +144,9 @@ public class EllipseBrush extends AbstractPerformerBrush {
     }
 
     private void ellipse(Snipe snipe, BlockVector3 targetBlock) {
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         try {
             for (double steps = 0; (steps <= TWO_PI); steps += this.stepSize) {
                 int x = (int) Math.round(this.xscl * Math.cos(steps));
@@ -194,9 +194,9 @@ public class EllipseBrush extends AbstractPerformerBrush {
         EditSession editSession = getEditSession();
         int ix = this.xscl;
         int iy = this.yscl;
-        int blockX = targetBlock.getX();
-        int blockY = targetBlock.getY();
-        int blockZ = targetBlock.getZ();
+        int blockX = targetBlock.x();
+        int blockY = targetBlock.y();
+        int blockZ = targetBlock.z();
         this.performer.perform(editSession, blockX, blockY, blockZ, getBlock(blockX, blockY, blockZ));
         try {
             if (ix >= iy) { // Need this unless you want weird holes

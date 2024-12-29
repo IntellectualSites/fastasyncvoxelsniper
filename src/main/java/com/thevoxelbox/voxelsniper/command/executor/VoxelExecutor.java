@@ -52,9 +52,9 @@ public class VoxelExecutor implements VoxelCommandElement {
             if (targetBlock != null) {
                 BlockState targetBlockState = BukkitAdapter.adapt(
                         player.getWorld().getBlockAt(
-                                targetBlock.getX(),
-                                targetBlock.getY(),
-                                targetBlock.getZ()
+                                targetBlock.x(),
+                                targetBlock.y(),
+                                targetBlock.z()
                         ).getBlockData());
                 if (targetBlockState == null) {
                     sniper.print(Caption.of("voxelsniper.command.invalid-target-block"));
@@ -65,7 +65,7 @@ public class VoxelExecutor implements VoxelCommandElement {
                 if (!player.hasPermission("voxelsniper.ignorelimitations") && config
                         .getLitesniperRestrictedMaterials()
                         .contains(targetBlockType.getResource())) {
-                    sniper.print(Caption.of("voxelsniper.command.not-allowed", targetBlockType.getId()));
+                    sniper.print(Caption.of("voxelsniper.command.not-allowed", targetBlockType.id()));
                     return;
                 }
 

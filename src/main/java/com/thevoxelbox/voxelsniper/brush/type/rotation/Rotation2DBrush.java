@@ -81,12 +81,12 @@ public class Rotation2DBrush extends AbstractBrush {
         this.snap = new BlockState[brushSize][brushSize][brushSize];
         double brushSizeSquared = Math.pow(this.brushSize + 0.5, 2);
         BlockVector3 targetBlock = this.getTargetBlock();
-        int sx = targetBlock.getX() - this.brushSize;
+        int sx = targetBlock.x() - this.brushSize;
         for (int x = 0; x < this.snap.length; x++) {
-            int sz = targetBlock.getZ() - this.brushSize;
+            int sz = targetBlock.z() - this.brushSize;
             double xSquared = Math.pow(x - this.brushSize, 2);
             for (int y = 0; y < this.snap.length; y++) {
-                int sy = targetBlock.getY() - this.brushSize;
+                int sy = targetBlock.y() - this.brushSize;
                 if (xSquared + Math.pow(y - this.brushSize, 2) <= brushSizeSquared) {
                     for (int z = 0; z < this.snap.length; z++) {
                         // why is this not sx + x, sy + y sz + z?
@@ -127,9 +127,9 @@ public class Rotation2DBrush extends AbstractBrush {
                             continue;
                         }
                         setBlockData(
-                                targetBlock.getX() + (int) newX,
-                                targetBlock.getY() + yy,
-                                targetBlock.getZ() + (int) newZ,
+                                targetBlock.x() + (int) newX,
+                                targetBlock.y() + yy,
+                                targetBlock.z() + (int) newZ,
                                 blockData
                         );
                     }
@@ -138,14 +138,14 @@ public class Rotation2DBrush extends AbstractBrush {
         }
         for (int x = 0; x < this.snap.length; x++) {
             double xSquared = Math.pow(x - this.brushSize, 2);
-            int fx = x + targetBlock.getX() - this.brushSize;
+            int fx = x + targetBlock.x() - this.brushSize;
             for (int z = 0; z < this.snap.length; z++) {
                 if (xSquared + Math.pow(z - this.brushSize, 2) <= brushSizeSquared) {
-                    int fz = z + targetBlock.getZ() - this.brushSize;
+                    int fz = z + targetBlock.z() - this.brushSize;
                     if (!doNotFill[x][z]) {
                         // smart fill stuff
                         for (int y = 0; y < this.snap.length; y++) {
-                            int fy = y + targetBlock.getY() - this.brushSize;
+                            int fy = y + targetBlock.y() - this.brushSize;
                             BlockType a = getBlockType(fx + 1, fy, fz);
                             BlockType b = getBlockType(fx, fy, fz - 1);
                             BlockType c = getBlockType(fx, fy, fz + 1);

@@ -28,7 +28,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
     private static final String DEFAULT_BIOME = "default";
 
     private static final List<String> BIOMES = BiomeTypes.values().stream()
-            .map(biomeType -> biomeType.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
+            .map(biomeType -> biomeType.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
             .toList();
 
     private BiomeType biomeType = null;
@@ -54,8 +54,8 @@ public class RegenerateChunkBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
                 BiomeTypes.values(),
-                (type, type2) -> type.getId().compareTo(type2.getId()),
-                type -> TextComponent.of(type.getId().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
+                (type, type2) -> type.id().compareTo(type2.id()),
+                type -> TextComponent.of(type.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
                 type -> type,
                 this.biomeType,
                 "voxelsniper.brush.biome"
@@ -85,7 +85,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.regenerate-chunk.set-biome",
-                this.biomeType.getId()
+                this.biomeType.id()
         ));
     }
 
@@ -101,15 +101,15 @@ public class RegenerateChunkBrush extends AbstractBrush {
 
     private void generateChunk(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        int chunkX = targetBlock.getX() >> 4;
-        int chunkY = targetBlock.getY() >> 8;
-        int chunkZ = targetBlock.getZ() >> 4;
+        int chunkX = targetBlock.x() >> 4;
+        int chunkY = targetBlock.y() >> 8;
+        int chunkZ = targetBlock.z() >> 4;
         SnipeMessenger messenger = snipe.createMessenger();
         messenger.sendMessage(Caption.of(
                 "voxelsniper.brush.regenerate-chunk.generate",
                 (this.biomeType == null
                         ? Caption.of("voxelsniper.brush.regenerate-chunk.default-biome")
-                        : this.biomeType.getId()),
+                        : this.biomeType.id()),
                 chunkX,
                 chunkY,
                 chunkZ
@@ -140,7 +140,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
                         "voxelsniper.brush.regenerate-chunk.set-biome",
                         (this.biomeType == null
                                 ? Caption.of("voxelsniper.brush.regenerate-chunk.default-biome")
-                                : this.biomeType.getId())
+                                : this.biomeType.id())
                 ))
                 .send();
     }

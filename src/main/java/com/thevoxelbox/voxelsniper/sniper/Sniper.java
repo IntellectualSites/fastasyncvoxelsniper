@@ -244,9 +244,9 @@ public class Sniper implements SniperCommander {
                             BlockType blockType;
                             if (targetBlock == null || Materials.isEmpty(
                                     (blockType = editSession.getBlockType(
-                                            targetBlock.getX(),
-                                            targetBlock.getY(),
-                                            targetBlock.getZ()
+                                            targetBlock.x(),
+                                            targetBlock.y(),
+                                            targetBlock.z()
                                     ))
                             )) {
                                 toolkitProperties.resetPattern();
@@ -274,9 +274,9 @@ public class Sniper implements SniperCommander {
                                 toolkitProperties.resetReplacePattern();
                             } else {
                                 BlockType blockType = editSession.getBlockType(
-                                        targetBlock.getX(),
-                                        targetBlock.getY(),
-                                        targetBlock.getZ()
+                                        targetBlock.x(),
+                                        targetBlock.y(),
+                                        targetBlock.z()
                                 );
                                 toolkitProperties.setReplacePattern(new BrushPattern(blockType));
                             }
@@ -296,11 +296,11 @@ public class Sniper implements SniperCommander {
                     return false;
                 } else {
                     if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                        if (targetBlock == null || (targetBlock.getY() != editSession.getMinY() &&
+                        if (targetBlock == null || (targetBlock.y() != editSession.getMinY() &&
                                 Materials.isEmpty(editSession.getBlockType(
-                                        targetBlock.getX(),
-                                        targetBlock.getY(),
-                                        targetBlock.getZ()
+                                        targetBlock.x(),
+                                        targetBlock.y(),
+                                        targetBlock.z()
                                 )))) {
                             print(Caption.of("voxelsniper.sniper.target-invisible"));
                             return true;

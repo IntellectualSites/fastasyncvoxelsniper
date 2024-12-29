@@ -41,9 +41,9 @@ public class ShellVoxelBrush extends AbstractBrush {
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         int brushSize = toolkitProperties.getBrushSize();
         BlockType[][][] oldMaterials = new BlockType[2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1][2 * (brushSize + 1) + 1]; // Array that holds the original materials plus a  buffer
-        int blockPositionX = targetBlock.getX();
-        int blockPositionY = targetBlock.getY();
-        int blockPositionZ = targetBlock.getZ();
+        int blockPositionX = targetBlock.x();
+        int blockPositionY = targetBlock.y();
+        int blockPositionZ = targetBlock.z();
         // Log current materials into oldmats
         for (int x = 0; x <= 2 * (brushSize + 1); x++) {
             for (int y = 0; y <= 2 * (brushSize + 1); y++) {

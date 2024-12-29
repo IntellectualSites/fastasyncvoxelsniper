@@ -69,14 +69,14 @@ public class CanyonBrush extends AbstractBrush {
     @Override
     public void handleArrowAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        canyon(targetBlock.getX() >> 4, targetBlock.getZ() >> 4);
+        canyon(targetBlock.x() >> 4, targetBlock.z() >> 4);
     }
 
     @Override
     public void handleGunpowderAction(Snipe snipe) {
         BlockVector3 targetBlock = getTargetBlock();
-        int chunkX = targetBlock.getX() >> 4;
-        int chunkZ = targetBlock.getZ() >> 4;
+        int chunkX = targetBlock.x() >> 4;
+        int chunkZ = targetBlock.z() >> 4;
         for (int x = chunkX - 1; x <= chunkX + 1; x++) {
             for (int z = chunkZ - 1; z <= chunkX + 1; z++) {
                 canyon(x, z);

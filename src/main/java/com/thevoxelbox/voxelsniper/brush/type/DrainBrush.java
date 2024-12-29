@@ -81,9 +81,9 @@ public class DrainBrush extends AbstractBrush {
         int brushSize = toolkitProperties.getBrushSize();
         double brushSizeSquared = Math.pow(brushSize + (this.trueCircle ? 0.5 : 0), 2);
         BlockVector3 targetBlock = getTargetBlock();
-        int targetBlockX = targetBlock.getX();
-        int targetBlockY = targetBlock.getY();
-        int targetBlockZ = targetBlock.getZ();
+        int targetBlockX = targetBlock.x();
+        int targetBlockY = targetBlock.y();
+        int targetBlockZ = targetBlock.z();
         if (this.disc) {
             for (int x = brushSize; x >= 0; x--) {
                 double xSquared = MathHelper.square(x);

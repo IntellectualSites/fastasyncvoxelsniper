@@ -37,7 +37,7 @@ public class SnowConeBrush extends AbstractBrush {
         if (getBlockType(targetBlock) == BlockTypes.SNOW) {
             addSnow(targetBlock);
         } else {
-            BlockVector3 blockAbove = BlockVector3.at(targetBlock.getX(), targetBlock.getY() + 1, targetBlock.getZ());
+            BlockVector3 blockAbove = BlockVector3.at(targetBlock.x(), targetBlock.y() + 1, targetBlock.z());
             BlockType type = getBlockType(blockAbove);
             if (Materials.isEmpty(type)) {
                 addSnow(blockAbove);
@@ -49,9 +49,9 @@ public class SnowConeBrush extends AbstractBrush {
     }
 
     private void addSnow(BlockVector3 targetBlock) {
-        int blockPositionX = targetBlock.getX();
-        int blockPositionY = targetBlock.getY();
-        int blockPositionZ = targetBlock.getZ();
+        int blockPositionX = targetBlock.x();
+        int blockPositionY = targetBlock.y();
+        int blockPositionZ = targetBlock.z();
         int brushSize = Materials.isEmpty(getBlockType(blockPositionX, blockPositionY, blockPositionZ))
                 ? 0
                 : blockDataToSnowLayers(getBlock(blockPositionX, clampY(blockPositionY), blockPositionZ)) + 1;

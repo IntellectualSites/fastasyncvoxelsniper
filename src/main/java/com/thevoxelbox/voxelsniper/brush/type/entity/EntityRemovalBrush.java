@@ -113,8 +113,8 @@ public class EntityRemovalBrush extends AbstractBrush {
         SnipeMessenger messenger = snipe.createMessenger();
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
         BlockVector3 targetBlock = getTargetBlock();
-        int chunkX = targetBlock.getX() >> 4;
-        int chunkZ = targetBlock.getZ() >> 4;
+        int chunkX = targetBlock.x() >> 4;
+        int chunkZ = targetBlock.z() >> 4;
         int entityCount = 0;
         int chunkCount = 0;
         int radius = Math.round(toolkitProperties.getBrushSize() / 16.0F);
