@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.51"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
     // Platform expectations
     compileOnly(libs.paper)
     compileOnly("org.apache.logging.log4j:log4j-api")
