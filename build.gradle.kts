@@ -1,3 +1,4 @@
+import com.vanniktech.maven.publish.SonatypeHost
 import groovy.json.JsonSlurper
 import java.net.URI
 import io.papermc.hangarpublishplugin.model.Platforms
@@ -6,12 +7,11 @@ import xyz.jpenilla.runpaper.task.RunServer
 plugins {
     java
     `java-library`
-    `maven-publish`
     signing
 
     alias(libs.plugins.pluginyml)
     alias(libs.plugins.shadow)
-    alias(libs.plugins.nexus)
+    alias(libs.plugins.publish)
     alias(libs.plugins.minotaur)
     alias(libs.plugins.hangar)
     alias(libs.plugins.runPaper)
@@ -23,8 +23,8 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
-    maven { url = uri("https://maven.enginehub.org/repo/") }
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://maven.enginehub.org/repo/")
 }
 
 dependencies {
@@ -90,15 +90,7 @@ tasks {
     }
 
     javadoc {
-        title = project.name + " " + project.version
         val opt = options as StandardJavadocDocletOptions
-        opt.addStringOption("Xdoclint:none", "-quiet")
-        opt.tags(
-                "apiNote:a:API Note:",
-                "implSpec:a:Implementation Requirements:",
-                "implNote:a:Implementation Note:"
-        )
-        opt.addBooleanOption("html5", true)
         opt.links("https://jd.papermc.io/paper/1.21.4/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
         opt.noTimestamp()
@@ -127,11 +119,6 @@ tasks {
     }
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 val javaComponent = components["java"] as AdhocComponentWithVariants
 javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
     skip()
@@ -147,64 +134,54 @@ signing {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
+mavenPublishing {
+    coordinates(
+            groupId = "$group",
+            artifactId = project.name,
+            version = "${project.version}",
+    )
+    pom {
+        name.set(project.name)
+        description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
+        url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
 
-            pom {
-
-                name.set(project.name + " " + project.version)
-                description.set("FastAsyncVoxelSniper API for Minecraft world editing from ingame using 3D brushes")
-                url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
-
-                licenses {
-                    license {
-                        name.set("GNU General Public License, Version 3.0")
-                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
-                        distribution.set("repo")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("NotMyFault")
-                        name.set("Alexander Brandes")
-                        organization.set("IntellectualSites")
-                        organizationUrl.set("https://github.com/IntellectualSites/")
-                        email.set("contact(at)notmyfault.dev")
-                    }
-                    developer {
-                        id.set("Aurelien30000")
-                        name.set("Aurelien30000")
-                        organization.set("IntellectualSites")
-                        organizationUrl.set("https://github.com/IntellectualSites/")
-                    }
-                }
-
-                scm {
-                    url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
-                    connection.set("scm:git:https://github.com/IntellectualSites/fastasyncvoxelsniper.git")
-                    developerConnection.set("scm:git:git@github.com:IntellectualSites/fastasyncvoxelsniper.git")
-                    tag.set("${project.version}")
-                }
-
-                issueManagement {
-                    system.set("GitHub")
-                    url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper/issues/")
-                }
+        licenses {
+            license {
+                name.set("GNU General Public License, Version 3.0")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                distribution.set("repo")
             }
         }
-    }
-}
 
-nexusPublishing {
-    this.repositories {
-        sonatype {
-            nexusUrl.set(URI.create("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        developers {
+            developer {
+                id.set("NotMyFault")
+                name.set("Alexander Brandes")
+                organization.set("IntellectualSites")
+                organizationUrl.set("https://github.com/IntellectualSites/")
+                email.set("contact(at)notmyfault.dev")
+            }
+            developer {
+                id.set("Aurelien30000")
+                name.set("Aurelien30000")
+                organization.set("IntellectualSites")
+                organizationUrl.set("https://github.com/IntellectualSites/")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper")
+            connection.set("scm:git:https://github.com/IntellectualSites/fastasyncvoxelsniper.git")
+            developerConnection.set("scm:git:git@github.com:IntellectualSites/fastasyncvoxelsniper.git")
+            tag.set("${project.version}")
+        }
+
+        issueManagement {
+            system.set("GitHub")
+            url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper/issues/")
         }
     }
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
 // Keep in sync with FAWE versions
