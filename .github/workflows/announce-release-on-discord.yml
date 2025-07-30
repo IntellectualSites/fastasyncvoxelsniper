@@ -11,7 +11,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: FastAsyncVoxelSniper Release
           DISCORD_AVATAR: https://cdn-raw.modrinth.com//data/D7XBSI1y/icon.png
-        uses: Ilshidur/action-discord@0.3.2
+        uses: Ilshidur/action-discord@0.4.0
         with:
           args: |
             "<@&673137848211472384>"
