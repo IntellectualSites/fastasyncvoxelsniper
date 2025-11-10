@@ -6,7 +6,7 @@ annotations = "26.0.2-1"
 cloud = "1.8.4"
 
 # Gradle plugins
-shadow = "9.0.2"
+shadow = "9.2.2"
 pluginyml = "0.6.0"
 publish = "0.33.0"
 minotaur = "2.8.10"
