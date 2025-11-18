@@ -8,7 +8,7 @@ cloud = "1.8.4"
 # Gradle plugins
 shadow = "9.2.2"
 pluginyml = "0.6.0"
-publish = "0.33.0"
+publish = "0.35.0"
 minotaur = "2.8.10"
 hangar = "0.1.3"
 runPaper = "3.0.2"
