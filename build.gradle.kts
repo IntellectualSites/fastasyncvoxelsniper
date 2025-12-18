@@ -101,6 +101,10 @@ tasks {
         isReproducibleFileOrder = true
     }
 
+    shadow {
+        addShadowVariantIntoJavaComponent = false
+    }
+
     shadowJar {
         this.archiveClassifier.set(null as String?)
         this.archiveFileName.set("${project.name}-${project.version}.${this.archiveExtension.getOrElse("jar")}")
@@ -117,11 +121,6 @@ tasks {
     named("build") {
         dependsOn(named("shadowJar"))
     }
-}
-
-val javaComponent = components["java"] as AdhocComponentWithVariants
-javaComponent.withVariantsFromConfiguration(configurations["shadowRuntimeElements"]) {
-    skip()
 }
 
 signing {
