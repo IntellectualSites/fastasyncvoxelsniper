@@ -1,4 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
 import groovy.json.JsonSlurper
 import java.net.URI
 import io.papermc.hangarpublishplugin.model.Platforms
@@ -180,7 +179,7 @@ mavenPublishing {
             url.set("https://github.com/IntellectualSites/fastasyncvoxelsniper/issues/")
         }
     }
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 }
 
 // Keep in sync with FAWE versions
