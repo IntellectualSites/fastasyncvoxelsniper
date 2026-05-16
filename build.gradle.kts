@@ -17,7 +17,7 @@ plugins {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(25))
 }
 
 repositories {
@@ -54,11 +54,11 @@ dependencies {
 }
 
 tasks.compileJava.configure {
-    options.release.set(21)
+    sourceCompatibility = "21"
 }
 
 configurations.all {
-    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 21)
+    attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
@@ -90,7 +90,7 @@ tasks {
 
     javadoc {
         val opt = options as StandardJavadocDocletOptions
-        opt.links("https://jd.papermc.io/paper/1.21.4/")
+        opt.links("https://jd.papermc.io/paper/26.1.2/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
         opt.noTimestamp()
     }
@@ -244,10 +244,10 @@ tasks {
             downloadPlugins {
                 url("https://ci.athion.net/job/FastAsyncWorldEdit/lastSuccessfulBuild/artifact/artifacts/${project.ext["faweArtifact"]}")
             }
-            // Run explicitly using JDK 21
+            // Run explicitly using JDK 25
             val javaToolchains  = project.extensions.getByType<JavaToolchainService>()
             javaLauncher.set(javaToolchains.launcherFor {
-                languageVersion.set(JavaLanguageVersion.of(21))
+                languageVersion.set(JavaLanguageVersion.of(25))
             })
             group = "run paper"
             runDirectory.set(file("run-$version"))

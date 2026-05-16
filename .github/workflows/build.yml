@@ -13,7 +13,7 @@ jobs:
               uses: actions/setup-java@v5
               with:
                   distribution: temurin
-                  java-version: 17
+                  java-version: 25
             - name: Clean Build
               run: ./gradlew clean build --no-daemon
             - name: Archive Artifacts

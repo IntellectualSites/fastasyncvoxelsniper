@@ -15,7 +15,7 @@ jobs:
               with:
                   distribution: temurin
                   cache: gradle
-                  java-version: 17
+                  java-version: 25
             - name: Upload to Modrinth
               run: ./gradlew clean build modrinth
               env:
