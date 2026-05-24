@@ -1,12 +1,11 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
-import com.fastasyncworldedit.core.Fawe;
 import com.fastasyncworldedit.core.configuration.Caption;
-import com.fastasyncworldedit.core.queue.implementation.QueueHandler;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.request.Request;
 import com.sk89q.worldedit.util.formatting.text.Component;
@@ -27,6 +26,7 @@ import com.thevoxelbox.voxelsniper.sniper.toolkit.Toolkit;
 import com.thevoxelbox.voxelsniper.sniper.toolkit.ToolkitProperties;
 import com.thevoxelbox.voxelsniper.util.material.Materials;
 import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class Sniper implements SniperCommander {
+
+    private static final Logger LOGGER = LogManagerCompat.getLogger();
 
     private final UUID uuid;
     private Player player;
@@ -179,25 +181,23 @@ public class Sniper implements SniperCommander {
             return false;
         }
         com.sk89q.worldedit.entity.Player wePlayer = BukkitAdapter.adapt(player);
-        LocalSession session = wePlayer.getSession();
-        QueueHandler queue = Fawe.instance().getQueueHandler();
-        queue.async(() -> {
-            synchronized (session) {
-                if (!player.isValid()) {
-                    return;
-                }
-                snipeOnCurrentThread(
-                        wePlayer,
-                        player,
-                        action,
-                        clickedBlock,
-                        clickedBlockFace,
-                        toolkit,
-                        toolAction,
-                        currentBrushProperties
-                );
-            }
-        });
+        wePlayer.runAction(
+                () -> {
+                    if (!player.isValid()) {
+                        return;
+                    }
+                    snipeOnCurrentThread(
+                            wePlayer,
+                            player,
+                            action,
+                            clickedBlock,
+                            clickedBlockFace,
+                            toolkit,
+                            toolAction,
+                            currentBrushProperties
+                    );
+                }, false, true
+        );
         return true;
     }
 
@@ -212,134 +212,132 @@ public class Sniper implements SniperCommander {
             BrushProperties currentBrushProperties
     ) {
         LocalSession session = wePlayer.getSession();
-        synchronized (session) {
-            EditSession editSession = session.createEditSession(wePlayer);
+        EditSession editSession = session.createEditSession(wePlayer);
 
-            try {
-                ToolkitProperties toolkitProperties = toolkit.getProperties();
-                BlockVector3 rayTraceTargetBlock = null;
-                BlockVector3 rayTraceLastBlock = null;
-                {
-                    Request.reset();
-                    Request.request().setExtent(editSession);
-                    if (clickedBlock == null) {
-                        BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
-                        BlockVector3 targetRayTraceResult = blockTracer.getTargetBlock();
-                        if (targetRayTraceResult != null) {
-                            rayTraceTargetBlock = targetRayTraceResult;
-                        }
-                        BlockVector3 lastRayTraceResult = blockTracer.getLastBlock();
-                        if (lastRayTraceResult != null) {
-                            rayTraceLastBlock = lastRayTraceResult;
-                        }
+        try {
+            ToolkitProperties toolkitProperties = toolkit.getProperties();
+            BlockVector3 rayTraceTargetBlock = null;
+            BlockVector3 rayTraceLastBlock = null;
+            {
+                Request.reset();
+                Request.request().setExtent(editSession);
+                if (clickedBlock == null) {
+                    BlockTracer blockTracer = toolkitProperties.createBlockTracer(player);
+                    BlockVector3 targetRayTraceResult = blockTracer.getTargetBlock();
+                    if (targetRayTraceResult != null) {
+                        rayTraceTargetBlock = targetRayTraceResult;
+                    }
+                    BlockVector3 lastRayTraceResult = blockTracer.getLastBlock();
+                    if (lastRayTraceResult != null) {
+                        rayTraceLastBlock = lastRayTraceResult;
                     }
                 }
-                BlockVector3 targetBlock = clickedBlock == null
-                        ? rayTraceTargetBlock
-                        : BukkitAdapter.asBlockVector(clickedBlock.getLocation());
-                if (player.isSneaking()) {
-                    SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
-                    if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
-                        if (toolAction == ToolAction.ARROW) {
-                            BlockType blockType;
-                            if (targetBlock == null || Materials.isEmpty(
-                                    (blockType = editSession.getBlockType(
-                                            targetBlock.x(),
-                                            targetBlock.y(),
-                                            targetBlock.z()
-                                    ))
-                            )) {
-                                toolkitProperties.resetPattern();
-                            } else {
-                                toolkitProperties.setPattern(new BrushPattern(blockType));
-                            }
-                            messenger.sendPatternMessage();
-                            return true;
-                        } else if (toolAction == ToolAction.GUNPOWDER) {
-                            BlockState blockState;
-                            if (targetBlock == null || Materials.isEmpty(
-                                    (blockState = editSession.getBlock(targetBlock)).getBlockType()
-                            )) {
-                                toolkitProperties.resetPattern();
-                            } else {
-                                toolkitProperties.setPattern(new BrushPattern(blockState));
-                            }
-                            messenger.sendPatternMessage();
-                            return true;
-                        }
-                        return false;
-                    } else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
-                        if (toolAction == ToolAction.ARROW) {
-                            if (targetBlock == null) {
-                                toolkitProperties.resetReplacePattern();
-                            } else {
-                                BlockType blockType = editSession.getBlockType(
+            }
+            BlockVector3 targetBlock = clickedBlock == null
+                    ? rayTraceTargetBlock
+                    : BukkitAdapter.asBlockVector(clickedBlock.getLocation());
+            if (player.isSneaking()) {
+                SnipeMessenger messenger = new SnipeMessenger(toolkitProperties, currentBrushProperties, player);
+                if (action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR) {
+                    if (toolAction == ToolAction.ARROW) {
+                        BlockType blockType;
+                        if (targetBlock == null || Materials.isEmpty(
+                                (blockType = editSession.getBlockType(
                                         targetBlock.x(),
                                         targetBlock.y(),
                                         targetBlock.z()
-                                );
-                                toolkitProperties.setReplacePattern(new BrushPattern(blockType));
-                            }
-                            messenger.sendReplacePatternMessage();
-                            return true;
-                        } else if (toolAction == ToolAction.GUNPOWDER) {
-                            if (targetBlock == null) {
-                                toolkitProperties.resetReplacePattern();
-                            } else {
-                                toolkitProperties.setReplacePattern(new BrushPattern(editSession.getBlock(targetBlock)));
-                            }
-                            messenger.sendReplacePatternMessage();
-                            return true;
+                                ))
+                        )) {
+                            toolkitProperties.resetPattern();
+                        } else {
+                            toolkitProperties.setPattern(new BrushPattern(blockType));
                         }
-                        return false;
-                    }
-                    return false;
-                } else {
-                    if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                        if (targetBlock == null || (targetBlock.y() != editSession.getMinY() &&
-                                Materials.isEmpty(editSession.getBlockType(
-                                        targetBlock.x(),
-                                        targetBlock.y(),
-                                        targetBlock.z()
-                                )))) {
-                            print(Caption.of("voxelsniper.sniper.target-invisible"));
-                            return true;
+                        messenger.sendPatternMessage();
+                        return true;
+                    } else if (toolAction == ToolAction.GUNPOWDER) {
+                        BlockState blockState;
+                        if (targetBlock == null || Materials.isEmpty(
+                                (blockState = editSession.getBlock(targetBlock)).getBlockType()
+                        )) {
+                            toolkitProperties.resetPattern();
+                        } else {
+                            toolkitProperties.setPattern(new BrushPattern(blockState));
                         }
-                        Brush currentBrush = toolkit.getCurrentBrush();
-                        if (currentBrush == null) {
-                            return false;
-                        }
-                        Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
-                        if (currentBrushProperties.getBrushPatternType() == BrushPatternType.SINGLE_BLOCK
-                                && toolkitProperties.getPattern().asBlockType() == null) {
-                            print(Caption.of("voxelsniper.sniper.single-block-pattern"));
-                            return false;
-                        }
-
-                        if (currentBrush instanceof PerformerBrush performerBrush) {
-                            performerBrush.initialize(snipe);
-                        }
-                        BlockVector3 lastBlock = clickedBlock == null
-                                ? rayTraceLastBlock
-                                : targetBlock.add(
-                                        clickedBlockFace.getModX(),
-                                        clickedBlockFace.getModY(),
-                                        clickedBlockFace.getModZ()
-                                );
-                        currentBrush.perform(snipe, toolAction, editSession, targetBlock, lastBlock);
+                        messenger.sendPatternMessage();
                         return true;
                     }
+                    return false;
+                } else if (action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR) {
+                    if (toolAction == ToolAction.ARROW) {
+                        if (targetBlock == null) {
+                            toolkitProperties.resetReplacePattern();
+                        } else {
+                            BlockType blockType = editSession.getBlockType(
+                                    targetBlock.x(),
+                                    targetBlock.y(),
+                                    targetBlock.z()
+                            );
+                            toolkitProperties.setReplacePattern(new BrushPattern(blockType));
+                        }
+                        messenger.sendReplacePatternMessage();
+                        return true;
+                    } else if (toolAction == ToolAction.GUNPOWDER) {
+                        if (targetBlock == null) {
+                            toolkitProperties.resetReplacePattern();
+                        } else {
+                            toolkitProperties.setReplacePattern(new BrushPattern(editSession.getBlock(targetBlock)));
+                        }
+                        messenger.sendReplacePatternMessage();
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
-            } catch (Throwable t) {
-                t.printStackTrace();
-                print(Caption.of("voxelsniper.error.unexpected"));
-                return false;
-            } finally {
-                session.remember(editSession);
-                editSession.flushQueue();
-                WorldEdit.getInstance().flushBlockBag(wePlayer, editSession);
+            } else {
+                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    if (targetBlock == null || (targetBlock.y() != editSession.getMinY() &&
+                            Materials.isEmpty(editSession.getBlockType(
+                                    targetBlock.x(),
+                                    targetBlock.y(),
+                                    targetBlock.z()
+                            )))) {
+                        print(Caption.of("voxelsniper.sniper.target-invisible"));
+                        return true;
+                    }
+                    Brush currentBrush = toolkit.getCurrentBrush();
+                    if (currentBrush == null) {
+                        return false;
+                    }
+                    Snipe snipe = new Snipe(this, toolkit, toolkitProperties, currentBrushProperties, currentBrush);
+                    if (currentBrushProperties.getBrushPatternType() == BrushPatternType.SINGLE_BLOCK
+                            && toolkitProperties.getPattern().asBlockType() == null) {
+                        print(Caption.of("voxelsniper.sniper.single-block-pattern"));
+                        return false;
+                    }
+
+                    if (currentBrush instanceof PerformerBrush performerBrush) {
+                        performerBrush.initialize(snipe);
+                    }
+                    BlockVector3 lastBlock = clickedBlock == null
+                            ? rayTraceLastBlock
+                            : targetBlock.add(
+                                    clickedBlockFace.getModX(),
+                                    clickedBlockFace.getModY(),
+                                    clickedBlockFace.getModZ()
+                            );
+                    currentBrush.perform(snipe, toolAction, editSession, targetBlock, lastBlock);
+                    return true;
+                }
             }
+            return false;
+        } catch (Throwable t) {
+            LOGGER.error("Unexpected error during FAVS action", t);
+            print(Caption.of("voxelsniper.error.unexpected"));
+            return false;
+        } finally {
+            session.remember(editSession);
+            editSession.flushQueue();
+            WorldEdit.getInstance().flushBlockBag(wePlayer, editSession);
         }
     }
 
