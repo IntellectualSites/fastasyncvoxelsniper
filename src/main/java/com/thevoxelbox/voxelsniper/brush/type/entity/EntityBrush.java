@@ -93,7 +93,7 @@ public class EntityBrush extends AbstractBrush {
         Class<? extends org.bukkit.entity.Entity> entityClass;
         try {
             entityClass = BukkitAdapter.adapt(entityType).getEntityClass();
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
             messenger.sendMessage(Caption.of("voxelsniper.brush.entity.cannot-spawn"));
             return;
         }
