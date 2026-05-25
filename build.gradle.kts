@@ -1,6 +1,5 @@
 import groovy.json.JsonSlurper
 import java.net.URI
-import io.papermc.hangarpublishplugin.model.Platforms
 import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
@@ -12,7 +11,6 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.publish)
     alias(libs.plugins.minotaur)
-    alias(libs.plugins.hangar)
     alias(libs.plugins.runPaper)
 }
 
@@ -201,28 +199,6 @@ modrinth {
     syncBodyFrom.set(rootProject.file("README.md").readText())
     changelog.set("The changelog is available on GitHub: https://github" +
             ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
-}
-
-hangarPublish {
-    publications.register("plugin") {
-        version.set(project.version as String)
-        id.set("FastAsyncVoxelSniper")
-        channel.set("Release")
-        changelog.set("The changelog is available on GitHub: https://github" +
-                ".com/IntellectualSites/fastasyncvoxelsniper/releases/tag/${project.version}")
-        apiKey.set(System.getenv("HANGAR_TOKEN"))
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(file("build/libs/${rootProject.name}-${project.version}.jar"))
-                platformVersions.set(supportedVersions)
-                this.dependencies {
-                    hangar("FastAsyncWorldEdit") {
-                        required.set(true)
-                    }
-                }
-            }
-        }
-    }
 }
 
 tasks {

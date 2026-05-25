@@ -20,7 +20,6 @@ jobs:
               run: ./gradlew clean build modrinth
               env:
                   MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-                  HANGAR_TOKEN: ${{ secrets.HANGAR_TOKEN }}
             - name: Upload Release Assets
               if: always()
               uses: AButler/upload-release-assets@v4.0.0
@@ -36,7 +35,7 @@ jobs:
                 # https://minecraft.curseforge.com/api/game/versions?token=redacted
                 # We have a public version on https://github.com/IntellectualSites/CurseForge-version-identifier
                 # gameVersionTypeID: 1
-                game_versions: "11163,12281,12934"
+                game_versions: "11779,12281,12934,13422,13506,13620,13927,13964,14406,15933,16021,16082"
                 project_id: 454430
                 game_endpoint: minecraft
                 token: ${{ secrets.CURSEFORGE_TOKEN }}

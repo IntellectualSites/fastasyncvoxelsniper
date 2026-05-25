@@ -10,7 +10,6 @@ shadow = "9.4.1"
 pluginyml = "0.6.0"
 publish = "0.36.0"
 minotaur = "2.9.0"
-hangar = "0.1.4"
 runPaper = "3.0.2"
 paperApi = "1.21.4-R0.1-SNAPSHOT"
 
@@ -33,5 +32,4 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 pluginyml = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
-hangar = { id = "io.papermc.hangar-publish-plugin", version.ref = "hangar" }
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
