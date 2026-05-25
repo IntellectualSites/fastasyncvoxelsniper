@@ -39,8 +39,8 @@ public class PlayerJoinListener implements Listener<PlayerJoinEvent> {
                         this.plugin.getDescription().getVersion(),
                         newVersionTitle,
                         TextComponent
-                                .of("https://dev.bukkit.org/projects/favs")
-                                .clickEvent(ClickEvent.openUrl("https://dev.bukkit.org/projects/favs"))
+                                .of("https://modrinth.com/plugin/fastasyncvoxelsniper")
+                                .clickEvent(ClickEvent.openUrl("https://modrinth.com/plugin/fastasyncvoxelsniper"))
                 ));
             }
         }

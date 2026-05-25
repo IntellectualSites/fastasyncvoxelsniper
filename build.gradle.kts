@@ -69,11 +69,11 @@ bukkit {
     main = "com.thevoxelbox.voxelsniper.VoxelSniperPlugin"
     authors = listOf("Empire92", "przerwap", "MikeMatrix", "Gavjenks", "giltwist", "psanker", "Deamon5550",
             "DivineRage", "pitcer", "jaqobb", "NotMyFault", "Aurelien30000")
-    apiVersion = "1.20"
+    apiVersion = "1.21"
     version = project.version.toString()
     softDepend = listOf("VoxelModPackPlugin")
     depend = listOf("FastAsyncWorldEdit")
-    website = "https://dev.bukkit.org/projects/favs"
+    website = "https://modrinth.com/plugin/fastasyncvoxelsniper"
     description = "World editing from ingame using 3D brushes"
 }
 
@@ -183,7 +183,8 @@ mavenPublishing {
 }
 
 // Keep in sync with FAWE versions
-val supportedVersions = listOf("1.20.2", "1.20.4", "1.20.6", "1.21.3", "1.21.4")
+val supportedVersions: List<String> = listOf("1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10",
+        "1.21.11", "26.1", "26.1.1", "26.1.2")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))

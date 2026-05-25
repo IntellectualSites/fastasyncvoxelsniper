@@ -27,12 +27,8 @@ body:
       description: Which server version version you using? If your server version is not listed, it is not supported. Update to a supported version first.
       multiple: false
       options:
-        - '26.x'
-        - '1.21.4'
-        - '1.21.1'
-        - '1.20.6'
-        - '1.20.4'
-        - '1.20.2'
+        - '26.1.x'
+        - '1.21.x'
     validations:
       required: true
 
@@ -93,8 +89,6 @@ body:
       description: Make sure you have followed each of the steps outlined here.
       options:
         - label: I have included a debugpaste.
-          required: true
-        - label: I am using the newest build from https://dev.bukkit.org/projects/favs and the issue still persists.
           required: true
 
   - type: textarea
