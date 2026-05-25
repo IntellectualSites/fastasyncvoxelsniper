@@ -10,16 +10,16 @@ This is a fork of [VoxelSniper](https://github.com/TVPT/VoxelSniper). It adds su
 
 FAVS is designed for efficient terrain creation.
 
-- VoxelSniper is the premier long range map editing tool for Minecraft. This mod allows you to edit any block that you can see using an arrow (for replacing) and a gunpowder (for adding).
-- It is best used by those with a strong attention to detail and 
-  fits a wide array of applications, from making detailed edits to structures with the snipe brush, to making massive terraforming jobs a breeze with some of the earth shattering soft selection tools.
-- FastAsyncVoxelSniper allows you to perform operations asynchronously, so you can let a lot of people perform many voxel 
+- VoxelSniper is the premier long-range map editing tool for Minecraft. This mod allows you to edit any block that you can see using an arrow (for replacing) and gunpowder (for adding).
+- It is best used by those with a strong attention to detail and
+  fits a wide array of applications, from making detailed edits to structures with the snipe brush to making massive terraforming jobs a breeze with some earth-shattering soft selection tools.
+- FastAsyncVoxelSniper allows you to perform operations asynchronously, so you can let a lot of people perform many voxel
   operations with ease and not hanging your server.
-- Simple to setup and use
+- Simple to set up and use
 - Extremely configurable
 - Uses minimal CPU/Memory
 - Safe for many players to use
-- Insanely fast, when using the slowest mode
+- Insanely fast when using the slowest mode
 - Hooks into FAWE to utilize its async features and respects the same protection plugins like FAWE.
 
 ## Downloads
@@ -32,13 +32,13 @@ Releases are available either on Modrinth or on CurseForge:
 
 * [Wiki](https://intellectualsites.github.io/fastasyncvoxelsniper-documentation/)
 * [Translations](https://intellectualsites.crowdin.com/fastasyncvoxelsniper)
-* [JavaDocs](https://intellectualsites.github.io/fastasyncvoxelsniper-javadocs/)
+* [Javadocs](https://intellectualsites.github.io/fastasyncvoxelsniper-javadocs/)
 
 ## Contributing
 See [here](https://github.com/IntellectualSites/.github/blob/main/CONTRIBUTING.md)
 
 ## Maven Deployment
-Releases are published to the central repository, snapshots are published to S01 OSS Sonatype.
+Releases are published to the central repository, and snapshots are published to S01 OSS Sonatype.
 
 Replace `VERSION` with the version you want to use.
 
