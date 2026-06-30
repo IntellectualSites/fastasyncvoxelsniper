@@ -89,13 +89,20 @@ public class EntityBrush extends AbstractBrush {
     }
 
     private void spawn(Snipe snipe) {
-        Class<? extends org.bukkit.entity.Entity> entityClass = BukkitAdapter.adapt(entityType).getEntityClass();
+        SnipeMessenger messenger = snipe.createMessenger();
+        Class<? extends org.bukkit.entity.Entity> entityClass;
+        try {
+            entityClass = BukkitAdapter.adapt(entityType).getEntityClass();
+        } catch (IllegalArgumentException e) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.entity.cannot-spawn"));
+            return;
+        }
         if (entityClass == null) {
+            messenger.sendMessage(Caption.of("voxelsniper.brush.entity.cannot-spawn"));
             return;
         }
 
         ToolkitProperties toolkitProperties = snipe.getToolkitProperties();
-        SnipeMessenger messenger = snipe.createMessenger();
         EditSession editSession = getEditSession();
         BlockVector3 lastBlock = getLastBlock();
 
