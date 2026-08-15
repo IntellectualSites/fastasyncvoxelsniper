@@ -18,6 +18,7 @@ import com.thevoxelbox.voxelsniper.performer.Performer;
 import com.thevoxelbox.voxelsniper.performer.PerformerRegistry;
 import com.thevoxelbox.voxelsniper.performer.property.PerformerProperties;
 import com.thevoxelbox.voxelsniper.sniper.SniperRegistry;
+import com.thevoxelbox.voxelsniper.update.UpdateCheckerParser;
 import com.thevoxelbox.voxelsniper.util.io.VoxelSniperResourceLoader;
 import io.papermc.lib.PaperLib;
 
@@ -30,9 +31,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.serverlib.ServerLib;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -270,7 +268,8 @@ public class VoxelSniperPlugin extends JavaPlugin {
         return this.commandRegistry;
     }
 
-    // Borrowed from Vault
+    // Borrowed from Vault - Updated to workaround JSON removal from paper
+
     private double updateCheck(double currentVersion) {
         try {
 
@@ -280,18 +279,25 @@ public class VoxelSniperPlugin extends JavaPlugin {
             conn.addRequestProperty("User-Agent", "FastAsyncVoxelSniper Update Checker");
             conn.setDoOutput(true);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            final String response = reader.readLine();
-            final JSONArray array = (JSONArray) JSONValue.parse(response);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            final String response = sb.toString();
 
-            if (array.isEmpty()) {
+            String lastName = UpdateCheckerParser.extractLatestNameFromResponse(response);
+
+            if (lastName == null) {
                 LOGGER.warn("No files found, or Feed URL is bad.");
                 return currentVersion;
             }
-            newVersionTitle =
-                    ((String) ((JSONObject) array.getLast()).get("name")).replace("FastAsyncVoxelSniper", "").trim();
+            newVersionTitle = lastName.replace("FastAsyncVoxelSniper", "").trim();
             return Double.parseDouble(newVersionTitle.replaceFirst("\\.", "").trim());
         } catch (IOException ignored) {
             LOGGER.error("Unable to connect to api.curseforge.com to check for updates. Improper firewall configuration?");
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Unable to parse version string: {}", newVersionTitle, e);
         }
         return Double.NaN;
     }

@@ -49,6 +49,15 @@ dependencies {
     implementation("org.bstats:bstats-bukkit")
     implementation("io.papermc:paperlib")
     implementation("com.intellectualsites.paster:Paster")
+
+    // Testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.platform:junit-platform-launcher:1.10.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 tasks.compileJava.configure {
