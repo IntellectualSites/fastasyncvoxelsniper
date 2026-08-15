@@ -10,7 +10,7 @@ shadow = "9.6.1"
 pluginyml = "0.6.0"
 publish = "0.37.0"
 minotaur = "2.9.0"
-runPaper = "3.0.2"
+runPaper = "3.1.0"
 paperApi = "26.2.build.112-stable"
 
 [libraries]
