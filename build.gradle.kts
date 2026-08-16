@@ -69,7 +69,7 @@ configurations.all {
 }
 
 group = "com.intellectualsites.fastasyncvoxelsniper"
-version = "3.2.5-SNAPSHOT"
+version = "3.2.5"
 
 bukkit {
     name = "FastAsyncVoxelSniper"
@@ -97,7 +97,7 @@ tasks {
 
     javadoc {
         val opt = options as StandardJavadocDocletOptions
-        opt.links("https://jd.papermc.io/paper/26.1.2/")
+        opt.links("https://jd.papermc.io/paper/26.2/")
         opt.links("https://intellectualsites.github.io/fastasyncworldedit-javadocs/worldedit-core/")
         opt.noTimestamp()
     }
@@ -191,7 +191,7 @@ mavenPublishing {
 
 // Keep in sync with FAWE versions
 val supportedVersions: List<String> = listOf("1.21.1", "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10",
-        "1.21.11", "26.1", "26.1.1", "26.1.2")
+        "1.21.11", "26.1", "26.1.1", "26.1.2", "26.2")
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
