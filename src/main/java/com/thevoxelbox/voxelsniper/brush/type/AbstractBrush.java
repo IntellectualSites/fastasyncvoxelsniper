@@ -1,13 +1,19 @@
 package com.thevoxelbox.voxelsniper.brush.type;
 
+import com.fastasyncworldedit.core.extent.FaweRegionExtent;
+import com.fastasyncworldedit.core.extent.MultiRegionExtent;
+import com.fastasyncworldedit.core.extent.SingleRegionExtent;
+import com.fastasyncworldedit.core.limit.FaweLimit;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.internal.util.LogManagerCompat;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.registry.Keyed;
 import com.sk89q.worldedit.registry.NamespacedRegistry;
 import com.sk89q.worldedit.util.Direction;
@@ -60,6 +66,27 @@ public abstract class AbstractBrush implements Brush {
         sniper.print(component);
     }
 
+    /**
+     * Set up the edit session.
+     * A region extent can be added in order to take into account region protections in brush computing.
+     */
+    private void setupEditSession() {
+        Region[] allowedRegions = editSession.getAllowedRegions();
+        if (allowedRegions == null || allowedRegions.length == 0) {
+            return;
+        }
+
+        Extent extent = editSession.getExtent();
+        FaweLimit limit = editSession.getLimit();
+        FaweRegionExtent regionExtent;
+        if (allowedRegions.length == 1) {
+            regionExtent = new SingleRegionExtent(extent, limit, allowedRegions[0]);
+        } else {
+            regionExtent = new MultiRegionExtent(extent, limit, allowedRegions, null);
+        }
+        editSession.setExtent(regionExtent);
+    }
+
     @Override
     public void perform(
             Snipe snipe,
@@ -71,6 +98,8 @@ public abstract class AbstractBrush implements Brush {
         this.editSession = editSession;
         this.targetBlock = targetBlock;
         this.lastBlock = lastBlock;
+        setupEditSession();
+
         if (action == ToolAction.ARROW) {
             handleArrowAction(snipe);
         } else if (action == ToolAction.GUNPOWDER) {
