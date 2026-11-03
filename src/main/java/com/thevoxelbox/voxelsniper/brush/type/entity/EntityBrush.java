@@ -57,7 +57,7 @@ public class EntityBrush extends AbstractBrush {
         messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
                 EntityType.REGISTRY.values(),
                 (type, type2) -> type.id().compareTo(type2.id()),
-                type -> TextComponent.of(type.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
+                type -> TextComponent.of(Identifiers.withoutMinecraftNamespace(type.id())),
                 type -> type,
                 this.entityType,
                 "voxelsniper.brush.entity"
