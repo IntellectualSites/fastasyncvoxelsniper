@@ -15,8 +15,6 @@ import com.thevoxelbox.voxelsniper.util.message.VoxelSniperText;
 import com.thevoxelbox.voxelsniper.util.minecraft.Identifiers;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /**
  * Regenerates the target chunk.
  */
@@ -26,10 +24,6 @@ import java.util.List;
 public class RegenerateChunkBrush extends AbstractBrush {
 
     private static final String DEFAULT_BIOME = "default";
-
-    private static final List<String> BIOMES = BiomeTypes.values().stream()
-            .map(biomeType -> biomeType.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH))
-            .toList();
 
     private BiomeType biomeType = null;
 
@@ -55,7 +49,7 @@ public class RegenerateChunkBrush extends AbstractBrush {
         messenger.sendMessage(VoxelSniperText.formatListWithCurrent(
                 BiomeTypes.values(),
                 (type, type2) -> type.id().compareTo(type2.id()),
-                type -> TextComponent.of(type.id().substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)),
+                type -> TextComponent.of(Identifiers.withoutMinecraftNamespace(type.id())),
                 type -> type,
                 this.biomeType,
                 "voxelsniper.brush.biome"
