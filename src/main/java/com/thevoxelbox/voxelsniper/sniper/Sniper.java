@@ -338,6 +338,9 @@ public class Sniper implements SniperCommander {
             session.remember(editSession);
             editSession.flushQueue();
             WorldEdit.getInstance().flushBlockBag(wePlayer, editSession);
+            // The request is kept per thread; clear it so the worker thread does not hold this edit session
+            // (and the player behind it) until its next task.
+            Request.reset();
         }
     }
 
