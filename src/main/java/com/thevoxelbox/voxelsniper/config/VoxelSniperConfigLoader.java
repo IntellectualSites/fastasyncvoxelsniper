@@ -342,9 +342,7 @@ public class VoxelSniperConfigLoader {
     public List<String> getLitesniperRestrictedMaterials() {
         return this.config.getStringList(LITESNIPER_RESTRICTED_MATERIALS).stream()
                 .map(key -> key.toLowerCase(Locale.ROOT))
-                .map(key -> key.startsWith(Identifiers.MINECRAFT_IDENTIFIER)
-                        ? key.substring(Identifiers.MINECRAFT_IDENTIFIER_LENGTH)
-                        : key)
+                .map(Identifiers::withoutMinecraftNamespace)
                 .toList();
     }
 
