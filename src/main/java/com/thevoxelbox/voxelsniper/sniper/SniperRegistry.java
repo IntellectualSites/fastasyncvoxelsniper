@@ -1,5 +1,6 @@
 package com.thevoxelbox.voxelsniper.sniper;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +51,10 @@ public class SniperRegistry {
     /**
      * Register the player as a sniper if not already done.
      * Return the sniper directly or after registration.
+     * <p>
+     * The player is only stored in the sniper while it is the current online player for its UUID.
+     * A player object that is no longer online (for example a command handled after the player quit,
+     * or a fake player) is never stored, so the registry does not keep it alive.
      *
      * @param player player to register and or get as sniper
      * @return sniper
@@ -57,6 +62,10 @@ public class SniperRegistry {
     public Sniper registerAndGetSniper(Player player) {
         UUID uuid = player.getUniqueId();
         Sniper sniper = getSniper(uuid);
+        if (Bukkit.getPlayer(uuid) != player) {
+            // Not the online player for this UUID: do not keep a reference to it.
+            return sniper == null ? new Sniper(player) : sniper;
+        }
         if (sniper == null) {
             sniper = new Sniper(player);
             register(sniper);
